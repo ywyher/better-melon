@@ -2,10 +2,10 @@
 > the translation functionality is yet to be implemented for now you can use [yomitan](https://yomitan.wiki/) instead
 
 # What is it ?
-An [Animleon](https://www.animelon.com/) alternative that aims to overcome all animelon inconvenients
+An [Animleon](https://www.animelon.com/) alternative that aims to overcome all animelon's inconvenients
 
 # Why ?
-Animelon doesn't proivde all animes by default and its the entries are rarely updated making it harder for people who want to learn through watching modern animes to use it, therefore i decided to create this website to provide the latest animes with their subtitles and real time japanese subtitles translation (basically an alternatives with more features)
+Animelon doesn’t provide all anime by default, and its entries are rarely updated, making it difficult for learners who want to watch modern anime with subtitles. That’s why I decided to create this website—to offer the latest anime with subtitles, along with real-time Japanese subtitle translation, providing a more feature-rich alternative.
 
 # Roadmap
 > [!note]
@@ -18,6 +18,7 @@ Animelon doesn't proivde all animes by default and its the entries are rarely up
 - [ ] ass/vtt support
 
 # Credit
-- [Consument API](https://github.com/consumet/api.consumet.org) -> The API we use to fetch anime data
-- [Jimaku API](https://jimaku.cc/) -> The API we use to fetch japanese subtitles
+- [Anilist](https://anilist.co/) -> Used to fetch anime data
+- [Consument](https://github.com/consumet/api.consumet.org) -> Used to fetch anime streaming data
+- [Jimaku](https://jimaku.cc/) -> Used to fetch japanese subtitles
 - [ywyh (Me)](https://github.com/ywyher) – for being goated
