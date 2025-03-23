@@ -1,4 +1,4 @@
-import Subs from "@/app/subs/[id]/[ep]/_components/subs";
+import Subs from "@/app/watch/[id]/[ep]/_components/subs";
 
 type Params = Promise<{ id: string, ep: string }>
 

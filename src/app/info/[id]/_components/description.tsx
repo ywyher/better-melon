@@ -3,7 +3,12 @@ import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ChevronDown, ChevronUp } from "lucide-react"
-import { AnimeDescriptionProps } from "@/app/info/[id]/types"
+import { Anime } from "@/types/anime"
+
+type AnimeDescriptionProps = {
+    title: Anime['title']
+    description: Anime['description']
+}
 
 export function AnimeDescription({ title, description }: AnimeDescriptionProps) {
     const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false)

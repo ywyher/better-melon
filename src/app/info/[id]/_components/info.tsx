@@ -2,7 +2,17 @@
 import Image from "next/image"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { AnimeInfoProps } from "@/app/info/[id]/types"
+import { Anime } from "@/types/anime"
+
+type AnimeInfoProps = {
+    coverImage: Anime['coverImage'] 
+    title: Anime['title']
+    format: Anime['format'] 
+    status: Anime['status'] 
+    season: Anime['season'] 
+    seasonYear: Anime['seasonYear'] 
+    genres: Anime['genres']
+}
 
 export function AnimeInfo({ 
     coverImage, 
@@ -19,8 +29,8 @@ export function AnimeInfo({
                 <div className="relative w-full aspect-[2/3] rounded-lg overflow-hidden mb-4">
                     {coverImage ? (
                         <Image 
-                            src={coverImage} 
-                            alt={title}
+                            src={coverImage.large} 
+                            alt={title.english || ""}
                             fill
                             className="object-cover"
                         />

@@ -4,50 +4,42 @@ import { Star } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Anime } from "@/types/anime";
+import { formatDescription, getTitle } from "@/lib/funcs";
+import AnimeStatusIndicator from "@/components/anime/status-indicator";
+import { useState } from "react";
+import { ImageSkeleton } from "@/components/image-skeleton";
 
-// Define TypeScript interfaces for the anime data
-interface AnimeTitle {
-  romaji: string;
-  english: string | null;
+type AnimeCardProps = {
+  id: Anime['id']
+  title: Anime['title']
+  coverImage: Anime['coverImage']
+  averageScore: Anime["averageScore"]
+  status: Anime["status"]
+  genres: Anime["genres"]
+  description: Anime["description"]
+  episodes: Anime["episodes"]
+  season: Anime["season"]
+  seasonYear: Anime["seasonYear"]
 }
 
-interface AnimeCoverImage {
-  large: string;
-  medium: string;
-}
-
-interface AnimeProps {
-  anime: {
-    id: number;
-    title: AnimeTitle;
-    description: string | null;
-    coverImage: AnimeCoverImage;
-    bannerImage: string | null;
-    episodes: number | null;
-    season: string | null;
-    seasonYear: number | null;
-    averageScore: number | null;
-    genres: string[];
-    status: string;
-  };
-}
-
-export default function AnimeCard({ anime }: AnimeProps) {
+export default function AnimeCard({ 
+  id,
+  title,
+  coverImage,
+  averageScore,
+  status,
+  genres,
+  description,
+  episodes,
+  season,
+  seasonYear,
+ }: AnimeCardProps) {
   const router = useRouter();
+  const [imageLoading, setImageLoading] = useState<boolean>(true)
 
-  // Format description by removing HTML tags
-  const formatDescription = (desc: string | null): string => {
-    if (!desc) return "No description available.";
-    const plainText = desc.replace(/<[^>]+>/g, '');
-    return plainText.length > 120 ? plainText.substring(0, 120) + "..." : plainText;
-  };
-
-  // Get title, prioritizing English if available
-  const title = anime.title.english || anime.title.romaji || "Unknown Title";
-  
   const handleClick = () => {
-    // For now, we'll just redirect to a placeholder page with the anime ID
-    router.push(`/info/${anime.id}`);
+    router.push(`/info/${id}`);
   };
   
   return (
@@ -59,13 +51,15 @@ export default function AnimeCard({ anime }: AnimeProps) {
       onClick={handleClick}
     >
       <div className="relative h-52 w-full overflow-hidden">
-        {anime.coverImage?.large ? (
+        {coverImage?.large ? (
           <div className="absolute inset-0 mx-2 mt-2">
+            {imageLoading && <ImageSkeleton />}
             <Image
-              src={anime.coverImage.large}
-              alt={title}
+              src={coverImage.large}
+              alt={getTitle(title)}
               fill
               className="object-cover rounded-sm"
+              onLoadingComplete={() => setImageLoading(false)}
             />
           </div>
         ) : (
@@ -77,15 +71,18 @@ export default function AnimeCard({ anime }: AnimeProps) {
         <div className="absolute top-4 right-4">
           <Badge variant="secondary" className="flex items-center gap-1 bg-black/70 text-white">
             <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-            {anime.averageScore ? (anime.averageScore / 10).toFixed(1) : "N/A"}
+            {averageScore ? (averageScore / 10).toFixed(1) : "N/A"}
           </Badge>
         </div>
       </div>
       
       <CardHeader className="px-4">
-        <h3 className="font-bold text-lg line-clamp-1" title={title}>{title}</h3>
+        <div className="flex flex-row gap-2">
+          <AnimeStatusIndicator status={status} />
+          <h3 className="font-bold text-lg line-clamp-1" title={getTitle(title)}>{getTitle(title)}</h3>
+        </div>
         <div className="flex flex-wrap gap-1 mt-1">
-          {anime.genres?.slice(0, 3).map((genre, idx) => (
+          {genres?.slice(0, 3).map((genre, idx) => (
             <Badge key={idx} variant="outline" className="text-xs">
               {genre}
             </Badge>
@@ -95,17 +92,17 @@ export default function AnimeCard({ anime }: AnimeProps) {
       
       <CardContent className="px-4">
         <p className="text-sm text-gray-600 line-clamp-3">
-          {formatDescription(anime.description)}
+          {formatDescription(description)}
         </p>
       </CardContent>
       
       <CardFooter className="pb-4 px-4  text-sm text-gray-500 flex justify-between">
         <div>
-          {anime.episodes ? `${anime.episodes} episodes` : "? episodes"}
+          {episodes ? `${episodes} episodes` : "? episodes"}
         </div>
         <div>
-          {anime.season && anime.seasonYear ? `${anime.season} ${anime.seasonYear}` : 
-           anime.seasonYear ? `${anime.seasonYear}` : "Unknown date"}
+          {season && seasonYear ? `${season} ${seasonYear}` : 
+           seasonYear ? `${seasonYear}` : "Unknown date"}
         </div>
       </CardFooter>
     </Card>

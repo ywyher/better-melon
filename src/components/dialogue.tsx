@@ -1,5 +1,5 @@
-import type { Mode, Sub as TSub } from "@/app/types";
-import Sub, { SubSkeleton } from "@/components/Sub";
+import type { Mode, Sub as TSub } from "@/types";
+import Sub, { SubSkeleton } from "@/components/sub";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dispatch, SetStateAction, useState, useTransition } from "react";
@@ -58,6 +58,7 @@ export default function Dialogue({ subs, mode, setMode, isLoading }: {
               value={modeOption.name}
               onClick={() => handleModeChange(modeOption.name)}
               disabled={isPending || isLoading}
+              className="cursor-pointer"
             >
               {modeOption.name}
             </TabsTrigger>

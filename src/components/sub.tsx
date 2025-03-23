@@ -1,4 +1,4 @@
-import type { Sub } from "@/app/types";
+import type { Sub } from "@/types";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";

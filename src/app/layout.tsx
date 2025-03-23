@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeProvider } from "@/lib/theme-provider";
 import { ReactQueryProvider } from "@/lib/react-query";
 import ApolloProvider from "@/lib/apollo-provider";
 import { Toaster } from "sonner";
+import { NuqsAdapter } from 'nuqs/adapters/next/app'
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,7 +38,9 @@ export default function RootLayout({
               enableSystem
               disableTransitionOnChange
             >
-              <main>{children}</main>
+              <NuqsAdapter>
+                <main>{children}</main>
+              </NuqsAdapter>
               <Toaster theme="dark" />
             </ThemeProvider>
           </ReactQueryProvider>

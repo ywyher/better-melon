@@ -1,4 +1,4 @@
-import { File } from "@/app/subs/[id]/[ep]/types";
+import { File } from "@/app/watch/[id]/[ep]/types";
 
 export const filterFiles = (files: File[]) => {
   const subtitleExtensions = ['srt', 'ass', 'vtt'];

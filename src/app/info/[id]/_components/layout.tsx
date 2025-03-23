@@ -1,8 +1,17 @@
+
 // AnimeLayout.tsx
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import { ChevronLeft } from "lucide-react"
-import { AnimeLayoutProps } from "@/app/info/[id]/types"
+import { Anime } from "@/types/anime"
+import { useRouter } from "next/navigation"
+
+type AnimeLayoutProps = {
+    bannerImage: Anime['bannerImage']
+    title: Anime['title']
+    children: React.ReactNode
+    router: any
+}
 
 export function AnimeLayout({ bannerImage, title, router, children }: AnimeLayoutProps) {
     return (
@@ -24,7 +33,7 @@ export function AnimeLayout({ bannerImage, title, router, children }: AnimeLayou
                 <div className="relative w-full h-48 md:h-64 lg:h-80 mb-6 rounded-lg overflow-hidden">
                     <Image 
                         src={bannerImage} 
-                        alt={title}
+                        alt={title.english}
                         fill
                         className="object-cover"
                         priority

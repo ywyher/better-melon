@@ -1,9 +1,8 @@
 "use client"
 
-import { Mode } from "@/app/types";
-import { filterFiles, selectFile } from "@/app/subs/[id]/[ep]/funcs";
-import { File } from "@/app/subs/[id]/[ep]/types";
-import Dialogue from "@/components/Dialogue";
+import { filterFiles, selectFile } from "@/app/watch/[id]/[ep]/funcs";
+import { File } from "@/app/watch/[id]/[ep]/types";
+import Dialogue from "@/components/dialogue";
 import { parseSubToJson } from "@/lib/fetch-subs";
 import { useQuery } from "@tanstack/react-query"
 import { useEffect, useState } from "react"
@@ -12,7 +11,8 @@ import { Indicator } from "@/components/indicator";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
-import Files from "@/app/subs/[id]/[ep]/_components/files";
+import Files from "@/app/watch/[id]/[ep]/_components/files";
+import { Mode } from "@/types/index";
 
 export default function Subs({ id, ep }: { id: string, ep: string }) {
     const [filteredFiles, setFilteredFiles] = useState<File[]>([])
