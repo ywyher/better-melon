@@ -7,9 +7,11 @@ An [Animleon](https://www.animelon.com/) alternative that aims to overcome all a
 # Why ?
 Animelon doesn't proivde all animes by default and its the entries are rarely updated making it harder for people who want to learn through watching modern animes to use it, therefore i decided to create this website to provide the latest animes with their subtitles and real time japanese subtitles translation (basically an alternatives with more features)
 
-# What's missing
+# Roadmap
 > [!note]
-> This project is still in its early stages so a lot of crucial stuff are yet to be implemented for this project to be called a usable alternative 
+> This project is still in its early stages so a lot of crucial stuff are yet to be implemented for this project to be called a usable alternative
+- [x] Search system
+- [x] Filtering system 
 - [ ] Implementing watching anime feature
 - [ ] Authentication using anilist
 - [ ] Translation on hover functionality
