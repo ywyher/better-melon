@@ -1,5 +1,5 @@
 > [!warning]
-> the translation functionality is yet to be implemented for now you can use [yomitan](https://yomitan.wiki/) instead
+> this is a very early prototype
 
 # What is it ?
 An [Animleon](https://www.animelon.com/) alternative that aims to overcome all animelon's inconvenients
