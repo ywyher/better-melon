@@ -57,7 +57,7 @@ export default async function Watch({ params }: { params: Params }) {
         <Player 
           episode={episode} 
           streamingData={streamingData} 
-          subtitleFiles={subtitleFiles} 
+          subtitleFiles={filterSubtitleFiles(subtitleFiles)} 
         />
         {subtitleFiles && (
           <SubtitlePanel
