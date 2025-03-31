@@ -9,7 +9,8 @@ Animelon doesn’t provide all anime by default, and its entries are rarely upda
 > This project is still in its early stages so a lot of crucial stuff are yet to be implemented for this project to be called a usable alternative
 - [x] Search system
 - [x] Filtering system 
-- [x] Implementing the watch functionality
+- [x] Watch functionality
+- [x] Subtitles panel
 - [ ] Authentication using anilist
 - [ ] Defintion on hover functionality
 - [ ] ass/vtt support
@@ -55,10 +56,10 @@ docker run -d \
   dovakiin0/m3u8-proxy
 ```
 
-For more details on hosting the Consumet API on Vercel, refer to its [GitHub repository](https://github.com/consumet/consumet-api).
+For more details on hosting the Consumet API on other platforms, refer to its [GitHub repository](https://github.com/consumet/consumet-api).
 
-### Register for Jimaku API
-Create an account on [Jimaku.cc](https://jimaku.cc) and generate an API token.
+### Register for Jimaku API (free)
+Create an account on [Jimaku.cc](https://jimaku.cc) and generate an API token through the profile page.
 
 ### Configure Environment Variables
 Create a `.env` file in the root directory and fill the following:
@@ -67,6 +68,7 @@ NEXT_PUBLIC_CONSUMET_URL=
 NEXT_PUBLIC_PROXY_URL=
 JIMAKU_KEY=
 ```
+
 it should look something like this
 ```.env
 NEXT_PUBLIC_CONSUMET_URL=http://localhost:6969
