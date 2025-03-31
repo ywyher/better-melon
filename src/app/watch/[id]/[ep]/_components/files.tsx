@@ -1,12 +1,6 @@
 import { File } from "@/app/watch/[id]/[ep]/types";
 import { Button } from "@/components/ui/button";
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
     DialogClose
 } from "@/components/ui/dialog"
 import { Dispatch, SetStateAction, useState } from "react";
@@ -15,20 +9,22 @@ import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { toast } from "sonner";
 import DialogWrapper from "@/components/dialog-wrapper";
+import { useWatchStore } from "@/app/watch/[id]/[ep]/store";
 
-export default function Files({ files, setSelectedFile, selectedFile }: { 
+export default function Files({ files }: { 
     files: File[];
-    setSelectedFile: Dispatch<SetStateAction<File | null>>
-    selectedFile: File | null;
 }) {
     const [loading, setLoading] = useState<string | null>(null);
     const [open, setOpen] = useState(false);
+    const sub = useWatchStore((state) => state.sub)
+    const setSub = useWatchStore((state) => state.setSub)
 
     const handleSelectFile = (file: File) => {
-        if (file.name === selectedFile?.name) return;
+        if (file.name === sub?.name) return;
         
         setLoading(file.name);
-        setSelectedFile(file);
+        setSub(file);
+        setSub(file)
         
         // Close dialog after selection
         setTimeout(() => {
@@ -55,7 +51,7 @@ export default function Files({ files, setSelectedFile, selectedFile }: {
             >
                 <ScrollArea className="mt-2 max-h-72 space-y-2 pr-1">
                         {files.map((file) => {
-                            const isSelected = file.name === selectedFile?.name;
+                            const isSelected = file.name === sub?.name;
                             const isLoading = loading === file.name;
                             
                             // Extract file extension

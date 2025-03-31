@@ -1,7 +1,7 @@
 import Player from "@/app/watch/[id]/[ep]/_components/player";
 import Subs from "@/app/watch/[id]/[ep]/_components/subs";
-import { filterFiles, selectFile } from "@/app/watch/[id]/[ep]/funcs";
-import { JimakuEntry, JimakuFile, StreamingData } from "@/app/watch/[id]/[ep]/types";
+import { filterFiles } from "@/app/watch/[id]/[ep]/funcs";
+import { JimakuFile } from "@/app/watch/[id]/[ep]/types";
 
 type Params = Promise<{ id: string, ep: string }>
 
@@ -10,7 +10,7 @@ export default async function Watch({ params }: { params: Params }) {
   const epNumber = parseInt(ep);
 
   try {
-    const episodesData = await fetch(`${process.env.CONSUMET_URL}/meta/anilist/episodes/${id}?provider=zoro`)
+    const episodesData = await fetch(`${process.env.NEXT_PUBLIC_CONSUMET_URL}/meta/anilist/episodes/${id}?provider=zoro`)
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch episodes data");
         return res.json();
@@ -23,7 +23,7 @@ export default async function Watch({ params }: { params: Params }) {
     }
 
     const [streamingData, jimakuEntry] = await Promise.all([
-      fetch(`${process.env.CONSUMET_URL}/meta/anilist/watch/${episode.id}?provider=zoro`)
+      fetch(`${process.env.NEXT_PUBLIC_CONSUMET_URL}/meta/anilist/watch/${episode.id}?provider=zoro`)
         .then((res) => {
           if (!res.ok) throw new Error("Failed to fetch streaming data");
           return res.json();
