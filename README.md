@@ -17,7 +17,7 @@ Animelon doesn’t provide all anime by default, and its entries are rarely upda
 # Self-Hosting
 
 > [!note]
-> This application is still in a very early stage, and it is not advised to use it in a production environmentm, and you are likely to face a ton of bugs
+> This application is still in a very early stage, and it is not advised to use it in a production environment since and you are likely to face a ton of bugs
 
 ### Clone the Repository
 ```sh
