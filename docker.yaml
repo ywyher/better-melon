@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  consumet-api:
+    image: riimuru/consumet-api
+    container_name: consumet-api
+    restart: unless-stopped
+    ports:
+      - "6969:3000"
+  m3u8-proxy:
+    image: dovakiin0/m3u8-proxy
+    container_name: m3u8-proxy
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
