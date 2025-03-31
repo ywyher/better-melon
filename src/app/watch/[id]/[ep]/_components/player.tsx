@@ -84,6 +84,7 @@ export default function Player({ streamingData, episodeData, japaneseSubs }: TPl
                         src={episodeData.image}
                         alt={episodeData.title}
                     />
+                    
                     {sub && filteredJpSubs.map((jpSub) => (
                         <Track
                             key={jpSub.url}
