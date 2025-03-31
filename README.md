@@ -9,7 +9,7 @@ Animelon doesn’t provide all anime by default, and its entries are rarely upda
 > This project is still in its early stages so a lot of crucial stuff are yet to be implemented for this project to be called a usable alternative
 - [x] Search system
 - [x] Filtering system 
-- [x] Implementing the ability watching
+- [x] Implementing the watch functionality
 - [ ] Authentication using anilist
 - [ ] Defintion on hover functionality
 - [ ] ass/vtt support
