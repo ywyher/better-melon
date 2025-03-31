@@ -1,6 +1,6 @@
-import { File } from "@/app/watch/[id]/[ep]/types";
+import { File, JimakuFile } from "@/app/watch/[id]/[ep]/types";
 
-export const filterFiles = (files: File[]) => {
+export const filterFiles = (files: JimakuFile[]) => {
   const subtitleExtensions = ['srt', 'ass', 'vtt'];
   
   return files.filter(file => {
@@ -27,7 +27,7 @@ export const filterFiles = (files: File[]) => {
   });
 };
 
-export const selectFile = (files: File[]) => {
+export const selectFile = (files: JimakuFile[]) => {
   if (!files || files.length === 0) {
     return null;
   }
