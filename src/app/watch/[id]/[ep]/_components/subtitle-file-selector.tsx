@@ -1,30 +1,31 @@
-import { File } from "@/app/watch/[id]/[ep]/types";
 import { Button } from "@/components/ui/button";
 import {
     DialogClose
 } from "@/components/ui/dialog"
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import { Check, FileText, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { toast } from "sonner";
 import DialogWrapper from "@/components/dialog-wrapper";
 import { useWatchStore } from "@/app/watch/[id]/[ep]/store";
+import { SubtitleFile } from "@/types/subtitle";
 
-export default function Files({ files }: { 
-    files: File[];
+export default function SubtitleFileSelector({ subtitleFiles }: { 
+    subtitleFiles: SubtitleFile[];
 }) {
     const [loading, setLoading] = useState<string | null>(null);
     const [open, setOpen] = useState(false);
-    const sub = useWatchStore((state) => state.sub)
-    const setSub = useWatchStore((state) => state.setSub)
 
-    const handleSelectFile = (file: File) => {
-        if (file.name === sub?.name) return;
+    const activeSubtitleFile = useWatchStore((state) => state.activeSubtitleFile)
+    const setActiveSubtitleFile = useWatchStore((state) => state.setActiveSubtitleFile)
+
+    const handleSelectFile = (file: SubtitleFile) => {
+        if (file.name === activeSubtitleFile?.name) return;
         
         setLoading(file.name);
-        setSub(file);
-        setSub(file)
+        setActiveSubtitleFile(file);
+        setActiveSubtitleFile(file)
         
         // Close dialog after selection
         setTimeout(() => {
@@ -50,8 +51,8 @@ export default function Files({ files }: {
                 trigger={trigger}
             >
                 <ScrollArea className="mt-2 max-h-72 space-y-2 pr-1">
-                        {files.map((file) => {
-                            const isSelected = file.name === sub?.name;
+                        {subtitleFiles.map((file) => {
+                            const isSelected = file.name === activeSubtitleFile?.name;
                             const isLoading = loading === file.name;
                             
                             // Extract file extension
@@ -90,7 +91,7 @@ export default function Files({ files }: {
                             );
                         })}
 
-                        {files.length === 0 && (
+                        {subtitleFiles.length === 0 && (
                             <div className="py-8 text-center text-muted-foreground">
                                 No subtitle files available
                             </div>

@@ -1,71 +1,64 @@
 "use client"
 
-import { EpisodeData, JimakuFile, StreamingData } from "@/app/watch/[id]/[ep]/types";
 import { MediaPlayer, MediaProvider, TextTrack } from '@vidstack/react';
 import { defaultLayoutIcons, DefaultVideoLayout } from '@vidstack/react/player/layouts/default';
 import { Poster } from '@vidstack/react';
 import { Track } from "@vidstack/react";
-import { filterFiles } from "@/app/watch/[id]/[ep]/funcs";
 import '@vidstack/react/player/styles/default/theme.css';
 import '@vidstack/react/player/styles/default/layouts/video.css';
-import { useCallback, useEffect, useRef, useState } from "react";
+
+import { useCallback, useEffect, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useWatchStore } from "@/app/watch/[id]/[ep]/store";
+import { SubtitleFile, SubtitleFormat } from '@/types/subtitle';
+import { AnimeEpisodeData, AnimeStreamingData } from '@/types/anime';
+import { selectSubtitleFile } from '@/app/watch/[id]/[ep]/funcs';
 
-type TPlayer = { 
-    streamingData: StreamingData;
-    episodeData: EpisodeData
-    japaneseSubs: JimakuFile[]
+type PlayerProps = { 
+    streamingData: AnimeStreamingData;
+    episode: AnimeEpisodeData;
+    subtitleFiles: SubtitleFile[];
 }
 
-export default function Player({ streamingData, episodeData, japaneseSubs }: TPlayer) {
-    const [uri, setUri] = useState("")
-    const [filteredJpSubs, setFilteredJpSubs] = useState<JimakuFile[]>([])
+export default function Player({ streamingData, episode, subtitleFiles }: PlayerProps) {
+    const [videoSrc, setVideoSrc] = useState("");
     const [isLoading, setIsLoading] = useState(true)
-    const sub = useWatchStore((state) => state.sub)
-    const setSub = useWatchStore((state) => state.setSub)
+
+    const activeSubtitleFile = useWatchStore((state) => state.activeSubtitleFile);
+    const setActiveSubtitleFile = useWatchStore((state) => state.setActiveSubtitleFile);
     
-    // Set up the player when component mounts
     useEffect(() => {
         const url = encodeURIComponent(streamingData?.sources[0].url);
-        setUri(`${process.env.NEXT_PUBLIC_PROXY_URL}?url=${url}`);
+        setVideoSrc(`${process.env.NEXT_PUBLIC_PROXY_URL}?url=${url}`);
         
-        // Filter the Japanese subs
-        const filtered = filterFiles(japaneseSubs);
-        setFilteredJpSubs(filtered);
         
-        // If no subtitle is selected yet and we have filtered subs, select the first one
-        if (!sub && filtered.length > 0) {
-            setSub({
-                name: filtered[0].name,
-                url: filtered[0].url,
-                last_modified: filtered[0].last_modified,
-                size: filtered[0].size
+        if (!activeSubtitleFile && subtitleFiles.length > 0) {
+            const selected = selectSubtitleFile(subtitleFiles)
+            if(!selected) return;
+            setActiveSubtitleFile({
+                name: selected.name,
+                url: selected.url,
+                last_modified: selected.last_modified,
+                size: selected.size
             });
         }
         
         setIsLoading(false);
-    }, [japaneseSubs, streamingData, setSub, sub]);
+    }, [subtitleFiles, streamingData, setActiveSubtitleFile, activeSubtitleFile]);
 
-    useEffect(() => {
-        console.log(sub)
-    }, [sub])
-
-    // Handle track change event
     const handleTrackChange = useCallback((track: TextTrack | null) => {
-        if (!track || sub?.name === track.label) return;
+        if (!track || activeSubtitleFile?.name === track.label) return;
     
-        // Find the matching subtitle from filtered Japanese subs
-        const matchedSub = filteredJpSubs.find(s => s.name === track.label);
+        const matchedSub = subtitleFiles.find(s => s.name === track.label);
         if (matchedSub) {
-            setSub({
+            setActiveSubtitleFile({
                 name: matchedSub.name,
                 url: matchedSub.url,
                 last_modified: matchedSub.last_modified,
                 size: matchedSub.size
             });
         }
-    }, [filteredJpSubs, setSub, sub]);
+    }, [subtitleFiles, setActiveSubtitleFile, activeSubtitleFile]);
     
 
     if (isLoading) return <Skeleton className="w-full aspect-video" />;
@@ -73,37 +66,35 @@ export default function Player({ streamingData, episodeData, japaneseSubs }: TPl
     return (
         <div className="h-fit">
             <MediaPlayer
-                title={episodeData.title}
-                src={uri}
+                title={episode.title}
+                src={videoSrc}
                 onTextTrackChange={handleTrackChange}
                 crossOrigin="anonymous"
             >
                 <MediaProvider>
                     <Poster
                         className="vds-poster"
-                        src={episodeData.image}
-                        alt={episodeData.title}
+                        src={episode.image}
+                        alt={episode.title}
                     />
                     
-                    {sub && filteredJpSubs.map((jpSub) => (
+                    {activeSubtitleFile && subtitleFiles.map((sub) => (
                         <Track
-                            key={jpSub.url}
-                            src={jpSub.url}
+                            key={sub.url}
+                            src={sub.url}
                             kind="subtitles"
-                            label={jpSub.name}
-                            type={jpSub.url.split('.').pop() as "vtt" | "srt" | "ass"}
+                            label={sub.name}
+                            type={sub.url.split('.').pop() as SubtitleFormat}
                             lang="jp-JP"
-                            default={jpSub.name == sub.name}
                         />
                     ))}
-                    {streamingData.subtitles.map((extSub) => (
+                    {streamingData.subtitles.map((sub) => (
                         <Track
-                            key={extSub.url}
-                            src={`${process.env.NEXT_PUBLIC_PROXY_URL}?url=${encodeURIComponent(extSub.url)}`}
+                            key={sub.url}
+                            src={`${process.env.NEXT_PUBLIC_PROXY_URL}?url=${encodeURIComponent(sub.url)}`}
                             kind="subtitles"
-                            label={extSub.lang}
-                            type={extSub.url.split('.').pop() as "vtt" | "srt" | "ass"}
-                            lang="en-US"
+                            label={sub.lang}
+                            type={sub.url.split('.').pop() as SubtitleFormat}
                         />
                     ))}
                 </MediaProvider>

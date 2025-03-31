@@ -1,21 +1,3 @@
-export interface AnimeTitle {
-    english: string;
-    romaji?: string;
-    native?: string;
-}
-
-export interface AnimeCoverImage {
-    large: string;
-    medium: string;
-    color?: string
-}
-
-export interface AnimeDate {
-    day: number
-    month: number
-    year: number
-}
-
 export type AnimeStatus = "CANCELLED" | "FINISHED" | "HIATUS" | "NOT_YET_RELEASED" | "RELEASING"
 export type AnimeSeason = "SPRING" | "FALL" | "SUMMER" | "WINTER"
 export type AnimeFormat = "TV" 
@@ -82,6 +64,24 @@ export type AnimeSort = "ID"
 | "FAVOURITES_DESC"	
 export type AnimeCountry = "JP" | "KR" | "TW" | "CN"
 
+export interface AnimeTitle {
+    english: string;
+    romaji?: string;
+    native?: string;
+}
+
+export interface AnimeCoverImage {
+    large: string;
+    medium: string;
+    color?: string
+}
+
+export interface AnimeDate {
+    day: number
+    month: number
+    year: number
+}
+
 export interface Anime {
     id: number | string;
     title: AnimeTitle;
@@ -100,3 +100,33 @@ export interface Anime {
     format: string;
 }
 
+export type AnimeEpisodeData = {
+    id: string;
+    title: string;
+    image: string;
+    imageHash: string;
+    number: number;
+    createdAt: Date;
+    description?: string;
+    url: string;
+}
+
+export type AnimeStreamingData = {
+    intro: {
+        start: number;
+        end: number;
+    };
+    outro: {
+        start: number;
+        end: number;
+    };
+    sources: {
+        url: string;
+        isM3U8: boolean;
+        type: 'hls'
+    }[];
+    subtitles: {
+        url: string;
+        lang: string;
+    }[]
+}

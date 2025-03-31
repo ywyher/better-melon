@@ -1,11 +1,11 @@
-import type { Sub } from "@/types";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import type { SubtitleCue } from "@/types/subtitle";
 
-export default function Sub({ sub }: { sub: Sub }) {
-    const { id, from, to, content, tokens } = sub;
+export default function SubtitleCue({ cue }: { cue: SubtitleCue }) {
+    const { id, from, to, content, tokens } = cue;
 
     return (
         <Card key={id} className="mb-4 p-0">
@@ -36,7 +36,7 @@ export default function Sub({ sub }: { sub: Sub }) {
     );
 }
 
-export function SubSkeleton() {
+export function SubtitleCueSkeleton() {
     return(
         <Card className="mb-4">
             <CardContent className="p-4 space-y-3">

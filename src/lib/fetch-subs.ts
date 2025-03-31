@@ -1,4 +1,4 @@
-import { Format, Mode, Sub } from "@/app/types";
+import { SubtitleCue, SubtitleDisplayMode, SubtitleFormat } from "@/types/subtitle";
 import * as kuromoji from "kuromoji";
 // @ts-expect-error - Kuroshiro lacks proper TypeScript typings
 import Kuroshiro from "kuroshiro";
@@ -14,14 +14,14 @@ interface KuroshiroInstance {
 let tokenizer: kuromoji.Tokenizer<kuromoji.IpadicFeatures> | null = null;
 let kuroshiro: KuroshiroInstance | null = null;
 
-export async function fetchSub(url: string) {
+export async function fetchSubtitles(url: string) {
   const response = await fetch(url);
   const text = await response.text();
   return text;
 }
 
-export async function parseSubToJson({ url, format, mode }: { url: string, format: Format, mode: Mode }) {
-  const content = await fetchSub(url);
+export async function parseSubtitleToJson({ url, format, mode }: { url: string, format: SubtitleFormat, mode: SubtitleDisplayMode }) {
+  const content = await fetchSubtitles(url);
   
   switch (format) {
     case 'srt':
@@ -32,17 +32,17 @@ export async function parseSubToJson({ url, format, mode }: { url: string, forma
       
       if (mode === 'japanese') {
         // Only tokenize for Japanese mode
-        return tokenizeSubs(subs);
+        return tokenizeSubtitles(subs);
       } else {
         // For other modes, convert and tokenize in one pass
-        return processSubsForNonJapaneseMode(subs, mode);
+        return processSubtitlesForNonJapaneseMode(subs, mode);
       }
     default:
       throw new Error(`Unsupported subtitle format: ${format}`);
   }
 }
 
-async function initializeProcessors(mode: Mode) {
+async function initializeProcessors(mode: SubtitleDisplayMode) {
   // Initialize tokenizer if not already done
   if (!tokenizer) {
     tokenizer = await createTokenizer();
@@ -66,7 +66,7 @@ function createTokenizer(dicPath = "/dict") {
   });
 }
 
-function tokenizeSubs(subs: Sub[]) {
+function tokenizeSubtitles(subs: SubtitleCue[]) {
   if (!tokenizer) {
     throw new Error("Tokenizer not initialized");
   }
@@ -78,7 +78,7 @@ function tokenizeSubs(subs: Sub[]) {
   }));
 }
 
-async function processSubsForNonJapaneseMode(subs: Sub[], mode: Mode) {
+async function processSubtitlesForNonJapaneseMode(subs: SubtitleCue[], mode: SubtitleDisplayMode) {
   if (!kuroshiro || !tokenizer) {
     throw new Error("Processors not initialized");
   }
@@ -111,7 +111,7 @@ function parseSrt(content: string) {
   const lines = content.split('\n');
   const result = [];
   
-  let currentEntry: Partial<Sub> = {}
+  let currentEntry: Partial<SubtitleCue> = {}
   let isReadingContent = false;
   
   for (let i = 0; i < lines.length; i++) {
@@ -152,5 +152,5 @@ function parseSrt(content: string) {
     result.push(currentEntry);
   }
   
-  return result as Sub[];
+  return result as SubtitleCue[];
 }
