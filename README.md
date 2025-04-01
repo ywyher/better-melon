@@ -1,4 +1,4 @@
-# What is it ?
+0#at is it ?
 An [Animleon](https://www.animelon.com/) alternative that aims to overcome all animelon's inconvenients
 
 # Why ?
@@ -12,11 +12,13 @@ Animelon doesn’t provide all animes by default, and its entries are rarely upd
 - [x] Subtitles panel
 - [x] Sync video subtitles with the panel subtitles
 - [x] Support for all japanese writing systems
+- [ ] Providers selector
 - [ ] Interactive video subtitles
 - [ ] Allow using local subtitles
 - [ ] Defintion on hover functionality
 - [ ] ass/vtt support
 - [ ] Authentication integration through anilist
+- [ ] User friendly/Modern UI
 
 # Self-Hosting
 
