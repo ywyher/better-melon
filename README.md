@@ -2,7 +2,7 @@
 An [Animleon](https://www.animelon.com/) alternative that aims to overcome all animelon's inconvenients
 
 # Why ?
-Animelon doesn’t provide all anime by default, and its entries are rarely updated, making it difficult for learners who want to watch modern anime with subtitles. That’s why I decided to create this website—to offer the latest anime with subtitles, along with real-time Japanese subtitle definitions, providing a more feature-rich alternative.
+Animelon doesn’t provide all animes by default, and its entries are rarely updated, making it difficult for learners who want to watch modern anime with subtitles. That’s why I decided to create this website—to offer the latest animes with subtitles, along with real-time Japanese subtitle definitions, providing a more feature-rich alternative.
 
 # Roadmap
 > [!note]
@@ -11,6 +11,8 @@ Animelon doesn’t provide all anime by default, and its entries are rarely upda
 - [x] Watch functionality
 - [x] Subtitles panel
 - [x] Sync video subtitles with the panel subtitles
+- [x] Support for all japanese writing systems
+- [ ] Interactive video subtitles
 - [ ] Allow using local subtitles
 - [ ] Defintion on hover functionality
 - [ ] ass/vtt support
