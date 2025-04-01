@@ -1,4 +1,4 @@
-0#at is it ?
+# What is it ?
 An [Animleon](https://www.animelon.com/) alternative that aims to overcome all animelon's inconvenients
 
 # Why ?
@@ -27,8 +27,8 @@ Animelon doesn’t provide all animes by default, and its entries are rarely upd
 > This application is still in a very early stage, and it is not advised to use it as of now, Since you are likely to face bugs
 ### Clone the Repository
 ```sh
-git clone <repo-url>
-cd <repo-directory>
+git clone https://github.com/ywyher/better-melon ./better-melon
+cd ./better-melon
 ```
 
 ### Install Dependencies
@@ -87,7 +87,8 @@ pnpm run dev  # or npm run dev
 ```
 
 # Credit
-- [Anilist](https://anilist.co/) -> Used to fetch anime data -[Consument](https://github.com/consumet/api.consumet.org) -> Used to fetch anime streaming data
+- [Anilist](https://anilist.co/) -> Used to fetch anime data 
+- [Consument](https://github.com/consumet/api.consumet.org) -> Used to fetch anime streaming data
 - [Jimaku](https://jimaku.cc/) -> Used to fetch japanese subtitles
 - [ywyh (Me)](https://github.com/ywyher) – for being goated
 			
