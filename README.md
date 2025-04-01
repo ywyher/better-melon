@@ -18,6 +18,7 @@ Animelon doesn’t provide all animes by default, and its entries are rarely upd
 - [ ] Defintion on hover functionality
 - [ ] ass/vtt support
 - [ ] Authentication integration through anilist
+- [ ] Anki integration
 - [ ] User friendly/Modern UI
 
 # Self-Hosting
