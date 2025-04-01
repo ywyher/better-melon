@@ -10,7 +10,7 @@ Animelon doesn’t provide all anime by default, and its entries are rarely upda
 - [x] Search/Filtering system
 - [x] Watch functionality
 - [x] Subtitles panel
-- [x] Sync videos subtitles with the panel subtitles
+- [x] Sync video subtitles with the panel subtitles
 - [ ] Allow using local subtitles
 - [ ] Defintion on hover functionality
 - [ ] ass/vtt support
