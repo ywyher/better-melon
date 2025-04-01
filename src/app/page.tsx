@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Anime } from "@/types/anime";
 import Link from "next/link";
 import Header from "@/components/header";
+import { srtTimestampToSeconds } from "@/lib/funcs";
 
 // Define TypeScript interfaces for the anime data
 interface AnimeTitle {

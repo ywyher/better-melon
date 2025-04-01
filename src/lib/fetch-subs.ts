@@ -140,6 +140,7 @@ function parseSrt(content: string) {
     }
     
     const timestampMatch = line.match(/(\d{2}:\d{2}:\d{2},\d{3}) --> (\d{2}:\d{2}:\d{2},\d{3})/);
+
     if (timestampMatch) {
       currentEntry.from = timestampMatch[1];
       currentEntry.to = timestampMatch[2];

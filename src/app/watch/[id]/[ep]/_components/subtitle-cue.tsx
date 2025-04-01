@@ -3,13 +3,18 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { SubtitleCue } from "@/types/subtitle";
+import { cn } from "@/lib/utils";
+import { useEffect } from "react";
 
-export default function SubtitleCue({ cue }: { cue: SubtitleCue }) {
+export default function SubtitleCue({ cue, isActive }: { cue: SubtitleCue, isActive: boolean }) {
     const { id, from, to, content, tokens } = cue;
 
     return (
         <Card key={id} className="mb-4 p-0">
-            <CardContent className="p-4 space-y-3">
+            <CardContent className={cn(
+                "p-4 space-y-3",
+                isActive && "bg-orange-400 text-white"
+            )}>
                 <div className="flex justify-between items-center">
                     <p className="text-lg font-medium">{content}</p>
                     <div className="text-sm text-muted-foreground">

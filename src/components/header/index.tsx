@@ -1,4 +1,5 @@
 import Search from '@/components/header/search';
+import { ThemeToggle } from '@/components/theme-toggle';
 import Link from 'next/link';
 import React from 'react';
 
@@ -13,6 +14,7 @@ export default function Header() {
       </Link>
       <Search />
       <div className="w-24">
+        <ThemeToggle />
       </div>
     </header>
   );

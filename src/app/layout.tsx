@@ -32,17 +32,17 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ApolloProvider>
           <ReactQueryProvider>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="dark"
-              enableSystem
-              disableTransitionOnChange
-            >
-              <NuqsAdapter>
-                <main>{children}</main>
-              </NuqsAdapter>
-              <Toaster theme="dark" />
-            </ThemeProvider>
+            <NuqsAdapter>
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange
+              >
+                  <main>{children}</main>
+                <Toaster theme="dark" />
+              </ThemeProvider>
+            </NuqsAdapter>
           </ReactQueryProvider>
         </ApolloProvider>
       </body>
