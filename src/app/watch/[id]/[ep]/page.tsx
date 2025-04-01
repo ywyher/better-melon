@@ -3,6 +3,8 @@ import { SubtitleFile } from "@/types/subtitle";
 import SubtitlePanel from "@/app/watch/[id]/[ep]/_components/subtitle-panel";
 import { AnimeEpisodeData } from "@/types/anime";
 import { filterSubtitleFiles } from "@/app/watch/[id]/[ep]/funcs";
+import Link from "next/link";
+import GoBack from "@/components/goback";
 
 type Params = Promise<{ id: string, ep: string }>
 
@@ -54,11 +56,14 @@ export default async function Watch({ params }: { params: Params }) {
 
     return (
       <div className="flex flex-row gap-10 container mx-auto px-4 py-6">
-        <Player 
-          episode={episode} 
-          streamingData={streamingData} 
-          subtitleFiles={filterSubtitleFiles(subtitleFiles)} 
-        />
+        <div className="flex flex-col gap-3">
+          <GoBack />
+          <Player 
+            episode={episode} 
+            streamingData={streamingData} 
+            subtitleFiles={filterSubtitleFiles(subtitleFiles)} 
+          />
+        </div>
         {subtitleFiles && (
           <SubtitlePanel
            subtitleFiles={filterSubtitleFiles(subtitleFiles)}

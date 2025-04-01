@@ -1,28 +1,43 @@
+'use client'
+
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { SubtitleCue } from "@/types/subtitle";
 import { cn } from "@/lib/utils";
-import { CSSProperties, useEffect } from "react";
-import { ClassNameValue } from "tailwind-merge";
+import { CSSProperties, Dispatch, SetStateAction, useEffect } from "react";
+import { useWatchStore } from "@/app/watch/[id]/[ep]/store";
+import { Button } from "@/components/ui/button";
+import { srtTimestampToSeconds } from "@/lib/funcs";
+import { Play } from "lucide-react";
 
 type SubtitleCueProps = { 
+    index: number;
     cue: SubtitleCue, 
     isActive: boolean 
     style: CSSProperties,
+    setActiveIndex: Dispatch<SetStateAction<number>>,
     className?: string
     variant?: 'default' | "detailed"
 }
 
 export default function SubtitleCue({ 
+    index,
     cue,
     isActive,
     style,
+    setActiveIndex,
     className = "",
     variant = "default"
 }: SubtitleCueProps) {
     const { id, from, to, content, tokens } = cue;
+    const player = useWatchStore((state) => state.player)
+
+    const handleSeek = () => {
+        setActiveIndex(index)
+        player.current?.remoteControl.seek(srtTimestampToSeconds(from)) // works
+    };
 
     return (
         <>
@@ -36,6 +51,13 @@ export default function SubtitleCue({
                         className
                     )}
                 >
+                    <Button
+                        onClick={(() => handleSeek())}
+                        className="me-2"
+                        variant='ghost'
+                    >
+                        <Play className="hover:fill-orange-400" />
+                    </Button>
                     {content}
                 </div>
             )}

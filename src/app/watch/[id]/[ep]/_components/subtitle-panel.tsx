@@ -15,6 +15,7 @@ import SubtitleFileSelector from "@/app/watch/[id]/[ep]/_components/subtitle-fil
 import { parseSubtitleToJson } from "@/lib/fetch-subs";
 import { srtTimestampToSeconds } from "@/lib/funcs";
 import { useVirtualizer } from '@tanstack/react-virtual';
+import { useMediaState } from '@vidstack/react'; // Import useMediaState
 
 export default function SubtitlePanel({ subtitleFiles }: { subtitleFiles: SubtitleFile[] }) {
     const [isLoading, setIsLoading] = useState(true)
@@ -24,8 +25,10 @@ export default function SubtitlePanel({ subtitleFiles }: { subtitleFiles: Subtit
     const [activeIndex, setActiveIndex] = useState<number>(-1);
     const [autoScroll, setAutoScroll] = useState<boolean>(true);
     
-    const currentTime = useWatchStore((state) => state.currentTime)
-    const activeSubtitleFile = useWatchStore((state) => state.activeSubtitleFile)
+    const player = useWatchStore((state) => state.player);
+    const activeSubtitleFile = useWatchStore((state) => state.activeSubtitleFile);
+
+    const currentTime = useMediaState('currentTime', player);
 
     const scrollAreaRef = useRef<HTMLDivElement>(null)
     const router = useRouter()
@@ -79,7 +82,7 @@ export default function SubtitlePanel({ subtitleFiles }: { subtitleFiles: Subtit
     };
 
     const isCueActive = (cue: TSubtitleCue) => {
-        if (!cue) return false;
+        if (!cue || !currentTime) return false;
         const startTime = srtTimestampToSeconds(cue.from);
         const endTime = srtTimestampToSeconds(cue.to);
         return currentTime >= startTime && currentTime <= endTime;
@@ -87,7 +90,7 @@ export default function SubtitlePanel({ subtitleFiles }: { subtitleFiles: Subtit
 
     // Find the active cue index and scroll to it when currentTime changes
     useEffect(() => {
-        if (!displayCues || !displayCues.length) return;
+        if (!displayCues || !displayCues.length || !currentTime) return;
         
         // Find the index of the active subtitle
         const currentActiveIndex = displayCues.findIndex(cue => {
@@ -199,9 +202,11 @@ export default function SubtitlePanel({ subtitleFiles }: { subtitleFiles: Subtit
                                     return (
                                         <SubtitleCue 
                                             key={virtualRow.key}
+                                            index={virtualRow.index}
                                             cue={cue} 
-                                            isActive={isActive} 
+                                            isActive={isActive}
                                             variant="default"
+                                            setActiveIndex={setActiveIndex}
                                             style={{
                                                 position: 'absolute',
                                                 top: 0,

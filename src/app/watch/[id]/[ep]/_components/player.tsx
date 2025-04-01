@@ -1,6 +1,6 @@
 "use client"
 
-import { MediaPlayer, MediaPlayerInstance, MediaProvider, TextTrack } from '@vidstack/react';
+import { MediaPlayer, MediaPlayerInstance, MediaProvider, TextTrack, useMediaState } from '@vidstack/react';
 import { DefaultAudioLayout, defaultLayoutIcons, DefaultVideoLayout } from '@vidstack/react/player/layouts/default';
 import { Poster } from '@vidstack/react';
 import { Track } from "@vidstack/react";
@@ -24,11 +24,17 @@ type PlayerProps = {
 export default function Player({ streamingData, episode, subtitleFiles }: PlayerProps) {
     const player = useRef<MediaPlayerInstance>(null);
     const [videoSrc, setVideoSrc] = useState("");
-    const [isLoading, setIsLoading] = useState(true);
-    
+    const [isInitializing, setIsInitializing] = useState(true);
+    const [isVideoReady, setIsVideoReady] = useState(false);
+
     const activeSubtitleFile = useWatchStore((state) => state.activeSubtitleFile);
     const setActiveSubtitleFile = useWatchStore((state) => state.setActiveSubtitleFile);
-    
+    const setPlayer = useWatchStore((state) => state.setPlayer);
+
+    useEffect(() => {
+        setPlayer(player)
+    }, [player])
+
     useEffect(() => {
         const url = encodeURIComponent(streamingData?.sources[0].url);
         setVideoSrc(`${process.env.NEXT_PUBLIC_PROXY_URL}?url=${url}`);
@@ -44,59 +50,8 @@ export default function Player({ streamingData, episode, subtitleFiles }: Player
             });
         }
         
-        setIsLoading(false);
+        setIsInitializing(false);
     }, [subtitleFiles, streamingData, setActiveSubtitleFile, activeSubtitleFile]);
-
-    // Refs to track time values and animation frame
-    const latestTimeRef = useRef(0);
-    const lastUpdatedTimeRef = useRef(0);
-    const rafIdRef = useRef<number | null>(null);
-    const significantChangeThreshold = 0.5; // Update when time changes by 0.5 seconds
-    
-    const setDuration = useWatchStore((state) => state.setDuration);
-    const currentTime = useWatchStore((state) => state.currentTime);
-    const setCurrentTime = useWatchStore((state) => state.setCurrentTime);
-    
-    // Local state for debouncing
-    const [localTime, setLocalTime] = useState(0);
-    const [debouncedTime] = useDebounce(localTime, 200);
-    
-    useEffect(() => {
-        console.log(currentTime)
-    }, [currentTime])
-
-    useEffect(() => {
-        setCurrentTime(debouncedTime);
-    }, [debouncedTime, setCurrentTime]);
-
-    // RequestAnimationFrame setup
-    // it will handle updating the state for us
-    useEffect(() => {
-        // Function to update local state in sync with browser's animation frame
-        const updateTimeState = () => {
-            const currentTime = latestTimeRef.current;
-            
-            // Only update if time has changed significantly
-            if (Math.abs(currentTime - lastUpdatedTimeRef.current) >= significantChangeThreshold) {
-                lastUpdatedTimeRef.current = currentTime;
-                setLocalTime(currentTime);
-            }
-            
-            // Continue the animation frame loop
-            rafIdRef.current = requestAnimationFrame(updateTimeState);
-        };
-
-        // Start the RAF loop
-        rafIdRef.current = requestAnimationFrame(updateTimeState);
-
-        // Cleanup
-        return () => {
-            if (rafIdRef.current) {
-                cancelAnimationFrame(rafIdRef.current);
-                rafIdRef.current = null;
-            }
-        };
-    }, []);
 
     const handleTrackChange = useCallback((track: TextTrack | null) => {
         if (!track || activeSubtitleFile?.name === track.label) return;
@@ -112,64 +67,99 @@ export default function Player({ streamingData, episode, subtitleFiles }: Player
         }
     }, [subtitleFiles, setActiveSubtitleFile, activeSubtitleFile]);
     
-    const onLoadedMetadata = () => {
-        if (player.current) {
-            setDuration(player.current.duration);
-        }
-    }
-    
-    // Let RAF handle when to actually update the state
-    const handleTimeUpdate = (time: { currentTime: number }) => {
-        latestTimeRef.current = time.currentTime;
+    // Track when the video is actually ready to play
+    const handleCanPlay = () => {
+        setIsVideoReady(true);
     };
 
-    if (isLoading) return <Skeleton className="w-full aspect-video" />;
+    // Using a timeout as additional fallback for very fast loading videos
+    useEffect(() => {
+        if (!isInitializing && !isVideoReady) {
+            const readyTimer = setTimeout(() => {
+                setIsVideoReady(true);
+            }, 3000); // Fallback timeout of 3 seconds
+            
+            return () => clearTimeout(readyTimer);
+        }
+    }, [isInitializing, isVideoReady]);
 
     return (
-        <div className="h-full w-full">
-            <MediaPlayer
-                title={episode.title}
-                src={videoSrc}
-                ref={player}
-                onTextTrackChange={handleTrackChange}
-                onLoadedMetadata={onLoadedMetadata}
-                onTimeUpdate={handleTimeUpdate}
-                load='eager'
-                posterLoad='eager'
-                crossOrigin="anonymous"
-            >
-                <MediaProvider>
-                    <Poster
-                        className="vds-poster"
-                        src={episode.image}
-                        alt={episode.title}
+        <div className="relative w-full h-full">
+            {/* Skeleton that takes exact same space as the player */}
+            {(!isVideoReady || isInitializing) && (
+                <div className="
+                    absolute inset-0 z-10
+                    flex flex-col
+                    w-full h-full 
+                ">
+                    <div className="w-full aspect-video bg-gray-800 relative overflow-hidden">
+                        {/* Main video area skeleton */}
+                        <Skeleton className="w-full h-full animate-pulse" />
+                        
+                        {/* Loading text overlay */}
+                        <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="flex flex-col items-center">
+                                <div className="h-8 w-8 border-4 border-t-blue-500 border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin mb-2"></div>
+                                <p className="text-white text-sm font-medium">Loading video...</p>
+                            </div>
+                        </div>
+                        
+                        {/* Timeline skeleton */}
+                        <div className="absolute bottom-0 left-0 right-0 h-12 bg-black bg-opacity-50 px-4 flex items-center">
+                            <Skeleton className="h-1 w-full rounded-full" />
+                        </div>
+                    </div>
+                </div>
+            )}
+            
+            {/* Actual player - always rendered but initially hidden */}
+            <div className={`w-full h-full transition-opacity duration-300 ${(!isVideoReady || isInitializing) ? 'opacity-0' : 'opacity-100'}`}>
+                <MediaPlayer
+                    title={episode.title}
+                    src={videoSrc}
+                    ref={player}
+                    onTextTrackChange={handleTrackChange}
+                    onCanPlay={handleCanPlay}
+                    load='eager'
+                    posterLoad='eager'
+                    onSeeking={() => {
+                        console.log('seeking ?')
+                    }}
+                    crossOrigin="anonymous"
+                >
+                    <MediaProvider>
+                        <Poster
+                            className="vds-poster"
+                            src={episode.image}
+                            alt={episode.title}
+                        />
+                        {activeSubtitleFile && subtitleFiles.map((sub) => (
+                            <Track
+                                key={sub.url}
+                                src={sub.url}
+                                kind="subtitles"
+                                label={sub.name}
+                                type={sub.url.split('.').pop() as SubtitleFormat}
+                                lang="jp-JP"
+                            />
+                        ))}
+                        {streamingData.subtitles.map((sub) => (
+                            <Track
+                                key={sub.url}
+                                src={`${process.env.NEXT_PUBLIC_PROXY_URL}?url=${encodeURIComponent(sub.url)}`}
+                                kind="subtitles"
+                                label={sub.lang}
+                                type={sub.url.split('.').pop() as SubtitleFormat}
+                            />
+                        ))}
+                    </MediaProvider>
+                    <DefaultAudioLayout icons={defaultLayoutIcons} />
+                    <DefaultVideoLayout
+                        thumbnails={`${process.env.NEXT_PUBLIC_PROXY_URL}?url=${encodeURIComponent("https://files.vidstack.io/sprite-fight/thumbnails.vtt")}`}
+                        icons={defaultLayoutIcons} 
                     />
-                    {activeSubtitleFile && subtitleFiles.map((sub) => (
-                        <Track
-                            key={sub.url}
-                            src={sub.url}
-                            kind="subtitles"
-                            label={sub.name}
-                            type={sub.url.split('.').pop() as SubtitleFormat}
-                            lang="jp-JP"
-                        />
-                    ))}
-                    {streamingData.subtitles.map((sub) => (
-                        <Track
-                            key={sub.url}
-                            src={`${process.env.NEXT_PUBLIC_PROXY_URL}?url=${encodeURIComponent(sub.url)}`}
-                            kind="subtitles"
-                            label={sub.lang}
-                            type={sub.url.split('.').pop() as SubtitleFormat}
-                        />
-                    ))}
-                </MediaProvider>
-                <DefaultAudioLayout icons={defaultLayoutIcons} />
-                <DefaultVideoLayout
-                    thumbnails={`${process.env.NEXT_PUBLIC_PROXY_URL}?url=${encodeURIComponent("https://files.vidstack.io/sprite-fight/thumbnails.vtt")}`}
-                    icons={defaultLayoutIcons} 
-                />
-            </MediaPlayer>
+                </MediaPlayer>
+            </div>
         </div>
     );
 }
