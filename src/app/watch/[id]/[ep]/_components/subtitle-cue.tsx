@@ -4,40 +4,78 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { SubtitleCue } from "@/types/subtitle";
 import { cn } from "@/lib/utils";
-import { useEffect } from "react";
+import { CSSProperties, useEffect } from "react";
+import { ClassNameValue } from "tailwind-merge";
 
-export default function SubtitleCue({ cue, isActive }: { cue: SubtitleCue, isActive: boolean }) {
+type SubtitleCueProps = { 
+    cue: SubtitleCue, 
+    isActive: boolean 
+    style: CSSProperties,
+    className?: string
+    variant?: 'default' | "detailed"
+}
+
+export default function SubtitleCue({ 
+    cue,
+    isActive,
+    style,
+    className = "",
+    variant = "default"
+}: SubtitleCueProps) {
     const { id, from, to, content, tokens } = cue;
 
     return (
-        <Card key={id} className="mb-4 p-0">
-            <CardContent className={cn(
-                "p-4 space-y-3",
-                isActive && "bg-orange-400 text-white"
-            )}>
-                <div className="flex justify-between items-center">
-                    <p className="text-lg font-medium">{content}</p>
-                    <div className="text-sm text-muted-foreground">
-                        <p>{from}</p>
-                        <p>{to}</p>
-                    </div>
+        <>
+            {variant == 'default' && (
+                <div
+                    style={style}
+                    className={cn(
+                        "absolute top-0 left-0 w-full p-2 border-b",
+                        "flex items-center",
+                        isActive && "text-orange-400",
+                        className
+                    )}
+                >
+                    {content}
                 </div>
-
-                {tokens && tokens.length > 0 && (
-                    <div className="space-y-2">
-                        <Separator />
-                        <p className="text-sm font-semibold">Tokenized:</p>
-                        <div className="flex flex-wrap gap-2">
-                            {tokens.map((token, index) => (
-                                <Badge key={index} variant="outline" title={`${token.pos}: ${token.basic_form}`}>
-                                    {token.surface_form}
-                                </Badge>
-                            ))}
+            )}
+            {variant == 'detailed' && (
+                <Card 
+                    className={cn(
+                        "mb-4 p-0",
+                        style,
+                        className
+                    )}
+                >
+                    <CardContent className={cn(
+                        "p-4 space-y-3",
+                        isActive && "bg-orange-400 text-white",
+                    )}>
+                        <div className="flex justify-between items-center">
+                            <p className="text-lg font-medium">{content}</p>
+                            <div className="text-sm text-muted-foreground">
+                                <p>{from}</p>
+                                <p>{to}</p>
+                            </div>
                         </div>
-                    </div>
-                )}
-            </CardContent>
-        </Card>
+
+                        {tokens && tokens.length > 0 && (
+                            <div className="space-y-2">
+                                <Separator />
+                                <p className="text-sm font-semibold">Tokenized:</p>
+                                <div className="flex flex-wrap gap-2">
+                                    {tokens.map((token, index) => (
+                                        <Badge key={index} variant="outline" title={`${token.pos}: ${token.basic_form}`}>
+                                            {token.surface_form}
+                                        </Badge>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                    </CardContent>
+                </Card>
+            )}
+        </>
     );
 }
 

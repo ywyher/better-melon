@@ -52,13 +52,14 @@ export default function Player({ streamingData, episode, subtitleFiles }: Player
     const lastUpdatedTimeRef = useRef(0);
     const rafIdRef = useRef<number | null>(null);
     const significantChangeThreshold = 0.5; // Update when time changes by 0.5 seconds
+    
     const setDuration = useWatchStore((state) => state.setDuration);
     const currentTime = useWatchStore((state) => state.currentTime);
     const setCurrentTime = useWatchStore((state) => state.setCurrentTime);
     
     // Local state for debouncing
     const [localTime, setLocalTime] = useState(0);
-    const [debouncedTime] = useDebounce(localTime, 250);
+    const [debouncedTime] = useDebounce(localTime, 200);
     
     useEffect(() => {
         console.log(currentTime)
@@ -125,7 +126,7 @@ export default function Player({ streamingData, episode, subtitleFiles }: Player
     if (isLoading) return <Skeleton className="w-full aspect-video" />;
 
     return (
-        <div className="h-fit">
+        <div className="h-full w-full">
             <MediaPlayer
                 title={episode.title}
                 src={videoSrc}
