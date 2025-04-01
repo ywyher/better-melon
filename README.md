@@ -2,24 +2,24 @@
 An [Animleon](https://www.animelon.com/) alternative that aims to overcome all animelon's inconvenients
 
 # Why ?
-Animelon doesn’t provide all anime by default, and its entries are rarely updated, making it difficult for learners who want to watch modern anime with subtitles. That’s why I decided to create this website—to offer the latest anime with subtitles, along with real-time Japanese subtitle translation, providing a more feature-rich alternative.
+Animelon doesn’t provide all anime by default, and its entries are rarely updated, making it difficult for learners who want to watch modern anime with subtitles. That’s why I decided to create this website—to offer the latest anime with subtitles, along with real-time Japanese subtitle definitions, providing a more feature-rich alternative.
 
 # Roadmap
 > [!note]
 > This project is still in its early stages so a lot of crucial stuff are yet to be implemented for this project to be called a usable alternative
-- [x] Search system
-- [x] Filtering system 
+- [x] Search/Filtering system
 - [x] Watch functionality
 - [x] Subtitles panel
-- [ ] Authentication using anilist
+- [x] Sync videos subtitles with the panel subtitles
+- [ ] Allow using local subtitles
 - [ ] Defintion on hover functionality
 - [ ] ass/vtt support
+- [ ] Authentication integration through anilist
 
 # Self-Hosting
 
 > [!warning]
-> This application is still in a very early stage, and it is not advised to use it in a production environment since and you are likely to face a ton of bugs
-
+> This application is still in a very early stage, and it is not advised to use it as of now, Since you are likely to face bugs
 ### Clone the Repository
 ```sh
 git clone <repo-url>
@@ -56,7 +56,7 @@ docker run -d \
   dovakiin0/m3u8-proxy
 ```
 
-For more details on hosting the Consumet API on other platforms, refer to its [GitHub repository](https://github.com/consumet/consumet-api).
+For more details on hosting the Consumet API on other platforms, refer to the official repo [GitHub repository](https://github.com/consumet/consumet-api).
 
 ### Register for Jimaku API (free)
 Create an account on [Jimaku.cc](https://jimaku.cc) and generate an API token through the profile page.
@@ -82,7 +82,7 @@ pnpm run dev  # or npm run dev
 ```
 
 # Credit
-- [Anilist](https://anilist.co/) -> Used to fetch anime data
-- [Consument](https://github.com/consumet/api.consumet.org) -> Used to fetch anime streaming data
+- [Anilist](https://anilist.co/) -> Used to fetch anime data -[Consument](https://github.com/consumet/api.consumet.org) -> Used to fetch anime streaming data
 - [Jimaku](https://jimaku.cc/) -> Used to fetch japanese subtitles
 - [ywyh (Me)](https://github.com/ywyher) – for being goated
+			
