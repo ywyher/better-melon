@@ -12,3 +12,9 @@ services:
     restart: unless-stopped
     ports:
       - "8080:8080"
+  aniwatch-api:
+    image: ghcr.io/ghoshritesh12/aniwatch
+    container_name: aniwatch-api
+    restart: unless-stopped
+    ports:
+      - "4000:4000"

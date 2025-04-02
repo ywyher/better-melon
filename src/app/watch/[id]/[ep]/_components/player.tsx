@@ -1,6 +1,6 @@
 "use client";
 
-import { MediaPlayer, MediaPlayerInstance, MediaProvider, TextTrack, TimeSlider } from '@vidstack/react';
+import { MediaPlayer, MediaPlayerInstance, MediaProvider, Menu, SeekButton, TextTrack, TimeSlider, ToggleButton } from '@vidstack/react';
 import { DefaultAudioLayout, defaultLayoutIcons, DefaultVideoLayout } from '@vidstack/react/player/layouts/default';
 import { Poster } from '@vidstack/react';
 import { Track } from "@vidstack/react";
@@ -11,9 +11,11 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useWatchStore } from "@/app/watch/[id]/[ep]/store";
 import { SubtitleFile, SubtitleFormat } from '@/types/subtitle';
-import { AnimeEpisodeData, AnimeStreamingData } from '@/types/anime';
+import { AnimeEpisodeData, AnimeStreamingData, SkipTime } from '@/types/anime';
 import { generateWebVTTFromSkipTimes, selectSubtitleFile } from '@/app/watch/[id]/[ep]/funcs';
-
+import { SkipForward, ThumbsDown, ThumbsUp, User } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { SeekForward10Icon } from '@vidstack/react/icons';
 type PlayerProps = { 
     streamingData: AnimeStreamingData;
     episode: AnimeEpisodeData;
@@ -29,6 +31,9 @@ export default function Player({ streamingData, episode, subtitleFiles }: Player
     const [vttUrl, setVttUrl] = useState<string>('');
     const [isInitialized, setIsInitialized] = useState(false);
     const [isVideoReady, setIsVideoReady] = useState(false);
+    const [skipTimes, setSkipTimes] = useState<SkipTime[]>([])
+    const [canSkip, setCanSkip] = useState(false)
+    const [autoSkip, setAutoSkip] = useState(false)
 
     const activeSubtitleFile = useWatchStore((state) => state.activeSubtitleFile);
     const setActiveSubtitleFile = useWatchStore((state) => state.setActiveSubtitleFile);
@@ -58,26 +63,25 @@ export default function Player({ streamingData, episode, subtitleFiles }: Player
         setIsInitializing(false);
     }, [subtitleFiles, streamingData, setActiveSubtitleFile, activeSubtitleFile]);
 
-
-
     useEffect(() => {
+        const skipTimes = [
+            {
+                interval: {
+                    startTime: streamingData.intro.start,
+                    endTime: streamingData.intro.end,
+                },
+                skipType: 'OP' as SkipTime['skipType']
+            },
+            {
+                interval: {
+                    startTime: streamingData.outro.start,
+                    endTime: streamingData.outro.end,
+                },
+                skipType: 'OT' as SkipTime['skipType']
+            }
+        ]
         const vttSkipTimesContent = generateWebVTTFromSkipTimes({
-            skipTimes: [
-                    {
-                        interval: {
-                            startTime: streamingData.intro.start,
-                            endTime: streamingData.intro.end,
-                        },
-                        skipType: 'OP'
-                    },
-                    {
-                        interval: {
-                            startTime: streamingData.outro.start,
-                            endTime: streamingData.outro.end,
-                        },
-                        skipType: 'OT'
-                    }
-            ],
+            skipTimes: skipTimes,
             totalDuration: player.current?.duration || 0,
             episode: {
                 title: episode.title,
@@ -87,6 +91,7 @@ export default function Player({ streamingData, episode, subtitleFiles }: Player
         const blob = new Blob([vttSkipTimesContent], { type: 'text/vtt' });
         const skipTimesBlobUrl = URL.createObjectURL(blob);
         setVttUrl(skipTimesBlobUrl);
+        setSkipTimes(skipTimes);
     }, [])
 
     const handleTrackChange = useCallback((track: TextTrack | null) => {
@@ -126,6 +131,26 @@ export default function Player({ streamingData, episode, subtitleFiles }: Player
         }
     }, [isInitializing, isVideoReady]);
 
+    const onTimeUpdate = () => {
+        if (player.current) {
+          const currentTime = player.current.currentTime;
+    
+          if (skipTimes.length) {
+            const skipInterval = skipTimes.find(
+              ({ interval }) =>
+                currentTime >= interval.startTime && currentTime < interval.endTime,
+            );
+            if (skipInterval) {
+                setCanSkip(true)
+                if(autoSkip) {
+                    player.current.currentTime = skipInterval.interval.endTime;
+                    setAutoSkip(true)
+                }
+            }
+          }
+        }
+      }
+    
     return (
         <div className="relative w-full h-full">
             {/* Skeleton that takes exact same space as the player */}
@@ -162,6 +187,7 @@ export default function Player({ streamingData, episode, subtitleFiles }: Player
                     ref={player}
                     onTextTrackChange={handleTrackChange}
                     onCanPlay={handleCanPlay}
+                    onTimeUpdate={onTimeUpdate}
                     load='eager'
                     posterLoad='eager'
                     crossOrigin="anonymous"
@@ -201,7 +227,27 @@ export default function Player({ streamingData, episode, subtitleFiles }: Player
                         // thumbnails={`${process.env.NEXT_PUBLIC_PROXY_URL}?url=${encodeURIComponent("https://files.vidstack.io/sprite-fight/thumbnails.vtt")}`}
                         // thumbnails={`https://files.vidstack.io/sprite-fight/thumbnails.vtt`}
                         icons={defaultLayoutIcons} 
+                        
                     />
+                    {canSkip && (
+                        <Menu.Root
+                            onClick={(() => {
+                                const currentTime = player.current?.currentTime
+                                if(!currentTime || !player.current) return;
+                                const skipInterval = skipTimes.find(
+                                    ({ interval }) =>
+                                      currentTime >= interval.startTime && currentTime < interval.endTime,
+                                  );
+                                  if (skipInterval) {
+                                    player.current.currentTime = skipInterval.interval.endTime;
+                                    setCanSkip(false)
+                                  }
+                            })}
+                        >
+                            <Menu.Button><SkipForward /></Menu.Button>
+                            <Menu.Content placement="bottom"></Menu.Content>
+                        </Menu.Root>
+                    )}
                 </MediaPlayer>
             </div>
         </div>

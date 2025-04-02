@@ -13,6 +13,7 @@ Animelon doesn’t provide all animes by default, and its entries are rarely upd
 - [x] Sync video subtitles with the panel subtitles
 - [x] Support for all japanese writing system
 - [x] Video chapters/timestamps
+- [x] Skip chapters/timestamps button
 - [ ] Providers selector
 - [ ] Interactive video subtitles
 - [ ] Allow using local subtitles
