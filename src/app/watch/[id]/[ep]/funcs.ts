@@ -1,3 +1,4 @@
+import { SkipTime } from "@/types/anime";
 import { SubtitleFile } from "@/types/subtitle";
 
 export const filterSubtitleFiles = (files: SubtitleFile[]) => {
@@ -46,3 +47,56 @@ export const selectSubtitleFile = (files: SubtitleFile[]) => {
   // Otherwise, just return the first file from the list
   return files[0];
 };
+
+function formatTime(seconds: number): string {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = Math.floor(seconds % 60);
+    return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+}
+
+type GenerateWebVTTFromSkipTimesProps = {
+  skipTimes: SkipTime[];
+  totalDuration: number;
+  episode: {
+    title: string;
+    number: number
+  }
+}
+
+export function generateWebVTTFromSkipTimes({
+    skipTimes,
+    totalDuration,
+    episode
+}: GenerateWebVTTFromSkipTimesProps): string {
+    let vttString = 'WEBVTT\n\n';
+    let previousEndTime = 0;
+
+    const sortedSkipTimes = skipTimes.sort(
+        (a: any, b: any) => a.interval.startTime - b.interval.startTime,
+    );
+
+    sortedSkipTimes.forEach((skipTime: any, index: any) => {
+        const { startTime, endTime } = skipTime.interval;
+        const skipType =
+        skipTime.skipType.toUpperCase() === 'OP' ? 'Opening' : 'Outro';
+
+        // Insert default title chapter before this skip time if there's a gap
+        if (previousEndTime < startTime) {
+            vttString += `${formatTime(previousEndTime)} --> ${formatTime(startTime)}\n`;
+            vttString += `${episode.title} - Episode ${episode.number}\n\n`;
+        }
+
+        // Insert this skip time
+        vttString += `${formatTime(startTime)} --> ${formatTime(endTime)}\n`;
+        vttString += `${skipType}\n\n`;
+        previousEndTime = endTime;
+
+        // Insert default title chapter after the last skip time
+        if (index === sortedSkipTimes.length - 1 && endTime < totalDuration) {
+            vttString += `${formatTime(endTime)} --> ${formatTime(totalDuration)}\n`;
+            vttString += `${episode.title} - Episode ${episode.number}\n\n`;
+        }
+    });
+
+    return vttString;
+}

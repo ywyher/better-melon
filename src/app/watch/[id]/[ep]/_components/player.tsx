@@ -1,19 +1,18 @@
-"use client"
+"use client";
 
-import { MediaPlayer, MediaPlayerInstance, MediaProvider, TextTrack, useMediaState } from '@vidstack/react';
+import { MediaPlayer, MediaPlayerInstance, MediaProvider, TextTrack, TimeSlider } from '@vidstack/react';
 import { DefaultAudioLayout, defaultLayoutIcons, DefaultVideoLayout } from '@vidstack/react/player/layouts/default';
 import { Poster } from '@vidstack/react';
 import { Track } from "@vidstack/react";
 import '@vidstack/react/player/styles/default/theme.css';
 import '@vidstack/react/player/styles/default/layouts/video.css';
-import { useDebounce } from 'use-debounce';
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useWatchStore } from "@/app/watch/[id]/[ep]/store";
 import { SubtitleFile, SubtitleFormat } from '@/types/subtitle';
 import { AnimeEpisodeData, AnimeStreamingData } from '@/types/anime';
-import { selectSubtitleFile } from '@/app/watch/[id]/[ep]/funcs';
+import { generateWebVTTFromSkipTimes, selectSubtitleFile } from '@/app/watch/[id]/[ep]/funcs';
 
 type PlayerProps = { 
     streamingData: AnimeStreamingData;
@@ -21,10 +20,14 @@ type PlayerProps = {
     subtitleFiles: SubtitleFile[];
 }
 
+
+
 export default function Player({ streamingData, episode, subtitleFiles }: PlayerProps) {
     const player = useRef<MediaPlayerInstance>(null);
     const [videoSrc, setVideoSrc] = useState("");
     const [isInitializing, setIsInitializing] = useState(true);
+    const [vttUrl, setVttUrl] = useState<string>('');
+    const [isInitialized, setIsInitialized] = useState(false);
     const [isVideoReady, setIsVideoReady] = useState(false);
 
     const activeSubtitleFile = useWatchStore((state) => state.activeSubtitleFile);
@@ -37,9 +40,10 @@ export default function Player({ streamingData, episode, subtitleFiles }: Player
 
     useEffect(() => {
         const url = encodeURIComponent(streamingData?.sources[0].url);
+        
         setVideoSrc(`${process.env.NEXT_PUBLIC_PROXY_URL}?url=${url}`);
         
-        if (!activeSubtitleFile && subtitleFiles.length > 0) {
+        if (!isInitialized && !activeSubtitleFile && subtitleFiles.length > 0) {
             const selected = selectSubtitleFile(subtitleFiles)
             if(!selected) return;
             setActiveSubtitleFile({
@@ -50,8 +54,40 @@ export default function Player({ streamingData, episode, subtitleFiles }: Player
             });
         }
         
+        setIsInitialized(true)
         setIsInitializing(false);
     }, [subtitleFiles, streamingData, setActiveSubtitleFile, activeSubtitleFile]);
+
+
+
+    useEffect(() => {
+        const vttSkipTimesContent = generateWebVTTFromSkipTimes({
+            skipTimes: [
+                    {
+                        interval: {
+                            startTime: streamingData.intro.start,
+                            endTime: streamingData.intro.end,
+                        },
+                        skipType: 'OP'
+                    },
+                    {
+                        interval: {
+                            startTime: streamingData.outro.start,
+                            endTime: streamingData.outro.end,
+                        },
+                        skipType: 'OT'
+                    }
+            ],
+            totalDuration: player.current?.duration || 0,
+            episode: {
+                title: episode.title,
+                number: episode.number
+            }
+        });
+        const blob = new Blob([vttSkipTimesContent], { type: 'text/vtt' });
+        const skipTimesBlobUrl = URL.createObjectURL(blob);
+        setVttUrl(skipTimesBlobUrl);
+    }, [])
 
     const handleTrackChange = useCallback((track: TextTrack | null) => {
         if (!track || activeSubtitleFile?.name === track.label) return;
@@ -64,10 +100,17 @@ export default function Player({ streamingData, episode, subtitleFiles }: Player
                 last_modified: matchedSub.last_modified,
                 size: matchedSub.size
             });
+            return;
         }
+
+        const matchedSubLang = streamingData.subtitles.find(s => s.url === track.src)
+        if (matchedSubLang) {
+            setActiveSubtitleFile(null);
+            return;
+        }
+
     }, [subtitleFiles, setActiveSubtitleFile, activeSubtitleFile]);
     
-    // Track when the video is actually ready to play
     const handleCanPlay = () => {
         setIsVideoReady(true);
     };
@@ -77,7 +120,7 @@ export default function Player({ streamingData, episode, subtitleFiles }: Player
         if (!isInitializing && !isVideoReady) {
             const readyTimer = setTimeout(() => {
                 setIsVideoReady(true);
-            }, 3000); // Fallback timeout of 3 seconds
+            }, 3000);
             
             return () => clearTimeout(readyTimer);
         }
@@ -112,7 +155,6 @@ export default function Player({ streamingData, episode, subtitleFiles }: Player
                 </div>
             )}
             
-            {/* Actual player - always rendered but initially hidden */}
             <div className={`w-full h-full transition-opacity duration-300 ${(!isVideoReady || isInitializing) ? 'opacity-0' : 'opacity-100'}`}>
                 <MediaPlayer
                     title={episode.title}
@@ -122,9 +164,6 @@ export default function Player({ streamingData, episode, subtitleFiles }: Player
                     onCanPlay={handleCanPlay}
                     load='eager'
                     posterLoad='eager'
-                    onSeeking={() => {
-                        console.log('seeking ?')
-                    }}
                     crossOrigin="anonymous"
                 >
                     <MediaProvider>
@@ -133,7 +172,10 @@ export default function Player({ streamingData, episode, subtitleFiles }: Player
                             src={episode.image}
                             alt={episode.title}
                         />
-                        {activeSubtitleFile && subtitleFiles.map((sub) => (
+                        {vttUrl && (
+                            <Track kind='chapters' src={vttUrl} default label='Skip Times' />
+                        )}
+                        {subtitleFiles.map((sub) => (
                             <Track
                                 key={sub.url}
                                 src={sub.url}
@@ -141,12 +183,13 @@ export default function Player({ streamingData, episode, subtitleFiles }: Player
                                 label={sub.name}
                                 type={sub.url.split('.').pop() as SubtitleFormat}
                                 lang="jp-JP"
+                                default={activeSubtitleFile?.name == sub.name}
                             />
                         ))}
                         {streamingData.subtitles.map((sub) => (
                             <Track
                                 key={sub.url}
-                                src={`${process.env.NEXT_PUBLIC_PROXY_URL}?url=${encodeURIComponent(sub.url)}`}
+                                src={`${sub.url}`}
                                 kind="subtitles"
                                 label={sub.lang}
                                 type={sub.url.split('.').pop() as SubtitleFormat}
@@ -155,7 +198,8 @@ export default function Player({ streamingData, episode, subtitleFiles }: Player
                     </MediaProvider>
                     <DefaultAudioLayout icons={defaultLayoutIcons} />
                     <DefaultVideoLayout
-                        thumbnails={`${process.env.NEXT_PUBLIC_PROXY_URL}?url=${encodeURIComponent("https://files.vidstack.io/sprite-fight/thumbnails.vtt")}`}
+                        // thumbnails={`${process.env.NEXT_PUBLIC_PROXY_URL}?url=${encodeURIComponent("https://files.vidstack.io/sprite-fight/thumbnails.vtt")}`}
+                        // thumbnails={`https://files.vidstack.io/sprite-fight/thumbnails.vtt`}
                         icons={defaultLayoutIcons} 
                     />
                 </MediaPlayer>

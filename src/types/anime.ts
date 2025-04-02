@@ -130,3 +130,11 @@ export type AnimeStreamingData = {
         lang: string;
     }[]
 }
+
+export type SkipTime = {
+    interval: {
+      startTime: number;
+      endTime: number;
+    };
+    skipType: "OP" | "OT";
+};

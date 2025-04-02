@@ -50,3 +50,4 @@ export function srtTimestampToSeconds(timestamp: string): number {
     // Return rounded to 3 decimal places for millisecond precision
     return Math.round(totalSeconds * 1000) / 1000;
 }
+
