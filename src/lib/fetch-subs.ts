@@ -25,19 +25,22 @@ export async function parseSubtitleToJson({ url, format, mode = 'japanese' }: { 
   
   switch (format) {
     case 'srt':
-      const subs = parseSrt(content);
+      const srtSubs = parseSrt(content);
       
       // Initialize required tools once
       await initializeProcessors(mode);
       
       if (mode === 'japanese') {
         // Only tokenize for Japanese mode
-        return tokenizeSubtitles(subs);
+        return tokenizeSubtitles(srtSubs);
       } else {
         // For other modes, convert and tokenize in one pass
-        const tokanizedSubs = tokenizeSubtitles(subs)
-        return processSubtitlesForNonJapaneseMode(tokanizedSubs, mode);
+        const tokanizedSrtSubs = tokenizeSubtitles(srtSubs)
+        return processSubtitlesForNonJapaneseMode(tokanizedSrtSubs, mode);
       }
+    case "vtt":
+      const vttSubs = parseVtt(content);
+      return vttSubs
     default:
       throw new Error(`Unsupported subtitle format: ${format}`);
   }
@@ -168,4 +171,66 @@ function parseSrt(content: string) {
   }
   
   return result as SubtitleCue[];
+}
+
+function parseVtt(content: string) {
+  const lines = content.split('\n');
+  const result = [];
+  
+  let currentEntry: Partial<SubtitleCue> = {};
+  let isReadingContent = false;
+  let idCounter = 1;
+  
+  // Skip the WEBVTT header line
+  let startIndex = 0;
+  if (lines[0].includes('WEBVTT')) {
+    startIndex = 1;
+  }
+  
+  for (let i = startIndex; i < lines.length; i++) {
+    const line = lines[i].trim();
+    
+    if (line === '') {
+      if (Object.keys(currentEntry).length > 0 && currentEntry.from && currentEntry.to) {
+        if (!currentEntry.id) {
+          currentEntry.id = idCounter++;
+        }
+        result.push(currentEntry);
+        currentEntry = {};
+        isReadingContent = false;
+      }
+      continue;
+    }
+    
+    if (isReadingContent) {
+      const initialContent = (currentEntry.content || '') + 
+        (currentEntry.content ? ' ' : '') + line;
+
+      currentEntry.content = removeHtmlTags(initialContent);
+      continue;
+    }
+    
+    // VTT timestamp format: 00:00:00.000 --> 00:00:00.000
+    const timestampMatch = line.match(/(\d{2}:\d{2}:\d{2}\.\d{3}) --> (\d{2}:\d{2}:\d{2}\.\d{3})/);
+    
+    if (timestampMatch) {
+      currentEntry.from = timestampMatch[1];
+      currentEntry.to = timestampMatch[2];
+      isReadingContent = true;
+      continue;
+    }
+  }
+  
+  if (Object.keys(currentEntry).length > 0 && currentEntry.from && currentEntry.to) {
+    if (!currentEntry.id) {
+      currentEntry.id = idCounter++;
+    }
+    result.push(currentEntry);
+  }
+  
+  return result as SubtitleCue[];
+}
+
+function removeHtmlTags(text: string): string {
+  return text.replace(/<[^>]*>/g, '');
 }

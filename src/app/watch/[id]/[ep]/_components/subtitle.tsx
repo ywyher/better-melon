@@ -96,7 +96,7 @@ export default function Subtitle() {
                 });
             }
         });
-        
+
         return result;
     }, [subtitleQueries, currentTime]);
 

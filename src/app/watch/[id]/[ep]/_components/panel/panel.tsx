@@ -51,6 +51,8 @@ export default function SubtitlePanel({ subtitleFiles }: { subtitleFiles: Subtit
     })
     
     useEffect(() => {
+        console.log(`panel`)
+        console.log(subtitleCues)
         if(subtitleCues?.length && activeSubtitleFile) {
             setIsLoading(false)
         }
