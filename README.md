@@ -27,6 +27,11 @@ Animelon doesn’t provide all animes by default, and its entries are rarely upd
 
 > [!warning]
 > This application is still in a very early stage, and it is not advised to use it as of now, Since you are likely to face bugs
+
+> [!note]
+> If you decide to self-host it anyway just keep in mind that this website currently works the best on firefox (the proxy iam using doesn't work on chrome for whatever reason for now)
+> will be fixed in the future tho
+
 ### Clone the Repository
 ```sh
 git clone https://github.com/ywyher/better-melon ./better-melon

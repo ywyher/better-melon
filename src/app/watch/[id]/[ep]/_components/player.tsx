@@ -41,6 +41,7 @@ export default function Player({ streamingData, episode, subtitleFiles }: Player
 
     useEffect(() => {
         setPlayer(player)
+        console.log(streamingData)
     }, [player])
 
     useEffect(() => {
