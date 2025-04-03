@@ -16,13 +16,12 @@ import { generateWebVTTFromSkipTimes, selectSubtitleFile } from '@/app/watch/[id
 import { SkipForward, ThumbsDown, ThumbsUp, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { SeekForward10Icon } from '@vidstack/react/icons';
+
 type PlayerProps = { 
     streamingData: AnimeStreamingData;
     episode: AnimeEpisodeData;
     subtitleFiles: SubtitleFile[];
 }
-
-
 
 export default function Player({ streamingData, episode, subtitleFiles }: PlayerProps) {
     const player = useRef<MediaPlayerInstance>(null);
@@ -191,6 +190,7 @@ export default function Player({ streamingData, episode, subtitleFiles }: Player
                     load='eager'
                     posterLoad='eager'
                     crossOrigin="anonymous"
+                    className='relative min-w-[100%]'
                 >
                     <MediaProvider>
                         <Poster
@@ -227,26 +227,45 @@ export default function Player({ streamingData, episode, subtitleFiles }: Player
                         // thumbnails={`${process.env.NEXT_PUBLIC_PROXY_URL}?url=${encodeURIComponent("https://files.vidstack.io/sprite-fight/thumbnails.vtt")}`}
                         // thumbnails={`https://files.vidstack.io/sprite-fight/thumbnails.vtt`}
                         icons={defaultLayoutIcons} 
-                        
                     />
                     {canSkip && (
-                        <Menu.Root
+                        <Button
+                            className="
+                                absolute
+                                bottom-20 right-4
+                            "
+                            variant='secondary'
                             onClick={(() => {
                                 const currentTime = player.current?.currentTime
                                 if(!currentTime || !player.current) return;
                                 const skipInterval = skipTimes.find(
                                     ({ interval }) =>
-                                      currentTime >= interval.startTime && currentTime < interval.endTime,
-                                  );
-                                  if (skipInterval) {
+                                    currentTime >= interval.startTime && currentTime < interval.endTime,
+                                );
+                                if (skipInterval) {
                                     player.current.currentTime = skipInterval.interval.endTime;
                                     setCanSkip(false)
-                                  }
+                                }
                             })}
                         >
-                            <Menu.Button><SkipForward /></Menu.Button>
-                            <Menu.Content placement="bottom"></Menu.Content>
-                        </Menu.Root>
+                            <span>Skip</span>
+                            {skipTimes.length && (
+                                <>
+                                    {
+                                        (() => {
+                                            const currentTime = player.current?.currentTime;
+                                            if(!currentTime) return;
+                                            const matchedInterval = skipTimes.find(({ skipType, interval }) => 
+                                                (currentTime || 0) >= interval.startTime &&
+                                                (currentTime || 0) < interval.endTime
+                                            );
+                                        
+                                            return matchedInterval?.skipType == 'OP' ? "Opening" : "Outro";
+                                        })()
+                                    }
+                                </>
+                            )}
+                        </Button>
                     )}
                 </MediaPlayer>
             </div>
