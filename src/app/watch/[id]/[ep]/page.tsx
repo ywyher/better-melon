@@ -1,11 +1,12 @@
 import Player from "@/app/watch/[id]/[ep]/_components/player";
 import { SubtitleFile } from "@/types/subtitle";
-import SubtitlePanel from "@/app/watch/[id]/[ep]/_components/subtitle-panel";
+import SubtitlePanel from "@/app/watch/[id]/[ep]/_components/panel/panel";
 import { AnimeEpisodeData } from "@/types/anime";
 import { filterSubtitleFiles } from "@/app/watch/[id]/[ep]/funcs";
 import Link from "next/link";
 import GoBack from "@/components/goback";
-import Subs from "@/app/watch/[id]/[ep]/_components/subs";
+import Subs from "@/app/watch/[id]/[ep]/_components/subtitle";
+import Bar from "@/app/watch/[id]/[ep]/_components/bar";
 
 type Params = Promise<{ id: string, ep: string }>
 
@@ -64,6 +65,7 @@ export default async function Watch({ params }: { params: Params }) {
             streamingData={streamingData} 
             subtitleFiles={filterSubtitleFiles(subtitleFiles)} 
           />
+          <Bar />
         </div>
         {subtitleFiles && (
           <SubtitlePanel

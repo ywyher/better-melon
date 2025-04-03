@@ -1,4 +1,4 @@
-import { SubtitleFile } from "@/types/subtitle";
+import { SubtitleDisplayMode, SubtitleFile } from "@/types/subtitle";
 import { MediaPlayerInstance } from "@vidstack/react";
 import { createRef, RefObject } from "react";
 import { create } from "zustand";
@@ -9,6 +9,8 @@ export type WatchStore = {
   setPlayer: (sub: WatchStore['player']) => void;
   activeSubtitleFile: SubtitleFile | null;
   setActiveSubtitleFile: (sub: WatchStore['activeSubtitleFile']) => void;
+  activeModes: SubtitleDisplayMode[];
+  setActiveModes: (sub: WatchStore['activeModes']) => void;
   reset: () => void;
 };
 
@@ -18,9 +20,12 @@ export const useWatchStore = create<WatchStore>()(
     setPlayer: (player: WatchStore['player']) => set({ player }),
     activeSubtitleFile: null,
     setActiveSubtitleFile: (activeSubtitleFile: WatchStore['activeSubtitleFile']) => set({ activeSubtitleFile }),
+    activeModes: ['japanese'],
+    setActiveModes: (activeModes: WatchStore['activeModes']) => set({ activeModes }),
     reset: () => {
       set({
         activeSubtitleFile: null,
+        activeModes: ['japanese'],
       });
     },
   }),

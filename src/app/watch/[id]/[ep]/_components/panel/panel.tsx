@@ -7,7 +7,7 @@ import { Indicator } from "@/components/indicator";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useWatchStore } from "@/app/watch/[id]/[ep]/store";
-import SubtitleCue from "@/app/watch/[id]/[ep]/_components/subtitle-cue";
+import SubtitleCue from "@/app/watch/[id]/[ep]/_components/panel/subtitle-cue";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { SubtitleCue as TSubtitleCue, SubtitleDisplayMode, SubtitleFile } from "@/types/subtitle";

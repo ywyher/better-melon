@@ -4,7 +4,7 @@ import { useWatchStore } from "@/app/watch/[id]/[ep]/store";
 import { parseSubtitleToJson } from "@/lib/fetch-subs";
 import { srtTimestampToSeconds } from "@/lib/funcs";
 import { cn } from "@/lib/utils";
-import { SubtitleCue } from "@/types/subtitle";
+import { SubtitleCue, SubtitleDisplayMode } from "@/types/subtitle";
 import { useQueries } from "@tanstack/react-query";
 import { useMediaState } from "@vidstack/react";
 import { CSSProperties, useEffect, useMemo, useState } from "react";
@@ -32,12 +32,14 @@ const activeTokenStyle: CSSProperties = {
   textShadow: '0 0 10px rgba(74, 222, 128, 0.8)',
 };
 
-export default function Subs() {
+export default function Subtitle() {
     const player = useWatchStore((state) => state.player);
     const activeSubtitleFile = useWatchStore((state) => state.activeSubtitleFile);
     const currentTime = useMediaState('currentTime', player);
     const [hoveredTokenIndex, setHoveredTokenIndex] = useState<number | null>(null);
     const [hoveredCueId, setHoveredCueId] = useState<number | null>(null);
+
+    const activeModes = useWatchStore((state) => state.activeModes)
 
     // Use useQueries to batch all subtitle queries together
     const subtitleQueries = useQueries({
@@ -48,15 +50,12 @@ export default function Subs() {
                     throw new Error("Couldn't get the file");
                 }
                 
-                // Only pass mode for non-Japanese types
-                const mode = type === 'japanese' ? undefined : type;
-                
                 return {
                     type,
                     cues: await parseSubtitleToJson({ 
                         url: activeSubtitleFile.url, 
                         format: 'srt', 
-                        mode 
+                        mode: type 
                     })
                 };
             },
@@ -116,7 +115,7 @@ export default function Subs() {
 
     return (
         <div className="absolute bottom-16 left-0 right-0 flex flex-col items-center">
-            {SUBTITLE_TYPES.map(type => (
+            {SUBTITLE_TYPES.filter((sub) => activeModes.find((m) => m == sub)).map(type => (
                 <div 
                     key={type} 
                     className={cn(
@@ -130,8 +129,6 @@ export default function Subs() {
                             className={`${type}`}
                         >
                             {cue.tokens?.length && cue.tokens?.map((token, tokenIdx) => {
-                                // Check if the current token is in the same cue ID 
-                                // and same position as the hovered token
                                 const isActive = hoveredCueId === cue.id && hoveredTokenIndex === tokenIdx;
                                 
                                 return (

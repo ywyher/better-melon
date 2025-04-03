@@ -16,7 +16,7 @@ import { generateWebVTTFromSkipTimes, selectSubtitleFile } from '@/app/watch/[id
 import { SkipForward, ThumbsDown, ThumbsUp, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { SeekForward10Icon } from '@vidstack/react/icons';
-import Subs from '@/app/watch/[id]/[ep]/_components/subs';
+import Subtitle from '@/app/watch/[id]/[ep]/_components/subtitle';
 
 type PlayerProps = { 
     streamingData: AnimeStreamingData;
@@ -153,17 +153,17 @@ export default function Player({ streamingData, episode, subtitleFiles }: Player
     }
     
     return (
-        <div className="relative w-full h-full">
+        <div className="relative w-full h-fit">
             {/* Skeleton that takes exact same space as the player */}
             {(!isVideoReady || isInitializing) && (
                 <div className="
                     absolute inset-0 z-10
                     flex flex-col
-                    w-full h-full 
+                    w-full h-fit 
                 ">
                     <div className="w-full aspect-video bg-gray-800 relative overflow-hidden">
                         {/* Main video area skeleton */}
-                        <Skeleton className="w-full h-full animate-pulse" />
+                        <Skeleton className="w-full h-fit animate-pulse" />
                         
                         {/* Loading text overlay */}
                         <div className="absolute inset-0 flex items-center justify-center">
@@ -181,7 +181,7 @@ export default function Player({ streamingData, episode, subtitleFiles }: Player
                 </div>
             )}
             
-            <div className={`w-full h-full transition-opacity duration-300 ${(!isVideoReady || isInitializing) ? 'opacity-0' : 'opacity-100'}`}>
+            <div className={`w-full h-fit transition-opacity duration-300 ${(!isVideoReady || isInitializing) ? 'opacity-0' : 'opacity-100'}`}>
                 <MediaPlayer
                     title={episode.title}
                     src={videoSrc}
@@ -192,7 +192,7 @@ export default function Player({ streamingData, episode, subtitleFiles }: Player
                     load='eager'
                     posterLoad='eager'
                     crossOrigin="anonymous"
-                    className='relative min-w-[100%]'
+                    className='relative min-w-[100%] h-fit'
                 >
                     <MediaProvider>
                         <Poster
@@ -269,7 +269,7 @@ export default function Player({ streamingData, episode, subtitleFiles }: Player
                             )}
                         </Button>
                     )}
-                    <Subs />
+                    <Subtitle />
                 </MediaPlayer>
             </div>
         </div>
