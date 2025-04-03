@@ -36,7 +36,7 @@ export default function SubtitleCue({
 
     const handleSeek = () => {
         setActiveIndex(index)
-        player.current?.remoteControl.seek(srtTimestampToSeconds(from)) // works
+        player.current?.remoteControl.seek(srtTimestampToSeconds(from))
     };
 
     return (
@@ -58,7 +58,18 @@ export default function SubtitleCue({
                     >
                         <Play className="hover:fill-orange-400" />
                     </Button>
-                    {content}
+                    <div className="flex items-center flex-wrap">
+                        {tokens?.length && tokens?.map((token, idx) => {
+                            return (
+                                <span 
+                                    key={idx}
+                                    // style={{ color: `#${Math.floor(Math.random() * 16777215).toString(16)}` }}
+                                >
+                                    {token.surface_form}
+                                </span>
+                            )
+                        })}
+                    </div>
                 </div>
             )}
             {variant == 'detailed' && (

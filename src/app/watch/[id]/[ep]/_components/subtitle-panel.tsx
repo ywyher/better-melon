@@ -49,7 +49,6 @@ export default function SubtitlePanel({ subtitleFiles }: { subtitleFiles: Subtit
         staleTime: Infinity,
         enabled: !!activeSubtitleFile
     })
-
     
     useEffect(() => {
         if(subtitleCues?.length && activeSubtitleFile) {

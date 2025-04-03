@@ -1,4 +1,5 @@
-import { AnimeCountryCode, AnimeFormat, AnimeSeason, AnimeSort, AnimeSource, AnimeStatus } from "@/types/anime"
+import { AnimeFormat, AnimeSeason, AnimeSort, AnimeSource, AnimeStatus } from "@/types/anime"
+import { SubtitleDisplayMode } from "@/types/subtitle"
 
 export const statuses: AnimeStatus[] = [
     "CANCELLED",
@@ -104,3 +105,5 @@ export const countries = [
         label: "China"
     }
 ];
+
+export const subtitleModes = ['japanese', 'hiragana', 'katakana', 'romaji'] as const

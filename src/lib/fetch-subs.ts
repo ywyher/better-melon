@@ -20,7 +20,7 @@ export async function fetchSubtitles(url: string) {
   return text;
 }
 
-export async function parseSubtitleToJson({ url, format, mode }: { url: string, format: SubtitleFormat, mode: SubtitleDisplayMode }) {
+export async function parseSubtitleToJson({ url, format, mode = 'japanese' }: { url: string, format: SubtitleFormat, mode?: SubtitleDisplayMode }) {
   const content = await fetchSubtitles(url);
   
   switch (format) {
@@ -35,7 +35,8 @@ export async function parseSubtitleToJson({ url, format, mode }: { url: string, 
         return tokenizeSubtitles(subs);
       } else {
         // For other modes, convert and tokenize in one pass
-        return processSubtitlesForNonJapaneseMode(subs, mode);
+        const tokanizedSubs = tokenizeSubtitles(subs)
+        return processSubtitlesForNonJapaneseMode(tokanizedSubs, mode);
       }
     default:
       throw new Error(`Unsupported subtitle format: ${format}`);
@@ -85,16 +86,29 @@ async function processSubtitlesForNonJapaneseMode(subs: SubtitleCue[], mode: Sub
   
   return Promise.all(
     subs.map(async sub => {
-      // Convert to the target script
-      const convertedContent = await kuroshiro!.convert(sub.content, { to: mode });
+    const convertedContent = await kuroshiro!.convert(sub.content, { to: mode });
       
-      // Return with both conversion and tokenization
+    // Converting the already tokanzied text so we get consistent tokens across modes
+    const convertedTokens = sub.tokens
+      ? await Promise.all(
+          sub.tokens
+            .filter(token => token.surface_form !== ' ' && token.surface_form !== '　')
+            .map(async token => {
+              const convertedToken = await kuroshiro!.convert(token.surface_form, { to: mode });
+              return {
+                ...token,
+                surface_form: convertedToken
+              };
+            })
+        )
+      : [];
+
+
       return {
         ...sub,
         original_content: sub.content,
         content: convertedContent,
-        tokens: tokenizer!.tokenize(convertedContent)
-          .filter(token => token.surface_form !== ' ' && token.surface_form !== '　')
+        tokens: convertedTokens
       };
     })
   );

@@ -5,6 +5,7 @@ import { AnimeEpisodeData } from "@/types/anime";
 import { filterSubtitleFiles } from "@/app/watch/[id]/[ep]/funcs";
 import Link from "next/link";
 import GoBack from "@/components/goback";
+import Subs from "@/app/watch/[id]/[ep]/_components/subs";
 
 type Params = Promise<{ id: string, ep: string }>
 

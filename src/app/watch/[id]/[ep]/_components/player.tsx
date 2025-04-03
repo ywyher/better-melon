@@ -16,6 +16,7 @@ import { generateWebVTTFromSkipTimes, selectSubtitleFile } from '@/app/watch/[id
 import { SkipForward, ThumbsDown, ThumbsUp, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { SeekForward10Icon } from '@vidstack/react/icons';
+import Subs from '@/app/watch/[id]/[ep]/_components/subs';
 
 type PlayerProps = { 
     streamingData: AnimeStreamingData;
@@ -45,7 +46,7 @@ export default function Player({ streamingData, episode, subtitleFiles }: Player
     useEffect(() => {
         const url = encodeURIComponent(streamingData?.sources[0].url);
         
-        setVideoSrc(`${process.env.NEXT_PUBLIC_PROXY_URL}?url=${url}`);
+        setVideoSrc(`${process.env.NEXT_PUBLIC_PROXY_URL}?url=${url}`)
         
         if (!isInitialized && !activeSubtitleFile && subtitleFiles.length > 0) {
             const selected = selectSubtitleFile(subtitleFiles)
@@ -119,7 +120,6 @@ export default function Player({ streamingData, episode, subtitleFiles }: Player
         setIsVideoReady(true);
     };
 
-    // Using a timeout as additional fallback for very fast loading videos
     useEffect(() => {
         if (!isInitializing && !isVideoReady) {
             const readyTimer = setTimeout(() => {
@@ -145,10 +145,12 @@ export default function Player({ streamingData, episode, subtitleFiles }: Player
                     player.current.currentTime = skipInterval.interval.endTime;
                     setAutoSkip(true)
                 }
+            }else {
+                setCanSkip(false)
             }
           }
         }
-      }
+    }
     
     return (
         <div className="relative w-full h-full">
@@ -209,7 +211,7 @@ export default function Player({ streamingData, episode, subtitleFiles }: Player
                                 label={sub.name}
                                 type={sub.url.split('.').pop() as SubtitleFormat}
                                 lang="jp-JP"
-                                default={activeSubtitleFile?.name == sub.name}
+                                // default={activeSubtitleFile?.name == sub.name}
                             />
                         ))}
                         {streamingData.subtitles.map((sub) => (
@@ -267,6 +269,7 @@ export default function Player({ streamingData, episode, subtitleFiles }: Player
                             )}
                         </Button>
                     )}
+                    <Subs />
                 </MediaPlayer>
             </div>
         </div>
