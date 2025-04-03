@@ -6,6 +6,7 @@ import { subtitleModes } from "@/lib/constants"
 import { SubtitleDisplayMode } from "@/types/subtitle"
 
 export default function Bar() {
+    const activeModes = useWatchStore((state) => state.activeModes)
     const setActiveModes = useWatchStore((state) => state.setActiveModes)
 
     const handleModes = (modes: SubtitleDisplayMode[]) => {
@@ -16,6 +17,12 @@ export default function Bar() {
         <div className="flex flex-row gap-5">
             <MultipleSelector 
                 options={subtitleModes.map((mode) => {
+                    return {
+                        value: mode,
+                        label: mode
+                    }
+                })}
+                value={activeModes.map((mode) => {
                     return {
                         value: mode,
                         label: mode

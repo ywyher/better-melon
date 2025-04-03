@@ -114,7 +114,7 @@ export default function Subtitle() {
     if (isLoading) return <>Loading...</>;
 
     return (
-        <div className="absolute bottom-16 left-0 right-0 flex flex-col items-center">
+        <div className="absolute bottom-16 left-1/2 transform -translate-x-1/2 flex flex-col items-center w-fit">
             {SUBTITLE_TYPES.filter((sub) => activeModes.find((m) => m == sub)).map(type => (
                 <div 
                     key={type} 
