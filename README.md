@@ -18,6 +18,7 @@ Animelon doesn’t provide all animes by default, and its entries are rarely upd
 - [ ] Providers selector
 - [ ] Allow using local subtitles
 - [ ] Defintion on hover functionality
+- [ ] Delay subtitle feature
 - [ ] ass/vtt support
 - [ ] Authentication integration through anilist
 - [ ] Anki integration
