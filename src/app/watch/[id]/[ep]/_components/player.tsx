@@ -33,6 +33,8 @@ export default function Player({ streamingData, episode, subtitleFiles }: Player
     const [canSkip, setCanSkip] = useState(false)
     const [autoSkip, setAutoSkip] = useState(false)
 
+    const englishSubtitleUrl = useWatchStore((state) => state.englishSubtitleUrl);
+    const setEnglishSubtitleUrl = useWatchStore((state) => state.setEnglishSubtitleUrl);
     const activeSubtitleFile = useWatchStore((state) => state.activeSubtitleFile);
     const setActiveSubtitleFile = useWatchStore((state) => state.setActiveSubtitleFile);
     const setPlayer = useWatchStore((state) => state.setPlayer);
@@ -45,7 +47,7 @@ export default function Player({ streamingData, episode, subtitleFiles }: Player
         const url = encodeURIComponent(streamingData?.sources[0].url);
         
         setVideoSrc(`${process.env.NEXT_PUBLIC_PROXY_URL}?url=${url}`)
-        
+
         if (!isInitialized && !activeSubtitleFile && subtitleFiles.length > 0) {
             const selected = selectSubtitleFile(subtitleFiles)
             if(!selected) return;
@@ -56,10 +58,24 @@ export default function Player({ streamingData, episode, subtitleFiles }: Player
                 size: selected.size
             });
         }
+
+        if(!isInitialized && !englishSubtitleUrl) {
+            setEnglishSubtitleUrl(streamingData.subtitles.find((s) => s.lang == 'English')?.url || "")
+        }
         
         setIsInitialized(true)
         setIsInitializing(false);
-    }, [subtitleFiles, streamingData, setActiveSubtitleFile, isInitialized, activeSubtitleFile, setIsInitialized, setIsInitializing]);
+    }, [
+        subtitleFiles,
+        streamingData,
+        setActiveSubtitleFile,
+        isInitialized,
+        activeSubtitleFile,
+        setIsInitialized,
+        setIsInitializing,
+        englishSubtitleUrl,
+        setEnglishSubtitleUrl
+    ]);
 
     useEffect(() => {
         const skipTimes = [
@@ -105,13 +121,6 @@ export default function Player({ streamingData, episode, subtitleFiles }: Player
             });
             return;
         }
-
-        const matchedSubLang = streamingData.subtitles.find(s => s.url === track.src)
-        if (matchedSubLang) {
-            setActiveSubtitleFile(null);
-            return;
-        }
-
     }, [subtitleFiles, setActiveSubtitleFile, activeSubtitleFile, streamingData.subtitles]);
     
     const handleCanPlay = () => {
@@ -201,7 +210,7 @@ export default function Player({ streamingData, episode, subtitleFiles }: Player
                         {vttUrl && (
                             <Track kind='chapters' src={vttUrl} default label='Skip Times' />
                         )}
-                        {subtitleFiles.map((sub) => (
+                        {/* {subtitleFiles.map((sub) => (
                             <Track
                                 key={sub.url}
                                 src={sub.url}
@@ -211,16 +220,7 @@ export default function Player({ streamingData, episode, subtitleFiles }: Player
                                 lang="jp-JP"
                                 // default={activeSubtitleFile?.name == sub.name}
                             />
-                        ))}
-                        {streamingData.subtitles.map((sub) => (
-                            <Track
-                                key={sub.url}
-                                src={`${sub.url}`}
-                                kind="subtitles"
-                                label={sub.lang}
-                                type={sub.url.split('.').pop() as SubtitleFormat}
-                            />
-                        ))}
+                        ))} */}
                     </MediaProvider>
                     <DefaultAudioLayout icons={defaultLayoutIcons} />
                     <DefaultVideoLayout

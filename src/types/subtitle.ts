@@ -49,4 +49,4 @@ export type SubtitleCue = {
 }
 
 export type SubtitleFormat = 'srt' | 'vtt' | 'ass'
-export type SubtitleDisplayMode = "japanese" | "hiragana" | "katakana" | "romaji"
+export type SubtitleScript = "japanese" | "hiragana" | "katakana" | "romaji" | "english"

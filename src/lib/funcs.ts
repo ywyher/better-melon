@@ -51,3 +51,62 @@ export function srtTimestampToSeconds(timestamp: string): number {
     return Math.round(totalSeconds * 1000) / 1000;
 }
 
+/**
+ * Converts a WebVTT timestamp to seconds
+ * Handles various VTT timestamp formats including:
+ * - 00:00:00.000 (standard format with hours)
+ * - 00:00.000 (short format without hours)
+ * 
+ * @param timestamp - VTT timestamp in format "00:00:00.000" or "00:00.000"
+ * @returns The timestamp converted to seconds as a number
+ */
+export function vttTimestampToSeconds(timestamp: string): number {
+  if(!timestamp) return 0;
+
+  const cleanTimestamp = timestamp.trim();
+  
+  // Check if the timestamp includes hours (00:00:00.000) or is in short format (00:00.000)
+  const hasHours = (cleanTimestamp.match(/:/g) || []).length > 1;
+  
+  let hours = 0;
+  let minutes = 0;
+  let seconds = 0;
+  let milliseconds = 0;
+  
+  if (hasHours) {
+      // Format: 00:00:00.000 (with hours)
+      const regex = /(\d+):(\d{2}):(\d{2})\.(\d{3})/;
+      const match = cleanTimestamp.match(regex);
+      
+      if (!match) {
+          throw new Error(`Invalid VTT timestamp format: ${timestamp}`);
+      }
+      
+      hours = parseInt(match[1], 10);
+      minutes = parseInt(match[2], 10);
+      seconds = parseInt(match[3], 10);
+      milliseconds = parseInt(match[4], 10);
+  } else {
+      // Format: 00:00.000 (without hours)
+      const regex = /(\d+):(\d{2})\.(\d{3})/;
+      const match = cleanTimestamp.match(regex);
+      
+      if (!match) {
+          throw new Error(`Invalid VTT timestamp format: ${timestamp}`);
+      }
+      
+      minutes = parseInt(match[1], 10);
+      seconds = parseInt(match[2], 10);
+      milliseconds = parseInt(match[3], 10);
+  }
+  
+  // Convert to seconds
+  const totalSeconds = 
+      hours * 3600 + 
+      minutes * 60 + 
+      seconds + 
+      milliseconds / 1000;
+  
+  // Return rounded to 3 decimal places for millisecond precision
+  return Math.round(totalSeconds * 1000) / 1000;
+}

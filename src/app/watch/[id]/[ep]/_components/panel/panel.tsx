@@ -10,7 +10,7 @@ import { useWatchStore } from "@/app/watch/[id]/[ep]/store";
 import SubtitleCue from "@/app/watch/[id]/[ep]/_components/panel/subtitle-cue";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import type { SubtitleCue as TSubtitleCue, SubtitleDisplayMode, SubtitleFile } from "@/types/subtitle";
+import type { SubtitleCue as TSubtitleCue, SubtitleScript, SubtitleFile } from "@/types/subtitle";
 import SubtitleFileSelector from "@/app/watch/[id]/[ep]/_components/subtitle-file-selector";
 import { parseSubtitleToJson } from "@/lib/fetch-subs";
 import { srtTimestampToSeconds } from "@/lib/funcs";
@@ -18,8 +18,8 @@ import { useVirtualizer } from '@tanstack/react-virtual';
 import { useMediaState } from '@vidstack/react'; // Import useMediaState
 
 export default function SubtitlePanel({ subtitleFiles }: { subtitleFiles: SubtitleFile[] }) {
-    const [isLoading, setIsLoading] = useState(true)
-    const [displayMode, setDisplayMode] = useState<SubtitleDisplayMode>('japanese')
+    const [isLoading, setIsLoading] = useState<boolean>(true)
+    const [displayScript, setDisplayScript] = useState<SubtitleScript>('japanese')
     const [isPending, startTransition] = useTransition();
     const [previousCues, setPreviousCues] = useState<TSubtitleCue[] | undefined>();
     const [activeIndex, setActiveIndex] = useState<number>(-1);
@@ -33,7 +33,7 @@ export default function SubtitlePanel({ subtitleFiles }: { subtitleFiles: Subtit
     const scrollAreaRef = useRef<HTMLDivElement>(null)
     const router = useRouter()
 
-    const displayModes = [
+    const displayScripts = [
         { name: "japanese" }, // normal|default
         { name: "hiragana" },
         { name: "katakana" },
@@ -41,9 +41,9 @@ export default function SubtitlePanel({ subtitleFiles }: { subtitleFiles: Subtit
     ]
 
     const { data: subtitleCues, isLoading: isCuesLoading, error: cuesError } = useQuery({
-        queryKey: ['subs', displayMode, activeSubtitleFile],
+        queryKey: ['subs', displayScript, activeSubtitleFile],
         queryFn: async () => {
-            if(activeSubtitleFile && activeSubtitleFile.url) return await parseSubtitleToJson({ url: activeSubtitleFile.url, format: 'srt', mode: displayMode })
+            if(activeSubtitleFile && activeSubtitleFile.url) return await parseSubtitleToJson({ url: activeSubtitleFile.url, format: 'srt', script: displayScript })
             else throw new Error("Couldn't get the file")
         },
         staleTime: Infinity,
@@ -51,8 +51,6 @@ export default function SubtitlePanel({ subtitleFiles }: { subtitleFiles: Subtit
     })
     
     useEffect(() => {
-        console.log(`panel`)
-        console.log(subtitleCues)
         if(subtitleCues?.length && activeSubtitleFile) {
             setIsLoading(false)
         }
@@ -75,9 +73,9 @@ export default function SubtitlePanel({ subtitleFiles }: { subtitleFiles: Subtit
         overscan: 5
     });
 
-    const handleDisplayModeChange = (newDisplayMode: SubtitleDisplayMode) => {
+    const handleDisplayScriptChange = (newDisplayScript: SubtitleScript) => {
         startTransition(() => {
-            setDisplayMode(newDisplayMode);
+            setDisplayScript(newDisplayScript);
         });
     };
 
@@ -134,7 +132,7 @@ export default function SubtitlePanel({ subtitleFiles }: { subtitleFiles: Subtit
 
     return (
         <Card className="flex flex-col gap-3 w-full max-w-[500px]">
-            <Tabs defaultValue={displayMode || displayModes[0].name} value={displayMode}>
+            <Tabs defaultValue={displayScript || displayScripts[0].name} value={displayScript}>
                 <CardHeader className="flex flex-col gap-3">
                     <div className="flex flex-row justify-between items-center w-full">
                         <CardTitle className="text-xl">Dialogue</CardTitle>
@@ -161,15 +159,15 @@ export default function SubtitlePanel({ subtitleFiles }: { subtitleFiles: Subtit
                                 </Badge>
                             )}
                             <TabsList className="w-full">
-                                {displayModes.map((displayModeOption, index) => (
+                                {displayScripts.map((displayScriptOption, index) => (
                                     <TabsTrigger
                                         key={index}
-                                        value={displayModeOption.name}
-                                        onClick={() => handleDisplayModeChange(displayModeOption.name as SubtitleDisplayMode)}
+                                        value={displayScriptOption.name}
+                                        onClick={() => handleDisplayScriptChange(displayScriptOption.name as SubtitleScript)}
                                         disabled={isPending || isCuesLoading}
                                         className="cursor-pointer"
                                     >
-                                        {displayModeOption.name}
+                                        {displayScriptOption.name}
                                     </TabsTrigger>
                                 ))}
                             </TabsList>
@@ -188,7 +186,7 @@ export default function SubtitlePanel({ subtitleFiles }: { subtitleFiles: Subtit
                             onScroll={handleManualScroll}
                         >
                             <TabsContent 
-                                value={displayMode}
+                                value={displayScript}
                                 className="relative w-full"
                                 style={{
                                     height: `${rowVirtualizer.getTotalSize()}px`,

@@ -1,13 +1,15 @@
-import { SubtitleCue, SubtitleDisplayMode, SubtitleFormat } from "@/types/subtitle";
+import { SubtitleCue, SubtitleScript, SubtitleFormat } from "@/types/subtitle";
 import * as kuromoji from "kuromoji";
 // @ts-expect-error - Kuroshiro lacks proper TypeScript typings
 import Kuroshiro from "kuroshiro";
 // @ts-expect-error - KuromojiAnalyzer lacks proper TypeScript typings
 import KuromojiAnalyzer from "kuroshiro-analyzer-kuromoji";
 
+import nlp from 'compromise';
+
 interface KuroshiroInstance {
   init: (analyzer: unknown) => Promise<void>;
-  convert: (text: string, options?: { to?: string; mode?: string }) => Promise<string>;
+  convert: (text: string, options?: { to?: string; script?: string }) => Promise<string>;
 }
 
 // Global instances to avoid re-initialization
@@ -20,40 +22,62 @@ export async function fetchSubtitles(url: string) {
   return text;
 }
 
-export async function parseSubtitleToJson({ url, format, mode = 'japanese' }: { url: string, format: SubtitleFormat, mode?: SubtitleDisplayMode }) {
+export async function parseSubtitleToJson({ url, format, script = 'japanese' }: { url: string, format: SubtitleFormat, script?: SubtitleScript }) {
   const content = await fetchSubtitles(url);
+
+  // console.log(`url`, url);
+  // console.log(`format`, format);
+  // console.log(`script`, script);
+
+  let subtitles: SubtitleCue[] = [];
   
+  // First parse the subtitle file to get basic cues
   switch (format) {
     case 'srt':
-      const srtSubs = parseSrt(content);
-      
-      // Initialize required tools once
-      await initializeProcessors(mode);
-      
-      if (mode === 'japanese') {
-        // Only tokenize for Japanese mode
-        return tokenizeSubtitles(srtSubs);
-      } else {
-        // For other modes, convert and tokenize in one pass
-        const tokanizedSrtSubs = tokenizeSubtitles(srtSubs)
-        return processSubtitlesForNonJapaneseMode(tokanizedSrtSubs, mode);
-      }
+      subtitles = parseSrt(content);
+      break;
     case "vtt":
-      const vttSubs = parseVtt(content);
-      return vttSubs
+      console.log('vtt')
+      subtitles = parseVtt(content);
+      console.log(subtitles)
+      break;
     default:
       throw new Error(`Unsupported subtitle format: ${format}`);
   }
+  
+  // Check if we have valid subtitles before processing
+  if (!subtitles.length) {
+    console.error("No subtitles found in file");
+    return [];
+  }
+  
+  // Now process the subtitles based on script type
+  if (script === 'english') {
+    return processEnglishSubtitles(subtitles);
+  } else {
+    // Initialize Japanese processors
+    await initializeProcessors(script);
+    
+    // For Japanese, tokenize first
+    const tokenizedSubs = tokenizeJapaneseSubtitles(subtitles);
+    
+    // If not Japanese, convert to the target script
+    if (script !== 'japanese') {
+      return processSubtitlesForNonJapaneseScript(tokenizedSubs, script);
+    }
+    
+    return tokenizedSubs;
+  }
 }
 
-async function initializeProcessors(mode: SubtitleDisplayMode) {
+async function initializeProcessors(script: SubtitleScript) {
   // Initialize tokenizer if not already done
-  if (!tokenizer) {
+  if (!tokenizer && script !== 'english') {
     tokenizer = await createTokenizer();
   }
   
-  // Initialize kuroshiro if not already done (for non-japanese modes only)
-  if (!kuroshiro && mode != 'japanese') {
+  // Initialize kuroshiro if not already done (for non-japanese scripts only)
+  if (!kuroshiro && script !== 'japanese' && script !== 'english') {
     kuroshiro = new Kuroshiro();
     const analyzer = new KuromojiAnalyzer({ dictPath: "/dict" });
     await kuroshiro?.init(analyzer);
@@ -70,11 +94,50 @@ function createTokenizer(dicPath = "/dict") {
   });
 }
 
-function tokenizeSubtitles(subs: SubtitleCue[]) {
+function processEnglishSubtitles(subs: SubtitleCue[]): SubtitleCue[] {
+  return subs.map(sub => {
+    // Skip processing if content is empty
+    if (!sub.content) {
+      return sub;
+    }
+    
+    const doc = nlp(sub.content);
+    const terms = doc.terms().out('array');
+    const tags = doc.terms().out('tags');
+    
+    // Transform each term into a SubtitleToken
+    const tokens = terms.map((term: any, index: any) => {
+      // Get the primary part of speech
+      const tagSet = tags[index] || {};
+      const primaryPos = Object.keys(tagSet)[0] || "word";
+      
+      return {
+        word_id: index,
+        surface_form: term,
+        pos: primaryPos,
+        basic_form: doc.terms().eq(index).normalize().out('text'),
+        word_type: "word",
+        word_position: index,
+        pos_detail_1: Object.keys(tagSet).join(','),
+        pos_detail_2: "",
+        pos_detail_3: "",
+        conjugated_type: tagSet.Verb ? "verb" : "",
+        conjugated_form: ""
+      };
+    });
+    
+    return {
+      ...sub,
+      tokens
+    };
+  });
+}
+
+function tokenizeJapaneseSubtitles(subs: SubtitleCue[]): SubtitleCue[] {
   if (!tokenizer) {
-    throw new Error("Tokenizer not initialized");
+    throw new Error("Tokenizer not initialized for Japanese subtitles");
   }
-  
+
   return subs.map(sub => ({
     ...sub,
     tokens: tokenizer!.tokenize(sub.content || '')
@@ -82,30 +145,33 @@ function tokenizeSubtitles(subs: SubtitleCue[]) {
   }));
 }
 
-async function processSubtitlesForNonJapaneseMode(subs: SubtitleCue[], mode: SubtitleDisplayMode) {
-  if (!kuroshiro || !tokenizer) {
-    throw new Error("Processors not initialized");
+async function processSubtitlesForNonJapaneseScript(subs: SubtitleCue[], script: SubtitleScript) {
+  if (!kuroshiro) {
+    throw new Error("Kuroshiro not initialized for script conversion");
   }
   
   return Promise.all(
     subs.map(async sub => {
-    const convertedContent = await kuroshiro!.convert(sub.content, { to: mode });
+      if (!sub.content) {
+        return sub;
+      }
       
-    // Converting the already tokanzied text so we get consistent tokens across modes
-    const convertedTokens = sub.tokens
-      ? await Promise.all(
-          sub.tokens
-            .filter(token => token.surface_form !== ' ' && token.surface_form !== '　')
-            .map(async token => {
-              const convertedToken = await kuroshiro!.convert(token.surface_form, { to: mode });
-              return {
-                ...token,
-                surface_form: convertedToken
-              };
-            })
-        )
-      : [];
-
+      const convertedContent = await kuroshiro!.convert(sub.content, { to: script });
+      
+      // Converting the already tokenized text so we get consistent tokens across scripts
+      const convertedTokens = sub.tokens
+        ? await Promise.all(
+            sub.tokens
+              .filter(token => token.surface_form !== ' ' && token.surface_form !== '　')
+              .map(async token => {
+                const convertedToken = await kuroshiro!.convert(token.surface_form, { to: script });
+                return {
+                  ...token,
+                  surface_form: convertedToken
+                };
+              })
+          )
+        : [];
 
       return {
         ...sub,
@@ -176,7 +242,6 @@ function parseSrt(content: string) {
 function parseVtt(content: string) {
   const lines = content.split('\n');
   const result = [];
-  
   let currentEntry: Partial<SubtitleCue> = {};
   let isReadingContent = false;
   let idCounter = 1;
@@ -189,7 +254,6 @@ function parseVtt(content: string) {
   
   for (let i = startIndex; i < lines.length; i++) {
     const line = lines[i].trim();
-    
     if (line === '') {
       if (Object.keys(currentEntry).length > 0 && currentEntry.from && currentEntry.to) {
         if (!currentEntry.id) {
@@ -203,19 +267,18 @@ function parseVtt(content: string) {
     }
     
     if (isReadingContent) {
-      const initialContent = (currentEntry.content || '') + 
+      const initialContent = (currentEntry.content || '') +
         (currentEntry.content ? ' ' : '') + line;
-
       currentEntry.content = removeHtmlTags(initialContent);
       continue;
     }
     
-    // VTT timestamp format: 00:00:00.000 --> 00:00:00.000
-    const timestampMatch = line.match(/(\d{2}:\d{2}:\d{2}\.\d{3}) --> (\d{2}:\d{2}:\d{2}\.\d{3})/);
-    
+    // Modified regex to handle both "HH:MM:SS.mmm" and "MM:SS.mmm" formats
+    const timestampMatch = line.match(/(\d+:)?(\d{2}:\d{2}\.\d{3}) --> (\d+:)?(\d{2}:\d{2}\.\d{3})/);
     if (timestampMatch) {
-      currentEntry.from = timestampMatch[1];
-      currentEntry.to = timestampMatch[2];
+      // Handle both formats and normalize to HH:MM:SS.mmm
+      currentEntry.from = normalizeTimestamp(timestampMatch[1], timestampMatch[2]);
+      currentEntry.to = normalizeTimestamp(timestampMatch[3], timestampMatch[4]);
       isReadingContent = true;
       continue;
     }
@@ -229,6 +292,15 @@ function parseVtt(content: string) {
   }
   
   return result as SubtitleCue[];
+}
+
+// Helper function to normalize timestamps to HH:MM:SS.mmm format
+function normalizeTimestamp(hoursPart: string | undefined, minuteSecondsPart: string): string {
+  if (hoursPart) {
+    return hoursPart + minuteSecondsPart;
+  } else {
+    return "00:" + minuteSecondsPart;
+  }
 }
 
 function removeHtmlTags(text: string): string {

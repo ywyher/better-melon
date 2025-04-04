@@ -2,33 +2,33 @@
 
 import { useWatchStore } from "@/app/watch/[id]/[ep]/store"
 import MultipleSelector from "@/components/multiple-selector"
-import { subtitleModes } from "@/lib/constants"
-import { SubtitleDisplayMode } from "@/types/subtitle"
+import { subtitleScripts } from "@/lib/constants"
+import { SubtitleScript } from "@/types/subtitle"
 
 export default function Bar() {
-    const activeModes = useWatchStore((state) => state.activeModes)
-    const setActiveModes = useWatchStore((state) => state.setActiveModes)
+    const activeScripts = useWatchStore((state) => state.activeScripts)
+    const setActiveScripts = useWatchStore((state) => state.setActiveScripts)
 
-    const handleModes = (modes: SubtitleDisplayMode[]) => {
-        setActiveModes(modes)
+    const handleScripts = (scripts: SubtitleScript[]) => {
+        setActiveScripts(scripts)
     }
 
     return (
         <div className="flex flex-row gap-5">
             <MultipleSelector 
-                options={subtitleModes.map((mode) => {
+                options={subtitleScripts.map((script) => {
                     return {
-                        value: mode,
-                        label: mode
+                        value: script,
+                        label: script
                     }
                 })}
-                value={activeModes.map((mode) => {
+                value={activeScripts.map((script) => {
                     return {
-                        value: mode,
-                        label: mode
+                        value: script,
+                        label: script
                     }
                 })}
-                onChange={(modes) => handleModes(modes.map((mode) => mode.value) as SubtitleDisplayMode[])}
+                onChange={(scripts) => handleScripts(scripts.map((script) => script.value) as SubtitleScript[])}
             />
         </div>
     )

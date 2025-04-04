@@ -2,65 +2,111 @@
 
 import { useWatchStore } from "@/app/watch/[id]/[ep]/store";
 import { parseSubtitleToJson } from "@/lib/fetch-subs";
-import { srtTimestampToSeconds } from "@/lib/funcs";
+import { srtTimestampToSeconds, vttTimestampToSeconds } from "@/lib/funcs";
 import { cn } from "@/lib/utils";
 import { SubtitleCue } from "@/types/subtitle";
 import { useQueries } from "@tanstack/react-query";
 import { useMediaState } from "@vidstack/react";
-import { CSSProperties, useMemo, useState } from "react";
+import { CSSProperties, Fragment, useEffect, useMemo, useState } from "react";
 
 // Define subtitle types for better code organization
-const SUBTITLE_TYPES = ['japanese', 'hiragana', 'katakana', 'romaji'] as const;
+const SUBTITLE_TYPES = ['japanese', 'hiragana', 'katakana', 'romaji', 'english'] as const;
 type SubtitleType = typeof SUBTITLE_TYPES[number];
 
-// Define default and active styles
-const defaultTokenStyle: CSSProperties = {
-  fontSize: '25px',
-  color: 'white',
-  WebkitTextStroke: '.5px black', // For Safari/Chrome
-  fontWeight: 'bold',
-  transition: 'all 0.15s ease',
-  display: 'inline-block',
-  margin: '0 1px',
+// Calculate font size based on fullscreen state and active scripts count
+const calculateFontSize = (isFullscreen: boolean, activeScriptsCount: number): string => {
+  // Base sizes for fullscreen and non-fullscreen
+  const fullscreenBaseSize = 40;
+  const normalBaseSize = 24;
+  
+  // Reduction factor per additional script (after the first one)
+  const reductionFactor = isFullscreen ? 4 : 2;
+  
+  // Calculate size with reduction for multiple scripts
+  const additionalScripts = Math.max(0, activeScriptsCount - 1);
+  const reduction = additionalScripts * reductionFactor;
+  
+  // Calculate final size with a minimum threshold
+  const baseSize = isFullscreen ? fullscreenBaseSize : normalBaseSize;
+  const finalSize = Math.max(baseSize - reduction, isFullscreen ? 24 : 16);
+  
+  return `${finalSize}px`;
 };
 
-const activeTokenStyle: CSSProperties = {
-  fontSize: '25px',
-  color: '#4ade80', // green-400
-  WebkitTextStroke: '1px black',
-  fontWeight: 'bold',
-  textShadow: '0 0 10px rgba(74, 222, 128, 0.8)',
+// Define style variants for various states
+const getTokenStyles = (isFullscreen: boolean, activeScriptsCount: number) => {
+  const fontSize = calculateFontSize(isFullscreen, activeScriptsCount);
+  
+  return {
+    default: {
+      fontSize: fontSize,
+      color: 'white',
+      WebkitTextStroke: isFullscreen ? '.5px black' : '.3px black',
+      fontWeight: 'bold',
+      transition: 'all 0.15s ease',
+      display: 'inline-block',
+      textShadow: '1px 1px 2px rgba(0, 0, 0, 0.8)',
+      margin: '0 2px',
+    } as CSSProperties,
+    
+    active: {
+      fontSize: fontSize,
+      color: '#4ade80', // green-400
+      WebkitTextStroke: isFullscreen ? '1px black' : '.5px black',
+      fontWeight: 'bold',
+      textShadow: '0 0 10px rgba(74, 222, 128, 0.8), 1px 1px 3px rgba(0, 0, 0, 0.9)',
+      margin: '0 2px',
+    } as CSSProperties
+  };
 };
 
 export default function Subtitle() {
     const player = useWatchStore((state) => state.player);
+    const englishSubtitleUrl = useWatchStore((state) => state.englishSubtitleUrl) || "";
     const activeSubtitleFile = useWatchStore((state) => state.activeSubtitleFile);
     const currentTime = useMediaState('currentTime', player);
+    const isFullscreen = useMediaState('fullscreen', player);
+    const controlsVisible = useMediaState('controlsVisible', player);
+
     const [hoveredTokenIndex, setHoveredTokenIndex] = useState<number | null>(null);
     const [hoveredCueId, setHoveredCueId] = useState<number | null>(null);
 
-    const activeModes = useWatchStore((state) => state.activeModes)
+    const activeScripts = useWatchStore((state) => state.activeScripts);
+    const activeScriptsCount = activeScripts.length;
+    
+    // Get dynamic styles based on fullscreen state and active scripts count
+    const tokenStyles = useMemo(
+      () => getTokenStyles(!!isFullscreen, activeScriptsCount),
+      [isFullscreen, activeScriptsCount]
+    );
 
     // Use useQueries to batch all subtitle queries together
     const subtitleQueries = useQueries({
-        queries: SUBTITLE_TYPES.map(type => ({
-            queryKey: ['subs', activeSubtitleFile, type],
+        queries: SUBTITLE_TYPES.filter(type => activeScripts.includes(type)).map(type => ({
+            queryKey: ['subs', type === 'english' ? englishSubtitleUrl : activeSubtitleFile?.url, type],
             queryFn: async () => {
-                if (!activeSubtitleFile?.url) {
-                    throw new Error("Couldn't get the file");
+                if ((type !== 'english' && !activeSubtitleFile?.url) || 
+                    (type === 'english' && !englishSubtitleUrl)) {
+                    throw new Error(`Couldn't get the file for ${type} subtitles`);
                 }
+                
+                const url = type === 'english' ? englishSubtitleUrl : activeSubtitleFile!.url;
+                const format = url.split('.').pop() as "srt" | "vtt";
+                
+                const cues = await parseSubtitleToJson({ 
+                    url,
+                    format, 
+                    script: type
+                });
                 
                 return {
                     type,
-                    cues: await parseSubtitleToJson({ 
-                        url: activeSubtitleFile.url, 
-                        format: 'srt', 
-                        mode: type 
-                    })
+                    cues
                 };
             },
             staleTime: Infinity,
-            enabled: !!activeSubtitleFile?.url
+            enabled: (type === 'english' ? !!englishSubtitleUrl : !!activeSubtitleFile?.url) && 
+                     activeScripts.includes(type)
         }))
     });
 
@@ -74,7 +120,8 @@ export default function Subtitle() {
                 japanese: [],
                 hiragana: [],
                 katakana: [],
-                romaji: []
+                romaji: [],
+                english: []
             };
         }
         
@@ -82,7 +129,8 @@ export default function Subtitle() {
             japanese: [],
             hiragana: [],
             katakana: [],
-            romaji: []
+            romaji: [],
+            english: []
         };
         
         subtitleQueries.forEach(query => {
@@ -90,8 +138,12 @@ export default function Subtitle() {
                 const { type, cues } = query.data;
                 
                 result[type as SubtitleType] = cues.filter(cue => {
-                    const startTime = srtTimestampToSeconds(cue.from);
-                    const endTime = srtTimestampToSeconds(cue.to);
+                    const startTime = type != 'english' ?
+                        srtTimestampToSeconds(cue.from)
+                        : vttTimestampToSeconds(cue.from)
+                    const endTime = type != "english" ?
+                        srtTimestampToSeconds(cue.to)
+                        : vttTimestampToSeconds(cue.to)
                     return currentTime >= startTime && currentTime <= endTime;
                 });
             }
@@ -111,63 +163,77 @@ export default function Subtitle() {
         setHoveredTokenIndex(null);
     };
 
+    // Get the bottom position based on player state
+    const getBottomPosition = () => {
+        if (isFullscreen) {
+            return controlsVisible ? '5' : '2';
+        }
+        return controlsVisible ? '4' : '1';
+    };
+
     if (isLoading) return <>Loading...</>;
 
     return (
-        <div className="absolute bottom-16 left-1/2 transform -translate-x-1/2 flex flex-col items-center w-fit">
-            {SUBTITLE_TYPES.filter((sub) => activeModes.find((m) => m == sub)).map(type => (
+        <div 
+            className={cn(
+                "absolute left-1/2 transform -translate-x-1/2 flex",
+                "flex-col items-center w-[100%] px-4 py-2 rounded-lg bg-black bg-opacity-30",
+                `bottom-${getBottomPosition()}`,
+            )}
+            style={{
+                transition: 'bottom 0.3s ease',
+                bottom: `${getBottomPosition()}rem`
+            }}
+        >
+            {SUBTITLE_TYPES.filter(type => activeScripts.includes(type)).map(type => (
                 <div 
-                    key={type} 
+                    key={type}
                     className={cn(
-                        "subtitle-group w-full text-center mb-3",
-                        `subtitle-${type}`
+                        "subtitle-group w-full text-center mb-2",
+                        `subtitle-${type}`,
+                        type == "english" && "flex flex-row flex-wrap justify-center gap-1"
                     )}
                 >
                     {activeSubtitleSets[type]?.map((cue, idx) => (
-                        <span 
-                            key={`${type}-cue-${idx}`}
-                            className={`${type}`}
-                        >
-                            {cue.tokens?.length && cue.tokens?.map((token, tokenIdx) => {
-                                const isActive = hoveredCueId === cue.id && hoveredTokenIndex === tokenIdx;
-                                
-                                return (
-                                    <span 
-                                        key={tokenIdx}
-                                        style={{
-                                            ...defaultTokenStyle,
-                                            ...(isActive ? activeTokenStyle : {})
-                                        }}
-                                        onMouseEnter={() => handleTokenMouseEnter(cue.id, tokenIdx)}
-                                        onMouseLeave={handleTokenMouseLeave}
-                                        onMouseOver={(e) => {
-                                            if (!isActive) {
-                                                Object.assign(e.currentTarget.style, {
-                                                    color: '#4ade80',
-                                                    WebkitTextStroke: '1px black',
-                                                    textStroke: '1px black',
-                                                    fontWeight: 'bold',
-                                                    textShadow: '0 0 10px rgba(74, 222, 128, 0.8)'
-                                                });
-                                            }
-                                        }}
-                                        onMouseOut={(e) => {
-                                            if (!isActive) {
-                                                Object.assign(e.currentTarget.style, {
-                                                    color: 'white',
-                                                    WebkitTextStroke: '0.5px black',
-                                                    textStroke: '0.5px black',
-                                                    fontWeight: 'normal',
-                                                    textShadow: 'none'
-                                                });
-                                            }
-                                        }}
-                                    >
-                                        {token.surface_form}
-                                    </span>
-                                );
-                            })}
-                        </span>
+                        <Fragment key={idx}>
+                            {cue.tokens?.length ? (
+                                cue.tokens.map((token, tokenIdx) => {
+                                    const isActive = hoveredCueId === cue.id && hoveredTokenIndex === tokenIdx;
+                                    
+                                    return (
+                                        <span 
+                                            key={tokenIdx}
+                                            style={isActive ? tokenStyles.active : tokenStyles.default}
+                                            onMouseEnter={() => handleTokenMouseEnter(cue.id, tokenIdx)}
+                                            onMouseLeave={handleTokenMouseLeave}
+                                            onMouseOver={(e) => {
+                                                if (!isActive) {
+                                                    Object.assign(e.currentTarget.style, {
+                                                        color: '#4ade80',
+                                                        WebkitTextStroke: isFullscreen ? '1px black' : '.5px black',
+                                                        textShadow: '0 0 10px rgba(74, 222, 128, 0.8), 1px 1px 3px rgba(0, 0, 0, 0.9)'
+                                                    });
+                                                }
+                                            }}
+                                            onMouseOut={(e) => {
+                                                if (!isActive) {
+                                                    Object.assign(e.currentTarget.style, {
+                                                        color: 'white',
+                                                        WebkitTextStroke: isFullscreen ? '.5px black' : '.3px black',
+                                                        textShadow: '1px 1px 2px rgba(0, 0, 0, 0.8)'
+                                                    });
+                                                }
+                                            }}
+                                        >
+                                            {token.surface_form}
+                                        </span>
+                                    );
+                                })
+                            ) : (
+                                // Fallback to displaying full content if no tokens
+                                <span style={tokenStyles.default}>{cue.content}</span>
+                            )}
+                        </Fragment>
                     ))}
                 </div>
             ))}
