@@ -16,6 +16,7 @@ Animelon doesn’t provide all animes by default, and its entries are rarely upd
 - [x] Skip chapters/timestamps button
 - [x] Interactive video subtitles
 - [x] Delay subtitle feature
+- [x] Next/Previous cue buttons
 - [ ] Seperate delay sliders for japanese and english subs
 - [ ] Providers selector
 - [ ] Allow using local subtitles

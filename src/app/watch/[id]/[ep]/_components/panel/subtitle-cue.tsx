@@ -33,10 +33,11 @@ export default function SubtitleCue({
 }: SubtitleCueProps) {
     const { from, to, content, tokens } = cue;
     const player = useWatchStore((state) => state.player)
+    const delay = useWatchStore((state) => state.delay)
 
     const handleSeek = () => {
         setActiveIndex(index)
-        player.current?.remoteControl.seek(srtTimestampToSeconds(from))
+        player.current?.remoteControl.seek(srtTimestampToSeconds(from) + delay)
     };
 
     return (

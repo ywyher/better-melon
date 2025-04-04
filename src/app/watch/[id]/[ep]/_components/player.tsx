@@ -44,7 +44,8 @@ export default function Player({ streamingData, episode, subtitleFiles }: Player
     }, [player, setPlayer])
 
     useEffect(() => {
-        const url = encodeURIComponent(streamingData?.sources[0].url);
+        if(!streamingData) return;
+        const url = encodeURIComponent(streamingData.sources[0].url);
         
         setVideoSrc(`${process.env.NEXT_PUBLIC_PROXY_URL}?url=${url}`)
 

@@ -27,6 +27,7 @@ export default function SubtitlePanel({ subtitleFiles }: { subtitleFiles: Subtit
     
     const player = useWatchStore((state) => state.player);
     const activeSubtitleFile = useWatchStore((state) => state.activeSubtitleFile);
+    const setSubtitleCues = useWatchStore((state) => state.setSubtitleCues);
     const delay = useWatchStore((state) => state.delay);
 
     const currentTime = useMediaState('currentTime', player);
@@ -53,6 +54,7 @@ export default function SubtitlePanel({ subtitleFiles }: { subtitleFiles: Subtit
     
     useEffect(() => {
         if(subtitleCues?.length && activeSubtitleFile) {
+            setSubtitleCues(subtitleCues)
             setIsLoading(false)
         }
     }, [subtitleCues, activeSubtitleFile])
@@ -84,7 +86,7 @@ export default function SubtitlePanel({ subtitleFiles }: { subtitleFiles: Subtit
         if (!cue || !currentTime) return false;
         const startTime = srtTimestampToSeconds(cue.from);
         const endTime = srtTimestampToSeconds(cue.to);
-        return currentTime >= startTime && currentTime <= endTime;
+        return currentTime >= startTime + delay && currentTime <= endTime + delay;
     };
 
     // Find the active cue index and scroll to it when currentTime changes
