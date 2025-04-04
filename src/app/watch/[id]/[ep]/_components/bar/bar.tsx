@@ -1,6 +1,7 @@
 "use client"
 
 import DelaySlider from "@/app/watch/[id]/[ep]/_components/bar/delay-slider"
+import NextCue from "@/app/watch/[id]/[ep]/_components/bar/next-cue"
 import { useWatchStore } from "@/app/watch/[id]/[ep]/store"
 import MultipleSelector from "@/components/multiple-selector"
 import { subtitleScripts } from "@/lib/constants"
@@ -32,6 +33,7 @@ export default function Bar() {
                 onChange={(scripts) => handleScripts(scripts.map((script) => script.value) as SubtitleScript[])}
             />
             <DelaySlider />
+            <NextCue />
         </div>
     )
 }

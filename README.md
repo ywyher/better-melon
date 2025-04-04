@@ -16,10 +16,11 @@ Animelon doesn’t provide all animes by default, and its entries are rarely upd
 - [x] Skip chapters/timestamps button
 - [x] Interactive video subtitles
 - [x] Delay subtitle feature
+- [ ] Seperate delay sliders for japanese and english subs
 - [ ] Providers selector
 - [ ] Allow using local subtitles
 - [ ] Defintion on hover functionality
-- [ ] ass/vtt support
+- [ ] .ass support
 - [ ] Authentication integration through anilist
 - [ ] Anki integration
 - [ ] User friendly/Modern UI
