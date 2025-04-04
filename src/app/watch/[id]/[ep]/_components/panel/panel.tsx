@@ -27,6 +27,7 @@ export default function SubtitlePanel({ subtitleFiles }: { subtitleFiles: Subtit
     
     const player = useWatchStore((state) => state.player);
     const activeSubtitleFile = useWatchStore((state) => state.activeSubtitleFile);
+    const delay = useWatchStore((state) => state.delay);
 
     const currentTime = useMediaState('currentTime', player);
 
@@ -94,7 +95,7 @@ export default function SubtitlePanel({ subtitleFiles }: { subtitleFiles: Subtit
         const currentActiveIndex = displayCues.findIndex(cue => {
             const startTime = srtTimestampToSeconds(cue.from);
             const endTime = srtTimestampToSeconds(cue.to);
-            return currentTime >= startTime && currentTime <= endTime;
+            return currentTime >= startTime + delay && currentTime <= endTime + delay;
         });
         
         // If found an active subtitle and it's different from the current one

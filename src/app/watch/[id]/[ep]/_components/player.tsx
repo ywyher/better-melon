@@ -10,7 +10,7 @@ import '@vidstack/react/player/styles/default/layouts/video.css';
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useWatchStore } from "@/app/watch/[id]/[ep]/store";
-import { SubtitleFile, SubtitleFormat } from '@/types/subtitle';
+import { SubtitleFile } from '@/types/subtitle';
 import { AnimeEpisodeData, AnimeStreamingData, SkipTime } from '@/types/anime';
 import { generateWebVTTFromSkipTimes, selectSubtitleFile } from '@/app/watch/[id]/[ep]/funcs';
 import { Button } from '@/components/ui/button';
@@ -121,7 +121,7 @@ export default function Player({ streamingData, episode, subtitleFiles }: Player
             });
             return;
         }
-    }, [subtitleFiles, setActiveSubtitleFile, activeSubtitleFile, streamingData.subtitles]);
+    }, [subtitleFiles, setActiveSubtitleFile, activeSubtitleFile]);
     
     const handleCanPlay = () => {
         setIsVideoReady(true);
@@ -231,7 +231,7 @@ export default function Player({ streamingData, episode, subtitleFiles }: Player
                     {canSkip && (
                         <Button
                             className="
-                                absolute
+                                absolute z-10
                                 bottom-20 right-4
                             "
                             variant='secondary'

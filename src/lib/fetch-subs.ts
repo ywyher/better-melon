@@ -105,9 +105,7 @@ function processEnglishSubtitles(subs: SubtitleCue[]): SubtitleCue[] {
     const terms = doc.terms().out('array');
     const tags = doc.terms().out('tags');
     
-    // Transform each term into a SubtitleToken
-    const tokens = terms.map((term: any, index: any) => {
-      // Get the primary part of speech
+    const tokens = terms.map((term: string, index: number) => {
       const tagSet = tags[index] || {};
       const primaryPos = Object.keys(tagSet)[0] || "word";
       

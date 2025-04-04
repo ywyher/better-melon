@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import { SubtitleCue } from "@/types/subtitle";
 import { useQueries } from "@tanstack/react-query";
 import { useMediaState } from "@vidstack/react";
-import { CSSProperties, Fragment, useEffect, useMemo, useState } from "react";
+import { CSSProperties, Fragment, useMemo, useState } from "react";
 
 // Define subtitle types for better code organization
 const SUBTITLE_TYPES = ['japanese', 'hiragana', 'katakana', 'romaji', 'english'] as const;
@@ -72,6 +72,8 @@ export default function Subtitle() {
     const [hoveredCueId, setHoveredCueId] = useState<number | null>(null);
 
     const activeScripts = useWatchStore((state) => state.activeScripts);
+    const delay = useWatchStore((state) => state.delay);
+
     const activeScriptsCount = activeScripts.length;
     
     // Get dynamic styles based on fullscreen state and active scripts count
@@ -80,7 +82,6 @@ export default function Subtitle() {
       [isFullscreen, activeScriptsCount]
     );
 
-    // Use useQueries to batch all subtitle queries together
     const subtitleQueries = useQueries({
         queries: SUBTITLE_TYPES.filter(type => activeScripts.includes(type)).map(type => ({
             queryKey: ['subs', type === 'english' ? englishSubtitleUrl : activeSubtitleFile?.url, type],
@@ -110,10 +111,8 @@ export default function Subtitle() {
         }))
     });
 
-    // Extract loading states and results
     const isLoading = subtitleQueries.some(query => query.isLoading);
     
-    // Find active cues for each subtitle type with proper typing
     const activeSubtitleSets = useMemo<Record<SubtitleType, SubtitleCue[]>>(() => {
         if (!currentTime) {
             return {
@@ -144,7 +143,7 @@ export default function Subtitle() {
                     const endTime = type != "english" ?
                         srtTimestampToSeconds(cue.to)
                         : vttTimestampToSeconds(cue.to)
-                    return currentTime >= startTime && currentTime <= endTime;
+                    return currentTime >= startTime + delay && currentTime <= endTime + delay;
                 });
             }
         });
@@ -152,7 +151,6 @@ export default function Subtitle() {
         return result;
     }, [subtitleQueries, currentTime]);
 
-    // Handle mouse enter/leave for token hover
     const handleTokenMouseEnter = (cueId: number, tokenIndex: number) => {
         setHoveredCueId(cueId);
         setHoveredTokenIndex(tokenIndex);
@@ -163,7 +161,6 @@ export default function Subtitle() {
         setHoveredTokenIndex(null);
     };
 
-    // Get the bottom position based on player state
     const getBottomPosition = () => {
         if (isFullscreen) {
             return controlsVisible ? '5' : '2';

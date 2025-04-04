@@ -1,5 +1,6 @@
 "use client"
 
+import DelaySlider from "@/app/watch/[id]/[ep]/_components/bar/delay-slider"
 import { useWatchStore } from "@/app/watch/[id]/[ep]/store"
 import MultipleSelector from "@/components/multiple-selector"
 import { subtitleScripts } from "@/lib/constants"
@@ -14,7 +15,7 @@ export default function Bar() {
     }
 
     return (
-        <div className="flex flex-row gap-5">
+        <div className="flex flex-col gap-5">
             <MultipleSelector 
                 options={subtitleScripts.map((script) => {
                     return {
@@ -30,6 +31,7 @@ export default function Bar() {
                 })}
                 onChange={(scripts) => handleScripts(scripts.map((script) => script.value) as SubtitleScript[])}
             />
+            <DelaySlider />
         </div>
     )
 }

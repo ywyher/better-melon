@@ -4,7 +4,7 @@ import SubtitlePanel from "@/app/watch/[id]/[ep]/_components/panel/panel";
 import { AnimeEpisodeData } from "@/types/anime";
 import { filterSubtitleFiles } from "@/app/watch/[id]/[ep]/funcs";
 import GoBack from "@/components/goback";
-import Bar from "@/app/watch/[id]/[ep]/_components/bar";
+import Bar from "@/app/watch/[id]/[ep]/_components/bar/bar";
 
 type Params = Promise<{ id: string, ep: string }>
 
