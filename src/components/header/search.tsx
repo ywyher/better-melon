@@ -6,27 +6,24 @@ import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Search as SearchIcon } from "lucide-react"
-import { useRouter } from "next/navigation"
-import { useQueryState } from "nuqs"
+import { useRouter, useSearchParams } from "next/navigation"
 
 type SearchFormValues = {
   query: string
 }
 
-// Separate component that uses search params
 function SearchForm() {
-  const [queryParam] = useQueryState('query')
+  const searchParams = useSearchParams()
+  const queryParam = searchParams.get('query') || ""
   const router = useRouter()
 
-  // Initialize the form with react-hook-form
   const form = useForm<SearchFormValues>({
     defaultValues: {
-      query: queryParam || ""
+      query: queryParam
     }
   })
 
-  // Handle form submission
-  async function onSubmit(data: SearchFormValues) {
+  function onSubmit(data: SearchFormValues) {
     router.push(`/search?query=${encodeURIComponent(data.query)}`)
   }
 
@@ -65,16 +62,6 @@ function SearchForm() {
   )
 }
 
-// Main component with Suspense
-export default function Search() {
-  return (
-    <Suspense fallback={<SearchFallback />}>
-      <SearchForm />
-    </Suspense>
-  )
-}
-
-// Fallback UI while Suspense is loading
 function SearchFallback() {
   return (
     <div className="flex flex-row gap-3 items-center">
@@ -96,5 +83,13 @@ function SearchFallback() {
         <SearchIcon />
       </Button>
     </div>
+  )
+}
+
+export default function Search() {
+  return (
+    <Suspense fallback={<SearchFallback />}>
+      <SearchForm />
+    </Suspense>
   )
 }
