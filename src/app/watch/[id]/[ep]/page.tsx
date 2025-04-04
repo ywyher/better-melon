@@ -3,9 +3,7 @@ import { SubtitleFile } from "@/types/subtitle";
 import SubtitlePanel from "@/app/watch/[id]/[ep]/_components/panel/panel";
 import { AnimeEpisodeData } from "@/types/anime";
 import { filterSubtitleFiles } from "@/app/watch/[id]/[ep]/funcs";
-import Link from "next/link";
 import GoBack from "@/components/goback";
-import Subs from "@/app/watch/[id]/[ep]/_components/subtitle";
 import Bar from "@/app/watch/[id]/[ep]/_components/bar";
 
 type Params = Promise<{ id: string, ep: string }>
@@ -21,7 +19,7 @@ export default async function Watch({ params }: { params: Params }) {
         return res.json();
       }) as AnimeEpisodeData[];
 
-    const episode = episodesData.find((episode: any) => episode.number === episodeNumber) as AnimeEpisodeData;
+    const episode = episodesData.find((episode: AnimeEpisodeData) => episode.number === episodeNumber) as AnimeEpisodeData;
     
     if (!episode) {
       return <div className="container mx-auto px-4 py-6 text-center">Episode not found</div>;

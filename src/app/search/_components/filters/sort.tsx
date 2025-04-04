@@ -17,7 +17,7 @@ export default function SortFilter({
         if(querySort?.length) {
             setSort(querySort)
         }
-    }, [querySort])
+    }, [querySort, setSort])
 
     return (
         <div className="w-full">

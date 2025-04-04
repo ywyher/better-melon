@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { SubtitleCue } from "@/types/subtitle";
 import { cn } from "@/lib/utils";
-import { CSSProperties, Dispatch, SetStateAction, useEffect } from "react";
+import { CSSProperties, Dispatch, SetStateAction } from "react";
 import { useWatchStore } from "@/app/watch/[id]/[ep]/store";
 import { Button } from "@/components/ui/button";
 import { srtTimestampToSeconds } from "@/lib/funcs";
@@ -31,7 +31,7 @@ export default function SubtitleCue({
     className = "",
     variant = "default"
 }: SubtitleCueProps) {
-    const { id, from, to, content, tokens } = cue;
+    const { from, to, content, tokens } = cue;
     const player = useWatchStore((state) => state.player)
 
     const handleSeek = () => {

@@ -1,7 +1,7 @@
 import { Indicator } from "@/components/indicator";
 import MultipleSelector from "@/components/multiple-selector";
 import { gql, useQuery } from "@apollo/client";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import InputSkeleton from "@/components/input-skeleton";
 
 const GET_TAGS = gql`
@@ -34,7 +34,7 @@ export default function TagsFilter({
         if(queryTags?.length) {
             setTags(queryTags)
         }
-    }, [queryTags])
+    }, [queryTags, setTags])
 
     if(error)
         return (

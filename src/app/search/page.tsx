@@ -82,7 +82,7 @@ export default function Search() {
     
     const [query] = useQueryState('query')
 
-    const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [isLoading] = useState<boolean>(false)
 
     const { data, loading, error, refetch } = useQuery(GET_ANIMES, {
         variables: {
@@ -111,7 +111,7 @@ export default function Search() {
         <>
             <Header />
             <div className="container mx-auto py-8 px-4">
-                <AnimeFilters refetch={refetch} setIsLoading={setIsLoading} />
+                <AnimeFilters refetch={refetch} />
                 {(loading || isLoading) && (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
                     {[1, 2, 3, 4, 5, 6].map((_, idx) => (

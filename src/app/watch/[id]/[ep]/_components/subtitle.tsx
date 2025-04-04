@@ -4,10 +4,10 @@ import { useWatchStore } from "@/app/watch/[id]/[ep]/store";
 import { parseSubtitleToJson } from "@/lib/fetch-subs";
 import { srtTimestampToSeconds } from "@/lib/funcs";
 import { cn } from "@/lib/utils";
-import { SubtitleCue, SubtitleDisplayMode } from "@/types/subtitle";
+import { SubtitleCue } from "@/types/subtitle";
 import { useQueries } from "@tanstack/react-query";
 import { useMediaState } from "@vidstack/react";
-import { CSSProperties, useEffect, useMemo, useState } from "react";
+import { CSSProperties, useMemo, useState } from "react";
 
 // Define subtitle types for better code organization
 const SUBTITLE_TYPES = ['japanese', 'hiragana', 'katakana', 'romaji'] as const;

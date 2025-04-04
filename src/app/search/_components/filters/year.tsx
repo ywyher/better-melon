@@ -1,9 +1,7 @@
 "use client"
 
 import { Combobox } from "@/components/ui/combobox";
-import { useQueryState } from "nuqs";
 import { Dispatch, SetStateAction } from "react";
-import { Anime } from "@/types/anime";
 
 export default function YearFilter({
     queryYear,

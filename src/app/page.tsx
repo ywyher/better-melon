@@ -2,45 +2,11 @@
 
 import { useState } from "react";
 import AnimeCard, { AnimeCardSkeleton } from "@/components/anime/card";
-import { gql, useLazyQuery, useQuery } from "@apollo/client";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Search } from "lucide-react";
-import { toast } from "sonner";
+import { gql, useQuery } from "@apollo/client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Anime } from "@/types/anime";
 import Link from "next/link";
 import Header from "@/components/header";
-import { srtTimestampToSeconds } from "@/lib/funcs";
-
-// Define TypeScript interfaces for the anime data
-interface AnimeTitle {
-  romaji: string;
-  english: string | null;
-}
-
-interface AnimeCoverImage {
-  large: string;
-  medium: string;
-}
-
-interface AnimeData {
-  id: number;
-  title: AnimeTitle;
-  description: string | null;
-  coverImage: AnimeCoverImage;
-  bannerImage: string | null;
-  episodes: number | null;
-  season: string | null;
-  seasonYear: number | null;
-  averageScore: number | null;
-  genres: string[];
-  status: string;
-}
-
-interface PageData {
-  media: AnimeData[];
-}
 
 const GET_ANIMES = gql`
   query {

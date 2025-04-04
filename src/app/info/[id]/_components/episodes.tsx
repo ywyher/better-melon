@@ -2,11 +2,12 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Anime } from "@/types/anime"
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime"
 
 type AnimeEpisodesProps = {
     episodes: Anime['episodes']
     id: Anime['id']
-    router: any
+    router: AppRouterInstance
 }
 
 export function AnimeEpisodes({ episodes, id, router }: AnimeEpisodesProps) {

@@ -1,6 +1,6 @@
 "use client"
 
-import { srt, vtt } from "@/lib/constants"
+import { vtt } from "@/lib/constants"
 import { parseSubtitleToJson } from "@/lib/fetch-subs"
 import { useQuery } from "@tanstack/react-query"
 import { useEffect } from "react"

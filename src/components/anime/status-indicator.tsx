@@ -1,5 +1,4 @@
 import { Anime } from "@/types/anime";
-import { useEffect, useState } from 'react';
 
 export default function AnimeStatusIndicator({ status }: { status: Anime['status'] }) {
   const getStatusStyles = () => {
@@ -49,7 +48,7 @@ export default function AnimeStatusIndicator({ status }: { status: Anime['status
     }
   };
 
-  const { bgColor, pulseColor, shadow, label } = getStatusStyles();
+  const { bgColor, pulseColor, shadow } = getStatusStyles();
 
   return (
     <div className="flex items-center gap-2 p-1">

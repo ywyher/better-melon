@@ -1,5 +1,4 @@
 import { AnimeFormat, AnimeSeason, AnimeSort, AnimeSource, AnimeStatus } from "@/types/anime"
-import { SubtitleDisplayMode } from "@/types/subtitle"
 
 export const statuses: AnimeStatus[] = [
     "CANCELLED",

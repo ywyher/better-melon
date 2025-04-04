@@ -1,7 +1,6 @@
 "use client"
 
-import { Combobox } from "@/components/ui/combobox";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 
 export default function ScoreFilter({
     queryScore,
@@ -10,8 +9,14 @@ export default function ScoreFilter({
     queryScore: number | null
     setScore: Dispatch<SetStateAction<number | null>>
 }) {
+
+    useEffect(() =>{ 
+        setScore(1)
+    }, [setScore])
+    
     return (
         <div className="w-full">
+            {queryScore}
         </div>
     )
 }

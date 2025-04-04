@@ -72,10 +72,10 @@ export function generateWebVTTFromSkipTimes({
     let previousEndTime = 0;
 
     const sortedSkipTimes = skipTimes.sort(
-        (a: any, b: any) => a.interval.startTime - b.interval.startTime,
+        (a: SkipTime, b: SkipTime) => a.interval.startTime - b.interval.startTime,
     );
 
-    sortedSkipTimes.forEach((skipTime: any, index: any) => {
+    sortedSkipTimes.forEach((skipTime: SkipTime, index: number) => {
         const { startTime, endTime } = skipTime.interval;
         const skipType =
         skipTime.skipType.toUpperCase() === 'OP' ? 'Opening' : 'Outro';

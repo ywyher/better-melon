@@ -1,8 +1,7 @@
 "use client"
 
-import { zodResolver } from "@hookform/resolvers/zod"
+import { Suspense } from "react"
 import { useForm } from "react-hook-form"
-import * as z from "zod"
 import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
@@ -10,20 +9,17 @@ import { Search as SearchIcon } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useQueryState } from "nuqs"
 
-// Define schema for form validation
-const searchSchema = z.object({
-  query: z.string().min(1, "Please enter a search term")
-})
+type SearchFormValues = {
+  query: string
+}
 
-type SearchFormValues = z.infer<typeof searchSchema>
-
-export default function Search() {
+// Separate component that uses search params
+function SearchForm() {
   const [queryParam] = useQueryState('query')
   const router = useRouter()
 
-  // Initialize the form with react-hook-form and zod validation
+  // Initialize the form with react-hook-form
   const form = useForm<SearchFormValues>({
-    resolver: zodResolver(searchSchema),
     defaultValues: {
       query: queryParam || ""
     }
@@ -37,8 +33,8 @@ export default function Search() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-row gap-3 items-center">
-        <div className="flex items-center border rounded-md overflow-hidden w-[500px]">
-          <div className="flex items-center px-2 py-0">
+        <div className="flex items-center border rounded-md overflow-hidden w-full max-w-lg">
+          <div className="flex items-center px-2 py-0 w-full">
             <SearchIcon className="h-5 w-5 text-gray-400" />
             <FormField
               control={form.control}
@@ -49,7 +45,7 @@ export default function Search() {
                     <Input
                       {...field}
                       placeholder="Search..."
-                      className="outline-none dark:bg-transparent bg-transparent border-none w-[500px] focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none"
+                      className="outline-none dark:bg-transparent bg-transparent border-none w-full focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none"
                     />
                   </FormControl>
                 </FormItem>
@@ -66,5 +62,39 @@ export default function Search() {
         </Button>
       </form>
     </Form>
+  )
+}
+
+// Main component with Suspense
+export default function Search() {
+  return (
+    <Suspense fallback={<SearchFallback />}>
+      <SearchForm />
+    </Suspense>
+  )
+}
+
+// Fallback UI while Suspense is loading
+function SearchFallback() {
+  return (
+    <div className="flex flex-row gap-3 items-center">
+      <div className="flex items-center border rounded-md overflow-hidden w-full max-w-lg">
+        <div className="flex items-center px-2 py-0 w-full">
+          <SearchIcon className="h-5 w-5 text-gray-400" />
+          <Input
+            placeholder="Loading search..."
+            disabled
+            className="outline-none dark:bg-transparent bg-transparent border-none w-full focus:ring-0"
+          />
+        </div>
+      </div>
+      <Button
+        variant="outline"
+        size="icon"
+        disabled
+      >
+        <SearchIcon />
+      </Button>
+    </div>
   )
 }

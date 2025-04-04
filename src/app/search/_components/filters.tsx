@@ -4,7 +4,6 @@ import CountryFilter from "@/app/search/_components/filters/country";
 import FormatFilter from "@/app/search/_components/filters/format";
 import GenresFilter from "@/app/search/_components/filters/genres";
 import IsAdultFilter from "@/app/search/_components/filters/is-adult";
-import ScoreFilter from "@/app/search/_components/filters/score";
 import SeasonFilter from "@/app/search/_components/filters/season";
 import SortFilter from "@/app/search/_components/filters/sort";
 import SourceFilter from "@/app/search/_components/filters/source";
@@ -15,14 +14,13 @@ import { Button } from "@/components/ui/button";
 import { formats, seasons, sources, statuses } from "@/lib/constants";
 import { AnimeCountry, AnimeFormat, AnimeSeason, AnimeSource, AnimeStatus } from "@/types/anime";
 import { parseAsArrayOf, parseAsBoolean, parseAsInteger, parseAsString, parseAsStringEnum, useQueryState } from "nuqs";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 
 type AnimeFiltersProps = {
     refetch: () => void
-    setIsLoading: Dispatch<SetStateAction<boolean>>
 }
 
-export default function AnimeFilters({ refetch, setIsLoading }: AnimeFiltersProps) {
+export default function AnimeFilters({ refetch }: AnimeFiltersProps) {
     // single selector
     const [queryStatus, setQueryStatus] = useQueryState<AnimeStatus>('status',
         parseAsStringEnum<AnimeStatus>(statuses)
@@ -56,7 +54,7 @@ export default function AnimeFilters({ refetch, setIsLoading }: AnimeFiltersProp
     const [country, setCountry] = useState<AnimeCountry | null>(null)
 
     const [queryScore, setQueryScore] = useQueryState<number>('score', parseAsInteger)
-    const [score, setScore] = useState<number | null>(null)
+    const [score] = useState<number | null>(null)
     
     const [query, setQuery] = useQueryState('query')
 
@@ -81,6 +79,8 @@ export default function AnimeFilters({ refetch, setIsLoading }: AnimeFiltersProp
         setQuerySource(source ? source : null)
         setQueryCountry(country ? country : null)
         setQueryScore(score ? score : null)
+        console.log(queryScore)
+        console.log(query)
 
         // multiple selector
         setQueryGenres(genres?.length ? genres : null)

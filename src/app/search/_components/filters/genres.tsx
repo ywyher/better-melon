@@ -1,7 +1,7 @@
 import { Indicator } from "@/components/indicator";
 import MultipleSelector from "@/components/multiple-selector";
 import { gql, useQuery } from "@apollo/client";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import InputSkeleton from "@/components/input-skeleton";
 
 const GET_GENRES = gql`
@@ -29,7 +29,7 @@ export default function GenresFilter({
         if(queryGenres?.length) {
             setGenres(queryGenres)
         }
-    }, [queryGenres])
+    }, [queryGenres, setGenres])
 
     if(error)
         return (

@@ -20,13 +20,13 @@ const useMediaQuery = (query: string) => {
     setMatches(media.matches);
     
     // Define callback for media query change
-    const listener = (e: any) => {
+    const listener = (e: MediaQueryListEvent) => {
       setMatches(e.matches);
     };
     
     // Add the listener
     media.addEventListener("change", listener);
-    
+  
     // Clean up
     return () => {
       media.removeEventListener("change", listener);

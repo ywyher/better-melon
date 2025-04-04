@@ -2,7 +2,6 @@ import { SubtitleDisplayMode, SubtitleFile } from "@/types/subtitle";
 import { MediaPlayerInstance } from "@vidstack/react";
 import { createRef, RefObject } from "react";
 import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
 
 export type WatchStore = {
   player: RefObject<MediaPlayerInstance | null>;

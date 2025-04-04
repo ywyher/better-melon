@@ -1,7 +1,6 @@
 "use client"
 
 import { Combobox } from "@/components/ui/combobox";
-import { useQueryState } from "nuqs";
 import { statuses } from "@/lib/constants";
 import { Dispatch, SetStateAction } from "react";
 import { AnimeStatus } from "@/types/anime";

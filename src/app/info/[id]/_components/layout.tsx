@@ -1,16 +1,14 @@
-
-// AnimeLayout.tsx
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import { ChevronLeft } from "lucide-react"
 import { Anime } from "@/types/anime"
-import { useRouter } from "next/navigation"
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime"
 
 type AnimeLayoutProps = {
     bannerImage: Anime['bannerImage']
     title: Anime['title']
     children: React.ReactNode
-    router: any
+    router: AppRouterInstance
 }
 
 export function AnimeLayout({ bannerImage, title, router, children }: AnimeLayoutProps) {

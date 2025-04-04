@@ -1,6 +1,6 @@
 "use client";
 
-import { MediaPlayer, MediaPlayerInstance, MediaProvider, Menu, SeekButton, TextTrack, TimeSlider, ToggleButton } from '@vidstack/react';
+import { MediaPlayer, MediaPlayerInstance, MediaProvider, TextTrack } from '@vidstack/react';
 import { DefaultAudioLayout, defaultLayoutIcons, DefaultVideoLayout } from '@vidstack/react/player/layouts/default';
 import { Poster } from '@vidstack/react';
 import { Track } from "@vidstack/react";
@@ -13,9 +13,7 @@ import { useWatchStore } from "@/app/watch/[id]/[ep]/store";
 import { SubtitleFile, SubtitleFormat } from '@/types/subtitle';
 import { AnimeEpisodeData, AnimeStreamingData, SkipTime } from '@/types/anime';
 import { generateWebVTTFromSkipTimes, selectSubtitleFile } from '@/app/watch/[id]/[ep]/funcs';
-import { SkipForward, ThumbsDown, ThumbsUp, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { SeekForward10Icon } from '@vidstack/react/icons';
 import Subtitle from '@/app/watch/[id]/[ep]/_components/subtitle';
 
 type PlayerProps = { 
@@ -41,8 +39,7 @@ export default function Player({ streamingData, episode, subtitleFiles }: Player
 
     useEffect(() => {
         setPlayer(player)
-        console.log(streamingData)
-    }, [player])
+    }, [player, setPlayer])
 
     useEffect(() => {
         const url = encodeURIComponent(streamingData?.sources[0].url);
@@ -62,7 +59,7 @@ export default function Player({ streamingData, episode, subtitleFiles }: Player
         
         setIsInitialized(true)
         setIsInitializing(false);
-    }, [subtitleFiles, streamingData, setActiveSubtitleFile, activeSubtitleFile]);
+    }, [subtitleFiles, streamingData, setActiveSubtitleFile, isInitialized, activeSubtitleFile, setIsInitialized, setIsInitializing]);
 
     useEffect(() => {
         const skipTimes = [
@@ -93,7 +90,7 @@ export default function Player({ streamingData, episode, subtitleFiles }: Player
         const skipTimesBlobUrl = URL.createObjectURL(blob);
         setVttUrl(skipTimesBlobUrl);
         setSkipTimes(skipTimes);
-    }, [])
+    }, [episode, streamingData])
 
     const handleTrackChange = useCallback((track: TextTrack | null) => {
         if (!track || activeSubtitleFile?.name === track.label) return;
@@ -115,7 +112,7 @@ export default function Player({ streamingData, episode, subtitleFiles }: Player
             return;
         }
 
-    }, [subtitleFiles, setActiveSubtitleFile, activeSubtitleFile]);
+    }, [subtitleFiles, setActiveSubtitleFile, activeSubtitleFile, streamingData.subtitles]);
     
     const handleCanPlay = () => {
         setIsVideoReady(true);
@@ -258,7 +255,7 @@ export default function Player({ streamingData, episode, subtitleFiles }: Player
                                         (() => {
                                             const currentTime = player.current?.currentTime;
                                             if(!currentTime) return;
-                                            const matchedInterval = skipTimes.find(({ skipType, interval }) => 
+                                            const matchedInterval = skipTimes.find(({ interval }) => 
                                                 (currentTime || 0) >= interval.startTime &&
                                                 (currentTime || 0) < interval.endTime
                                             );
