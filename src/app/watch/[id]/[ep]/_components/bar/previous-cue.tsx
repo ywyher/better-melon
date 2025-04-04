@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button";
-import { SkipForward } from "lucide-react";
+import { SkipBack } from "lucide-react";
 import { useWatchStore } from "@/app/watch/[id]/[ep]/store";
 import { useMediaState } from "@vidstack/react";
 import { srtTimestampToSeconds } from "@/lib/funcs";
@@ -20,7 +20,7 @@ export default function PreviousCue() {
         const currentCue = subtitleCues.find(cue => {
             const startTime = srtTimestampToSeconds(cue.from);
             const endTime = srtTimestampToSeconds(cue.to);
-            return currentTime >= startTime + delay && currentTime <= endTime + delay;
+            return currentTime >= startTime + delay.japanese && currentTime <= endTime + delay.japanese;
         });
         
         if(!currentCue) return;
@@ -28,7 +28,7 @@ export default function PreviousCue() {
         const previousCue = subtitleCues.find(cue => cue.id == (currentCue?.id - 1));
 
         if (previousCue) {
-            const previousCueTime = srtTimestampToSeconds(previousCue.from) + delay;
+            const previousCueTime = srtTimestampToSeconds(previousCue.from) + delay.japanese;
             player.current.currentTime = Math.max(0, previousCueTime);
         }
     };
@@ -40,7 +40,7 @@ export default function PreviousCue() {
             disabled={!activeSubtitleFile}
             className="flex-1"
         >
-            <SkipForward className="mr-2" size={16} />
+            <SkipBack className="mr-2" size={16} />
             Previous Cue
         </Button>
     );

@@ -37,7 +37,7 @@ export default function SubtitleCue({
 
     const handleSeek = () => {
         setActiveIndex(index)
-        player.current?.remoteControl.seek(srtTimestampToSeconds(from) + delay)
+        player.current?.remoteControl.seek(srtTimestampToSeconds(from) + delay.japanese)
     };
 
     return (

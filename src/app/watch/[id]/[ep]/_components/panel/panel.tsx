@@ -131,7 +131,7 @@ export default function SubtitlePanel({ subtitleFiles }: { subtitleFiles: Subtit
         if (!cue || !currentTime) return false;
         const startTime = srtTimestampToSeconds(cue.from);
         const endTime = srtTimestampToSeconds(cue.to);
-        return currentTime >= startTime + delay && currentTime <= endTime + delay;
+        return currentTime >= startTime + delay.japanese && currentTime <= endTime + delay.japanese;
     };
 
     // Find the active cue index and scroll to it when currentTime changes
@@ -142,7 +142,7 @@ export default function SubtitlePanel({ subtitleFiles }: { subtitleFiles: Subtit
         const currentActiveIndex = displayCues.findIndex(cue => {
             const startTime = srtTimestampToSeconds(cue.from);
             const endTime = srtTimestampToSeconds(cue.to);
-            return currentTime >= startTime + delay && currentTime <= endTime + delay;
+            return currentTime >= startTime + delay.japanese && currentTime <= endTime + delay.japanese;
         });
         
         // If found an active subtitle and it's different from the current one

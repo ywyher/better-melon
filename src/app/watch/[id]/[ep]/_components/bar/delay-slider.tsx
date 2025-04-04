@@ -1,52 +1,91 @@
 "use client"
-
 import { useWatchStore } from "@/app/watch/[id]/[ep]/store";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 
 export default function DelaySlider() {
-    const delay = useWatchStore((state) => state.delay);
-    const setDelay = useWatchStore((state) => state.setDelay);
-    
-    const [progress, setProgress] = useState([delay]);
+  const delay = useWatchStore((state) => state.delay);
+  const setDelay = useWatchStore((state) => state.setDelay);
+  const [japaneseProgress, setJapaneseProgress] = useState([delay.japanese]);
+  const [englishProgress, setEnglishProgress] = useState([delay.english]);
 
-    useEffect(() => {
-        setProgress([delay]);
-    }, [delay]);
+  useEffect(() => {
+    setJapaneseProgress([delay.japanese]);
+    setEnglishProgress([delay.english]);
+  }, [delay.japanese, delay.english]);
 
-    return (
-        <div className="flex flex-col gap-2 w-full">
-            <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">Subtitle Delay</span>
-                <Button 
-                    variant="outline" 
-                    size="sm" 
-                    onClick={() => {
-                        setDelay(0);
-                        setProgress([0]);
-                    }}
-                >
-                    Reset
-                </Button>
-            </div>
-            <div className="flex flex-row items-center gap-3">
-                <div className="flex-1">
-                    <Slider
-                        defaultValue={[delay]}
-                        min={-30}
-                        max={30}
-                        step={1}
-                        onValueChange={(e) => setProgress(e)}
-                        onPointerUp={() => {
-                            setDelay(progress[0])
-                        }}
-                    />
-                </div>
-                <div className="w-12 text-right">
-                    {progress[0]}s
-                </div>
-            </div>
+  const resetDelays = () => {
+    setDelay({
+      japanese: 0,
+      english: 0
+    });
+    setJapaneseProgress([0]);
+    setEnglishProgress([0]);
+  };
+
+  return (
+    <div className="flex flex-col gap-4 w-full">
+      <div className="flex items-center justify-between">
+        <span className="text-sm font-medium">Subtitle Delay</span>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={resetDelays}
+        >
+          Reset All
+        </Button>
+      </div>
+
+      {/* Japanese Subtitle Delay */}
+      <div className="flex flex-col gap-2">
+        <span className="text-xs font-medium">Japanese</span>
+        <div className="flex flex-row items-center gap-3">
+          <div className="flex-1">
+            <Slider
+              defaultValue={[delay.japanese]}
+              min={-30}
+              max={30}
+              step={1}
+              onValueChange={(e) => setJapaneseProgress(e)}
+              onPointerUp={() => {
+                setDelay({
+                  ...delay,
+                  japanese: japaneseProgress[0]
+                });
+              }}
+            />
+          </div>
+          <div className="w-12 text-right">
+            {japaneseProgress[0]}s
+          </div>
         </div>
-    );
+      </div>
+
+      {/* English Subtitle Delay */}
+      <div className="flex flex-col gap-2">
+        <span className="text-xs font-medium">English</span>
+        <div className="flex flex-row items-center gap-3">
+          <div className="flex-1">
+            <Slider
+              defaultValue={[delay.english]}
+              min={-30}
+              max={30}
+              step={1}
+              onValueChange={(e) => setEnglishProgress(e)}
+              onPointerUp={() => {
+                setDelay({
+                  ...delay,
+                  english: englishProgress[0]
+                });
+              }}
+            />
+          </div>
+          <div className="w-12 text-right">
+            {englishProgress[0]}s
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }

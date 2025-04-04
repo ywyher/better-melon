@@ -20,7 +20,7 @@ export default function NextCue() {
         const currentCue = subtitleCues.find(cue => {
             const startTime = srtTimestampToSeconds(cue.from);
             const endTime = srtTimestampToSeconds(cue.to);
-            return currentTime >= startTime + delay && currentTime <= endTime + delay;
+            return currentTime >= startTime + delay.japanese && currentTime <= endTime + delay.japanese;
         });
         
         if(!currentCue) return;
@@ -34,7 +34,7 @@ export default function NextCue() {
         console.log(nextCue)
 
         if (nextCue) {
-            const nextCueTime = srtTimestampToSeconds(nextCue.from) + delay;
+            const nextCueTime = srtTimestampToSeconds(nextCue.from) + delay.japanese;
             player.current.currentTime = Math.max(0, nextCueTime);
         }
     };

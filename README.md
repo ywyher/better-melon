@@ -18,7 +18,7 @@ Animelon doesn’t provide all animes by default, and its entries are rarely upd
 - [x] Delay subtitle feature
 - [x] Next/Previous cue buttons
 - [x] Support local subtitles
-- [ ] Seperate delay sliders for japanese and english subs
+- [x] Seperate delay sliders for japanese and english subs
 - [ ] Providers selector
 - [ ] Defintion on hover functionality
 - [ ] .ass support

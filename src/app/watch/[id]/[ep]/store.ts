@@ -19,7 +19,10 @@ export type WatchStore = {
   subtitleCues: SubtitleCue[];
   setSubtitleCues: (sub: WatchStore['subtitleCues']) => void;
 
-  delay: number;
+  delay: {
+    japanese: number;
+    english: number;
+  };
   setDelay: (sub: WatchStore['delay']) => void;
 
   reset: () => void;
@@ -42,7 +45,10 @@ export const useWatchStore = create<WatchStore>()(
     subtitleCues: [],
     setSubtitleCues: (subtitleCues: WatchStore['subtitleCues']) => set({ subtitleCues }),
 
-    delay: 5,
+    delay: {
+      japanese: 0,
+      english: 0
+    },
     setDelay: (delay: WatchStore['delay']) => set({ delay }),
 
     reset: () => {
@@ -51,7 +57,10 @@ export const useWatchStore = create<WatchStore>()(
         englishSubtitleUrl: null,
         activeScripts: ['japanese', 'english'],
         subtitleCues: [],
-        delay: 0,
+        delay: {
+          japanese: 0,
+          english: 0,
+        },
       });
     },
   }),

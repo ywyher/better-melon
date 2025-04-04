@@ -96,10 +96,6 @@ export default function Subtitle() {
                     : activeSubtitleFile?.source == 'remote' 
                     ? activeSubtitleFile!.file.url.split('.').pop() as "srt" | "vtt"
                     : activeSubtitleFile!.file.name.split('.').pop() as "srt" | "vtt";
-
-                    console.log(`source`, source)
-                    console.log(`format`, format)
-                    console.log(`script`, type)
                 
                 const cues = await parseSubtitleToJson({ 
                     source,
@@ -146,15 +142,20 @@ export default function Subtitle() {
         subtitleQueries.forEach(query => {
             if (query.data?.cues) {
                 const { type, cues } = query.data;
+                const subtitleType = type as SubtitleType;
                 
-                result[type as SubtitleType] = cues.filter(cue => {
-                    const startTime = type != 'english' ?
-                        srtTimestampToSeconds(cue.from)
-                        : vttTimestampToSeconds(cue.from)
-                    const endTime = type != "english" ?
-                        srtTimestampToSeconds(cue.to)
-                        : vttTimestampToSeconds(cue.to)
-                    return currentTime >= startTime + delay && currentTime <= endTime + delay;
+                const typeDelay = subtitleType === 'japanese' ? delay.japanese : delay.english;
+                
+                result[subtitleType] = cues.filter(cue => {
+                const startTime = subtitleType !== 'english' ?
+                    srtTimestampToSeconds(cue.from)
+                    : vttTimestampToSeconds(cue.from);
+                
+                const endTime = subtitleType !== "english" ?
+                    srtTimestampToSeconds(cue.to)
+                    : vttTimestampToSeconds(cue.to);
+                
+                return currentTime >= startTime + typeDelay && currentTime <= endTime + typeDelay;
                 });
             }
         });
