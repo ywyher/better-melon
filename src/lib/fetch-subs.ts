@@ -16,41 +16,52 @@ interface KuroshiroInstance {
 let tokenizer: kuromoji.Tokenizer<kuromoji.IpadicFeatures> | null = null;
 let kuroshiro: KuroshiroInstance | null = null;
 
-export async function fetchSubtitles(url: string) {
-  const response = await fetch(url);
-  const text = await response.text();
-  return text;
+export async function fetchSubtitles(source: string | File) {
+  // Handle URL string
+  if (typeof source === 'string') {
+    const response = await fetch(source);
+    const text = await response.text();
+    return text;
+  } 
+  // Handle File object
+  else if (source instanceof File) {
+    return await source.text()
+  }
+  
+  throw new Error('Invalid source: must be a URL string or File object');
 }
 
-export async function parseSubtitleToJson({ url, format, script = 'japanese' }: { url: string, format: SubtitleFormat, script?: SubtitleScript }) {
-  const content = await fetchSubtitles(url);
-
-  // console.log(`url`, url);
-  // console.log(`format`, format);
-  // console.log(`script`, script);
+export async function parseSubtitleToJson({ 
+  source, 
+  format, 
+  script = 'japanese' 
+}: { 
+  source: string | File, 
+  format: SubtitleFormat, 
+  script?: SubtitleScript 
+}) {
+  const content = await fetchSubtitles(source);
 
   let subtitles: SubtitleCue[] = [];
-  
+
   // First parse the subtitle file to get basic cues
   switch (format) {
     case 'srt':
       subtitles = parseSrt(content);
       break;
     case "vtt":
-      console.log('vtt')
       subtitles = parseVtt(content);
-      console.log(subtitles)
       break;
     default:
       throw new Error(`Unsupported subtitle format: ${format}`);
   }
-  
+
   // Check if we have valid subtitles before processing
   if (!subtitles.length) {
     console.error("No subtitles found in file");
     return [];
   }
-  
+
   // Now process the subtitles based on script type
   if (script === 'english') {
     return processEnglishSubtitles(subtitles);

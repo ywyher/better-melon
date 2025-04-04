@@ -84,19 +84,26 @@ export default function Subtitle() {
 
     const subtitleQueries = useQueries({
         queries: SUBTITLE_TYPES.filter(type => activeScripts.includes(type)).map(type => ({
-            queryKey: ['subs', type === 'english' ? englishSubtitleUrl : activeSubtitleFile?.url, type],
+            queryKey: ['subs', type === 'english' ? englishSubtitleUrl : activeSubtitleFile],
             queryFn: async () => {
-                if ((type !== 'english' && !activeSubtitleFile?.url) || 
+                if ((type !== 'english' && activeSubtitleFile?.source == 'remote' ? !activeSubtitleFile?.file.url : !activeSubtitleFile?.file) || 
                     (type === 'english' && !englishSubtitleUrl)) {
                     throw new Error(`Couldn't get the file for ${type} subtitles`);
                 }
                 
-                const url = type === 'english' ? englishSubtitleUrl : activeSubtitleFile!.url;
-                const format = url.split('.').pop() as "srt" | "vtt";
+                const source = type === 'english' ? englishSubtitleUrl : activeSubtitleFile?.source == 'remote' ? activeSubtitleFile!.file.url : activeSubtitleFile!.file;
+                const format = type === 'english' ? englishSubtitleUrl.split('.').pop() as "srt" | "vtt"
+                    : activeSubtitleFile?.source == 'remote' 
+                    ? activeSubtitleFile!.file.url.split('.').pop() as "srt" | "vtt"
+                    : activeSubtitleFile!.file.name.split('.').pop() as "srt" | "vtt";
+
+                    console.log(`source`, source)
+                    console.log(`format`, format)
+                    console.log(`script`, type)
                 
                 const cues = await parseSubtitleToJson({ 
-                    url,
-                    format, 
+                    source,
+                    format,
                     script: type
                 });
                 
@@ -106,8 +113,12 @@ export default function Subtitle() {
                 };
             },
             staleTime: Infinity,
-            enabled: (type === 'english' ? !!englishSubtitleUrl : !!activeSubtitleFile?.url) && 
-                     activeScripts.includes(type)
+            enabled:
+                (type === 'english' ? !!englishSubtitleUrl : 
+                    activeSubtitleFile?.source == 'remote' 
+                        ? !!activeSubtitleFile?.file.url 
+                        : !!activeSubtitleFile?.file) 
+                            && activeScripts.includes(type)
         }))
     });
 

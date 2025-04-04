@@ -16,6 +16,9 @@ import { parseSubtitleToJson } from "@/lib/fetch-subs";
 import { srtTimestampToSeconds } from "@/lib/funcs";
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { useMediaState } from '@vidstack/react'; // Import useMediaState
+import {franc} from 'franc-min'
+import { toast } from "sonner";
+import { selectSubtitleFile } from "@/app/watch/[id]/[ep]/funcs";
 
 export default function SubtitlePanel({ subtitleFiles }: { subtitleFiles: SubtitleFile[] }) {
     const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -27,6 +30,7 @@ export default function SubtitlePanel({ subtitleFiles }: { subtitleFiles: Subtit
     
     const player = useWatchStore((state) => state.player);
     const activeSubtitleFile = useWatchStore((state) => state.activeSubtitleFile);
+    const setActiveSubtitleFile = useWatchStore((state) => state.setActiveSubtitleFile);
     const setSubtitleCues = useWatchStore((state) => state.setSubtitleCues);
     const delay = useWatchStore((state) => state.delay);
 
@@ -42,15 +46,31 @@ export default function SubtitlePanel({ subtitleFiles }: { subtitleFiles: Subtit
         { name: "romaji" },
     ]
 
-    const { data: subtitleCues, isLoading: isCuesLoading, error: cuesError } = useQuery({
+    const { data: subtitleCues, isLoading: isCuesLoading, error: cuesError, refetch } = useQuery({
         queryKey: ['subs', displayScript, activeSubtitleFile],
         queryFn: async () => {
-            if(activeSubtitleFile && activeSubtitleFile.url) return await parseSubtitleToJson({ url: activeSubtitleFile.url, format: 'srt', script: displayScript })
+            if(activeSubtitleFile) {
+                const format = activeSubtitleFile?.source == 'remote' 
+                ? activeSubtitleFile!.file.url.split('.').pop() as "srt" | "vtt"
+                : activeSubtitleFile!.file.name.split('.').pop() as "srt" | "vtt";
+                
+                return await parseSubtitleToJson({ 
+                    source: activeSubtitleFile?.source == 'remote' 
+                        ? activeSubtitleFile.file.url 
+                        : activeSubtitleFile.file,
+                    format,
+                    script: displayScript
+                })
+            }
             else throw new Error("Couldn't get the file")
         },
         staleTime: Infinity,
         enabled: !!activeSubtitleFile
     })
+
+    useEffect(() => {
+        refetch()
+    }, [activeSubtitleFile])
     
     useEffect(() => {
         if(subtitleCues?.length && activeSubtitleFile) {
@@ -58,6 +78,31 @@ export default function SubtitlePanel({ subtitleFiles }: { subtitleFiles: Subtit
             setIsLoading(false)
         }
     }, [subtitleCues, activeSubtitleFile])
+
+    useEffect(() => {
+        if(!subtitleCues?.length) return;
+        
+        const content = subtitleCues.slice(0, Math.ceil(subtitleCues.length / 2)) // Get the first half
+            .map((cue) => cue.content)
+            .join(' ')
+
+        const result = franc(content)
+
+        if(result != 'jpn') {
+            const selected = selectSubtitleFile(subtitleFiles)
+            if(!selected) return;
+            setActiveSubtitleFile({
+                source: 'remote',
+                file: {
+                    name: selected.name,
+                    url: selected.url,
+                    last_modified: selected.last_modified,
+                    size: selected.size
+                }
+            });
+            toast.warning("You can only use japanese subtitles!")            
+        }
+    }, [subtitleCues])
 
     // If we have new subs that aren't loading, update our previous subs
     useEffect(() => {
@@ -141,13 +186,15 @@ export default function SubtitlePanel({ subtitleFiles }: { subtitleFiles: Subtit
                         <CardTitle className="text-xl">Dialogue</CardTitle>
                         {subtitleCues && !isLoading && (
                             <div className="flex flex-row gap-2">
-                                <Button
-                                    onClick={() => router.push(activeSubtitleFile?.url || "")}
-                                    size="sm"
-                                    variant='secondary'
-                                >
-                                    Download File
-                                </Button>
+                                {activeSubtitleFile?.source == 'remote' && (
+                                    <Button
+                                        onClick={() => router.push(activeSubtitleFile?.file.url || "")}
+                                        size="sm"
+                                        variant='secondary'
+                                    >
+                                        Download Subtitle
+                                    </Button>
+                                )}
                                 <SubtitleFileSelector 
                                     subtitleFiles={subtitleFiles}
                                 />

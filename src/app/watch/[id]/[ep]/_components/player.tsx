@@ -53,10 +53,13 @@ export default function Player({ streamingData, episode, subtitleFiles }: Player
             const selected = selectSubtitleFile(subtitleFiles)
             if(!selected) return;
             setActiveSubtitleFile({
-                name: selected.name,
-                url: selected.url,
-                last_modified: selected.last_modified,
-                size: selected.size
+                source: 'remote',
+                file: {
+                    name: selected.name,
+                    url: selected.url,
+                    last_modified: selected.last_modified,
+                    size: selected.size
+                }
             });
         }
 
@@ -110,15 +113,18 @@ export default function Player({ streamingData, episode, subtitleFiles }: Player
     }, [episode, streamingData])
 
     const handleTrackChange = useCallback((track: TextTrack | null) => {
-        if (!track || activeSubtitleFile?.name === track.label) return;
+        if (!track || activeSubtitleFile?.file.name === track.label) return;
     
         const matchedSub = subtitleFiles.find(s => s.name === track.label);
         if (matchedSub) {
             setActiveSubtitleFile({
-                name: matchedSub.name,
-                url: matchedSub.url,
-                last_modified: matchedSub.last_modified,
-                size: matchedSub.size
+                source: "remote",
+                file: {
+                    name: matchedSub.name,
+                    url: matchedSub.url,
+                    last_modified: matchedSub.last_modified,
+                    size: matchedSub.size
+                }
             });
             return;
         }

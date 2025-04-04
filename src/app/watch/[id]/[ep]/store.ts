@@ -7,7 +7,7 @@ export type WatchStore = {
   player: RefObject<MediaPlayerInstance | null>;
   setPlayer: (sub: WatchStore['player']) => void;
 
-  activeSubtitleFile: SubtitleFile | null;
+  activeSubtitleFile: { source: "remote", file: SubtitleFile } | { source: "local", file: File } | null;
   setActiveSubtitleFile: (sub: WatchStore['activeSubtitleFile']) => void;
 
   englishSubtitleUrl: string | null;
