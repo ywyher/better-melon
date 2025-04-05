@@ -6,7 +6,7 @@ Animelon doesn’t provide all animes by default, and its entries are rarely upd
 
 # Roadmap
 > [!warning]
-> This project is still in its early stages so a lot of crucial stuff are yet to be implemented for this project to be called a
+> This project is still in beta
 
 > [!note]
 > the only crucial feature that hasn't been added yet is the definition on hover functionality, you could use yomitan instead for now
@@ -36,7 +36,7 @@ usable alternative
 
 # Self-Hosting
 > [!warning]
-> This application is still in a very early stage, and it is not advised to use it as of now, Since you are likely to face bugs
+> This project is still in beta
 
 > [!note]
 > you can access this app without self hosting it via https://better-melon.vercel.app
