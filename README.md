@@ -19,6 +19,7 @@ Animelon doesn’t provide all animes by default, and its entries are rarely upd
 - [x] Next/Previous cue buttons
 - [x] Support local subtitles
 - [x] Seperate delay sliders for japanese and english subs
+- [ ] Optomizing for best performance
 - [ ] Providers selector
 - [ ] Defintion on hover functionality
 - [ ] .ass support
@@ -34,6 +35,9 @@ Animelon doesn’t provide all animes by default, and its entries are rarely upd
 > [!note]
 > If you decide to self-host it anyway just keep in mind that this website currently works the best on firefox (the proxy iam using doesn't work on chrome for whatever reason for now)
 > will be fixed in the future tho
+
+> [!note]
+> the only crucial feature that hasn't been added yet is the definition on hover functionality, you could use yomitan instead for now
 
 ### Clone the Repository
 ```sh

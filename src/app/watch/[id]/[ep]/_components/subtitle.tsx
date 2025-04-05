@@ -161,7 +161,7 @@ export default function Subtitle() {
         });
 
         return result;
-    }, [subtitleQueries, currentTime, delay.english]);
+    }, [subtitleQueries, currentTime, delay]);
 
     const handleTokenMouseEnter = (cueId: number, tokenIndex: number) => {
         setHoveredCueId(cueId);

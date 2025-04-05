@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { useWatchStore } from "@/app/watch/[id]/[ep]/store";
 import { SkipTime } from "@/types/anime";
-import { Dispatch, SetStateAction, useMemo, CSSProperties } from "react";
+import { Dispatch, SetStateAction, useMemo } from "react";
 import { useMediaState } from "@vidstack/react";
 import { cn } from "@/lib/utils";
 

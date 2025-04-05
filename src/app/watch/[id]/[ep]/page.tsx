@@ -39,7 +39,12 @@ export default async function Watch({ params }: { params: Params }) {
     if (subtitleEntries.length === 0) {
       return (
         <div className="container mx-auto px-4 py-6">
-          <Player episode={episode} streamingData={streamingData} subtitleFiles={[]} />
+          <Player 
+            episode={episode} 
+            streamingData={streamingData} 
+            subtitleFiles={[]} 
+            episodesLength={episodesData.length}
+          />
         </div>
       );
     }

@@ -6,6 +6,7 @@ import { ReactQueryProvider } from "@/lib/react-query";
 import ApolloProvider from "@/lib/apollo-provider";
 import { Toaster } from "sonner";
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
+import Script from "next/script";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,6 +30,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <Script
+          crossOrigin="anonymous"
+          src="//unpkg.com/react-scan/dist/auto.global.js"
+        />
+      </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ApolloProvider>
           <ReactQueryProvider>

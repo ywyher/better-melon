@@ -5,7 +5,7 @@ import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { SubtitleCue } from "@/types/subtitle";
 import { cn } from "@/lib/utils";
-import { CSSProperties, Dispatch, SetStateAction } from "react";
+import { CSSProperties } from "react";
 import { useWatchStore } from "@/app/watch/[id]/[ep]/store";
 import { Button } from "@/components/ui/button";
 import { srtTimestampToSeconds } from "@/lib/funcs";
@@ -20,13 +20,12 @@ type SubtitleCueProps = {
 }
 
 export default function SubtitleCue({ 
-    index,
     cue,
     isActive,
     style,
     className = "",
 }: SubtitleCueProps) {
-    const { from, to, tokens } = cue;
+    const { from, tokens } = cue;
     const player = useWatchStore((state) => state.player)
     const delay = useWatchStore((state) => state.delay)
 
@@ -49,7 +48,7 @@ export default function SubtitleCue({
                 className="me-2"
                 variant='ghost'
             >
-                <Play className="hover:fill-orange-400" />
+                <Play className="hover:fill-[#fb923c]" />
             </Button>
             <div className="flex flex-col gap-2">
                 {/* <div className="flex flex-row gap-3">

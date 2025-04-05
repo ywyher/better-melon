@@ -1,6 +1,6 @@
 "use client";
 
-import { MediaPlayer, MediaPlayerInstance, MediaProvider, Poster, TextTrack, useMediaState } from '@vidstack/react';
+import { MediaPlayer, MediaPlayerInstance, MediaProvider, Poster, TextTrack } from '@vidstack/react';
 import { DefaultAudioLayout, defaultLayoutIcons, DefaultVideoLayout } from '@vidstack/react/player/layouts/default';
 import { Track } from "@vidstack/react";
 import '@vidstack/react/player/styles/default/theme.css';
@@ -10,7 +10,7 @@ import { useCallback, useEffect, useRef, useState, useMemo, memo } from "react";
 import { useWatchStore } from "@/app/watch/[id]/[ep]/store";
 import { SubtitleFile } from '@/types/subtitle';
 import { AnimeEpisodeData, AnimeStreamingData, SkipTime } from '@/types/anime';
-import { generateWebVTTFromSkipTimes, selectSubtitleFile } from '@/app/watch/[id]/[ep]/funcs';
+import { generateWebVTTFromSkipTimes } from '@/app/watch/[id]/[ep]/funcs';
 import Subtitle from '@/app/watch/[id]/[ep]/_components/subtitle';
 import SkipButton from '@/app/watch/[id]/[ep]/_components/player/skip-button';
 import PlayerSkeleton from '@/app/watch/[id]/[ep]/_components/player/player-skeleton';
@@ -98,11 +98,6 @@ export default function Player({
                 number: episode.number
             }
         });
-        
-        // Clean up previous blob URL to prevent memory leaks
-        if (vttUrl) {
-            URL.revokeObjectURL(vttUrl);
-        }
         
         const blob = new Blob([vttContent], { type: 'text/vtt' });
         const blobUrl = URL.createObjectURL(blob);
@@ -229,7 +224,7 @@ export default function Player({
                     </MediaProvider>
                     <DefaultAudioLayout icons={defaultLayoutIcons} />
                     <DefaultVideoLayout
-                        thumbnails={`https://files.vidstack.io/sprite-fight/thumbnails.vtt`}
+                        // thumbnails={`https://files.vidstack.io/sprite-fight/thumbnails.vtt`}
                         icons={defaultLayoutIcons} 
                     />
                     <MemoizedSkipButton

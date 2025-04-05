@@ -50,7 +50,7 @@ export default function WatchContainer({
             const englishSub = streamingData.subtitles.find((s) => s.lang === 'English')?.url || "";
             setEnglishSubtitleUrl(englishSub);
         }
-    }, [streamingData, subtitleFiles]);
+    }, [streamingData, subtitleFiles, activeSubtitleFile, englishSubtitleUrl, setActiveSubtitleFile, setEnglishSubtitleUrl]);
     
     return (
         <div className="flex flex-row gap-10 container mx-auto px-4 py-6">
