@@ -6,7 +6,7 @@ Animelon doesn’t provide all animes by default, and its entries are rarely upd
 
 # Roadmap
 > [!warning]
-> This project is still in beta
+> This project is still in beta 
 
 > [!note]
 > the only crucial feature that hasn't been added yet is the definition on hover functionality, you could use yomitan instead for now
