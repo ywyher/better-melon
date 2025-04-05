@@ -1,6 +1,6 @@
 "use client";
 
-import { MediaPlayer, MediaPlayerInstance, MediaProvider, Poster, TextTrack } from '@vidstack/react';
+import { MediaPlayer, MediaPlayerInstance, MediaProvider, TextTrack } from '@vidstack/react';
 import { DefaultAudioLayout, defaultLayoutIcons, DefaultVideoLayout } from '@vidstack/react/player/layouts/default';
 import { Track } from "@vidstack/react";
 import '@vidstack/react/player/styles/default/theme.css';
@@ -213,11 +213,11 @@ export default function Player({
                     className='relative w-full h-fit'
                 >
                     <MediaProvider>
-                        <Poster
+                        {/* <Poster
                             className="vds-poster"
                             src={episode.image}
                             alt={episode.title}
-                        />
+                        /> */}
                         {vttUrl && (
                             <Track kind='chapters' src={vttUrl} default label='Skip Times' />
                         )}

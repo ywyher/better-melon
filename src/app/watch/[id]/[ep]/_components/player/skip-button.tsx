@@ -48,7 +48,7 @@ export default function SkipButton({
         <>
             {canSkip && (
                 <div 
-                    style={{ position: 'absolute', ...buttonPositioning }}
+                    style={{ position: 'absolute', ...buttonPositioning, zIndex: 10 }}
                 >
                     <Button
                         className={cn(

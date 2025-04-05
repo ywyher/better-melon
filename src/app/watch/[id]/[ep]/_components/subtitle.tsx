@@ -180,7 +180,7 @@ export default function Subtitle() {
         return controlsVisible ? '4' : '1';
     };
 
-    if (isLoading) return <>Loading...</>;
+    if (isLoading) return <></>;
 
     return (
         <div 
@@ -207,7 +207,7 @@ export default function Subtitle() {
                         <Fragment key={idx}>
                             {cue.tokens?.length ? (
                                 cue.tokens.map((token, tokenIdx) => {
-                                    const isActive = hoveredCueId === cue.id && hoveredTokenIndex === tokenIdx;
+                                    const isActive = hoveredCueId === cue.id && (hoveredTokenIndex === tokenIdx && type != 'english');
                                     
                                     return (
                                         <span 
