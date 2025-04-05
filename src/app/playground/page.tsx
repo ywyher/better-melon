@@ -22,6 +22,10 @@ export default function Playground() {
         enabled: !!file
     })
 
+    useEffect(() => {
+        console.log(data)
+    }, [data])
+
     return (
         <>
             <Input

@@ -1,14 +1,14 @@
 "use client"
 
+import CueNavigation from "@/app/watch/[id]/[ep]/_components/bar/cue-navigation"
 import DelaySlider from "@/app/watch/[id]/[ep]/_components/bar/delay-slider"
-import NextCue from "@/app/watch/[id]/[ep]/_components/bar/next-cue"
-import PreviousCue from "@/app/watch/[id]/[ep]/_components/bar/previous-cue"
+import EpisodeNavigation from "@/app/watch/[id]/[ep]/_components/bar/episode-navigator"
 import { useWatchStore } from "@/app/watch/[id]/[ep]/store"
 import MultipleSelector from "@/components/multiple-selector"
 import { subtitleScripts } from "@/lib/constants"
 import { SubtitleScript } from "@/types/subtitle"
 
-export default function Bar() {
+export default function Bar({ episodesLength }: { episodesLength: number }) {
     const activeScripts = useWatchStore((state) => state.activeScripts)
     const setActiveScripts = useWatchStore((state) => state.setActiveScripts)
 
@@ -35,8 +35,12 @@ export default function Bar() {
             />
             <DelaySlider />
             <div className="flex flex-row gap-3">
-                <PreviousCue />
-                <NextCue />
+                <CueNavigation direction="previous" />
+                <CueNavigation direction="next" />
+            </div>
+            <div className="flex flex-row gap-3">
+                <EpisodeNavigation direction="previous" episodesLength={episodesLength} />
+                <EpisodeNavigation direction="next" episodesLength={episodesLength} />
             </div>
         </div>
     )

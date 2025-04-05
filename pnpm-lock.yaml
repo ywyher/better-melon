@@ -125,9 +125,6 @@ importers:
       tailwindcss-animate:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@4.0.13)
-      use-debounce:
-        specifier: ^10.0.4
-        version: 10.0.4(react@19.0.0)
       vaul:
         specifier: ^1.1.2
         version: 1.1.2(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -177,6 +174,9 @@ importers:
       typescript:
         specifier: ^5
         version: 5.8.2
+      use-debounce:
+        specifier: ^10.0.4
+        version: 10.0.4(react@19.0.0)
 
 packages:
 

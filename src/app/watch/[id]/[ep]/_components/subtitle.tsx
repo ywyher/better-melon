@@ -147,21 +147,21 @@ export default function Subtitle() {
                 const typeDelay = subtitleType === 'japanese' ? delay.japanese : delay.english;
                 
                 result[subtitleType] = cues.filter(cue => {
-                const startTime = subtitleType !== 'english' ?
-                    srtTimestampToSeconds(cue.from)
-                    : vttTimestampToSeconds(cue.from);
-                
-                const endTime = subtitleType !== "english" ?
-                    srtTimestampToSeconds(cue.to)
-                    : vttTimestampToSeconds(cue.to);
-                
-                return currentTime >= startTime + typeDelay && currentTime <= endTime + typeDelay;
+                    const startTime = subtitleType !== 'english'
+                        ? srtTimestampToSeconds(cue.from)
+                        : vttTimestampToSeconds(cue.from);
+                    
+                    const endTime = subtitleType !== "english"
+                        ? srtTimestampToSeconds(cue.to)
+                        : vttTimestampToSeconds(cue.to);
+                    
+                    return (currentTime + .1) >= startTime + typeDelay && (currentTime + .1) <= endTime + typeDelay;
                 });
             }
         });
 
         return result;
-    }, [subtitleQueries, currentTime]);
+    }, [subtitleQueries, currentTime, delay.english]);
 
     const handleTokenMouseEnter = (cueId: number, tokenIndex: number) => {
         setHoveredCueId(cueId);

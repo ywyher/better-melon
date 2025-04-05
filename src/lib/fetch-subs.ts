@@ -199,7 +199,7 @@ function cleanContent(content: string) {
   return cleanedContent;
 }
 
-function parseSrt(content: string) {
+export function parseSrt(content: string) {
   const lines = content.split('\n');
   const result = [];
   
@@ -248,7 +248,7 @@ function parseSrt(content: string) {
   return result as SubtitleCue[];
 }
 
-function parseVtt(content: string) {
+export function parseVtt(content: string) {
   const lines = content.split('\n');
   const result = [];
   let currentEntry: Partial<SubtitleCue> = {};

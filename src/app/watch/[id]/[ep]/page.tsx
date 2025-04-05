@@ -1,10 +1,7 @@
-import Player from "@/app/watch/[id]/[ep]/_components/player";
+import Player from "@/app/watch/[id]/[ep]/_components/player/player";
 import { SubtitleFile } from "@/types/subtitle";
-import SubtitlePanel from "@/app/watch/[id]/[ep]/_components/panel/panel";
 import { AnimeEpisodeData } from "@/types/anime";
-import { filterSubtitleFiles } from "@/app/watch/[id]/[ep]/funcs";
-import GoBack from "@/components/goback";
-import Bar from "@/app/watch/[id]/[ep]/_components/bar/bar";
+import WatchContainer from "@/app/watch/[id]/[ep]/_components/watch-container";
 
 type Params = Promise<{ id: string, ep: string }>
 
@@ -55,22 +52,12 @@ export default async function Watch({ params }: { params: Params }) {
     }) as SubtitleFile[];
 
     return (
-      <div className="flex flex-row gap-10 container mx-auto px-4 py-6">
-        <div className="flex flex-col gap-3">
-          <GoBack />
-          <Player 
-            episode={episode} 
-            streamingData={streamingData} 
-            subtitleFiles={filterSubtitleFiles(subtitleFiles)} 
-          />
-          <Bar />
-        </div>
-        {subtitleFiles && (
-          <SubtitlePanel
-           subtitleFiles={filterSubtitleFiles(subtitleFiles)}
-          />
-        )}
-      </div>
+      <WatchContainer
+        episode={episode}
+        streamingData={streamingData}
+        subtitleFiles={subtitleFiles}
+        episodesLength={episodesData.length}
+      />
     );
   } catch (error) {
     console.error("Error fetching data:", error);

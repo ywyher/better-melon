@@ -1,5 +1,8 @@
+import { fetchSubtitles, parseSrt, parseVtt } from "@/lib/fetch-subs";
+import { srtTimestampToSeconds } from "@/lib/funcs";
 import { SkipTime } from "@/types/anime";
-import { SubtitleFile } from "@/types/subtitle";
+import { SubtitleCue, SubtitleFile } from "@/types/subtitle";
+import { franc } from "franc-min";
 
 export const filterSubtitleFiles = (files: SubtitleFile[]) => {
   const subtitleExtensions = ['srt', 'ass', 'vtt'];
@@ -99,4 +102,25 @@ export function generateWebVTTFromSkipTimes({
     });
 
     return vttString;
+}
+
+export async function isFileJpn(file: File) {
+  const content = await fetchSubtitles(file)
+
+  let parsed
+  if(file.name.split('.').pop() == 'srt') {
+    parsed = parseSrt(content)
+  }else if(file.name.split('.').pop() == 'vtt') {
+    parsed = parseVtt(content)
+  }
+
+  if(!parsed) return;
+
+  const toBeTested = parsed?.slice(0, Math.ceil(parsed?.length / 2))
+    .map((cue) => cue.content)
+    .join(' ')
+
+  const result = franc(toBeTested)
+
+  return result == 'jpn' ? true : false
 }

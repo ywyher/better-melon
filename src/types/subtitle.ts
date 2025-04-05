@@ -21,6 +21,10 @@ export type SubtitleFile = {
     last_modified: Date;
 }
 
+export type ActiveSubtitleFile = 
+  | { source: "remote"; file: SubtitleFile }
+  | { source: "local"; file: File };
+  
 export type SubtitleToken = {
     // Most used
     word_id: number;

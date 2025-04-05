@@ -20,8 +20,6 @@ export default function DelaySlider() {
       japanese: 0,
       english: 0
     });
-    setJapaneseProgress([0]);
-    setEnglishProgress([0]);
   };
 
   return (
@@ -43,10 +41,10 @@ export default function DelaySlider() {
         <div className="flex flex-row items-center gap-3">
           <div className="flex-1">
             <Slider
-              defaultValue={[delay.japanese]}
+              value={japaneseProgress}
               min={-30}
               max={30}
-              step={1}
+              step={0.5}
               onValueChange={(e) => setJapaneseProgress(e)}
               onPointerUp={() => {
                 setDelay({
@@ -68,7 +66,7 @@ export default function DelaySlider() {
         <div className="flex flex-row items-center gap-3">
           <div className="flex-1">
             <Slider
-              defaultValue={[delay.english]}
+              value={englishProgress}
               min={-30}
               max={30}
               step={1}

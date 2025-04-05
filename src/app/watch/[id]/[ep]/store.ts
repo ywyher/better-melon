@@ -1,4 +1,4 @@
-import { SubtitleScript, SubtitleFile, SubtitleCue } from "@/types/subtitle";
+import { SubtitleScript, SubtitleCue, ActiveSubtitleFile } from "@/types/subtitle";
 import { MediaPlayerInstance } from "@vidstack/react";
 import { createRef, RefObject } from "react";
 import { create } from "zustand";
@@ -7,7 +7,7 @@ export type WatchStore = {
   player: RefObject<MediaPlayerInstance | null>;
   setPlayer: (sub: WatchStore['player']) => void;
 
-  activeSubtitleFile: { source: "remote", file: SubtitleFile } | { source: "local", file: File } | null;
+  activeSubtitleFile: ActiveSubtitleFile | null;
   setActiveSubtitleFile: (sub: WatchStore['activeSubtitleFile']) => void;
 
   englishSubtitleUrl: string | null;
@@ -24,7 +24,7 @@ export type WatchStore = {
     english: number;
   };
   setDelay: (sub: WatchStore['delay']) => void;
-
+  
   reset: () => void;
 };
 

@@ -1,3 +1,5 @@
+"use client"
+
 import { Button } from "@/components/ui/button";
 import {
     DialogClose
@@ -10,6 +12,8 @@ import { toast } from "sonner";
 import DialogWrapper from "@/components/dialog-wrapper";
 import { useWatchStore } from "@/app/watch/[id]/[ep]/store";
 import { SubtitleFile } from "@/types/subtitle";
+import { isFileJpn, selectSubtitleFile } from "@/app/watch/[id]/[ep]/funcs";
+import { franc } from "franc-min";
 
 export default function SubtitleFileSelector({ subtitleFiles }: { 
     subtitleFiles: SubtitleFile[];
@@ -23,7 +27,6 @@ export default function SubtitleFileSelector({ subtitleFiles }: {
     const activeSubtitleFile = useWatchStore((state) => state.activeSubtitleFile)
     const setActiveSubtitleFile = useWatchStore((state) => state.setActiveSubtitleFile)
 
-    // Update localFileName when activeSubtitleFile changes
     useEffect(() => {
         if (activeSubtitleFile?.source === "local" && activeSubtitleFile.file) {
             setLocalFileName(activeSubtitleFile.file.name);
@@ -37,27 +40,32 @@ export default function SubtitleFileSelector({ subtitleFiles }: {
         setActiveSubtitleFile({ source: "remote", file: file });
         setLocalFileName(null)
         
-        // Close dialog after selection
         setTimeout(() => {
             setOpen(false);
             toast.message("File updated!")
-            // Reset loading state after dialog closes
             setTimeout(() => setLoading(null), 300);
         }, 500);
     };
-
-    const handleLocalFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files[0]) {
-            const file = e.target.files[0];
-            setLocalLoading(true);
-            
+    
+    const handleLocalFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (!e.target.files || !e.target.files[0]) return;
+        
+        setLocalLoading(true);
+        const file = e.target.files[0];
+        
+        const isJpn = await isFileJpn(file)
+        
+        if(isJpn) {
             setLocalFileName(file.name);
             setActiveSubtitleFile({ source: "local", file: file });
-            
             setTimeout(() => {
-                setLocalLoading(false);
-                toast.message("Local subtitle loaded!");
+                setOpen(false);
+                toast.message("File updated!")
+                setTimeout(() => setLocalLoading(false), 300);
             }, 500);
+        }else {
+            toast.warning("Subtitles must be in japanese")
+            setLocalLoading(false);
         }
     };
 
