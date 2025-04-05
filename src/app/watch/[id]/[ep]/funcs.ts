@@ -1,7 +1,6 @@
 import { fetchSubtitles, parseSrt, parseVtt } from "@/lib/fetch-subs";
-import { srtTimestampToSeconds } from "@/lib/funcs";
 import { SkipTime } from "@/types/anime";
-import { SubtitleCue, SubtitleFile } from "@/types/subtitle";
+import { SubtitleFile } from "@/types/subtitle";
 import { franc } from "franc-min";
 
 export const filterSubtitleFiles = (files: SubtitleFile[]) => {
@@ -36,18 +35,43 @@ export const selectSubtitleFile = (files: SubtitleFile[]) => {
     return null;
   }
   
-  // First check if there are any SRT files
+  // Helper function to check for Netflix keyword
+  const hasNetflixKeyword = (file: SubtitleFile) => {
+    return file.name.toLowerCase().includes('netflix');
+  };
+  
+  // Filter by file extensions
   const srtFiles = files.filter(file => {
     const extension = file.name.split('.').pop()?.toLowerCase();
     return extension === 'srt';
   });
   
-  // If we have SRT files, return the first one
+  const vttFiles = files.filter(file => {
+    const extension = file.name.split('.').pop()?.toLowerCase();
+    return extension === 'vtt';
+  });
+  
+  // First priority: SRT files
   if (srtFiles.length > 0) {
+    // Check if any SRT files have Netflix keyword
+    const netflixSrt = srtFiles.find(hasNetflixKeyword);
+    if (netflixSrt) {
+      return netflixSrt;
+    }
     return srtFiles[0];
   }
   
-  // Otherwise, just return the first file from the list
+  // Second priority: VTT files
+  if (vttFiles.length > 0) {
+    // Check if any VTT files have Netflix keyword
+    const netflixVtt = vttFiles.find(hasNetflixKeyword);
+    if (netflixVtt) {
+      return netflixVtt;
+    }
+    return vttFiles[0];
+  }
+  
+  // Last resort: return first file
   return files[0];
 };
 

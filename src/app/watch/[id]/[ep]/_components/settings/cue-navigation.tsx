@@ -92,12 +92,8 @@ export default function CueNavigation({ direction }: CueNavigationProps) {
     }
   };
 
-  useEffect(() => {
-    console.log(currentCue)
-  }, [currentCue])
-
   const isDisabled = !activeSubtitleFile || !subtitleCues || subtitleCues.length === 0 || 
-    (currentCue && !isNext && currentCue.id <= 1) || 
+    (!isNext && (!currentCue || currentCue?.id <= 1)) || 
     (currentCue && isNext && currentCue.id >= subtitleCues.length);
 
   return (
@@ -105,7 +101,7 @@ export default function CueNavigation({ direction }: CueNavigationProps) {
       variant="outline"
       onClick={handleCueNavigation}
       disabled={isDisabled || false}
-      className="flex-1"
+      className="w-full flex-1"
     >
       {!isNext && <SkipBack className="mr-2" size={16} />}
       {isNext ? 'Next Cue' : 'Previous Cue'}

@@ -1,33 +1,45 @@
 import { Skeleton } from "@/components/ui/skeleton";
+import { useEffect, useState } from "react";
 
 export default function PlayerSkeleton({ isLoading }: { isLoading: boolean }) {
+    const [progress, setProgress] = useState(0);
+    
+    useEffect(() => {
+        if (!isLoading) return;
+        
+        // Reset progress when loading starts
+        setProgress(0);
+        
+        // Simulate loading progress
+        const interval = setInterval(() => {
+            setProgress(prev => {
+                // Slow down progress as it approaches 100%
+                const increment = Math.max(1, 10 - Math.floor(prev / 10));
+                const newProgress = Math.min(99, prev + increment);
+                return newProgress;
+            });
+        }, 200);
+        
+        return () => clearInterval(interval);
+    }, [isLoading]);
+
     return (
-        <>
+        <div className={`absolute inset-0 z-10 w-full aspect-video bg-black bg-opacity-80 flex flex-col items-center justify-center transition-opacity duration-300 ${isLoading ? 'opacity-100' : 'opacity-0'}`}>
+            {/* Video placeholder skeleton */}
             {isLoading && (
-                <div className="
-                    absolute inset-0 z-10
-                    flex flex-col
-                    w-full h-fit 
-                ">
-                    <div className="w-full aspect-video bg-gray-800 relative overflow-hidden">
-                        {/* Main video area skeleton */}
-                        <Skeleton className="w-full h-fit animate-pulse" />
-                        
-                        {/* Loading text overlay */}
-                        <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="flex flex-col items-center">
-                                <div className="h-8 w-8 border-4 border-t-blue-500 border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin mb-2"></div>
-                                <p className="text-white text-sm font-medium">Loading video...</p>
-                            </div>
-                        </div>
-                        
-                        {/* Timeline skeleton */}
-                        <div className="absolute bottom-0 left-0 right-0 h-12 bg-black bg-opacity-50 px-4 flex items-center">
-                            <Skeleton className="h-1 w-full rounded-full" />
-                        </div>
-                    </div>
-                </div>
+                <Skeleton className="absolute inset-0 w-full h-full" />
             )}
-        </>
-    )
+            
+            {/* Text overlay - shown during loading */}
+            <p className="text-white text-sm font-medium mb-4 z-20">Powered by better melon</p>
+            
+            {/* Linear loading indicator with real progress */}
+            <div className="w-64 h-1.5 bg-gray-700 rounded overflow-hidden z-20">
+                <div 
+                    className="h-full bg-blue-500 transition-all duration-200 ease-out"
+                    style={{ width: `${progress}%` }}
+                />
+            </div>
+        </div>
+    );
 }

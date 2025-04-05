@@ -1,11 +1,11 @@
 "use client"
 
-import Bar from "@/app/watch/[id]/[ep]/_components/bar/bar";
+import Settings from "@/app/watch/[id]/[ep]/_components/settings/settings";
 import SubtitlePanel from "@/app/watch/[id]/[ep]/_components/panel/panel";
 import Player from "@/app/watch/[id]/[ep]/_components/player/player";
 import { filterSubtitleFiles, selectSubtitleFile } from "@/app/watch/[id]/[ep]/funcs";
 import { useWatchStore } from "@/app/watch/[id]/[ep]/store";
-import GoBack from "@/components/goback";
+import GoBack from "@/app/watch/[id]/[ep]/_components/goback";
 import { AnimeEpisodeData, AnimeStreamingData } from "@/types/anime";
 import { SubtitleFile } from "@/types/subtitle";
 import { useEffect } from "react";
@@ -60,8 +60,9 @@ export default function WatchContainer({
                     episode={episode} 
                     streamingData={streamingData} 
                     subtitleFiles={filterSubtitleFiles(subtitleFiles)} 
+                    episodesLength={episodesLength}
                 />
-                <Bar episodesLength={episodesLength} />
+                <Settings episodesLength={episodesLength} />
             </div>
             {subtitleFiles && (
                 <SubtitlePanel

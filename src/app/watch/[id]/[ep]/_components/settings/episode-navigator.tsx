@@ -28,7 +28,7 @@ export default function EpisodeNavigation({ direction, episodesLength }: { direc
         <Button 
             variant="outline" 
             onClick={handleClick}
-            className="flex-1"
+            className="w-full flex-1"
             disabled={isDisabled}
         >
             {!isNext && <SkipBack className="mr-2" size={16} />}

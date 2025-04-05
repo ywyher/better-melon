@@ -2,14 +2,16 @@
 
 import { Button } from "@/components/ui/button"
 import { ArrowLeft } from "lucide-react"
-import { useRouter } from "next/navigation"
+import { useParams, useRouter } from "next/navigation"
 
 export default function GoBack() {
     const router = useRouter()
+    const params = useParams<{ id: string; ep: string }>();
+
     return (
         <Button
             onClick={() => {
-                router.back()
+                router.push(`/info/${params.id}`)
             }}
             variant='ghost'
             className="w-fit"
