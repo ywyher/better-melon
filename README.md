@@ -5,8 +5,13 @@ An [Animleon](https://www.animelon.com/) alternative that aims to overcome all a
 Animelon doesn’t provide all animes by default, and its entries are rarely updated, making it difficult for learners who want to watch modern anime with subtitles. That’s why I decided to create this website—to offer the latest animes with subtitles, along with real-time Japanese subtitle definitions, providing a more feature-rich alternative.
 
 # Roadmap
+> [!warning]
+> This project is still in its early stages so a lot of crucial stuff are yet to be implemented for this project to be called a
+
 > [!note]
-> This project is still in its early stages so a lot of crucial stuff are yet to be implemented for this project to be called a usable alternative
+> the only crucial feature that hasn't been added yet is the definition on hover functionality, you could use yomitan instead for now
+
+usable alternative
 - [x] Search/Filtering system
 - [x] Watch functionality
 - [x] Subtitles panel
@@ -30,12 +35,11 @@ Animelon doesn’t provide all animes by default, and its entries are rarely upd
 - [ ] User friendly/Modern UI
 
 # Self-Hosting
-
 > [!warning]
 > This application is still in a very early stage, and it is not advised to use it as of now, Since you are likely to face bugs
-> 
+
 > [!note]
-> the only crucial feature that hasn't been added yet is the definition on hover functionality, you could use yomitan instead for now
+> you can access this app without self hosting it via https://better-melon.vercel.app
 
 ### Clone the Repository
 ```sh
@@ -94,8 +98,16 @@ JIMAKU_KEY=AAAAAasndaund9uhWIJHUSDAIDJamsdkoanmdIAUN
 ```
 
 ### Start the Application
+`For development` 
 ```sh
 pnpm run dev  # or npm run dev
+```
+
+`For production & actual use`
+
+```sh
+pnpm run build  # or npm run build
+pnpm start # or npm start
 ```
 
 # Credit
@@ -103,4 +115,3 @@ pnpm run dev  # or npm run dev
 - [Consument](https://github.com/consumet/api.consumet.org) -> Used to fetch anime streaming data
 - [Jimaku](https://jimaku.cc/) -> Used to fetch japanese subtitles
 - [ywyh (Me)](https://github.com/ywyher) – for being goated
-			

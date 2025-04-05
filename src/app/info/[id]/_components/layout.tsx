@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
-import { ChevronLeft } from "lucide-react"
+import { ArrowLeft } from "lucide-react"
 import { Anime } from "@/types/anime"
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime"
 
@@ -19,10 +19,10 @@ export function AnimeLayout({ bannerImage, title, router, children }: AnimeLayou
                 <Button 
                     variant="ghost" 
                     className="flex items-center gap-1" 
-                    onClick={() => router.back()}
+                    onClick={() => router.push('/')}
                 >
-                    <ChevronLeft size={16} />
-                    <span>Back</span>
+                    <ArrowLeft size={16} />
+                    <span>Go Back</span>
                 </Button>
             </div>
             
