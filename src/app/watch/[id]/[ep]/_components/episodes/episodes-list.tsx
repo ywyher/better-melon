@@ -85,8 +85,7 @@ export default function EpisodesList({
 
   return (
     <Card 
-      className="overflow-auto h-[80vh] max-w-[500px]"
-      ref={scrollAreaRef}
+      className="h-[80vh] max-w-[500px]"
     >
       <CardHeader className="flex flex-col gap-3">
         <div className="flex flex-row items-center w-full">
@@ -147,42 +146,46 @@ export default function EpisodesList({
         
       </CardHeader>
       <CardContent
-        className="relative w-full"
-        style={{
-            height: `${rowVirtualizer.getTotalSize()}px`,
-            position: 'relative',
-        }}
+        ref={scrollAreaRef}
+        className="relative w-full overflow-y-auto"
       >
-        {episodesListViewMode === "grid" && (
-          <GridView 
-            episodes={filteredEpisodes} 
-            currentEpisode={currentEpisode} 
-            animeId={params.id} 
-            router={router} 
-          />
-        )}
-        
-        {episodesListViewMode === "list" && (
-          <ListView 
-            episodes={filteredEpisodes} 
-            currentEpisode={currentEpisode} 
-            animeId={params.id} 
-            router={router} 
-            spoilerMode={episodesListSpoilerMode}
-            animeData={animeData}
-          />
-        )}
-        
-        {episodesListViewMode === "image" && (
-          <ImageView 
-            episodes={filteredEpisodes} 
-            currentEpisode={currentEpisode} 
-            animeId={params.id} 
-            router={router} 
-            spoilerMode={episodesListSpoilerMode}
-            animeData={animeData}
-          />
-        )}
+        <div
+          style={{
+              height: `${rowVirtualizer.getTotalSize()}px`,
+              position: 'relative',
+          }}
+        >
+          {episodesListViewMode === "grid" && (
+            <GridView 
+              episodes={filteredEpisodes} 
+              currentEpisode={currentEpisode} 
+              animeId={params.id} 
+              router={router} 
+            />
+          )}
+          
+          {episodesListViewMode === "list" && (
+            <ListView 
+              episodes={filteredEpisodes} 
+              currentEpisode={currentEpisode} 
+              animeId={params.id} 
+              router={router} 
+              spoilerMode={episodesListSpoilerMode}
+              animeData={animeData}
+            />
+          )}
+          
+          {episodesListViewMode === "image" && (
+            <ImageView 
+              episodes={filteredEpisodes} 
+              currentEpisode={currentEpisode} 
+              animeId={params.id} 
+              router={router} 
+              spoilerMode={episodesListSpoilerMode}
+              animeData={animeData}
+            />
+          )}
+        </div>
       </CardContent>
     </Card>
   );
