@@ -72,7 +72,7 @@ export default function SubtitlePanel({ subtitleFiles }: { subtitleFiles: Subtit
     if(isCuesLoading) return <PanelSkeleton />
 
     return (
-        <Card className="flex flex-col gap-3 w-full max-w-[500px]">
+        <Card className="flex flex-col gap-3 w-full max-w-[500px] h-fit">
             <Tabs defaultValue={displayScript || subtitleScripts[0]} value={displayScript}>
                 <PanelHeader 
                     isLoading={isCuesLoading}

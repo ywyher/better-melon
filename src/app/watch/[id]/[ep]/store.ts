@@ -1,3 +1,4 @@
+import { EpisodesListViewMode } from "@/types/anime";
 import { SubtitleScript, SubtitleCue, ActiveSubtitleFile } from "@/types/subtitle";
 import { MediaPlayerInstance } from "@vidstack/react";
 import { createRef, RefObject } from "react";
@@ -34,6 +35,12 @@ export type WatchStore = {
 
   autoNext: boolean;
   setAutoNext: (sub: WatchStore['autoNext']) => void;
+
+  episodesListViewMode: EpisodesListViewMode;
+  setEpisodesListViewMode: (sub: WatchStore['episodesListViewMode']) => void;
+
+  episodesListSpoilerMode: boolean;
+  setEpisodesListSpoilerMode: (sub: WatchStore['episodesListSpoilerMode']) => void;
   
   reset: () => void;
 };
@@ -70,6 +77,12 @@ export const useWatchStore = create<WatchStore>()(
 
       autoNext: false,
       setAutoNext: (autoNext: WatchStore['autoNext']) => set({ autoNext }),
+      
+      episodesListViewMode: 'image',
+      setEpisodesListViewMode: (episodesListViewMode: WatchStore['episodesListViewMode']) => set({ episodesListViewMode }),
+
+      episodesListSpoilerMode: false,
+      setEpisodesListSpoilerMode: (episodesListSpoilerMode: WatchStore['episodesListSpoilerMode']) => set({ episodesListSpoilerMode }),
 
       reset: () => {
         set({
@@ -96,7 +109,9 @@ export const useWatchStore = create<WatchStore>()(
         autoPlay: state.autoPlay,
         autoSkip: state.autoSkip,
         autoNext: state.autoNext,
-        activeScripts: state.activeScripts
+        activeScripts: state.activeScripts,
+        episodesListViewMode: state.episodesListViewMode,
+        episodesListSpoilerMode: state.episodesListSpoilerMode
       }),
     }
   ),

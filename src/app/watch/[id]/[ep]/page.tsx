@@ -15,6 +15,34 @@ import PlayerSkeleton from '@/app/watch/[id]/[ep]/_components/player/player-skel
 import PanelSkeleton from '@/app/watch/[id]/[ep]/_components/panel/panel-skeleton';
 import SettingsSkeleton from '@/app/watch/[id]/[ep]/_components/settings/settings-skeleton';
 import { Indicator } from '@/components/indicator';
+import EpisodesList from '@/app/watch/[id]/[ep]/_components/episodes/episodes-list';
+import { gql, useQuery as useGqlQuery } from "@apollo/client"
+import EpisodesListSkeleton from '@/app/watch/[id]/[ep]/_components/episodes/episodes-list-skeleton';
+
+const GET_ANIME_DATA = gql`
+  query($id: Int!) {
+    Media(id: $id) {
+      id
+      idMal
+      bannerImage
+      format
+      title {
+        romaji
+        english
+      }  
+      episodes
+      coverImage {
+        large
+        medium
+      }
+      description
+      genres
+      status
+      season
+      seasonYear
+    } 
+  }
+`
 
 export default function Watch() {
   const params = useParams();
@@ -22,7 +50,8 @@ export default function Watch() {
   const ep = params.ep as string;
   const episodeNumber = parseInt(ep);
 
-  // Memoize the fetch functions
+  const { loading: isLoadingAnime, error: animeError, data: animeData } = useGqlQuery(GET_ANIME_DATA, { variables: { id: parseInt(id) } })
+
   const fetchEpisodesData = useCallback(async () => {
     const res = await fetch(`${process.env.NEXT_PUBLIC_CONSUMET_URL}/meta/anilist/episodes/${id}?provider=zoro`);
     if (!res.ok) throw new Error("Failed to fetch episodes data");
@@ -127,7 +156,7 @@ export default function Watch() {
   }, [episode?.id, streamingData, subtitleFiles, setActiveSubtitleFile, setEnglishSubtitleUrl]);
 
   // Fix error handling
-  const errors = [episodesError, streamingError, subtitleEntriesError, subtitleFilesError];
+  const errors = [episodesError, streamingError, subtitleEntriesError, subtitleFilesError, animeError];
   const errorMessages = errors.filter(error => error !== null && error !== undefined);
   
   if(errorMessages.length > 0) {
@@ -180,13 +209,20 @@ export default function Watch() {
         <GoBack />
         {renderPlayerContent()}
       </div>
-      {isPanelLoading ? (
-        <PanelSkeleton />
-      ) : (
-        <SubtitlePanel
-          subtitleFiles={filterSubtitleFiles(subtitleFiles || [])}
-        />
-      )}
+      <div className='flex flex-col gap-5'>
+        {isPanelLoading ? (
+          <PanelSkeleton />
+        ) : (
+          <SubtitlePanel
+            subtitleFiles={filterSubtitleFiles(subtitleFiles || [])}
+          />
+        )}
+        {(isLoadingAnime || !episodesData) ? (
+          <EpisodesListSkeleton />
+        ): (
+          <EpisodesList animeData={animeData.Media} episodes={episodesData} />
+        )}
+      </div>
     </div>
   );
 }

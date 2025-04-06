@@ -138,3 +138,5 @@ export type SkipTime = {
     };
     skipType: "OP" | "OT";
 };
+
+export type EpisodesListViewMode = "grid" | "list" | "image"

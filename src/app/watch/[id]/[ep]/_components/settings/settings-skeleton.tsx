@@ -1,4 +1,4 @@
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import AccordionSkeleton from "@/components/accordion-skeleton"
 import { Separator } from "@/components/ui/separator"
 import { Skeleton } from "@/components/ui/skeleton"
 
@@ -52,16 +52,7 @@ export default function SettingsSkeleton({
 
   if (withAccordion) {
     return (
-      <Accordion className="w-full flex-1" type="single" collapsible defaultValue="settings">
-        <AccordionItem value="settings">
-          <AccordionTrigger className="cursor-pointer">
-            <Skeleton className="h-6 w-20" />
-          </AccordionTrigger>
-          <AccordionContent>
-            <SettingsContent />
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
+      <AccordionSkeleton />
     )
   }
 

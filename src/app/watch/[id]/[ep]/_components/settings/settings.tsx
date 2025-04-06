@@ -28,10 +28,6 @@ export default function Settings({ episodesLength }: { episodesLength: number })
     }, [setActiveScripts])
 
     return (
-        // <Accordion className="w-full flex-1" type="single" collapsible>
-        //     <AccordionItem value="settings" defaultChecked>
-        //         <AccordionTrigger className="cursor-pointer">Settings</AccordionTrigger>
-        //         <AccordionContent>
         <div className="flex flex-col gap-5">
             <div className="flex flex-row gap-2">
                 <TooltipWrapper tooltip="Choose which scripts (like Romaji, Hiragana, etc.) are shown as subtitles">
@@ -98,8 +94,5 @@ export default function Settings({ episodesLength }: { episodesLength: number })
                 </div>
             </div>
         </div>
-        //          </AccordionContent>
-        //     </AccordionItem>
-        // </Accordion>
     )
 }
