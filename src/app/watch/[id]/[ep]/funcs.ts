@@ -9,7 +9,6 @@ export const filterSubtitleFiles = (files: SubtitleFile[]) => {
   return files.filter(file => {
     const filename = file.name;
     
-    // Check if file has a subtitle extension
     const extension = filename.split('.').pop()?.toLowerCase();
     const isSubtitleFile = extension && subtitleExtensions.includes(extension);
     
@@ -51,9 +50,7 @@ export const selectSubtitleFile = (files: SubtitleFile[]) => {
     return extension === 'vtt';
   });
   
-  // First priority: SRT files
   if (srtFiles.length > 0) {
-    // Check if any SRT files have Netflix keyword
     const netflixSrt = srtFiles.find(hasNetflixKeyword);
     if (netflixSrt) {
       return netflixSrt;
@@ -61,9 +58,7 @@ export const selectSubtitleFile = (files: SubtitleFile[]) => {
     return srtFiles[0];
   }
   
-  // Second priority: VTT files
   if (vttFiles.length > 0) {
-    // Check if any VTT files have Netflix keyword
     const netflixVtt = vttFiles.find(hasNetflixKeyword);
     if (netflixVtt) {
       return netflixVtt;
@@ -71,7 +66,6 @@ export const selectSubtitleFile = (files: SubtitleFile[]) => {
     return vttFiles[0];
   }
   
-  // Last resort: return first file
   return files[0];
 };
 

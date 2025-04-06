@@ -25,7 +25,6 @@ export default function ImageView({
 }: ImageViewProps) {
   const [imageLoading, setImageLoading] = useState<boolean>(true);
 
-  // Get first episode data for spoiler mode
   const genericTitle = animeData.title.english || "Episode";
   const genericImage = animeData.coverImage.medium || null;
   const genericDescription = animeData.description || "No description available for this episode.";

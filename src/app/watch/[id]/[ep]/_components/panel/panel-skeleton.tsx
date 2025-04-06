@@ -38,15 +38,13 @@ export default function PanelSkeleton() {
 }
 
 function SubtitleCueSkeleton({ index }: { index: number }) {
-  // Predefined set of widths to ensure consistency between server and client
   const tokenWidths = [
-    [25, 32, 45, 22, 36, 28, 30, 40],  // Pattern 1
-    [30, 22, 38, 45, 28, 33, 24, 35],  // Pattern 2
-    [28, 40, 22, 35, 26, 38, 30, 42],  // Pattern 3
-    [35, 26, 42, 30, 24, 38, 45, 28]   // Pattern 4
+    [25, 32, 45, 22, 36, 28, 30, 40],
+    [30, 22, 38, 45, 28, 33, 24, 35],
+    [28, 40, 22, 35, 26, 38, 30, 42],
+    [35, 26, 42, 30, 24, 38, 45, 28] 
   ];
   
-  // Use modulo to pick a pattern based on index
   const widthPattern = tokenWidths[index % tokenWidths.length];
   
   return (

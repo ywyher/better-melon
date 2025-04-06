@@ -21,7 +21,6 @@ export default function ListView({
   spoilerMode = false,
   animeData
 }: ListViewProps) {
-  // Get first episode title for spoiler mode
   const genericTitle = animeData.title.english || "Episode";
 
   return (

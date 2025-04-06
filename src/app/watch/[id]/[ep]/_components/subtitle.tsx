@@ -10,30 +10,23 @@ import { useQueries } from "@tanstack/react-query";
 import { useMediaState } from "@vidstack/react";
 import { CSSProperties, Fragment, useCallback, useMemo, useState } from "react";
 
-// Define subtitle types for better code organization
 type SubtitleType = typeof subtitleScripts[number];
 
-// Calculate font size based on fullscreen state and active scripts count
 const calculateFontSize = (isFullscreen: boolean, activeScriptsCount: number): string => {
-  // Base sizes for fullscreen and non-fullscreen
   const fullscreenBaseSize = 40;
   const normalBaseSize = 24;
   
-  // Reduction factor per additional script (after the first one)
   const reductionFactor = isFullscreen ? 4 : 2;
   
-  // Calculate size with reduction for multiple scripts
   const additionalScripts = Math.max(0, activeScriptsCount - 1);
   const reduction = additionalScripts * reductionFactor;
   
-  // Calculate final size with a minimum threshold
   const baseSize = isFullscreen ? fullscreenBaseSize : normalBaseSize;
   const finalSize = Math.max(baseSize - reduction, isFullscreen ? 24 : 16);
   
   return `${finalSize}px`;
 };
 
-// Define style variants for various states
 const getTokenStyles = (isFullscreen: boolean, activeScriptsCount: number) => {
   const fontSize = calculateFontSize(isFullscreen, activeScriptsCount);
   
@@ -76,7 +69,6 @@ export default function Subtitle() {
 
     const activeScriptsCount = activeScripts.length;
     
-    // Get dynamic styles based on fullscreen state and active scripts count
     const tokenStyles = useMemo(
       () => getTokenStyles(!!isFullscreen, activeScriptsCount),
       [isFullscreen, activeScriptsCount]
@@ -172,10 +164,6 @@ export default function Subtitle() {
         return result;
     }, [subtitleQueries, currentTime, delay]);
 
-    // useEffect(() => {
-    //     console.log(subtitleQueries.map((s) => s.data?.type))
-    // }, [subtitleQueries])
-
     const handleTokenMouseEnter = (cueId: number, tokenIndex: number) => {
         setHoveredCueId(cueId);
         setHoveredTokenIndex(tokenIndex);
@@ -252,7 +240,6 @@ export default function Subtitle() {
                                     );
                                 })
                             ) : (
-                                // Fallback to displaying full content if no tokens
                                 <span style={tokenStyles.default}>{cue.content}</span>
                             )}
                         </Fragment>

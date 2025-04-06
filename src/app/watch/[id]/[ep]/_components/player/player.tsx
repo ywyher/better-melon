@@ -146,11 +146,11 @@ export default function Player({
             } else {
                 console.log('No more episodes');
                 toast.message("No more episodes to watch :(");
-                isTransitioning.current = false; // Reset since we're not navigating
+                isTransitioning.current = false;
             }
         } catch (error) {
             console.error('Error moving to the next episode:', error);
-            isTransitioning.current = false; // Reset on error
+            isTransitioning.current = false;
         }
     }, [autoNext, ep, episodesLength, id, router]);
 
@@ -160,7 +160,6 @@ export default function Player({
         const currentTime = player.current.currentTime;
         const duration = player.current.duration;
         
-        // Handle skip times
         if (skipTimes.length) {
             const skipInterval = skipTimes.find(
                 ({ interval }) => currentTime >= interval.startTime && currentTime < interval.endTime
@@ -175,9 +174,8 @@ export default function Player({
             }
         }
         
-        // "Almost ended" logic - add a flag to prevent multiple triggers
         if ((duration - currentTime) < 3 && duration > 0 && !isTransitioning.current) {
-            isTransitioning.current = true; // Prevent multiple triggers
+            isTransitioning.current = true
             handlePlaybackEnded();
         }
     }, 500, { trailing: true, leading: true });

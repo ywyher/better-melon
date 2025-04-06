@@ -2,7 +2,6 @@ import AccordionSkeleton from "@/components/accordion-skeleton"
 import { Separator } from "@/components/ui/separator"
 import { Skeleton } from "@/components/ui/skeleton"
 
-// Settings skeleton component
 interface SettingsSkeletonProps {
   withAccordion?: boolean
 }

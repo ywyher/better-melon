@@ -9,7 +9,6 @@ export default function PlayerSkeleton({ isLoading }: { isLoading: boolean }) {
     useEffect(() => {
         if (!isLoading) return;
         
-        // Reset progress when loading starts
         setProgress(0);
         
         // Simulate loading progress

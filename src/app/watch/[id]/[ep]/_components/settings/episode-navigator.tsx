@@ -15,7 +15,7 @@ export default function EpisodeNavigation({ direction, episodesLength }: { direc
         if (isNaN(currentEp)) return;
 
         const newEp = isNext ? currentEp + 1 : currentEp - 1;
-        if (newEp < 1) return; // prevent negative or zero episodes
+        if (newEp < 1) return;
 
         router.push(`/watch/${params.id}/${newEp}`);
     };

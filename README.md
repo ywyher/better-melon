@@ -24,7 +24,7 @@ usable alternative
 - [x] Next/Previous cue buttons
 - [x] Support local subtitles
 - [x] Seperate delay sliders for japanese and english subs
-- [x] Episodes list
+- [x] Episodes list/selector
 - [ ] Optimize for best performance
 - [ ] Video vtt thumbnails
 - [ ] Providers selector

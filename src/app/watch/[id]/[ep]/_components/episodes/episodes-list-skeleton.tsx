@@ -6,7 +6,6 @@ import { Image as ImageIcon, Eye, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function EpisodesListSkeleton() {
-  // Create an array to represent loading skeleton items
   const skeletonItems = Array(5).fill(null);
 
   return (

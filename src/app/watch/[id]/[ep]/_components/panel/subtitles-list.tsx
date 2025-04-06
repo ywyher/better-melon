@@ -92,17 +92,13 @@ export default function SubtitlesList({
         });
     }, [player, displayCues, cueTimeRanges, findActiveCue]);
 
-    // Handle manual scroll to disable auto-scroll temporarily
     const handleManualScroll = useCallback(() => {
-        // Disable auto-scroll when user manually scrolls
         setAutoScroll(false);
         
-        // Clear existing timer if there is one
         if (autoScrollTimerRef.current) {
             clearTimeout(autoScrollTimerRef.current);
         }
         
-        // Re-enable auto-scroll after 5 seconds of inactivity
         autoScrollTimerRef.current = setTimeout(() => {
             setAutoScroll(true);
         }, 5000);
