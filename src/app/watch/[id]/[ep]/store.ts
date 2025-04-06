@@ -50,9 +50,9 @@ export const useWatchStore = create<WatchStore>()(
       englishSubtitleUrl: null,
       setEnglishSubtitleUrl: (englishSubtitleUrl: WatchStore['englishSubtitleUrl']) => set({ englishSubtitleUrl }),
 
-      activeScripts: ['japanese', 'english'],
+      activeScripts: ['japanese'],
       setActiveScripts: (activeScripts: WatchStore['activeScripts']) => set({ activeScripts }),
-
+      
       subtitleCues: [],
       setSubtitleCues: (subtitleCues: WatchStore['subtitleCues']) => set({ subtitleCues }),
 
@@ -96,6 +96,7 @@ export const useWatchStore = create<WatchStore>()(
         autoPlay: state.autoPlay,
         autoSkip: state.autoSkip,
         autoNext: state.autoNext,
+        activeScripts: state.activeScripts
       }),
     }
   ),

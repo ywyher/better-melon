@@ -1,17 +1,17 @@
 'use client'
 
 import { useWatchStore } from "@/app/watch/[id]/[ep]/store";
+import { subtitleScripts } from "@/lib/constants";
 import { parseSubtitleToJson } from "@/lib/fetch-subs";
 import { srtTimestampToSeconds, vttTimestampToSeconds } from "@/lib/funcs";
 import { cn } from "@/lib/utils";
 import { SubtitleCue } from "@/types/subtitle";
 import { useQueries } from "@tanstack/react-query";
 import { useMediaState } from "@vidstack/react";
-import { CSSProperties, Fragment, useMemo, useState } from "react";
+import { CSSProperties, Fragment, useCallback, useMemo, useState } from "react";
 
 // Define subtitle types for better code organization
-const SUBTITLE_TYPES = ['japanese', 'hiragana', 'katakana', 'romaji', 'english'] as const;
-type SubtitleType = typeof SUBTITLE_TYPES[number];
+type SubtitleType = typeof subtitleScripts[number];
 
 // Calculate font size based on fullscreen state and active scripts count
 const calculateFontSize = (isFullscreen: boolean, activeScriptsCount: number): string => {
@@ -83,13 +83,20 @@ export default function Subtitle() {
     );
 
     const subtitleQueries = useQueries({
-        queries: SUBTITLE_TYPES.filter(type => activeScripts.includes(type)).map(type => ({
-            queryKey: ['subs', type === 'english' ? englishSubtitleUrl : activeSubtitleFile],
+        queries: subtitleScripts.filter(type => activeScripts.includes(type)).map(type => ({
+            queryKey: ['subs', type, type === 'english' 
+                ? englishSubtitleUrl 
+                : activeSubtitleFile?.source == 'remote' 
+                    ? activeSubtitleFile?.file.url 
+                    :  activeSubtitleFile?.file
+            ],
             queryFn: async () => {
                 if ((type !== 'english' && activeSubtitleFile?.source == 'remote' ? !activeSubtitleFile?.file.url : !activeSubtitleFile?.file) || 
                     (type === 'english' && !englishSubtitleUrl)) {
                     throw new Error(`Couldn't get the file for ${type} subtitles`);
                 }
+
+                console.log(type)
                 
                 const source = type === 'english' ? englishSubtitleUrl : activeSubtitleFile?.source == 'remote' ? activeSubtitleFile!.file.url : activeSubtitleFile!.file;
                 const format = type === 'english' ? englishSubtitleUrl.split('.').pop() as "srt" | "vtt"
@@ -119,7 +126,7 @@ export default function Subtitle() {
     });
 
     const isLoading = subtitleQueries.some(query => query.isLoading);
-    
+
     const activeSubtitleSets = useMemo<Record<SubtitleType, SubtitleCue[]>>(() => {
         if (!currentTime) {
             return {
@@ -144,9 +151,11 @@ export default function Subtitle() {
                 const { type, cues } = query.data;
                 const subtitleType = type as SubtitleType;
                 
-                const typeDelay = subtitleType === 'japanese' ? delay.japanese : delay.english;
-                
-                result[subtitleType] = cues.filter(cue => {
+                const typeDelay = ['hiragana', 'katakana', 'romaji', 'japanese'].includes(subtitleType) 
+                    ? delay.japanese 
+                    : delay.english;
+                    
+                result[type] = cues.filter(cue => {
                     const startTime = subtitleType !== 'english'
                         ? srtTimestampToSeconds(cue.from)
                         : vttTimestampToSeconds(cue.from);
@@ -163,15 +172,19 @@ export default function Subtitle() {
         return result;
     }, [subtitleQueries, currentTime, delay]);
 
+    // useEffect(() => {
+    //     console.log(subtitleQueries.map((s) => s.data?.type))
+    // }, [subtitleQueries])
+
     const handleTokenMouseEnter = (cueId: number, tokenIndex: number) => {
         setHoveredCueId(cueId);
         setHoveredTokenIndex(tokenIndex);
     };
 
-    const handleTokenMouseLeave = () => {
+    const handleTokenMouseLeave = useCallback(() => {
         setHoveredCueId(null);
         setHoveredTokenIndex(null);
-    };
+    }, [setHoveredCueId, setHoveredTokenIndex]);
 
     const getBottomPosition = () => {
         if (isFullscreen) {
@@ -194,7 +207,7 @@ export default function Subtitle() {
                 bottom: `${getBottomPosition()}rem`
             }}
         >
-            {SUBTITLE_TYPES.filter(type => activeScripts.includes(type)).map(type => (
+            {subtitleScripts.filter(type => activeScripts.includes(type)).map(type => (
                 <div 
                     key={type}
                     className={cn(

@@ -1,5 +1,7 @@
-import { Skeleton } from "@/components/ui/skeleton";
-import { useEffect, useState } from "react";
+"use client"
+
+import { useState, useEffect } from "react"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export default function PlayerSkeleton({ isLoading }: { isLoading: boolean }) {
     const [progress, setProgress] = useState(0);
@@ -23,12 +25,12 @@ export default function PlayerSkeleton({ isLoading }: { isLoading: boolean }) {
         return () => clearInterval(interval);
     }, [isLoading]);
 
+    if (!isLoading) return null;
+
     return (
-        <div className={`absolute inset-0 z-10 w-full aspect-video bg-black bg-opacity-80 flex flex-col items-center justify-center transition-opacity duration-300 ${isLoading ? 'opacity-100' : 'opacity-0'}`}>
+        <div className="absolute inset-0 z-10 w-full aspect-video bg-black bg-opacity-80 flex flex-col items-center justify-center">
             {/* Video placeholder skeleton */}
-            {isLoading && (
-                <Skeleton className="absolute inset-0 w-full h-full" />
-            )}
+            <Skeleton className="absolute inset-0 w-full h-full" />
             
             {/* Text overlay - shown during loading */}
             <p className="text-white text-sm font-medium mb-4 z-20">Powered by better melon</p>

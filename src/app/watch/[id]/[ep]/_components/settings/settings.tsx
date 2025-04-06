@@ -10,8 +10,9 @@ import { Separator } from "@/components/ui/separator"
 import { subtitleScripts } from "@/lib/constants"
 import { SubtitleScript } from "@/types/subtitle"
 import TooltipWrapper from "@/components/tooltip-wrapper"
+import { useCallback } from "react"
   
-export default function Bar({ episodesLength }: { episodesLength: number }) {
+export default function Settings({ episodesLength }: { episodesLength: number }) {
     const activeScripts = useWatchStore((state) => state.activeScripts)
     const setActiveScripts = useWatchStore((state) => state.setActiveScripts)
 
@@ -22,9 +23,9 @@ export default function Bar({ episodesLength }: { episodesLength: number }) {
     const autoSkip = useWatchStore((state) => state.autoSkip)
     const setAutoSkip = useWatchStore((state) => state.setAutoSkip)
 
-    const handleScripts = (scripts: SubtitleScript[]) => {
+    const handleScripts = useCallback((scripts: SubtitleScript[]) => {
         setActiveScripts(scripts)
-    }
+    }, [setActiveScripts])
 
     return (
         // <Accordion className="w-full flex-1" type="single" collapsible>
@@ -45,9 +46,9 @@ export default function Bar({ episodesLength }: { episodesLength: number }) {
                                 value: script,
                                 label: script,
                             }))}
-                            onChange={(scripts) =>
+                            onChange={(scripts) => {
                                 handleScripts(scripts.map((script) => script.value) as SubtitleScript[])
-                            }
+                            }}
                             className="w-full"
                         />
                     </div>

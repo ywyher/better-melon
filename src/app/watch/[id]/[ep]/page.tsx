@@ -1,71 +1,192 @@
+'use client';
+
+import { useEffect, useCallback } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import Player from "@/app/watch/[id]/[ep]/_components/player/player";
 import { SubtitleFile } from "@/types/subtitle";
-import { AnimeEpisodeData } from "@/types/anime";
-import WatchContainer from "@/app/watch/[id]/[ep]/_components/watch-container";
+import { AnimeEpisodeData, AnimeStreamingData } from "@/types/anime";
+import { useParams } from 'next/navigation';
+import { useWatchStore } from '@/app/watch/[id]/[ep]/store';
+import { filterSubtitleFiles, selectSubtitleFile } from '@/app/watch/[id]/[ep]/funcs';
+import GoBack from '@/app/watch/[id]/[ep]/_components/goback';
+import Settings from '@/app/watch/[id]/[ep]/_components/settings/settings';
+import SubtitlePanel from '@/app/watch/[id]/[ep]/_components/panel/panel';
+import PlayerSkeleton from '@/app/watch/[id]/[ep]/_components/player/player-skeleton';
+import PanelSkeleton from '@/app/watch/[id]/[ep]/_components/panel/panel-skeleton';
+import SettingsSkeleton from '@/app/watch/[id]/[ep]/_components/settings/settings-skeleton';
+import { Indicator } from '@/components/indicator';
 
-type Params = Promise<{ id: string, ep: string }>
-
-export default async function Watch({ params }: { params: Params }) {
-  const { id, ep } = await params;
+export default function Watch() {
+  const params = useParams();
+  const id = params.id as string;
+  const ep = params.ep as string;
   const episodeNumber = parseInt(ep);
 
-  try {
-    const episodesData = await fetch(`${process.env.NEXT_PUBLIC_CONSUMET_URL}/meta/anilist/episodes/${id}?provider=zoro`)
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to fetch episodes data");
-        return res.json();
-      }) as AnimeEpisodeData[];
+  // Memoize the fetch functions
+  const fetchEpisodesData = useCallback(async () => {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_CONSUMET_URL}/meta/anilist/episodes/${id}?provider=zoro`);
+    if (!res.ok) throw new Error("Failed to fetch episodes data");
+    return res.json() as Promise<AnimeEpisodeData[]>;
+  }, [id]);
 
-    const episode = episodesData.find((episode: AnimeEpisodeData) => episode.number === episodeNumber) as AnimeEpisodeData;
+  const { 
+    data: episodesData, 
+    isLoading: isLoadingEpisodes, 
+    error: episodesError 
+  } = useQuery({
+    queryKey: ['episodesData', id],
+    queryFn: fetchEpisodesData
+  });
+
+  const episode = episodesData?.find(
+    (episode: AnimeEpisodeData) => episode.number === episodeNumber
+  );
+
+  const fetchStreamingData = useCallback(async () => {
+    if (!episode) return null;
+    const res = await fetch(`${process.env.NEXT_PUBLIC_CONSUMET_URL}/meta/anilist/watch/${episode.id}?provider=zoro`);
+    if (!res.ok) throw new Error("Failed to fetch streaming data");
+    return res.json();
+  }, [episode]);
+
+  const { 
+    data: streamingData, 
+    isLoading: isLoadingStreamingData,
+    error: streamingError
+  } = useQuery({
+    queryKey: ['streamingData', episode?.id],
+    queryFn: fetchStreamingData,
+    enabled: !!episode 
+  });
+
+  const fetchSubtitleEntries = useCallback(async () => {
+    const res = await fetch(`https://jimaku.cc/api/entries/search?anilist_id=${id}`, {
+      headers: { Authorization: `${process.env.NEXT_PUBLIC_JIMAKU_KEY}` },
+    });
+    if (!res.ok) throw new Error("Failed to fetch subtitle entries");
+    return res.json();
+  }, [id]);
+
+  const {
+    data: subtitleEntries,
+    isLoading: isLoadingSubtitleEntries,
+    error: subtitleEntriesError
+  } = useQuery({
+    queryKey: ['subtitleEntries', id],
+    queryFn: fetchSubtitleEntries
+  });
+
+  const fetchSubtitleFiles = useCallback(async () => {
+    if (!subtitleEntries || subtitleEntries.length === 0) return [];
+    const res = await fetch(`https://jimaku.cc/api/entries/${subtitleEntries[0].id}/files?episode=${ep}`, {
+      headers: { Authorization: `${process.env.NEXT_PUBLIC_JIMAKU_KEY}` },
+    });
+    if (!res.ok) throw new Error("Failed to fetch subtitle files");
+    return res.json() as Promise<SubtitleFile[]>;
+  }, [subtitleEntries, ep]);
+
+  const {
+    data: subtitleFiles,
+    isLoading: isLoadingSubtitleFiles,
+    error: subtitleFilesError
+  } = useQuery({
+    queryKey: ['subtitleFiles', subtitleEntries?.[0]?.id, ep],
+    queryFn: fetchSubtitleFiles,
+    enabled: !!subtitleEntries && subtitleEntries.length > 0,
+  });
+
+  const { setEnglishSubtitleUrl, setActiveSubtitleFile } = useWatchStore();
+
+  useEffect(() => {
+    if(!streamingData || !subtitleFiles?.length) return;
     
-    if (!episode) {
-      return <div className="container mx-auto px-4 py-6 text-center">Episode not found</div>;
+    // Reset subtitle state when episode changes
+    setActiveSubtitleFile(null);
+    setEnglishSubtitleUrl(null);
+    
+    if (subtitleFiles.length > 0) {
+      const selected = selectSubtitleFile(subtitleFiles);
+      if(selected) {
+        setActiveSubtitleFile({
+          source: 'remote',
+          file: {
+            name: selected.name,
+            url: selected.url,
+            last_modified: selected.last_modified,
+            size: selected.size
+          }
+        });
+      }
     }
+    
+    if (streamingData) {
+      const englishSub = streamingData?.subtitles.find((s: AnimeStreamingData['subtitles'][0]) => s.lang === 'English')?.url || "";
+      setEnglishSubtitleUrl(englishSub);
+    }
+  // Only include values that should trigger the effect
+  }, [episode?.id, streamingData, subtitleFiles, setActiveSubtitleFile, setEnglishSubtitleUrl]);
 
-    const [streamingData, subtitleEntries] = await Promise.all([
-      fetch(`${process.env.NEXT_PUBLIC_CONSUMET_URL}/meta/anilist/watch/${episode.id}?provider=zoro`)
-        .then((res) => {
-          if (!res.ok) throw new Error("Failed to fetch streaming data");
-          return res.json();
-        }),
-      fetch(`https://jimaku.cc/api/entries/search?anilist_id=${id}`, {
-        headers: { Authorization: `${process.env.JIMAKU_KEY}` },
-      }).then((res) => {
-        if (!res.ok) throw new Error("Failed to fetch subtitle entries");
-        return res.json();
-      })
-    ]);
+  // Fix error handling
+  const errors = [episodesError, streamingError, subtitleEntriesError, subtitleFilesError];
+  const errorMessages = errors.filter(error => error !== null && error !== undefined);
+  
+  if(errorMessages.length > 0) {
+    return <Indicator type='error' message={errorMessages[0]?.message || "An error occurred"} />;
+  }
 
-    if (subtitleEntries.length === 0) {
+  const isPlayerLoading = isLoadingEpisodes || isLoadingStreamingData || !episode || !streamingData;
+  const isPanelLoading = isLoadingSubtitleEntries || isLoadingSubtitleFiles || !subtitleFiles;
+
+  // Extract PlayerContent to a separate component for better readability
+  const renderPlayerContent = () => {
+    if (isPlayerLoading) {
       return (
-        <div className="container mx-auto px-4 py-6">
-          <Player 
-            episode={episode} 
-            streamingData={streamingData} 
-            subtitleFiles={[]} 
-            episodesLength={episodesData.length}
-          />
+        <div className="flex flex-col gap-3">
+          <div className="relative w-full aspect-video bg-gray-900">
+            <PlayerSkeleton isLoading={isPlayerLoading} />
+          </div>
+          <div className="w-full">
+            <SettingsSkeleton />
+          </div>
         </div>
       );
     }
-
-    const subtitleFiles = await fetch(`https://jimaku.cc/api/entries/${subtitleEntries[0].id}/files?episode=${ep}`, {
-      headers: { Authorization: `${process.env.JIMAKU_KEY}` },
-    }).then((res) => {
-      if (!res.ok) throw new Error("Failed to fetch Japanese subtitles");
-      return res.json();
-    }) as SubtitleFile[];
-
+    
     return (
-      <WatchContainer
-        episode={episode}
-        streamingData={streamingData}
-        subtitleFiles={subtitleFiles}
-        episodesLength={episodesData.length}
-      />
+      <div className='flex flex-col gap-3'>
+        <Player 
+          episode={episode} 
+          streamingData={streamingData} 
+          subtitleFiles={subtitleFiles ? filterSubtitleFiles(subtitleFiles) : []} 
+          episodesLength={episodesData?.length || 0}
+        />
+        <Settings episodesLength={episodesData?.length || 0} />
+      </div>
     );
-  } catch (error) {
-    console.error("Error fetching data:", error);
-    return <div className="container mx-auto px-4 py-6 text-center">Error loading content: {(error as Error).message}</div>;
+  };
+
+  // When subtitles are empty but everything else is loaded
+  if ((!subtitleEntries || subtitleEntries.length === 0) && streamingData) {
+    return (
+      <div className="container mx-auto px-4 py-6">
+        {renderPlayerContent()}
+      </div>
+    );
   }
+
+  return (
+    <div className="flex flex-row gap-10 container mx-auto px-4 py-6">
+      <div className="flex flex-col gap-3 flex-1">
+        <GoBack />
+        {renderPlayerContent()}
+      </div>
+      {isPanelLoading ? (
+        <PanelSkeleton />
+      ) : (
+        <SubtitlePanel
+          subtitleFiles={filterSubtitleFiles(subtitleFiles || [])}
+        />
+      )}
+    </div>
+  );
 }

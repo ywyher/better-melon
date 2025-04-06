@@ -31,7 +31,8 @@ const MemoizedSkipButton = memo(SkipButton);
 
 export default function Player({ 
     streamingData,
-    episode, subtitleFiles,
+    episode, 
+    subtitleFiles,
     episodesLength
 }: PlayerProps) {
     const { id, ep } = useParams<{ id: string, ep: string }>()

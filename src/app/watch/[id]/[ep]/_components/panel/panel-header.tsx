@@ -8,25 +8,32 @@ import { TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { subtitleScripts } from "@/lib/constants";
 import { ActiveSubtitleFile, SubtitleCue, SubtitleFile, SubtitleScript } from "@/types/subtitle";
 import { useRouter } from "next/navigation";
+import { Dispatch, SetStateAction, useCallback, useTransition } from "react";
 
 type PanelHeaderProps = {
     isLoading: boolean;
-    isPendingTransition: boolean;
     subtitleCues?: SubtitleCue[];
     activeSubtitleFile: ActiveSubtitleFile | null;
-    subtitleFiles: SubtitleFile[]
-    handleScriptChange: (script: SubtitleScript) => void
+    subtitleFiles: SubtitleFile[];
+    setDisplayScript: Dispatch<SetStateAction<SubtitleScript>>
 }
 
 export default function PanelHeader({
     isLoading,
-    isPendingTransition,
     subtitleCues,
     activeSubtitleFile,
     subtitleFiles,
-    handleScriptChange
+    setDisplayScript
 }: PanelHeaderProps) {
     const router = useRouter();
+    const [isPendingTransition, startTransition] = useTransition();
+
+    const handleScriptChange = useCallback((script: SubtitleScript) => {
+        startTransition(() => {
+            setDisplayScript(script);
+        });
+    }, [setDisplayScript]);
+
     return (
         <CardHeader className="flex flex-col gap-3">
             <div className="flex flex-row justify-between items-center w-full">
