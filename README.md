@@ -25,7 +25,7 @@ usable alternative
 - [x] Support local subtitles
 - [x] Seperate delay sliders for japanese and english subs
 - [x] Episodes list/selector
-- [x] Anki integration
+- [x] Anki integration (CURRENTLY ONLY WORKS ON LOCALHOST)
   - [x] Support for images
   - [ ] Support for audio
 - [ ] Video vtt thumbnails

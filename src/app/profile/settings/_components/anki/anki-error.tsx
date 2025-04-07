@@ -9,6 +9,12 @@ export default function AnkiError() {
           <div className="flex items-center gap-3 bg-amber-50 p-4 rounded-lg border border-amber-200 dark:bg-amber-950 dark:border-amber-400">
             <AlertCircle className="text-amber-500 dark:text-amber-300 h-6 w-6 flex-shrink-0" />
             <p className="font-semibold text-amber-700 dark:text-amber-200">
+              CURRENTLY ONLY WORKS ON LOCALHOST, STEPS AT <a href="https://github.com/ywyher/better-melon">THE GITHUB REPO</a> 
+            </p>
+          </div>
+          <div className="flex items-center gap-3 bg-amber-50 p-4 rounded-lg border border-amber-200 dark:bg-amber-950 dark:border-amber-400">
+            <AlertCircle className="text-amber-500 dark:text-amber-300 h-6 w-6 flex-shrink-0" />
+            <p className="font-semibold text-amber-700 dark:text-amber-200">
               ANKI NEEDS TO BE OPENED AS LONG AS YOU ARE USING THIS APP IN ORDER FOR THIS FEATURE TO FUNCTION PROPERLY
             </p>
           </div>
@@ -31,8 +37,9 @@ export default function AnkiError() {
                 <div className="text-gray-700 dark:text-gray-300">
                   <p>Go to the plugin config tab and add <code className="bg-gray-100 px-1 py-0.5 rounded text-sm font-mono dark:bg-gray-800">https://better-melon.vercel.app</code> to <code className="bg-gray-100 px-1 py-0.5 rounded text-sm font-mono dark:bg-gray-800">webCorsOriginList</code> so it looks like:</p>
                   <pre className="bg-gray-100 p-3 rounded-md mt-2 text-sm font-mono overflow-x-auto dark:bg-gray-800 dark:text-gray-200">
+                    {/* "https://better-melon.vercel.app", */}
                     {`"webCorsOriginList": [
-                        "https://better-melon.vercel.app",
+                        "http://localhost:3000"
                         "http://localhost"
                     ]`}
                   </pre>

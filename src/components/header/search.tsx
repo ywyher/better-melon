@@ -1,6 +1,5 @@
 "use client"
 
-import { Suspense } from "react"
 import { useForm } from "react-hook-form"
 import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form"
@@ -12,7 +11,7 @@ type SearchFormValues = {
   query: string
 }
 
-function SearchForm() {
+export default function Search() {
   const searchParams = useSearchParams()
   const queryParam = searchParams.get('query') || ""
   const router = useRouter()
@@ -59,37 +58,5 @@ function SearchForm() {
         </Button>
       </form>
     </Form>
-  )
-}
-
-function SearchFallback() {
-  return (
-    <div className="flex flex-row gap-3 items-center">
-      <div className="flex items-center border rounded-md overflow-hidden w-full">
-        <div className="flex items-center px-2 py-0 w-full">
-          <SearchIcon className="h-5 w-5 text-gray-400" />
-          <Input
-            placeholder="Loading search..."
-            disabled
-            className="outline-none dark:bg-transparent bg-transparent border-none w-full focus:ring-0"
-          />
-        </div>
-      </div>
-      <Button
-        variant="outline"
-        size="icon"
-        disabled
-      >
-        <SearchIcon />
-      </Button>
-    </div>
-  )
-}
-
-export default function Search() {
-  return (
-    <Suspense fallback={<SearchFallback />}>
-      <SearchForm />
-    </Suspense>
   )
 }
