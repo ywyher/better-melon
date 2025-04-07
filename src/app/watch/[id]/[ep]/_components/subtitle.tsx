@@ -4,8 +4,9 @@ import { useWatchStore } from "@/app/watch/[id]/[ep]/store";
 import { subtitleScripts } from "@/lib/constants";
 import { parseSubtitleToJson } from "@/lib/fetch-subs";
 import { srtTimestampToSeconds, vttTimestampToSeconds } from "@/lib/funcs";
+import { useInfoCardStore } from "@/lib/stores/info-card-store";
 import { cn } from "@/lib/utils";
-import { SubtitleCue } from "@/types/subtitle";
+import { SubtitleCue, SubtitleToken } from "@/types/subtitle";
 import { useQueries } from "@tanstack/react-query";
 import { useMediaState } from "@vidstack/react";
 import { CSSProperties, Fragment, useCallback, useMemo, useState } from "react";
@@ -40,6 +41,7 @@ const getTokenStyles = (isFullscreen: boolean, activeScriptsCount: number) => {
       display: 'inline-block',
       textShadow: '1px 1px 2px rgba(0, 0, 0, 0.8)',
       margin: '0 2px',
+      cursor: 'pointer'
     } as CSSProperties,
     
     active: {
@@ -49,6 +51,7 @@ const getTokenStyles = (isFullscreen: boolean, activeScriptsCount: number) => {
       fontWeight: 'bold',
       textShadow: '0 0 10px rgba(74, 222, 128, 0.8), 1px 1px 3px rgba(0, 0, 0, 0.9)',
       margin: '0 2px',
+      cursor: 'pointer'
     } as CSSProperties
   };
 };
@@ -57,11 +60,16 @@ export default function Subtitle() {
     const player = useWatchStore((state) => state.player);
     const englishSubtitleUrl = useWatchStore((state) => state.englishSubtitleUrl) || "";
     const activeSubtitleFile = useWatchStore((state) => state.activeSubtitleFile);
+    const activeToken = useInfoCardStore((state) => state.token)
+    const setSentance = useInfoCardStore((state) => state.setSentance)
+    const setToken = useInfoCardStore((state) => state.setToken)
+    
     const currentTime = useMediaState('currentTime', player);
     const isFullscreen = useMediaState('fullscreen', player);
     const controlsVisible = useMediaState('controlsVisible', player);
 
-    const [hoveredTokenIndex, setHoveredTokenIndex] = useState<number | null>(null);
+    // Changed from hoveredTokenIndex to hoveredTokenId
+    const [hoveredTokenId, setHoveredTokenId] = useState<string | number | null>(null);
     const [hoveredCueId, setHoveredCueId] = useState<number | null>(null);
 
     const activeScripts = useWatchStore((state) => state.activeScripts);
@@ -88,8 +96,6 @@ export default function Subtitle() {
                     throw new Error(`Couldn't get the file for ${type} subtitles`);
                 }
 
-                console.log(type)
-                
                 const source = type === 'english' ? englishSubtitleUrl : activeSubtitleFile?.source == 'remote' ? activeSubtitleFile!.file.url : activeSubtitleFile!.file;
                 const format = type === 'english' ? englishSubtitleUrl.split('.').pop() as "srt" | "vtt"
                     : activeSubtitleFile?.source == 'remote' 
@@ -164,15 +170,24 @@ export default function Subtitle() {
         return result;
     }, [subtitleQueries, currentTime, delay]);
 
-    const handleTokenMouseEnter = (cueId: number, tokenIndex: number) => {
+    // Updated to use token.id instead of index
+    const handleTokenMouseEnter = (cueId: number, tokenId: string | number) => {
+        console.log('yoo')
         setHoveredCueId(cueId);
-        setHoveredTokenIndex(tokenIndex);
+        setHoveredTokenId(tokenId);
     };
 
     const handleTokenMouseLeave = useCallback(() => {
         setHoveredCueId(null);
-        setHoveredTokenIndex(null);
-    }, [setHoveredCueId, setHoveredTokenIndex]);
+        setHoveredTokenId(null);
+    }, [setHoveredCueId, setHoveredTokenId]);
+
+    const handleClick = useCallback((sentance: string, token: SubtitleToken) => {
+        if(!sentance || !token) return;
+        setSentance(sentance)
+        setToken(token)
+    }, [setSentance, setToken])
+    
 
     const getBottomPosition = () => {
         if (isFullscreen) {
@@ -208,13 +223,19 @@ export default function Subtitle() {
                         <Fragment key={idx}>
                             {cue.tokens?.length ? (
                                 cue.tokens.map((token, tokenIdx) => {
-                                    const isActive = hoveredCueId === cue.id && (hoveredTokenIndex === tokenIdx && type != 'english');
+                                    // Using token.id instead of tokenIdx for comparison
+                                    const isActive = 
+                                        (hoveredCueId === cue.id && (hoveredTokenId === token.id && type != 'english'))
+                                        || token.id == activeToken?.id
                                     
                                     return (
                                         <span 
                                             key={tokenIdx}
                                             style={isActive ? tokenStyles.active : tokenStyles.default}
-                                            onMouseEnter={() => handleTokenMouseEnter(cue.id, tokenIdx)}
+                                            onClick={() => {
+                                                handleClick(cue.content, token)
+                                            }}
+                                            onMouseEnter={() => handleTokenMouseEnter(cue.id, token.id)}
                                             onMouseLeave={handleTokenMouseLeave}
                                             onMouseOver={(e) => {
                                                 if (!isActive) {

@@ -1,4 +1,4 @@
-import { SubtitleCue, SubtitleScript, SubtitleFormat } from "@/types/subtitle";
+import { SubtitleCue, SubtitleScript, SubtitleFormat, SubtitleToken } from "@/types/subtitle";
 import * as kuromoji from "kuromoji";
 // @ts-expect-error - Kuroshiro lacks proper TypeScript typings
 import Kuroshiro from "kuroshiro";
@@ -121,6 +121,7 @@ function processEnglishSubtitles(subs: SubtitleCue[]): SubtitleCue[] {
       const primaryPos = Object.keys(tagSet)[0] || "word";
       
       return {
+        id: index,
         word_id: index,
         surface_form: term,
         pos: primaryPos,
@@ -150,7 +151,11 @@ function tokenizeJapaneseSubtitles(subs: SubtitleCue[]): SubtitleCue[] {
   return subs.map(sub => ({
     ...sub,
     tokens: tokenizer!.tokenize(sub.content || '')
-      .filter(token => token.surface_form !== ' ' && token.surface_form !== '　')
+    .filter(token => token.surface_form !== ' ' && token.surface_form !== '　')
+    .map((token, index) => ({
+      ...token,
+      id: `${sub.id}-${index}`
+    })) as SubtitleToken[]
   }));
 }
 

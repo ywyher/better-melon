@@ -18,6 +18,7 @@ import { Indicator } from '@/components/indicator';
 import EpisodesList from '@/app/watch/[id]/[ep]/_components/episodes/episodes-list';
 import { gql, useQuery as useGqlQuery } from "@apollo/client"
 import EpisodesListSkeleton from '@/app/watch/[id]/[ep]/_components/episodes/episodes-list-skeleton';
+import Header from '@/components/header';
 
 const GET_ANIME_DATA = gql`
   query($id: Int!) {
@@ -197,32 +198,35 @@ export default function Watch() {
   // When subtitles are empty but everything else is loaded
   if ((!subtitleEntries || subtitleEntries.length === 0) && streamingData) {
     return (
-      <div className="container mx-auto px-4 py-6">
+      <div className="mx-auto px-4 py-6">
         {renderPlayerContent()}
       </div>
     );
   }
 
   return (
-    <div className="flex flex-row gap-10 container mx-auto px-4 py-6">
-      <div className="flex flex-col gap-3 flex-1">
-        <GoBack />
-        {renderPlayerContent()}
+    <>
+      <Header />
+      <div className="flex flex-row gap-10 mx-auto px-4 py-6">
+        <div className="flex flex-col gap-3 flex-1">
+          <GoBack />
+          {renderPlayerContent()}
+        </div>
+        <div className='flex flex-col gap-5'>
+          {isPanelLoading ? (
+            <PanelSkeleton />
+          ) : (
+            <SubtitlePanel
+              subtitleFiles={filterSubtitleFiles(subtitleFiles || [])}
+            />
+          )}
+          {(isLoadingAnime || !episodesData) ? (
+            <EpisodesListSkeleton />
+          ): (
+            <EpisodesList animeData={animeData.Media} episodes={episodesData} />
+          )}
+        </div>
       </div>
-      <div className='flex flex-col gap-5'>
-        {isPanelLoading ? (
-          <PanelSkeleton />
-        ) : (
-          <SubtitlePanel
-            subtitleFiles={filterSubtitleFiles(subtitleFiles || [])}
-          />
-        )}
-        {(isLoadingAnime || !episodesData) ? (
-          <EpisodesListSkeleton />
-        ): (
-          <EpisodesList animeData={animeData.Media} episodes={episodesData} />
-        )}
-      </div>
-    </div>
+    </>
   );
 }

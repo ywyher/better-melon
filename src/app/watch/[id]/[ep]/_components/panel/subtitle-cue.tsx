@@ -3,13 +3,14 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
-import type { SubtitleCue } from "@/types/subtitle";
+import type { SubtitleCue, SubtitleToken } from "@/types/subtitle";
 import { cn } from "@/lib/utils";
 import { CSSProperties } from "react";
 import { useWatchStore } from "@/app/watch/[id]/[ep]/store";
 import { Button } from "@/components/ui/button";
 import { srtTimestampToSeconds } from "@/lib/funcs";
 import { Play } from "lucide-react";
+import { useInfoCardStore } from "@/lib/stores/info-card-store";
 
 type SubtitleCueProps = { 
     index: number;
@@ -25,15 +26,24 @@ export default function SubtitleCue({
     style,
     className = "",
 }: SubtitleCueProps) {
-    const { from, tokens } = cue;
+    const { from, tokens, content } = cue;
     const player = useWatchStore((state) => state.player)
     const delay = useWatchStore((state) => state.delay)
 
+    const activeToken = useInfoCardStore((state) => state.token)
+    const setSentance = useInfoCardStore((state) => state.setSentance)
+    const setToken = useInfoCardStore((state) => state.setToken)
+      
     const handleSeek = () => {
-        player.current?.remoteControl.seek(srtTimestampToSeconds(from) + delay.japanese)
-        
+        player.current?.remoteControl.seek(srtTimestampToSeconds(from) + delay.japanese)  
     };
 
+    const handleClick = (sentance: string, token: SubtitleToken) => {
+        if(!sentance || !token) return;
+        setSentance(sentance)
+        setToken(token)
+    }
+    
     return (
         <div
             style={style}
@@ -61,8 +71,13 @@ export default function SubtitleCue({
                         return (
                             <span 
                                 key={idx}
-                                // style={{ color: `#${Math.floor(Math.random() * 16777215).toString(16)}` }}
-                                className="hover:text-orange-400"
+                                className={cn(
+                                    "hover:text-orange-400",
+                                    activeToken?.id == token.id && "text-orange-400"
+                                )}
+                                onClick={() => {
+                                    handleClick(content, token)
+                                }}
                             >
                                 {token.surface_form}
                             </span>

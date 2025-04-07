@@ -113,7 +113,7 @@ export default function CueNavigation({ direction }: CueNavigationProps) {
   
   const isDisabled = useMemo(() => {
     return !activeSubtitleFile || !subtitleCues || subtitleCues.length === 0 || 
-      (!isNext && (!currentCue || currentCue?.id <= 1)) || 
+      (!isNext && (currentCue && currentCue.id <= 1)) || 
       (currentCue && isNext && currentCue.id >= subtitleCues.length);
   }, [activeSubtitleFile, subtitleCues, currentCue, isNext]);
 

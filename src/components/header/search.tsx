@@ -29,8 +29,8 @@ function SearchForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-row gap-3 items-center">
-        <div className="flex items-center border rounded-md overflow-hidden w-full max-w-lg">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-row gap-3 items-center md:min-w-[500px]">
+        <div className="flex items-center border rounded-md overflow-hidden w-full ">
           <div className="flex items-center px-2 py-0 w-full">
             <SearchIcon className="h-5 w-5 text-gray-400" />
             <FormField
@@ -65,7 +65,7 @@ function SearchForm() {
 function SearchFallback() {
   return (
     <div className="flex flex-row gap-3 items-center">
-      <div className="flex items-center border rounded-md overflow-hidden w-full max-w-lg">
+      <div className="flex items-center border rounded-md overflow-hidden w-full">
         <div className="flex items-center px-2 py-0 w-full">
           <SearchIcon className="h-5 w-5 text-gray-400" />
           <Input

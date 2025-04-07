@@ -17,6 +17,7 @@ import PlayerSkeleton from '@/app/watch/[id]/[ep]/_components/player/player-skel
 import { useThrottledCallback } from 'use-debounce';
 import { useParams, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import InfoCard from '@/components/info-card';
 
 type PlayerProps = { 
     streamingData: AnimeStreamingData;
@@ -28,6 +29,7 @@ type PlayerProps = {
 const MemoizedSubtitle = memo(Subtitle);
 const MemoizedPlayerSkeleton = memo(PlayerSkeleton);
 const MemoizedSkipButton = memo(SkipButton);
+const MemoizedInfoCard = memo(InfoCard);
 
 export default function Player({ 
     streamingData,
@@ -165,9 +167,10 @@ export default function Player({
                 ({ interval }) => currentTime >= interval.startTime && currentTime < interval.endTime
             );
             if (skipInterval) {
-                setCanSkip(true);
                 if (autoSkip) {
                     player.current.currentTime = skipInterval.interval.endTime;
+                }else {
+                    setCanSkip(true);
                 }
             } else {
                 setCanSkip(false);
@@ -179,7 +182,6 @@ export default function Player({
             handlePlaybackEnded();
         }
     }, 500, { trailing: true, leading: true });
-
     
     const containerClassName = useMemo(() => {
         return `w-full h-fit transition-opacity duration-300 ${(!isVideoReady || !isInitialized) ? 'opacity-0' : 'opacity-100'}`;
@@ -233,6 +235,7 @@ export default function Player({
                         skipTimes={skipTimes}
                     />
                     <MemoizedSubtitle />
+                    <MemoizedInfoCard />
                 </MediaPlayer>
             </div>
         </div>

@@ -53,7 +53,6 @@ export default function SubtitlesList({
         }, [])
     });
 
-
     const findActiveCue = useCallback((currentTime: number) => {
         const activeCue = cueTimeRanges.find(cue => 
             currentTime >= cue.start && currentTime <= cue.end
@@ -103,7 +102,6 @@ export default function SubtitlesList({
             setAutoScroll(true);
         }, 5000);
     }, []);
-    
     
     return (
         <div 

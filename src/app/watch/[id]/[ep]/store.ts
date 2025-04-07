@@ -21,6 +21,9 @@ export type WatchStore = {
   subtitleCues: SubtitleCue[];
   setSubtitleCues: (sub: WatchStore['subtitleCues']) => void;
 
+  activeTokenId: string | null;
+  setActiveTokenId: (sub: WatchStore['activeTokenId']) => void;
+
   delay: {
     japanese: number;
     english: number;
@@ -62,6 +65,9 @@ export const useWatchStore = create<WatchStore>()(
       
       subtitleCues: [],
       setSubtitleCues: (subtitleCues: WatchStore['subtitleCues']) => set({ subtitleCues }),
+
+      activeTokenId: null,
+      setActiveTokenId: (activeTokenId: WatchStore['activeTokenId']) => set({ activeTokenId }),
 
       delay: {
         japanese: 0,

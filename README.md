@@ -25,13 +25,15 @@ usable alternative
 - [x] Support local subtitles
 - [x] Seperate delay sliders for japanese and english subs
 - [x] Episodes list/selector
-- [ ] Optimize for best performance
+- [x] Anki integration
+  - [x] Support for images
+  - [ ] Support for audio
 - [ ] Video vtt thumbnails
 - [ ] Providers selector
 - [ ] Defintion on hover functionality
 - [ ] .ass support
 - [ ] Authentication integration through anilist
-- [ ] Anki integration
+- [ ] Optimize for best performance
 - [ ] User friendly/Modern UI
 
 # Self-Hosting
@@ -87,14 +89,14 @@ Create a `.env` file in the root directory and fill the following:
 ```.env
 NEXT_PUBLIC_CONSUMET_URL=
 NEXT_PUBLIC_PROXY_URL=
-JIMAKU_KEY=
+NEXT_PUBLIC_JIMAKU_KEY=
 ```
 
 it should look something like this
 ```.env
 NEXT_PUBLIC_CONSUMET_URL=http://localhost:6969
 NEXT_PUBLIC_PROXY_URL=http://localhost:8080/m3u8-proxy
-JIMAKU_KEY=AAAAAasndaund9uhWIJHUSDAIDJamsdkoanmdIAUN
+NEXT_PUBLIC_JIMAKU_KEY=AAAAAasndaund9uhWIJHUSDAIDJamsdkoanmdIAUN
 ```
 
 ### Start the Application

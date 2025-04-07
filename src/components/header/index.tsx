@@ -1,3 +1,4 @@
+import { Menu } from '@/components/header/menu';
 import Search from '@/components/header/search';
 import { ThemeToggle } from '@/components/theme-toggle';
 import Link from 'next/link';
@@ -5,7 +6,7 @@ import React from 'react';
 
 export default function Header() {
   return (
-    <header className="flex items-center justify-between px-6 py-2 shadow">
+    <header className="flex flex-row items-center justify-between px-6 py-3 shadow">
       <Link 
         className="font-bold text-xl cursor-pointer"
         href="/"
@@ -13,8 +14,9 @@ export default function Header() {
         Logo
       </Link>
       <Search />
-      <div className="w-24">
+      <div className="flex flex-row gap-5 items-center justify-end">
         <ThemeToggle />
+        <Menu />
       </div>
     </header>
   );

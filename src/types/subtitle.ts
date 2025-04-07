@@ -27,6 +27,7 @@ export type ActiveSubtitleFile =
 
 export type SubtitleToken = {
     // Most used
+    id: string;
     word_id: number;
     surface_form: string; // most important
     pos: string;
