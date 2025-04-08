@@ -1,42 +1,27 @@
+'use server'
+
+// utils/ankiConnect.ts
 export const invokeAnkiConnect = async (action: string, version: number, params = {}) => {
     try {
-        const response = await fetch(process.env.NEXT_PUBLIC_ANKI_CONNECT || "", {
+      const response = await fetch(`${process.env.APP_URL}/api/anki`, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ action, version, params }),
-        })
-        
-        const data = await response.json()
-        
-        if (Object.keys(data).length !== 2) {
-        throw new Error('Response has an unexpected number of fields')
-        }
-        
-        if (!('error' in data)) {
-        throw new Error('Response is missing required error field')
-        }
-        
-        if (!('result' in data)) {
-        throw new Error('Response is missing required result field')
-        }
-        
-        if (data.error) {
-            return {
-                data: null,
-                error: data.error
-            }
-        }
-        
-        return {
-            data: data.result,
-            error: null
-        }
+      });
+      
+      const result = await response.json();
+      
+      return {
+        data: result.data,
+        error: result.error,
+      };
     } catch (error) {
-        return {
-            data: null,
-            error,
-        }
+      console.error('Error connecting to Anki API route:', error);
+      return {
+        data: null,
+        error: error || "Make sure to follow the instrucitons at on the settings page",
+      };
     }
-}
+  };
