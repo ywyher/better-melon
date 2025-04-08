@@ -11,8 +11,8 @@ import { Input } from "@/components/ui/input"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { useQuery } from "@tanstack/react-query"
-import { invokeAnkiConnect } from "@/lib/anki"
 import { ankiFieldsValues } from "@/lib/constants"
+import { invokeAnkiConnect } from "@/lib/anki"
 
 type FormState = {
     presetName: string
@@ -30,7 +30,7 @@ type PresetFormProps = {
     onToggleGui: (checked: boolean) => void
 }
 
-export function PresetForm({ formState, onChange, onToggleDefault, onToggleGui }: PresetFormProps) {
+export default function AnkiPresetForm({ formState, onChange, onToggleDefault, onToggleGui }: PresetFormProps) {
     const { presetName, deckName, modelName, fieldValues, isDefault, isGui } = formState
     
     const { data: deckNames } = useQuery({

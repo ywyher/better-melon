@@ -9,9 +9,8 @@ Animelon doesn’t provide all animes by default, and its entries are rarely upd
 > This project is still in beta 
 
 > [!note]
-> the only crucial feature that hasn't been added yet is the definition on hover functionality, you could use yomitan instead for now
+> the only crucial feature that hasn't been added yet is the definition on select functionality, you could use yomitan instead for now
 
-usable alternative
 - [x] Search/Filtering system
 - [x] Watch functionality
 - [x] Subtitles panel
@@ -26,15 +25,23 @@ usable alternative
 - [x] Seperate delay sliders for japanese and english subs
 - [x] Episodes list/selector
 - [x] Anki integration (CURRENTLY ONLY WORKS ON LOCALHOST)
-  - [x] Support for images
-  - [ ] Support for audio
+  1. [x] Support for images
+  2. [ ] Support for audio
+- [ ] Global configuration for
+  1. [ ] Prefered subtitles formats
+  2. [ ] Keyword (regex) when found on a subtitle name select it over the others
+- [ ] Per anime configuration for
+  1. [ ] Subtitles delay
+  2. [ ] Prefered subtitles formats
+  3. [ ] Keyword (regex) when found on a subtitle name select it over the others
 - [ ] Video vtt thumbnails
 - [ ] Providers selector
-- [ ] Defintion on hover functionality
+- [ ] Defintion on select functionality
 - [ ] .ass support
-- [ ] Authentication integration through anilist
-- [ ] Optimize for best performance
 - [ ] User friendly/Modern UI
+- [ ] Database instead of localstorage lol
+- [ ] Authentication integration through anilist or better-auth with the ability to link your anilist account for anilist related actions
+- [ ] Comments (maybe lol)
 
 # Self-Hosting
 > [!warning]
@@ -87,17 +94,17 @@ Create an account on [Jimaku.cc](https://jimaku.cc) and generate an API token th
 ### Configure Environment Variables
 Create a `.env` file in the root directory and fill the following:
 ```.env
-NEXT_PUBLIC_CONSUMET_URL=
+CONSUMET_URL=
+JIMAKU_KEY=
 NEXT_PUBLIC_PROXY_URL=
-NEXT_PUBLIC_JIMAKU_KEY=
 NEXT_PUBLIC_ANKI_CONNECT=
 ```
 
 it should look something like this
 ```.env
-NEXT_PUBLIC_CONSUMET_URL=http://localhost:6969
+CONSUMET_URL=http://localhost:6969
+JIMAKU_KEY=AAAAAasndaund9uhWIJHUSDAIDJamsdkoanmdIAUN
 NEXT_PUBLIC_PROXY_URL=http://localhost:8080/m3u8-proxy
-NEXT_PUBLIC_JIMAKU_KEY=AAAAAasndaund9uhWIJHUSDAIDJamsdkoanmdIAUN
 NEXT_PUBLIC_ANKI_CONNECT=http://127.0.0.1:8765
 ```
 

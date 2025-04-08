@@ -15,8 +15,8 @@ import {
     AlertDialogTitle
 } from "@/components/ui/alert-dialog"
 import { toast } from "sonner"
-import { PresetSelector } from "@/app/profile/settings/_components/anki/preset-selector"
-import { PresetForm } from "@/app/profile/settings/_components/anki/preset-form"
+import AnkiPresetSelector from "@/app/profile/settings/_components/anki/anki-preset-selector"
+import AnkiPresetForm from "@/app/profile/settings/_components/anki/anki-preset-form"
 import { AnkiField, AnkiPreset as TAnkiPreset, useAnkiPresetStore } from "@/lib/stores/anki-presets-store"
 import { nanoid } from 'nanoid'
 
@@ -191,14 +191,14 @@ export default function AnkiPreset() {
             <Card className="w-full">
                 <CardHeader className="flex flex-row items-center justify-between">
                     <CardTitle>Anki Preset</CardTitle>
-                    <PresetSelector 
+                    <AnkiPresetSelector 
                         presets={presets} 
                         selectedPreset={selectedPreset} 
                         onPresetSelect={handlePresetSelect} 
                     />
                 </CardHeader>
                 
-                <PresetForm
+                <AnkiPresetForm
                     formState={formState}
                     onChange={handleFormChange}
                     onToggleDefault={handleToggleDefault}

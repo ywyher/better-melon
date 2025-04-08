@@ -19,6 +19,7 @@ import EpisodesList from '@/app/watch/[id]/[ep]/_components/episodes/episodes-li
 import { gql, useQuery as useGqlQuery } from "@apollo/client"
 import EpisodesListSkeleton from '@/app/watch/[id]/[ep]/_components/episodes/episodes-list-skeleton';
 import Header from '@/components/header';
+import { getEpisodesData, getStreamingData, getSubtitleEntries, getSubtitleFiles } from '@/app/watch/[id]/[ep]/actions';
 
 const GET_ANIME_DATA = gql`
   query($id: Int!) {
@@ -50,14 +51,9 @@ export default function Watch() {
   const id = params.id as string;
   const ep = params.ep as string;
   const episodeNumber = parseInt(ep);
+  const player = useWatchStore((state) => state.player)
 
   const { loading: isLoadingAnime, error: animeError, data: animeData } = useGqlQuery(GET_ANIME_DATA, { variables: { id: parseInt(id) } })
-
-  const fetchEpisodesData = useCallback(async () => {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_CONSUMET_URL}/meta/anilist/episodes/${id}?provider=zoro`);
-    if (!res.ok) throw new Error("Failed to fetch episodes data");
-    return res.json() as Promise<AnimeEpisodeData[]>;
-  }, [id]);
 
   const { 
     data: episodesData, 
@@ -65,19 +61,13 @@ export default function Watch() {
     error: episodesError 
   } = useQuery({
     queryKey: ['episodesData', id],
-    queryFn: fetchEpisodesData
+    queryFn: async () => await getEpisodesData(id),
+    refetchOnWindowFocus: false
   });
 
   const episode = episodesData?.find(
     (episode: AnimeEpisodeData) => episode.number === episodeNumber
   );
-
-  const fetchStreamingData = useCallback(async () => {
-    if (!episode) return null;
-    const res = await fetch(`${process.env.NEXT_PUBLIC_CONSUMET_URL}/meta/anilist/watch/${episode.id}?provider=zoro`);
-    if (!res.ok) throw new Error("Failed to fetch streaming data");
-    return res.json();
-  }, [episode]);
 
   const { 
     data: streamingData, 
@@ -85,17 +75,10 @@ export default function Watch() {
     error: streamingError
   } = useQuery({
     queryKey: ['streamingData', episode?.id],
-    queryFn: fetchStreamingData,
-    enabled: !!episode 
+    queryFn: async () => await getStreamingData(episode?.id || ""),
+    refetchOnWindowFocus: false,
+    enabled: !!episode
   });
-
-  const fetchSubtitleEntries = useCallback(async () => {
-    const res = await fetch(`https://jimaku.cc/api/entries/search?anilist_id=${id}`, {
-      headers: { Authorization: `${process.env.NEXT_PUBLIC_JIMAKU_KEY}` },
-    });
-    if (!res.ok) throw new Error("Failed to fetch subtitle entries");
-    return res.json();
-  }, [id]);
 
   const {
     data: subtitleEntries,
@@ -103,17 +86,9 @@ export default function Watch() {
     error: subtitleEntriesError
   } = useQuery({
     queryKey: ['subtitleEntries', id],
-    queryFn: fetchSubtitleEntries
+    queryFn: async () => await getSubtitleEntries(id),
+    refetchOnWindowFocus: false
   });
-
-  const fetchSubtitleFiles = useCallback(async () => {
-    if (!subtitleEntries || subtitleEntries.length === 0) return [];
-    const res = await fetch(`https://jimaku.cc/api/entries/${subtitleEntries[0].id}/files?episode=${ep}`, {
-      headers: { Authorization: `${process.env.NEXT_PUBLIC_JIMAKU_KEY}` },
-    });
-    if (!res.ok) throw new Error("Failed to fetch subtitle files");
-    return res.json() as Promise<SubtitleFile[]>;
-  }, [subtitleEntries, ep]);
 
   const {
     data: subtitleFiles,
@@ -121,16 +96,20 @@ export default function Watch() {
     error: subtitleFilesError
   } = useQuery({
     queryKey: ['subtitleFiles', subtitleEntries?.[0]?.id, ep],
-    queryFn: fetchSubtitleFiles,
+    queryFn: async () => {
+      if(!subtitleEntries || !subtitleEntries[0].id || !episode) return;
+      return await getSubtitleFiles(subtitleEntries[0].id, episode?.number)
+    },
+    refetchOnWindowFocus: false,
     enabled: !!subtitleEntries && subtitleEntries.length > 0,
   });
+
 
   const { setEnglishSubtitleUrl, setActiveSubtitleFile } = useWatchStore();
 
   useEffect(() => {
     if(!streamingData || !subtitleFiles?.length) return;
     
-    // Reset subtitle state when episode changes
     setActiveSubtitleFile(null);
     setEnglishSubtitleUrl(null);
     
@@ -153,10 +132,8 @@ export default function Watch() {
       const englishSub = streamingData?.subtitles.find((s: AnimeStreamingData['subtitles'][0]) => s.lang === 'English')?.url || "";
       setEnglishSubtitleUrl(englishSub);
     }
-  // Only include values that should trigger the effect
   }, [episode?.id, streamingData, subtitleFiles, setActiveSubtitleFile, setEnglishSubtitleUrl]);
 
-  // Fix error handling
   const errors = [episodesError, streamingError, subtitleEntriesError, subtitleFilesError, animeError];
   const errorMessages = errors.filter(error => error !== null && error !== undefined);
   

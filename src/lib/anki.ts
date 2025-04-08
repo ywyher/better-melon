@@ -1,27 +1,34 @@
-'use server'
+'use client'
 
 // utils/ankiConnect.ts
 export const invokeAnkiConnect = async (action: string, version: number, params = {}) => {
-    try {
-      const response = await fetch(`${process.env.APP_URL}/api/anki`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ action, version, params }),
-      });
-      
-      const result = await response.json();
-      
-      return {
-        data: result.data,
-        error: result.error,
-      };
-    } catch (error) {
-      console.error('Error connecting to Anki API route:', error);
+  try {
+    const response = await fetch(process.env.NEXT_PUBLIC_ANKI_CONNECT_URL!, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ action, version, params }),
+    })
+    
+    const data = await response.json()
+    
+    if (data.error) {
       return {
         data: null,
-        error: error || "Make sure to follow the instrucitons at on the settings page",
-      };
+        error: data.error
+      }
     }
-  };
+    
+    return {
+      data: data.result,
+      error: null
+    }
+  } catch (error) {
+    console.error('Error invoking Anki Connect:', error)
+    return {
+      data: null,
+      error: error instanceof Error ? error.message : 'Failed to connect to Anki'
+    }
+  }
+}

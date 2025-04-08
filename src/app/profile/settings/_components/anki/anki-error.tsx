@@ -39,9 +39,9 @@ export default function AnkiError() {
                   <pre className="bg-gray-100 p-3 rounded-md mt-2 text-sm font-mono overflow-x-auto dark:bg-gray-800 dark:text-gray-200">
                     {/* "https://better-melon.vercel.app", */}
                     {`"webCorsOriginList": [
-                        "http://localhost:3000"
-                        "http://localhost"
-                    ]`}
+    "http://localhost:3000"
+    "http://localhost"
+]`}
                   </pre>
                 </div>
               </li>

@@ -14,7 +14,7 @@ type PresetSelectorProps = {
     onPresetSelect: (presetId: string) => void
 }
 
-export function PresetSelector({ presets, selectedPreset, onPresetSelect }: PresetSelectorProps) {
+export default function AnkiPresetSelector({ presets, selectedPreset, onPresetSelect }: PresetSelectorProps) {
     return (
         <Select value={selectedPreset || "new"} onValueChange={onPresetSelect}>
             <SelectTrigger className="w-[200px]">
