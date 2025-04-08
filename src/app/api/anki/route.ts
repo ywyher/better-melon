@@ -62,6 +62,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ data: data.result, error: null }, { status: 200 });
   } catch (error) {
+    console.log('Error connecting to Anki:', error);
     console.error('Error connecting to Anki:', error);
     return NextResponse.json(
       { data: null, error: 'Failed to connect to Anki' },
