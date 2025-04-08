@@ -28,11 +28,11 @@ Animelon doesn’t provide all animes by default, and its entries are rarely upd
   1. [x] Support for images
   2. [ ] Support for audio
 - [ ] Global configuration for
-  1. [ ] Prefered subtitles formats
+  1. [ ] Preferred subtitles formats
   2. [ ] Keyword (regex) when found on a subtitle name select it over the others
 - [ ] Per anime configuration for
   1. [ ] Subtitles delay
-  2. [ ] Prefered subtitles formats
+  2. [ ] Preferred subtitles formats
   3. [ ] Keyword (regex) when found on a subtitle name select it over the others
 - [ ] Video vtt thumbnails
 - [ ] Providers selector

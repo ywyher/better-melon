@@ -1,9 +1,8 @@
 'use client';
 
-import { useEffect, useCallback } from 'react';
+import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import Player from "@/app/watch/[id]/[ep]/_components/player/player";
-import { SubtitleFile } from "@/types/subtitle";
 import { AnimeEpisodeData, AnimeStreamingData } from "@/types/anime";
 import { useParams } from 'next/navigation';
 import { useWatchStore } from '@/app/watch/[id]/[ep]/store';
@@ -51,7 +50,6 @@ export default function Watch() {
   const id = params.id as string;
   const ep = params.ep as string;
   const episodeNumber = parseInt(ep);
-  const player = useWatchStore((state) => state.player)
 
   const { loading: isLoadingAnime, error: animeError, data: animeData } = useGqlQuery(GET_ANIME_DATA, { variables: { id: parseInt(id) } })
 
