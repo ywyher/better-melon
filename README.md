@@ -97,7 +97,7 @@ Create a `.env` file in the root directory and fill the following:
 CONSUMET_URL=
 JIMAKU_KEY=
 NEXT_PUBLIC_PROXY_URL=
-NEXT_PUBLIC_ANKI_CONNECT=
+NEXT_PUBLIC_ANKI_CONNECT_URL=
 ```
 
 it should look something like this
@@ -105,7 +105,7 @@ it should look something like this
 CONSUMET_URL=http://localhost:6969
 JIMAKU_KEY=AAAAAasndaund9uhWIJHUSDAIDJamsdkoanmdIAUN
 NEXT_PUBLIC_PROXY_URL=http://localhost:8080/m3u8-proxy
-NEXT_PUBLIC_ANKI_CONNECT=http://127.0.0.1:8765
+NEXT_PUBLIC_ANKI_CONNECT_URL=http://127.0.0.1:8765
 ```
 
 ### Start the Application
