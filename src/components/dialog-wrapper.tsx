@@ -13,7 +13,7 @@ import {
   DrawerTitle,
   DrawerTrigger
 } from "@/components/ui/drawer";
-import { useIsMedium } from "@/hooks/useMediaQuery";
+import { useIsMedium, useIsSmall } from "@/hooks/useMediaQuery";
 
 type DialogWrapperProps = {
   title: string;
@@ -32,7 +32,7 @@ export default function DialogWrapper({
   onOpenChange,
   trigger
 }: DialogWrapperProps) {
-  const isMedium = useIsMedium();
+  const isMedium = useIsSmall();
 
   if (isMedium) {
     return (
