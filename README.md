@@ -24,7 +24,11 @@ Animelon doesn’t provide all animes by default, and its entries are rarely upd
 - [x] Support local subtitles
 - [x] Seperate delay sliders for japanese and english subs
 - [x] Episodes list/selector
-- [x] Anki integration (CURRENTLY ONLY WORKS ON LOCALHOST)
+- [x] Authentication integration using better-auth 
+- [x] Account linking
+  1. [x] Anilist -> User can link anilist account to perform actions on his list
+  2. [ ] Myanimelist -> might not happen cause of term of use
+- [x] Anki integration
   1. [x] Support for images
   2. [ ] Support for audio
 - [ ] Global configuration for
@@ -39,11 +43,16 @@ Animelon doesn’t provide all animes by default, and its entries are rarely upd
 - [ ] Defintion on select functionality
 - [ ] .ass support
 - [ ] User friendly/Modern UI
-- [ ] Database instead of localstorage lol
-- [ ] Authentication integration through anilist or better-auth with the ability to link your anilist account for anilist related actions
+-----
+probably wont happen:
+- [ ] public account page for each account where users can inspect the user account public data
+  1. [ ] the option to choose the data you wanna make public/private
 - [ ] Comments (maybe lol)
 
 # Self-Hosting
+> [!warning]
+> This section is outdated
+
 > [!warning]
 > This project is still in beta
 

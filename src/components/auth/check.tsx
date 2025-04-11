@@ -1,66 +1,85 @@
 "use client"
 
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { FieldError, FieldErrors, useForm } from "react-hook-form";
+import { FieldErrors, useForm } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from "zod";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { useIsSmall } from "@/hooks/useMediaQuery";
 import { Dispatch, SetStateAction, useState } from "react";
-import { AuthPort } from "@/components/auth/auth";
+import { AuthIdentifier, AuthPort } from "@/components/auth/auth";
 import { checkEmail } from "@/components/auth/actions";
 import { authClient } from "@/lib/auth-client";
 import LoadingButton from "@/components/loading-button";
+import { emailRegex, identifierSchema, usernameRegex } from "@/types";
 
 export const checkSchema = z.object({
-    email: z.string().email().min(2, "Email."),
+    identifier: identifierSchema,
 });
 
 type FormValues = z.infer<typeof checkSchema>;
+type CheckProps = { 
+    setPort: Dispatch<SetStateAction<AuthPort>>, 
+    setIdentifierValue: Dispatch<SetStateAction<string>> 
+    setIdentifier: Dispatch<SetStateAction<AuthIdentifier | null>> 
+}
 
-export default function Check({ setPort, setEmail }: { setPort: Dispatch<SetStateAction<AuthPort>>, setEmail: Dispatch<SetStateAction<string>> }) {
+export default function Check({ setPort, setIdentifierValue, setIdentifier }: CheckProps) {
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const isSmall = useIsSmall()
 
     const form = useForm<FormValues>({
         resolver: zodResolver(checkSchema),
         defaultValues: {
-            email: ""
+            identifier: ""
         }
     })
 
     const onSubmit = async (data: FormValues) => {
         setIsLoading(true)
-        const { exists, verified } = await checkEmail({ data });
+
+        let identifier: AuthIdentifier | null = null;
+        if(data.identifier.match(usernameRegex)) {
+            identifier = 'username'
+        }else if(data.identifier.match(emailRegex)) {
+            identifier = 'email'
+        }else {
+            identifier = null
+        }
+
+        if(!identifier) {
+            toast.error('Use email or username')
+            return;
+        }
+
+        const { exists, verified } = await checkEmail({ data, identifier });
         
         if(exists && verified) {
             setPort("login")
         }else if(!exists) {
-            setPort("register")
-        }else if (exists && !verified) {
-            const { error } = await authClient.emailOtp.sendVerificationOtp({
-                email: data.email,
-                type: "email-verification"
-            })
-            
-            if(error) {
-                toast.error(error.message)
+            if(identifier == 'username') {
+                toast.error("Registration requires an email", {
+                    description: "Username can be used to login after registration"
+                })
                 setIsLoading(false)
                 return;
+            }else {
+                setPort("register")
             }
-
-            setPort('verify')
+        }else if (exists && !verified) {
+            setPort('login')
         }
         
-        setEmail(data.email)
+        setIdentifier(identifier)
+        setIdentifierValue(data.identifier)
         setIsLoading(false)
     }
 
     const onError = (errors: FieldErrors<FormValues>) => {
         const position = isSmall ? "top-center" : "bottom-right"
-        if (errors.email) {
-            toast.error(errors.email.message, { position });
+        if (errors.identifier) {
+            toast.error(errors.identifier.message, { position });
         }
     }
 
@@ -69,17 +88,17 @@ export default function Check({ setPort, setEmail }: { setPort: Dispatch<SetStat
             <form onSubmit={form.handleSubmit(onSubmit, onError)}>
                 <FormField
                     control={form.control}
-                    name="email"
+                    name="identifier"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Email</FormLabel>
+                            <FormLabel>Email or Username</FormLabel>
                             <FormControl>
-                                <Input placeholder="m@example.com" {...field} />
+                                <Input {...field} />
                             </FormControl>
                         </FormItem>
                     )}
                 />
-                <LoadingButton isLoading={isLoading} className="w-full mt-4">Verify</LoadingButton>
+                <LoadingButton isLoading={isLoading} className="w-full mt-4">Authenticate</LoadingButton>
             </form>
         </Form>
     )

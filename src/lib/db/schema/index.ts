@@ -1,3 +1,4 @@
+import { InferSelectModel } from "drizzle-orm";
 import { pgTable, text, integer, timestamp, boolean } from "drizzle-orm/pg-core";
 			
 export const user = pgTable("user", {
@@ -5,7 +6,7 @@ export const user = pgTable("user", {
   name: text('name').notNull(),
   email: text('email').notNull().unique(),
   emailVerified: boolean('email_verified').notNull(),
-  image: text('image').default("/pfp.png"),
+  image: text('image').default("pfp.png"),
   createdAt: timestamp('created_at').notNull(),
   updatedAt: timestamp('updated_at').notNull()
 });
@@ -45,3 +46,5 @@ export const verification = pgTable("verification", {
   createdAt: timestamp('created_at'),
   updatedAt: timestamp('updated_at')
 });
+
+export type User = InferSelectModel<typeof user>;

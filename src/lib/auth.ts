@@ -43,6 +43,14 @@ export const auth = betterAuth({
       }
     },
   },
+  account: {
+    accountLinking: {
+        enabled: true, 
+        trustedProviders: ['anilist'],
+        allowDifferentEmails: true,
+        allowUnlinkingAll: true
+    }
+  },
   plugins: [
     emailOTP({ 
       async sendVerificationOTP({ email, otp, type }) { 
@@ -82,6 +90,7 @@ export const auth = betterAuth({
           clientSecret: process.env.ANILIST_SECRET!,
           authorizationUrl: "https://anilist.co/api/v2/oauth/authorize",
           tokenUrl: "https://anilist.co/api/v2/oauth/token",
+          redirectURI: process.env.ANILIST_REDIRECT_URL!,
           getUserInfo: async (tokens) => {
             const { accessToken } = tokens;
             // AniList uses GraphQL API for user data

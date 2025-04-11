@@ -10,13 +10,18 @@ import { useIsSmall } from "@/hooks/useMediaQuery";
 import { PasswordInput } from "@/components/form/password-input";
 import { authClient } from "@/lib/auth-client";
 import { Dispatch, SetStateAction, useState } from "react";
-import { AuthPort } from "@/components/auth/auth";
+import { AuthIdentifier, AuthPort } from "@/components/auth/auth";
 import LoadingButton from "@/components/loading-button";
 import { Button } from "@/components/ui/button";
+import { identifierSchema, passwordSchema } from "@/types";
+import { getEmailByUsername } from "@/components/auth/actions";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const loginSchema = z.object({
-    email: z.string().email().min(3, "Email should at least be 3 characters."),
-    password: z.string().min(8, "Passowrd should at least be 8 characters."),
+    identifier: identifierSchema,
+    password: z.string().min(1, {
+        message: "Password is required.",
+    }),
 });
 
 type FormValues = z.infer<typeof loginSchema>;
@@ -24,26 +29,38 @@ type FormValues = z.infer<typeof loginSchema>;
 type LoginProps = { 
     setOpen: Dispatch<SetStateAction<boolean>>,
     setPort: Dispatch<SetStateAction<AuthPort>>,
-    email: string
+    identifierValue: string
+    identifier: AuthIdentifier
 }
 
-export default function Login({ setPort, email, setOpen }: LoginProps) {
+export default function Login({ setPort, identifier, identifierValue, setOpen }: LoginProps) {
     const [isLoading, setIsLoading] = useState<boolean>(false)
-    const [test, setTest] = useState<boolean>(false)
+    const queryClient = useQueryClient()
     const isSmall = useIsSmall()
 
     const form = useForm<FormValues>({
         resolver: zodResolver(loginSchema),
         defaultValues: {
-            email: email,
+            identifier: identifierValue,
             password: "",
         }
     })
 
     const onSubmit = async (formData: FormValues) => {
         setIsLoading(true)
+
+        let email: string | null = identifierValue;
+        if(identifier == 'username') {
+            email = await getEmailByUsername({ username: identifierValue }) || null
+        }
+
+        if(!email) {
+            toast.error("Failed to get email")
+            return
+        }
+
         const result = await authClient.signIn.email({
-            email: formData.email,
+            email: email,
             password: formData.password,
         });
 
@@ -53,12 +70,23 @@ export default function Login({ setPort, email, setOpen }: LoginProps) {
             return;
         }
         
+        queryClient.invalidateQueries({ queryKey: ['session'] })
         setOpen(false)
         setPort('check')
     }
 
     const onForgetPassword = async () => {
         setIsLoading(true)
+        let email: string | null = identifierValue;
+        if(identifier == 'username') {
+            email = await getEmailByUsername({ username: identifierValue }) || null
+        }
+
+        if(!email) {
+            toast.error("Failed to get email")
+            return
+        }
+
         const { error } = await authClient.forgetPassword({
             email: email,
             redirectTo: "/reset-password",
@@ -91,10 +119,10 @@ export default function Login({ setPort, email, setOpen }: LoginProps) {
                 <div className="flex flex-col gap-4">
                     <FormField
                         control={form.control}
-                        name="email"
+                        name="identifier"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Email</FormLabel>
+                                <FormLabel className="capitalize">{identifier}</FormLabel>
                                 <FormControl>
                                     <Input {...field} />
                                 </FormControl>

@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import {
+  LogOut,
   Settings,
 } from "lucide-react";
 import {
@@ -24,10 +25,28 @@ import { Separator } from "@/components/ui/separator";
 import { useIsMedium } from "@/hooks/useMediaQuery";
 import Pfp from "@/components/pfp";
 import Link from "next/link";
+import { User } from "@/lib/db/schema";
+import { authClient } from "@/lib/auth-client";
+import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
 
-export function Menu() {
+export function Menu({ user, isSmall }: { user: User, isSmall: boolean }) {
   const router = useRouter();
+  const queryClient = useQueryClient()
   const isMedium = useIsMedium()
+
+  const handleLogout = async () => {
+    const { error } = await authClient.signOut()
+    
+    if(error) {
+      toast.error(error.message)
+      return;
+    }
+
+    queryClient.invalidateQueries({ queryKey: ['session'] })
+    router.push('/')
+  }
 
   if (isMedium)
     return (
@@ -48,6 +67,12 @@ export function Menu() {
                 <span>Settings</span>
             </Link>
           </div>
+          <div className="flex items-end h-full">
+              <Button className="w-full" onClick={() => handleLogout()}>
+                <LogOut />
+                Logout
+              </Button>
+            </div>
         </SheetContent>
       </Sheet>
     );
@@ -59,7 +84,7 @@ export function Menu() {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-44">
         <DropdownMenuLabel className="capitalize">
-            お帰り
+            おかえり
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
@@ -69,6 +94,14 @@ export function Menu() {
           >
             <Settings />
             <span>Settings</span>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            className="cursor-pointer"
+            onClick={() => handleLogout()}
+          >
+            <LogOut />
+            <span>Log out</span>
           </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>

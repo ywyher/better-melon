@@ -12,11 +12,12 @@ import { authClient } from "@/lib/auth-client";
 import { Dispatch, SetStateAction, useState } from "react";
 import { AuthPort } from "@/components/auth/auth";
 import LoadingButton from "@/components/loading-button";
+import { emailSchema, passwordSchema, usernameSchema } from "@/types";
 
 export const registerSchema = z.object({
-    username: z.string().min(3, "Username should at least be 3 characters."),
-    email: z.string().email().min(2, "Email should at least be 2 characters."),
-    password: z.string().min(8, "Passowrd should at least be 8 characters."),
+    username: usernameSchema,
+    email: emailSchema,
+    password: passwordSchema,
 });
 
 type FormValues = z.infer<typeof registerSchema>;

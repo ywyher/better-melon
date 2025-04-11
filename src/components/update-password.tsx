@@ -9,9 +9,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
 import { useState } from "react"
 import LoadingButton from "@/components/loading-button"
 import { toast } from "sonner"
@@ -23,6 +21,7 @@ import { passwordSchema } from "@/types"
 
 const formSchema = z
   .object({
+    oldPassword: z.string(),
     password: passwordSchema,
     confirmPassword: z.string(),
   })
@@ -33,7 +32,7 @@ const formSchema = z
 
 type ResetPasswordValues = z.infer<typeof formSchema>
 
-export function ResetPasswordForm({ token }: { token: string }) {
+export function UpdatePassword() {
   const [isLoading, setIsLoading] = useState(false)
   const isSmall = useIsSmall()
   const router = useRouter()
@@ -41,6 +40,7 @@ export function ResetPasswordForm({ token }: { token: string }) {
   const form = useForm<ResetPasswordValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      oldPassword: "",
       password: "",
       confirmPassword: "",
     },
@@ -49,9 +49,10 @@ export function ResetPasswordForm({ token }: { token: string }) {
   const onSubmit = async (data: ResetPasswordValues) => {
     setIsLoading(true)
 
-    const { error } = await authClient.resetPassword({
-      newPassword: data.password,
-      token,
+    const { error } =  await authClient.changePassword({
+        newPassword: data.password,
+        currentPassword: data.oldPassword,
+        revokeOtherSessions: true,
     });
 
     if(error) {
@@ -61,8 +62,12 @@ export function ResetPasswordForm({ token }: { token: string }) {
     }
     
     setIsLoading(false)
-    toast.success("Password reset successfully ")
-    router.replace('/')
+    toast.success("Password updated successfully ")
+    form.reset({
+      oldPassword: "",
+      password: "",
+      confirmPassword: "",
+    })
   }
 
   const onError = (errors: FieldErrors<ResetPasswordValues>) => {
@@ -76,7 +81,20 @@ export function ResetPasswordForm({ token }: { token: string }) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit, onError)} className="space-y-6 max-w-md">
+      <form onSubmit={form.handleSubmit(onSubmit, onError)} className="flex flex-col gap-4">
+        <FormField
+          control={form.control}
+          name="oldPassword"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Old Password</FormLabel>
+              <FormControl>
+                <PasswordInput {...field} />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+
         <FormField
           control={form.control}
           name="password"
@@ -104,7 +122,7 @@ export function ResetPasswordForm({ token }: { token: string }) {
         />
 
         <LoadingButton isLoading={isLoading} className="w-full">
-          Reset Password
+          Update Password
         </LoadingButton>
       </form>
     </Form>

@@ -12,7 +12,13 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "media.kitsu.app",
         pathname: "/**",
-      }
+      },
+      {
+        protocol: "https",
+        hostname: "pub-0d475d35bd594b8180c8ab8c0addd19a.r2.dev",
+        port: "",
+        pathname: "/**",
+      },
     ],
   },
 };

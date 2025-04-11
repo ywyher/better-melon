@@ -84,7 +84,7 @@ export default function SubtitleFileSelector({ subtitleFiles }: {
         <>
             <DialogWrapper
                 open={open}
-                onOpenChange={setOpen}
+                setOpen={setOpen}
                 title="Select a subtitle"
                 trigger={trigger}
             >

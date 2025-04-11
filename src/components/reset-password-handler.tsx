@@ -1,12 +1,11 @@
-// components/reset-password-handler.tsx
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import DialogWrapper from "@/components/dialog-wrapper";
 import { ResetPasswordForm } from "@/components/reset-password-form";
 
-export default function ResetPasswordHandler() {
+function ResetPasswordContent() {
   const searchParams = useSearchParams();
   const [open, setOpen] = useState(false);
   const [resetToken, setResetToken] = useState<string | null>(null);
@@ -24,8 +23,16 @@ export default function ResetPasswordHandler() {
   if (!resetToken) return null;
 
   return (
-    <DialogWrapper open={open} onOpenChange={setOpen} title="">
+    <DialogWrapper open={open} setOpen={setOpen} title="Reset your password">
       <ResetPasswordForm token={resetToken} />
     </DialogWrapper>
+  );
+}
+
+export default function ResetPasswordHandler() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ResetPasswordContent />
+    </Suspense>
   );
 }
