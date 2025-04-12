@@ -88,7 +88,7 @@ export default function EpisodesList({
       className="h-[80vh] max-w-[500px]"
     >
       <CardHeader className="flex flex-col gap-3">
-        <div className="flex flex-row items-center w-full">
+        <div className="flex flex-row gap-2 items-center w-full">
           <div className="flex flex-row gap-2 items-center w-full">
             {chunks && (
               <Select
@@ -121,7 +121,7 @@ export default function EpisodesList({
           </div>
           <div className="flex gap-2">
             <Button
-              variant="ghost"
+              variant="outline"
               size="icon"
               className="p-2"
               onClick={() => setEpisodesListSpoilerMode(!episodesListSpoilerMode)}
@@ -131,7 +131,7 @@ export default function EpisodesList({
             </Button>
             
             <Button
-              variant="ghost"
+              variant="outline"
               size="icon"
               className="p-2"
               onClick={cycleViewMode}

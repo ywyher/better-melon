@@ -29,8 +29,8 @@ function SearchForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-row gap-3 items-center md:min-w-[500px]">
-        <div className="flex items-center border rounded-md overflow-hidden w-full ">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-row gap-2 items-center md:min-w-[500px]">
+        <div className="flex items-center border bg-background rounded-sm overflow-hidden w-full ">
           <div className="flex items-center px-2 py-0 w-full">
             <SearchIcon className="h-5 w-5 text-gray-400" />
             <FormField
@@ -41,8 +41,8 @@ function SearchForm() {
                   <FormControl>
                     <Input
                       {...field}
-                      placeholder="Search..."
-                      className="outline-none dark:bg-transparent bg-transparent border-none w-full focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none"
+                      placeholder="Search Anime"
+                      className="h-9 outline-none dark:bg-transparent bg-transparent border-none w-full focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none"
                     />
                   </FormControl>
                 </FormItem>
@@ -54,6 +54,7 @@ function SearchForm() {
           variant="outline"
           size="icon"
           type="submit"
+          className="w-10 h-10 rounded-sm"
         >
           <SearchIcon />
         </Button>

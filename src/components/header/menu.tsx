@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import {
   LogOut,
   Settings,
+  UserIcon,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -52,7 +53,7 @@ export function Menu({ user, isSmall }: { user: User, isSmall: boolean }) {
     return (
       <Sheet>
         <SheetTrigger>
-          <Pfp />
+          <Pfp className="min-w-10 max-w-10 min-h-10 max-h-10 rounded-sm" />
         </SheetTrigger>
         <SheetContent className="flex flex-col gap-5 w-[300px]">
           <SheetHeader className="h-1">
@@ -62,6 +63,10 @@ export function Menu({ user, isSmall }: { user: User, isSmall: boolean }) {
           </SheetHeader>
           <Separator />
           <div className="flex flex-col gap-4 px-4">
+            <Link href="/profile" className="flex flex-row gap-2">
+                <UserIcon size={20} />
+                <span>Profile</span>
+            </Link>
             <Link href="/profile/settings" className="flex flex-row gap-2">
                 <Settings size={20} />
                 <span>Settings</span>
@@ -80,7 +85,7 @@ export function Menu({ user, isSmall }: { user: User, isSmall: boolean }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="cursor-pointer">
-        <Pfp />
+        <Pfp className="min-w-10 max-w-10 min-h-10 max-h-10 rounded-sm" />
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-44">
         <DropdownMenuLabel className="capitalize">
@@ -88,6 +93,13 @@ export function Menu({ user, isSmall }: { user: User, isSmall: boolean }) {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
+          <DropdownMenuItem
+            className="cursor-pointer"
+            onClick={() => router.push("/profile")}
+          >
+            <UserIcon />
+            <span>Profile</span>
+          </DropdownMenuItem>
           <DropdownMenuItem
             className="cursor-pointer"
             onClick={() => router.push("/profile/settings")}

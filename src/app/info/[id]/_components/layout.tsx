@@ -13,7 +13,7 @@ type AnimeLayoutProps = {
 
 export function AnimeLayout({ bannerImage, title, router, children }: AnimeLayoutProps) {
     return (
-        <div className="container mx-auto px-4 py-6">
+        <div>
             {/* Back Button */}
             <div className="mb-4">
                 <Button 

@@ -4,6 +4,7 @@ import ConnectionCard from "@/app/profile/connections/_components/connection-car
 import { authClient } from "@/lib/auth-client";
 import { OAuthProviders } from "@/types";
 import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 
 export default function Connections() {
 

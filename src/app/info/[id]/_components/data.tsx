@@ -62,7 +62,6 @@ export default function AnimeData({ id }: { id: string }) {
                         genres={anime.genres}
                     />
                 </div>
-                
                 {/* Title, Description and Episodes */}
                 <div className="flex flex-col gap-6 md:col-span-2">
                   <AnimeEpisodes 

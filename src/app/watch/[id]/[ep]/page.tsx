@@ -173,7 +173,7 @@ export default function Watch() {
   // When subtitles are empty but everything else is loaded
   if ((!subtitleEntries || subtitleEntries.length === 0) && streamingData) {
     return (
-      <div className="mx-auto px-4 py-6">
+        <div>
         {renderPlayerContent()}
       </div>
     );
@@ -182,7 +182,7 @@ export default function Watch() {
   return (
     <>
       <Header />
-      <div className="flex flex-row gap-10 mx-auto px-4 py-6">
+      <div className="flex flex-row gap-10">
         <div className="flex flex-col gap-3 flex-1">
           <GoBack />
           {renderPlayerContent()}

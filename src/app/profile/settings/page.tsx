@@ -9,7 +9,7 @@ export default function Profile() {
     return (
         <>
             <Header />
-            <Tabs defaultValue="anki" className="flex flex-col gap-5 py-5 px-10">
+            <Tabs defaultValue="anki" className="flex flex-col gap-5">
                 <TabsList className="w-full">
                     <TabsTrigger className="w-full cursor-pointer" value="anki">Anki</TabsTrigger>
                 </TabsList>

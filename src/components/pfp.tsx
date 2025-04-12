@@ -12,9 +12,10 @@ export default function Pfp({
     <Avatar className={cn(
       "cursor-pointer border",
       "w-12 h-12",
+      "object",
       className,
     )}>
-      <AvatarImage src={image} alt="Profile picture" />
+      <AvatarImage className="object-cover" src={image} alt="Profile picture" />
       <AvatarFallback>AS</AvatarFallback>
     </Avatar>
   );
