@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 
 // Media query breakpoints
 export const breakpoints = {
-  small: "(max-width: 640px)",     // Mobile
+  small: "(max-width: 772px)",     // Mobile
   medium: "(max-width: 1024px)",   // Tablets
   large: "(min-width: 1025px)"     // Laptops/PCs
 };

@@ -4,7 +4,7 @@ import ResetPasswordHandler from "@/components/reset-password-handler";
 
 export default function Home() {
   return (
-    <>
+    <div>
       <div className="container mx-auto">
         <h1 className="text-3xl font-bold mb-6 text-center">
           Better Melon (An <Link className="underline underline-offset-4" href="https://animelon.com">Animelon</Link> Alternative)
@@ -12,6 +12,6 @@ export default function Home() {
         <AnimeTabs />
       </div>
       <ResetPasswordHandler />
-    </>
+    </div>
   );
 }

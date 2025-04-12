@@ -7,8 +7,8 @@ import ApolloProvider from "@/lib/apollo-provider";
 import { Toaster } from "sonner";
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
 import Script from "next/script";
-import Sidebar from "@/components/sidebar/sidebar";
 import Header from "@/components/header";
+import Navigation from "@/app/navigation";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -50,15 +50,11 @@ export default function RootLayout({
                 enableSystem
                 disableTransitionOnChange
               >
-                  <div className="flex flex-col min-h-screen">
-                    <Header />
-                    <div className="flex-1 pt-[calc(1rem+var(--header-height))]"> 
-                      <Sidebar className="shrink-0" />
-                      <main className="container mx-auto md:pl-[var(--sidebar-width)]">
-                        {children}
-                      </main>
-                    </div>
-                  </div>
+                <Navigation>
+                  <main className="container mx-auto">
+                    {children}
+                  </main>
+                </Navigation>
                 <Toaster theme="dark" />
               </ThemeProvider>
             </NuqsAdapter>

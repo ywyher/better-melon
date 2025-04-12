@@ -5,7 +5,7 @@ import { History, Home, Settings, TrendingDown, User } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
-export default function SidebarLinks() {
+export default function BottombarLinks() {
   const pathname = usePathname()
   
   const links = [

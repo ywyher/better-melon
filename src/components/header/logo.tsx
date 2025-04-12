@@ -10,8 +10,8 @@ export default function Logo() {
             <Image
                 src="/images/logo.png"
                 alt="logo"
-                width="125"
-                height="125"
+                width="120"
+                height="120"
                 className="object-cover"
             />
         </Link>
