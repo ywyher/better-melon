@@ -6,12 +6,10 @@ type SearchItemProps = {
   title: Anime['title']['english'],
   cover: Anime['coverImage']['large']
   status: Anime['status']
-  seasonYear: Anime['seasonYear']
 }
 
 export default function SearchItem({
   cover,
-  seasonYear,
   status,
   title
 }: SearchItemProps) {

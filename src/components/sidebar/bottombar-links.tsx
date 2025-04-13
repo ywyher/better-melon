@@ -39,13 +39,13 @@ export default function BottombarLinks() {
             key={idx}
             className={cn(
               "flex-1 md:w-full",
-              "flex flex-col gap-[.6rem] items-center justify-center",
+              "flex flex-col gap-1 items-center justify-center",
               "py-2 pt-3 md:pt-4 md:pb-3",
-              "hover:bg-muted cursor-pointer transition-all",
-              "border-t border-t-transparent hover:border-t-primary md:border-e md:border-e-transparent hover:md:border-e-primary md:border-t-0",
+              "hover:bg-muted/50 cursor-pointer transition-all",
               ++idx % 2 === 1 && "md:bg-secondary/30",
+              "text-gray-600 dark:text-gray-400 hover:text-foreground",
               // Apply active styles when the link is active
-              isActive && "bg-muted md:bg-muted border-t-primary md:border-e-primary"
+              isActive && "text-foreground"
             )}
           >
             <l.icon className={cn(isActive && "text-primary")} />

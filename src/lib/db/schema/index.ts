@@ -1,15 +1,40 @@
-import { InferSelectModel } from "drizzle-orm";
-import { pgTable, text, integer, timestamp, boolean } from "drizzle-orm/pg-core";
+import { InferSelectModel, relations } from "drizzle-orm";
+import { pgTable, text, timestamp, boolean, jsonb } from "drizzle-orm/pg-core";
 			
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
-  name: text('name').notNull(),
+  name: text('name').notNull().unique(),
   email: text('email').notNull().unique(),
   emailVerified: boolean('email_verified').notNull(),
   image: text('image').default("pfp.png"),
+  isAnonymous: boolean('isAnonymous').default(false),
   createdAt: timestamp('created_at').notNull(),
   updatedAt: timestamp('updated_at').notNull()
 });
+
+export const userRelations = relations(user, ({ many }) => ({
+  user: many(ankiPreset)
+}))
+
+export const ankiPreset = pgTable('anki_preset', {
+  id: text("id").primaryKey(),
+  name: text('name').notNull(),
+  deck: text('deck').notNull(),
+  model: text('model').notNull(),
+  fields: jsonb(),
+  isDefault: boolean('is_default').default(false),
+  isGui: boolean('is_gui').default(false),
+  userId: text("userId").references(() => user.id, { onDelete: "cascade" }),
+  createdAt: timestamp('created_at').notNull(),
+  updatedAt: timestamp('updated_at').notNull()
+})
+
+export const ankiPresetRelations = relations(ankiPreset, ({ one }) => ({
+  user: one(user, {
+    fields: [ankiPreset.userId],
+    references: [user.id]
+  })
+}))
 
 export const session = pgTable("session", {
   id: text("id").primaryKey(),
@@ -48,3 +73,6 @@ export const verification = pgTable("verification", {
 });
 
 export type User = InferSelectModel<typeof user>;
+export type AnkiPreset = Omit<InferSelectModel<typeof ankiPreset>, 'fields'> & {
+  fields: Record<string, string>;
+};

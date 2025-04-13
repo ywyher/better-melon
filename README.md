@@ -31,6 +31,10 @@ Animelon doesn’t provide all animes by default, and its entries are rarely upd
 - [x] Anki integration
   1. [x] Support for images
   2. [ ] Support for audio
+- [ ] Anonymous users -> instead of using localstorage we will create an anonymous record in the database which have the following benifits:
+  1. All users settings before registration will be saved into his account after registration (Amazing UX)
+  2. I won't have to implement the storing logic twice once for the DB and once for the localstorage each time i need it (Amazing DX lol)
+- [ ] Subtitles settings (font and and stuff)
 - [ ] Global configuration for
   1. [ ] Preferred subtitles formats
   2. [ ] Keyword (regex) when found on a subtitle name select it over the others
@@ -38,7 +42,6 @@ Animelon doesn’t provide all animes by default, and its entries are rarely upd
   1. [ ] Subtitles delay
   2. [ ] Preferred subtitles formats
   3. [ ] Keyword (regex) when found on a subtitle name select it over the others
-- [ ] Subtitles settings (font and and stuff)
 - [ ] Video vtt thumbnails
 - [ ] Providers selector
 - [ ] Defintion on select functionality

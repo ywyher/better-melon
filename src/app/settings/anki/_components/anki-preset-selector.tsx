@@ -5,18 +5,19 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { AnkiPreset } from "@/lib/stores/anki-presets-store"
+import { AnkiPreset } from "@/lib/db/schema"
 import { Plus } from "lucide-react"
+import { Dispatch, SetStateAction } from "react"
 
 type PresetSelectorProps = {
     presets: AnkiPreset[]
-    selectedPreset: string | null
-    onPresetSelect: (presetId: string) => void
+    selectedPresetId: string | null
+    setSelectedPresetId: Dispatch<SetStateAction<string>>
 }
 
-export default function AnkiPresetSelector({ presets, selectedPreset, onPresetSelect }: PresetSelectorProps) {
+export default function AnkiPresetSelector({ presets, selectedPresetId, setSelectedPresetId }: PresetSelectorProps) {
     return (
-        <Select value={selectedPreset || "new"} onValueChange={onPresetSelect}>
+        <Select value={selectedPresetId || "new"} onValueChange={setSelectedPresetId}>
             <SelectTrigger className="w-[200px]">
                 <SelectValue placeholder="Select preset" />
             </SelectTrigger>

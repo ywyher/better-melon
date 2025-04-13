@@ -1,7 +1,7 @@
 import db from "@/lib/db";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { emailOTP, genericOAuth } from "better-auth/plugins"
+import { anonymous, emailOTP, genericOAuth } from "better-auth/plugins"
 import * as schema from '@/lib/db/schema/index'
 
 export const auth = betterAuth({
@@ -48,10 +48,11 @@ export const auth = betterAuth({
         enabled: true, 
         trustedProviders: ['anilist'],
         allowDifferentEmails: true,
-        allowUnlinkingAll: true
+        allowUnlinkingAll: true,
     }
   },
   plugins: [
+    anonymous(),
     emailOTP({ 
       async sendVerificationOTP({ email, otp, type }) { 
         if (type === "email-verification") {

@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { invokeAnkiConnect } from "@/lib/anki";
-import { AnkiPreset, useAnkiPresetStore } from "@/lib/stores/anki-presets-store";
 import { useInfoCardStore } from "@/lib/stores/info-card-store";
 import { X } from "lucide-react";
 import { toast } from "sonner";
@@ -16,14 +15,29 @@ import {
 } from '@dnd-kit/core';
 import { useWatchStore } from '@/app/watch/[id]/[ep]/store';
 import { takeSnapshot } from '@/lib/funcs';
+import { useQuery } from '@tanstack/react-query';
+import { AnkiPreset } from '@/lib/db/schema';
+import { getDefaultPreset } from '@/app/settings/anki/actions';
 
 export default function InfoCard() {
-  const getDefaultPreset = useAnkiPresetStore((state) => state.getDefaultPreset)
   const { sentance, setSentance, setToken, token } = useInfoCardStore()
   const setActiveTokenId = useWatchStore((state) => state.setActiveTokenId)
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const player = useWatchStore((state) => state.player);
+
+  const { data: preset } = useQuery({
+    queryKey: ['anki', 'preset'],
+    queryFn: async () => {
+      return await getDefaultPreset() as AnkiPreset
+    }
+  })
+
   
+  useEffect(() =>{ 
+    if(!preset) return;
+    console.log(Object.entries(preset?.fields))
+  }, [preset])
+
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -41,24 +55,27 @@ export default function InfoCard() {
   };
 
   const handleAddNote = async () => {
-    const preset = getDefaultPreset() as AnkiPreset
-  
     if(!preset || !token || !sentance) {
       toast.warning("Setup anki configurations thorugh /profile/settings")
       return;
     }
   
-    const noteFields = preset.fields.filter(f => f.value).map((f) => {
+    const noteFields = Object.entries(preset.fields)
+    .filter(([_, value]) => value)
+    .map(([key, value]) => {
       return {
-        [f.name]: f.value == "expression" ? token.surface_form : (f.value == 'sentance' ? sentance : "")
-      }
-    })
-    
+        [key]: value === "expression"
+          ? token.surface_form
+          : value === "sentance"
+          ? sentance
+          : ""
+      };
+    });
 
     const noteOptions = {
       "note": {
-        "deckName": preset.deckName,
-        "modelName": preset.modelName,
+        "deckName": preset.deck,
+        "modelName": preset.model,
         "fields": noteFields.reduce((acc, obj) => ({ ...acc, ...obj }), {}),
         "options": {
           "allowDuplicate": false,
@@ -72,12 +89,12 @@ export default function InfoCard() {
         "tags": [
           "better-melon"
         ],
-        "picture": (preset.fields.find(p => p.value == 'image') && player.current) ? [
+        "picture": (Object.entries(preset.fields).find(([_,value]) => value == 'image') && player.current) ? [
           {
-            "data": takeSnapshot(player.current), // This is the key change - use "data" instead of "url"
+            "data": takeSnapshot(player.current),
             "filename": `frame_${Date.now()}.png`,
             "fields": [
-              "Image" // Make sure this matches your Anki note type's image field name
+              "Image"
             ]
           }
         ] : undefined

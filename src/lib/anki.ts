@@ -25,7 +25,6 @@ export const invokeAnkiConnect = async (action: string, version: number, params 
       error: null
     }
   } catch (error) {
-    console.error('Error invoking Anki Connect:', error)
     return {
       data: null,
       error: error instanceof Error ? error.message : 'Failed to connect to Anki'

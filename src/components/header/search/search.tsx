@@ -13,7 +13,8 @@ import {
 import { Button } from "@/components/ui/button"
 import { gql, useQuery } from "@apollo/client"
 import { Anime } from "@/types/anime"
-import SearchItem from "@/components/header/search-item"
+import SearchItem from "@/components/header/search/search-item"
+import SearchItemSkeleton from "@/components/header/search/search-item-skeleton" // Import the skeleton component
 import { useDebounce } from "use-debounce"
 import { useRouter } from "next/navigation"
 import { useIsSmall } from "@/hooks/useMediaQuery"
@@ -21,9 +22,9 @@ import {
   Drawer,
   DrawerContent,
   DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
 } from "@/components/ui/drawer"
-import { DialogHeader } from "@/components/ui/dialog"
-import { DialogTitle } from "@radix-ui/react-dialog"
 import { Input } from "@/components/ui/input"
 
 const GET_ANIMES = gql`
@@ -51,9 +52,30 @@ const GET_ANIMES = gql`
   }
 `;
 
+const ViewAll = ({ navigateToSearch, query }: { navigateToSearch: (query: string) => void, query: string }) => {
+  return (
+    <div className="border-t p-0 bg-background mt-auto">
+      <div 
+        className="flex items-center w-full justify-between cursor-pointer p-2 rounded hover:bg-accent"
+        onClick={() => navigateToSearch(query)}
+      >
+        <div className="flex items-center gap-2">
+          <span>View all</span>
+        </div>
+        <div className="text-xs text-muted-foreground hidden md:block">
+          <span className="rounded border px-1">↑↓</span> navigate,{" "}
+          <span className="rounded border px-1">Enter</span> select,{" "}
+          <span className="rounded border px-1">Esc</span> close
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function Search() {
   const [open, setOpen] = React.useState(false)
   const [inputValue, setInputValue] = React.useState("")
+  const [isTyping, setIsTyping] = React.useState(false)
   const [debouncedValue] = useDebounce(inputValue, 500)
   const isSmall = useIsSmall()
   const router = useRouter()
@@ -76,36 +98,25 @@ export default function Search() {
     return () => document.removeEventListener("keydown", down)
   }, [])
 
+  React.useEffect(() => {
+    if (inputValue !== debouncedValue) return
+    setIsTyping(false)
+  }, [debouncedValue])
+
   const animeResults = data?.Page?.media || []
-  const filteredResults = animeResults.filter((anime: Anime) => anime.title?.english)
+  const filteredResults = !isTyping && animeResults.filter((anime: Anime) => anime.title?.english)
 
   const navigateToInfo = (id: number) => {
     router.push(`/info/${id}`)
     setOpen(false)
   }
 
-  const navigateToSearch = () => {
-    router.push('/search')
+  const navigateToSearch = (query: string) => {
+    router.push(`/search?query=${query}`)
     setOpen(false)
   }
-
-  const viewAll = (
-    <div className="border-t p-0 bg-background mt-auto">
-      <div 
-        className="flex items-center w-full justify-between cursor-pointer p-2 rounded hover:bg-accent"
-        onClick={() => navigateToSearch()}
-      >
-        <div className="flex items-center gap-2">
-          <span>View all</span>
-        </div>
-        <div className="text-xs text-muted-foreground hidden md:block">
-          <span className="rounded border px-1">↑↓</span> navigate,{" "}
-          <span className="rounded border px-1">Enter</span> select,{" "}
-          <span className="rounded border px-1">Esc</span> close
-        </div>
-      </div>
-    </div>
-  )
+  
+  const skeletonItems = Array(5).fill(null)
 
   return (
     <>
@@ -123,15 +134,29 @@ export default function Search() {
             h-screen
             flex flex-col gap-4 px-4
           ">
-            <DialogHeader>
-              <DialogTitle></DialogTitle>
+            <DrawerHeader>
+              <DrawerTitle></DrawerTitle>
               <Input
                 value={inputValue}
-                onChange={(e) => setInputValue(e.currentTarget.value)}
+                onChange={(e) => {
+                  setInputValue(e.currentTarget.value)
+                  setIsTyping(true)
+                }}
                 placeholder="Search anime..."
               />
-            </DialogHeader>
-              {loading && <div className="p-4 text-center text-sm">Loading...</div>}
+            </DrawerHeader>
+              {(loading || isTyping) && (
+                <div className="flex flex-col gap-2 p-4">
+                  <p className="text-gray-200 text-xs">Loading Results</p>
+                  <div className="flex flex-col gap-3">
+                    {skeletonItems.map((_, index) => (
+                      <div key={index} >
+                        <SearchItemSkeleton />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
               {error && <div className="p-4 text-center text-sm text-red-500">Error: {error.message}</div>}
               
               {!debouncedValue && (
@@ -144,19 +169,18 @@ export default function Search() {
           
             <div className="
               max-h-full overflow-y-scroll
-              flex flex-col gap-4
+              flex flex-col gap-4 px-4
             ">
               {filteredResults.length > 0 && filteredResults.map((anime: Anime) => (
                 <div
                   key={anime.id}
-                  className="cursor-pointer hover:bg-secondary/20 transition-all"
-                  onSelect={() => navigateToInfo(parseInt(anime.id.toString()))}
+                  className="cursor-pointer rounded-lg hover:bg-secondary/20 transition-all"
+                  onClick={() => navigateToInfo(parseInt(anime.id.toString()))}
                 >
                   <div className="w-full">
                     <SearchItem
                       title={anime.title.english}
                       cover={anime.coverImage.large}
-                      seasonYear={anime.seasonYear}
                       status={anime.status}
                     />
                   </div>
@@ -164,7 +188,7 @@ export default function Search() {
               ))}
             </div>
             <DrawerFooter>
-              {viewAll}
+              <ViewAll navigateToSearch={navigateToSearch} query={debouncedValue} />
             </DrawerFooter>
           </DrawerContent>
         </Drawer>
@@ -173,18 +197,28 @@ export default function Search() {
           <div className="flex flex-col h-full max-h-[80vh]">
             <CommandInput
               value={inputValue}
-              onValueChange={setInputValue}
+              onValueChange={(e) => {
+                setInputValue(e)
+                setIsTyping(true)
+              }}
               placeholder="Search anime..."
             />
             
             <div className="flex-1 overflow-y-auto">
               <CommandList>
-                {loading && <div className="p-4 text-center text-sm">Loading...</div>}
-                {error && <div className="p-4 text-center text-sm text-red-500">Error: {error.message}</div>}
-                
-                {!debouncedValue && (
-                  <CommandEmpty>Search Anime</CommandEmpty>
+                {(loading || isTyping) && (
+                  <div className="flex flex-col gap-2 p-4">
+                    <p className="text-gray-200 text-xs">Loading Results</p>
+                    <div className="flex flex-col gap-3">
+                      {skeletonItems.map((_, index) => (
+                        <div key={index} >
+                          <SearchItemSkeleton />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 )}
+                {error && <div className="p-4 text-center text-sm text-red-500">Error: {error.message}</div>}
                 
                 {debouncedValue && filteredResults.length === 0 && !loading && (
                   <CommandEmpty>No results found.</CommandEmpty>
@@ -203,7 +237,6 @@ export default function Search() {
                           <SearchItem
                             title={anime.title.english}
                             cover={anime.coverImage.large}
-                            seasonYear={anime.seasonYear}
                             status={anime.status}
                           />
                         </div>
@@ -213,7 +246,7 @@ export default function Search() {
                 )}
               </CommandList>
             </div>
-            {viewAll}
+            <ViewAll navigateToSearch={navigateToSearch} query={debouncedValue} />
           </div>
         </CommandDialog>
       )}

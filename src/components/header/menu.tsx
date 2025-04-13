@@ -55,19 +55,19 @@ export function Menu({ user, isSmall }: { user: User, isSmall: boolean }) {
         <SheetTrigger>
           <Pfp className="min-w-10 max-w-10 min-h-10 max-h-10 rounded-sm" />
         </SheetTrigger>
-        <SheetContent className="flex flex-col gap-5 w-[300px]">
+        <SheetContent className="flex flex-col gap-5 px-4 pb-4 w-[80%]">
           <SheetHeader className="h-1">
             <SheetTitle>
-              お帰り
+              おかえり
             </SheetTitle>
           </SheetHeader>
           <Separator />
-          <div className="flex flex-col gap-4 px-4">
+          <div className="flex flex-col gap-4">
             <Link href="/profile" className="flex flex-row gap-2">
                 <UserIcon size={20} />
                 <span>Profile</span>
             </Link>
-            <Link href="/profile/settings" className="flex flex-row gap-2">
+            <Link href="/settings" className="flex flex-row gap-2">
                 <Settings size={20} />
                 <span>Settings</span>
             </Link>
@@ -77,7 +77,7 @@ export function Menu({ user, isSmall }: { user: User, isSmall: boolean }) {
                 <LogOut />
                 Logout
               </Button>
-            </div>
+          </div>
         </SheetContent>
       </Sheet>
     );
@@ -102,7 +102,7 @@ export function Menu({ user, isSmall }: { user: User, isSmall: boolean }) {
           </DropdownMenuItem>
           <DropdownMenuItem
             className="cursor-pointer"
-            onClick={() => router.push("/profile/settings")}
+            onClick={() => router.push("/settings")}
           >
             <Settings />
             <span>Settings</span>

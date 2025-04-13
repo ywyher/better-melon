@@ -34,10 +34,10 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
         {process.env.ENV == 'DEVELOPMENT' && (
           <head>
-            <Script
+            {/* <Script
               crossOrigin="anonymous"
               src="//unpkg.com/react-scan/dist/auto.global.js"
-            />
+            /> */}
           </head>
         )}
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
