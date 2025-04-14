@@ -1,5 +1,5 @@
 import { InferSelectModel, relations } from "drizzle-orm";
-import { pgTable, text, timestamp, boolean, jsonb } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, boolean, jsonb, integer, pgEnum } from "drizzle-orm/pg-core";
 			
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -12,8 +12,12 @@ export const user = pgTable("user", {
   updatedAt: timestamp('updated_at').notNull()
 });
 
-export const userRelations = relations(user, ({ many }) => ({
-  user: many(ankiPreset)
+export const userRelations = relations(user, ({ many, one }) => ({
+  ankiPresets: many(ankiPreset),
+  subtitleSettings: one(subtitleSettings, {
+    fields: [user.id],
+    references: [subtitleSettings.userId]
+  }),
 }))
 
 export const ankiPreset = pgTable('anki_preset', {
@@ -32,6 +36,47 @@ export const ankiPreset = pgTable('anki_preset', {
 export const ankiPresetRelations = relations(ankiPreset, ({ one }) => ({
   user: one(user, {
     fields: [ankiPreset.userId],
+    references: [user.id]
+  })
+}))
+
+
+export const transcriptionEnum = pgEnum("transcription", [
+  "all",
+  "japanese",
+  "hiragan",
+  "katakana",
+  "romaji",
+  "english",
+]);
+
+export const subtitleSettings = pgTable("subtitle_settings", {
+  id: text("id").primaryKey(),
+
+  fontSize: integer("font_size").default(16),
+  fontFamily: text("font_family").default('arial'),
+  
+  textColor: text("text_color").default('#FFFFF'),
+  textOpeacity: integer("text_opeacity").default(1),
+  textShadow: text("text_shadow").default('outline'),
+  
+  bakgroundColor: text("background_color").default('#000000'),
+  bakgroundOpacity: integer("background_opacity").default(0.5),
+  bakgroundBlur: integer("background_blur").default(0.2),
+  bakgroundRadius: integer("background_radius").default(6),
+
+  userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }),
+  animeId: text("animeId").unique(),
+
+  transcription: transcriptionEnum("transcription").default('all'),
+  isGlobal: boolean('is_global').default(false),
+  createdAt: timestamp("created_at").notNull(),
+  updatedAt: timestamp("updated_at").notNull()
+});
+
+export const subtitleSettingsRelations = relations(subtitleSettings, ({ one }) => ({
+  user: one(user, {
+    fields: [subtitleSettings.userId],
     references: [user.id]
   })
 }))
@@ -75,4 +120,24 @@ export const verification = pgTable("verification", {
 export type User = InferSelectModel<typeof user>;
 export type AnkiPreset = Omit<InferSelectModel<typeof ankiPreset>, 'fields'> & {
   fields: Record<string, string>;
+};
+export type SubtitleSettings = {
+  id: string;
+  globalSettings: {
+    font: {
+      size: number,
+      family: string
+    },
+    text: {
+      color: string,
+      opacity: number,
+      shadow: "none" | "drop-shadow" | "raised" | "depressed" | "outline"
+    }
+    background: {
+      color: string;
+      opacity: number;
+      blur: number;
+      radius: number;
+    }
+  }
 };

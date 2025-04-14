@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CardHeader, CardTitle } from "@/components/ui/card";
 import { TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { subtitleScripts } from "@/lib/constants";
+import { subtitleTranscriptions } from "@/lib/constants";
 import { ActiveSubtitleFile, SubtitleCue, SubtitleFile, SubtitleScript } from "@/types/subtitle";
 import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction, useCallback, useTransition } from "react";
@@ -63,7 +63,7 @@ export default function PanelHeader({
                         </Badge>
                     )}
                     <TabsList className="w-full">
-                        {subtitleScripts.filter(s => s != 'english').map((script, index) => (
+                        {subtitleTranscriptions.filter(s => s != 'english').map((script, index) => (
                             <TabsTrigger
                                 key={index}
                                 value={script}

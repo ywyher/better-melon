@@ -105,7 +105,7 @@ export const countries = [
     }
 ];
 
-export const subtitleScripts = ['japanese', 'hiragana', 'katakana', 'romaji', 'english'] as const
+export const subtitleTranscriptions = ['japanese', 'hiragana', 'katakana', 'romaji', 'english'] as const
 
 export const vttEn = "https://s.megastatics.com/subtitle/6422ef1d64b31a672f041ef180be0c1b/6422ef1d64b31a672f041ef180be0c1b.vtt"
 export const srtJp = "https://jimaku.cc/entry/2184/download/%5BAC%5D%20Boku%20dake%20ga%20Inai%20Machi%20-%2004%20%5B720p%5D%5BLucifer22%5D%5BCrunchyroll%20Timed%5D.ja.srt" 
@@ -117,3 +117,36 @@ export const ankiFieldsValues = [
     "image",
     "definition"
 ]
+
+export const fontFamilies = [
+    "Arial",
+    "Helvetica",
+    "Georgia",
+    "Times New Roman",
+    "Courier New",
+    "Verdana",
+    "Tahoma",
+    "Trebuchet MS",
+    "Lucida Console",
+    "Comic Sans MS",
+    "Fira Code",
+    "JetBrains Mono",
+    "Roboto",
+    "Open Sans",
+    "Inter",
+    "Source Sans Pro",
+    "Poppins",
+    "Lato",
+    "Nunito",
+    "Montserrat",
+];
+
+
+  // Define text shadow types
+export const textShadowTypes = [
+    "none",
+    "drop-shadow",
+    "raised",
+    "depressed",
+    "outline"
+] as const;

@@ -8,7 +8,7 @@ import { useWatchStore } from "@/app/watch/[id]/[ep]/store";
 import { Tabs } from "@/components/ui/tabs";
 import type { SubtitleCue as TSubtitleCue, SubtitleScript, SubtitleFile } from "@/types/subtitle";
 import { parseSubtitleToJson } from "@/lib/fetch-subs";
-import { subtitleScripts } from "@/lib/constants";
+import { subtitleTranscriptions } from "@/lib/constants";
 import PanelHeader from "@/app/watch/[id]/[ep]/_components/panel/panel-header";
 import SubtitlesList from "@/app/watch/[id]/[ep]/_components/panel/subtitles-list";
 import PanelSkeleton from "@/app/watch/[id]/[ep]/_components/panel/panel-skeleton";
@@ -73,7 +73,7 @@ export default function SubtitlePanel({ subtitleFiles }: { subtitleFiles: Subtit
 
     return (
         <Card className="flex flex-col gap-3 w-full max-w-[500px] h-fit">
-            <Tabs defaultValue={displayScript || subtitleScripts[0]} value={displayScript}>
+            <Tabs defaultValue={displayScript || subtitleTranscriptions[0]} value={displayScript}>
                 <PanelHeader 
                     isLoading={isCuesLoading}
                     subtitleCues={subtitleCues}

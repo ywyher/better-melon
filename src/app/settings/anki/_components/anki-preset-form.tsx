@@ -211,18 +211,18 @@ export default function AnkiPresetForm({
                                 <FormItem className="grid grid-cols-8 items-center gap-4">
                                     <FormLabel className="col-span-3 text-sm font-medium">Deck</FormLabel>
                                     <FormControl>
-                                    <Select onValueChange={field.onChange} value={field.value}>
-                                        <SelectTrigger className="col-span-5 w-full cursor-pointer">
-                                            <SelectValue placeholder="Select deck" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {deckNames.data?.map((deck: string, idx: number) => (
-                                                <SelectItem key={idx} value={deck}>
-                                                    {deck}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
+                                        <Select onValueChange={field.onChange} value={field.value}>
+                                            <SelectTrigger className="col-span-5 w-full cursor-pointer">
+                                                <SelectValue placeholder="Select deck" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {deckNames.data?.map((deck: string, idx: number) => (
+                                                    <SelectItem key={idx} value={deck}>
+                                                        {deck}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
                                     </FormControl>
                                 </FormItem>
                             )}

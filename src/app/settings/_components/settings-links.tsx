@@ -9,6 +9,7 @@ export default function SettingsLinks() {
   const pathname = usePathname()
   const links = [
     { label: "General", href: '/settings' },
+    { label: "Subtitle", href: '/settings/subtitle' },
     { label: "Anki", href: '/settings/anki' },
   ]
 

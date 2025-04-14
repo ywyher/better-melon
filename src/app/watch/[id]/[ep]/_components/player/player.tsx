@@ -11,7 +11,7 @@ import { useWatchStore } from "@/app/watch/[id]/[ep]/store";
 import { SubtitleFile } from '@/types/subtitle';
 import { AnimeEpisodeData, AnimeStreamingData, SkipTime } from '@/types/anime';
 import { generateWebVTTFromSkipTimes } from '@/app/watch/[id]/[ep]/funcs';
-import Subtitle from '@/app/watch/[id]/[ep]/_components/subtitle';
+import SubtitleTranscriptions from '@/app/watch/[id]/[ep]/_components/subtitle-transcriptions';
 import SkipButton from '@/app/watch/[id]/[ep]/_components/player/skip-button';
 import PlayerSkeleton from '@/app/watch/[id]/[ep]/_components/player/player-skeleton';
 import { useThrottledCallback } from 'use-debounce';
@@ -26,7 +26,7 @@ type PlayerProps = {
     episodesLength: number
 }
 
-const MemoizedSubtitle = memo(Subtitle);
+const MemoizedSubtitle = memo(SubtitleTranscriptions);
 const MemoizedPlayerSkeleton = memo(PlayerSkeleton);
 const MemoizedSkipButton = memo(SkipButton);
 const MemoizedInfoCard = memo(InfoCard);
@@ -234,7 +234,7 @@ export default function Player({
                         currentTime={player.current?.currentTime || 0}
                         skipTimes={skipTimes}
                     />
-                    <MemoizedSubtitle />
+                    <MemoizedSubtitleTranscriptions />
                     <MemoizedInfoCard />
                 </MediaPlayer>
             </div>

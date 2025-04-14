@@ -1,18 +1,20 @@
-// src/components/form/NumberInput.tsx
 import React from "react";
 import { Input } from "@/components/ui/input";
 
-interface NumberInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
+interface NumberInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'value'> {
   placeholder?: string;
-  onChange?: (value: string) => void;
+  value?: number | string;
+  onChange?: (value: number) => void;
 }
 
 export const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
-  ({ placeholder = "", onChange, ...props }, ref) => {
+  ({ placeholder = "", onChange, value, ...props }, ref) => {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const value = e.target.value.replace(/\D/g, ""); // Remove non-numeric characters
+      const stringValue = e.target.value.replace(/\D/g, ""); // Remove non-numeric characters
+      const numericValue = stringValue ? parseInt(stringValue, 10) : 0;
+      
       if (onChange) {
-        onChange(value);
+        onChange(numericValue);
       }
     };
 
@@ -22,6 +24,7 @@ export const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
         placeholder={placeholder}
         inputMode="numeric"
         pattern="[0-9]*"
+        value={value ?? ""}
         onChange={handleChange}
         {...props}
       />

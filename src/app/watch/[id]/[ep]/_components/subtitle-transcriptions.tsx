@@ -1,7 +1,7 @@
 'use client'
 
 import { useWatchStore } from "@/app/watch/[id]/[ep]/store";
-import { subtitleScripts } from "@/lib/constants";
+import { subtitleTranscriptions } from "@/lib/constants";
 import { parseSubtitleToJson } from "@/lib/fetch-subs";
 import { srtTimestampToSeconds, vttTimestampToSeconds } from "@/lib/funcs";
 import { useInfoCardStore } from "@/lib/stores/info-card-store";
@@ -11,7 +11,7 @@ import { useQueries } from "@tanstack/react-query";
 import { useMediaState } from "@vidstack/react";
 import { CSSProperties, Fragment, useCallback, useMemo, useState } from "react";
 
-type SubtitleType = typeof subtitleScripts[number];
+type SubtitleType = typeof subtitleTranscriptions[number];
 
 const calculateFontSize = (isFullscreen: boolean, activeScriptsCount: number): string => {
   const fullscreenBaseSize = 40;
@@ -56,7 +56,7 @@ const getTokenStyles = (isFullscreen: boolean, activeScriptsCount: number) => {
   };
 };
 
-export default function Subtitle() {
+export default function SubtitleTranscriptions() {
     const player = useWatchStore((state) => state.player);
     const englishSubtitleUrl = useWatchStore((state) => state.englishSubtitleUrl) || "";
     const activeSubtitleFile = useWatchStore((state) => state.activeSubtitleFile);
@@ -68,7 +68,6 @@ export default function Subtitle() {
     const isFullscreen = useMediaState('fullscreen', player);
     const controlsVisible = useMediaState('controlsVisible', player);
 
-    // Changed from hoveredTokenIndex to hoveredTokenId
     const [hoveredTokenId, setHoveredTokenId] = useState<string | number | null>(null);
     const [hoveredCueId, setHoveredCueId] = useState<number | null>(null);
 
@@ -83,7 +82,7 @@ export default function Subtitle() {
     );
 
     const subtitleQueries = useQueries({
-        queries: subtitleScripts.filter(type => activeScripts.includes(type)).map(type => ({
+        queries: subtitleTranscriptions.filter(type => activeScripts.includes(type)).map(type => ({
             queryKey: ['subs', type, type === 'english' 
                 ? englishSubtitleUrl 
                 : activeSubtitleFile?.source == 'remote' 
@@ -210,7 +209,7 @@ export default function Subtitle() {
                 bottom: `${getBottomPosition()}rem`
             }}
         >
-            {subtitleScripts.filter(type => activeScripts.includes(type)).map(type => (
+            {subtitleTranscriptions.filter(type => activeScripts.includes(type)).map(type => (
                 <div 
                     key={type}
                     className={cn(

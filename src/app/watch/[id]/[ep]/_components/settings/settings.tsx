@@ -7,7 +7,7 @@ import ToggleButton from "@/app/watch/[id]/[ep]/_components/settings/toggle-butt
 import { useWatchStore } from "@/app/watch/[id]/[ep]/store"
 import MultipleSelector from "@/components/multiple-selector"
 import { Separator } from "@/components/ui/separator"
-import { subtitleScripts } from "@/lib/constants"
+import { subtitleTranscriptions } from "@/lib/constants"
 import { SubtitleScript } from "@/types/subtitle"
 import TooltipWrapper from "@/components/tooltip-wrapper"
 import { useCallback } from "react"
@@ -34,7 +34,7 @@ export default function Settings({ episodesLength }: { episodesLength: number })
                     <div className="w-full flex-1">
                         <MultipleSelector
                             placeholder="Select subtitle scripts to display"
-                            options={subtitleScripts.map((script) => ({
+                            options={subtitleTranscriptions.map((script) => ({
                                 value: script,
                                 label: script,
                             }))}

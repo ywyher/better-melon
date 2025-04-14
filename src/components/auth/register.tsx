@@ -26,7 +26,7 @@ type RegisterProps = {
     setPort: Dispatch<SetStateAction<AuthPort>>,
     email: string
     setPassword: Dispatch<SetStateAction<string>>,
-}
+};
 
 export default function Register({ setPort, email, setPassword }: RegisterProps) {
     const [isLoading, setIsLoading] = useState<boolean>(false)
