@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { CardContent } from "@/components/ui/card"
 import {
     Select,
@@ -24,10 +24,13 @@ import { createPreset, updatePreset } from "@/app/settings/anki/actions"
 import { useRouter } from "next/navigation"
 import LoadingButton from "@/components/loading-button"
 import { Button } from "@/components/ui/button"
+import AnkiSkeleton from "@/app/settings/anki/_components/anki-skeleton"
+import AnkiDeletePreset from "@/app/settings/anki/_components/anki-delete-preset"
 
 type PresetFormProps = {
     preset: AnkiPreset | null
-    presetsLength: number
+    presets: AnkiPreset[];
+    setSelectedPresetId: Dispatch<SetStateAction<AnkiPreset['id']>>
 }
 
 export const ankiPresetSchema = z.object({
@@ -41,7 +44,11 @@ export const ankiPresetSchema = z.object({
 
 export type AnkiPresetSchema = z.infer<typeof ankiPresetSchema>
 
-export default function AnkiPresetForm({ preset, presetsLength }: PresetFormProps) {
+export default function AnkiPresetForm({ 
+    preset,
+    presets,
+    setSelectedPresetId
+}: PresetFormProps) {
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [selectedModel, setSelectedModel] = useState<string>(preset?.model || "")
 
@@ -49,7 +56,7 @@ export default function AnkiPresetForm({ preset, presetsLength }: PresetFormProp
     const isSmall = useIsSmall()
 
     const queryClient = useQueryClient()
-    const isFirstPreset = presetsLength === 0
+    const isFirstPreset = presets.length === 0
 
     const { data: deckNames, isLoading: isDeckNamesLoading } = useQuery({
         queryKey: ['profile', 'settings', 'deckNames'],
@@ -138,6 +145,10 @@ export default function AnkiPresetForm({ preset, presetsLength }: PresetFormProp
     };
 
     const onSubmit = async (data: AnkiPresetSchema) => {
+        if(!data.fields || (Object.entries(data.fields).filter(([_, value]) => value).length == 0)) {
+            toast.error("At least one field need to be mapped")
+            return;
+        };
         setIsLoading(true)
         let result;
         if(preset) {
@@ -151,10 +162,12 @@ export default function AnkiPresetForm({ preset, presetsLength }: PresetFormProp
             return;
         }
 
+        const defaultPreset = presets.find(preset => preset.isDefault === true)
+            
+        setSelectedPresetId(defaultPreset?.id || "new")
         toast.message(result.message)
         setIsLoading(false)
         queryClient.invalidateQueries({ queryKey: [ 'anki' ] })
-        router.push('/settings/anki')
     }
 
     const onError = (errors: FieldErrors<AnkiPresetSchema>) => {
@@ -167,15 +180,11 @@ export default function AnkiPresetForm({ preset, presetsLength }: PresetFormProp
     }
     
     if (!deckNames || !modelNames || isDeckNamesLoading || isModelNamesLoading) {
-        return (
-            <div className="flex items-center justify-center py-6">
-                Loading deck and model data...
-            </div>
-        );
+        return <AnkiSkeleton />
     }
 
     return (
-        <CardContent className="p-6">
+        <CardContent className="flex flex-col gap-4 py-3 px-6">
             <Form {...form}>
                 <form className="flex flex-col space-y-6" onSubmit={form.handleSubmit(onSubmit, onError)}>
                     <div className="space-y-4">
@@ -248,8 +257,6 @@ export default function AnkiPresetForm({ preset, presetsLength }: PresetFormProp
                             )}
                         />
                     </div>
-                    
-                    {/* Dynamic Fields Section */}
                     {modelFieldNames?.data && modelFieldNames.data.length > 0 && (
                         <div className="bg-muted/20 rounded-lg p-4 border border-border">
                             <h3 className="text-sm font-medium mb-4">Field Mappings</h3>
@@ -307,7 +314,6 @@ export default function AnkiPresetForm({ preset, presetsLength }: PresetFormProp
                             </div>
                         </div>
                     )}
-                    
                     <div className="space-y-3 pt-2">
                         <FormField
                             control={form.control}
@@ -357,7 +363,14 @@ export default function AnkiPresetForm({ preset, presetsLength }: PresetFormProp
                         {preset ? "Update Preset" : "Create Preset"}
                     </LoadingButton>
                 </form>
-            </Form>        
+            </Form>
+            {preset && (
+                <AnkiDeletePreset
+                    presets={presets}
+                    presetId={preset.id}
+                    setSelectedPresetId={setSelectedPresetId}
+                />
+            )}
         </CardContent>
     )
 }

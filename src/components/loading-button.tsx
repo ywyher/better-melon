@@ -9,6 +9,7 @@ export default function LoadingButton({
   children,
   disabled,
   className,
+  type = 'submit',
 }: {
   isLoading: boolean;
   size?: "default" | "sm" | "lg" | "icon";
@@ -17,6 +18,7 @@ export default function LoadingButton({
   children: React.ReactNode;
   disabled?: boolean;
   className?: string;
+  type?: 'submit' | 'button'
 }) {
   return (
     <Button

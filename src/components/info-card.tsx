@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useEffect, useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -31,11 +33,13 @@ export default function InfoCard() {
       return await getDefaultPreset() as AnkiPreset
     }
   })
-
-  
   useEffect(() =>{ 
     if(!preset) return;
-    console.log(Object.entries(preset?.fields))
+    console.log(preset)
+    Object.entries(preset?.fields).map(([field,value]) => {
+      console.log(`field`, field)
+      console.log(`value`, value)
+    })
   }, [preset])
 
   const sensors = useSensors(
@@ -100,12 +104,11 @@ export default function InfoCard() {
         ] : undefined
       }
     };
-    
+
     const { error } = await invokeAnkiConnect(preset.isGui ? 'guiAddCards' : 'addNote', 6, noteOptions)
   
     if(error) {
-      console.log(error)
-      toast.error('Please follow the instruction on the /profile/settings page to get this feature working properly')
+      toast.error(error)
     } else {
       toast.success("Note created successfully")
     }

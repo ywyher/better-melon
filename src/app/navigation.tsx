@@ -12,7 +12,9 @@ export default function Navigation({ children }: { children: React.ReactNode }) 
             {isSmall ? (
                 <>
                     <Header />
-                    {children}
+                    <div className="pb-[calc(1rem+var(--bottombar-height))]">
+                        {children}
+                    </div>
                     <Bottombar />
                 </>
             ): (

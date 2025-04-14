@@ -14,6 +14,8 @@ export async function createPreset({ data }: { data: AnkiPresetSchema }) {
         headers: await headers()
     })
     
+    userId = currentUser?.user.id;
+
     if(!currentUser) {
         const anon = await auth.api.signInAnonymous()
         
@@ -24,8 +26,6 @@ export async function createPreset({ data }: { data: AnkiPresetSchema }) {
 
         userId = anon.user.id
     }
-
-    userId = currentUser?.user.id;
 
     if(data.isDefault == true){
         await db.update(ankiPreset).set({
@@ -60,7 +60,6 @@ export async function createPreset({ data }: { data: AnkiPresetSchema }) {
     }
 }
 
-// Update preset action
 export async function updatePreset({ 
   id, 
   data 

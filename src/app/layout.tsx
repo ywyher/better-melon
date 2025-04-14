@@ -6,8 +6,6 @@ import { ReactQueryProvider } from "@/lib/react-query";
 import ApolloProvider from "@/lib/apollo-provider";
 import { Toaster } from "sonner";
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
-import Script from "next/script";
-import Header from "@/components/header";
 import Navigation from "@/app/navigation";
 
 const geistSans = Geist({

@@ -1,6 +1,5 @@
 'use client'
 
-// utils/ankiConnect.ts
 export const invokeAnkiConnect = async (action: string, version: number, params = {}) => {
   try {
     const response = await fetch(process.env.NEXT_PUBLIC_ANKI_CONNECT_URL!, {
