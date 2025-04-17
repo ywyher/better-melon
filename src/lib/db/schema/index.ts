@@ -1,14 +1,5 @@
 import { InferSelectModel, relations, sql } from "drizzle-orm";
 import { pgTable, text, timestamp, boolean, jsonb, pgEnum, real, unique } from "drizzle-orm/pg-core";
-
-export const subtitleTranscriptionEnum = pgEnum("transcription", [
-  "all",
-  "japanese",
-  "hiragana",
-  "katakana",
-  "romaji",
-  "english",
-]);
 			
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -56,6 +47,15 @@ export const textShadowEnum = pgEnum("text_shadow_enum", [
   "raised",
   "depressed",
   "outline"
+]);
+
+export const subtitleTranscriptionEnum = pgEnum("transcription", [
+  "all",
+  "japanese",
+  "hiragana",
+  "katakana",
+  "romaji",
+  "english",
 ]);
 
 export const subtitleSettings = pgTable("subtitle_settings", {

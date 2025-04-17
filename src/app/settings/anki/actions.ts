@@ -219,19 +219,46 @@ export async function deletePreset({ id }: { id: string }) {
 }
 
 export async function getPresets() {
-    const presets = await db.select().from(ankiPreset)
+  const currentUser = await auth.api.getSession({
+    headers: await headers()
+  })
 
-    return presets
+  if(!currentUser?.user) return [];
+
+  const presets = await db.select().from(ankiPreset)
+    .where(eq(ankiPreset.userId, currentUser.user.id))
+
+  return presets
 } 
 
 export async function getPreset({ id }: { id: AnkiPreset['id'] }) {
-    const [preset] = await db.select().from(ankiPreset).where(eq(ankiPreset.id, id))
+  const currentUser = await auth.api.getSession({
+    headers: await headers()
+  })
 
-    return preset
+  if(!currentUser?.user) return [];
+
+  const [preset] = await db.select().from(ankiPreset)
+    .where(and(
+      eq(ankiPreset.id, id),
+      eq(ankiPreset.userId, currentUser.user.id)
+    ))
+
+  return preset
 }
 
 export async function getDefaultPreset() {
-    const [preset] = await db.select().from(ankiPreset).where(eq(ankiPreset.isDefault, true))
+  const currentUser = await auth.api.getSession({
+    headers: await headers()
+  })
 
-    return preset
+  if(!currentUser?.user) return [];
+
+  const [preset] = await db.select().from(ankiPreset)
+    .where(and(
+      eq(ankiPreset.isDefault, true),
+      eq(ankiPreset.userId, currentUser.user.id)
+    ))
+
+  return preset
 }

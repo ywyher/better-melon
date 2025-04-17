@@ -13,7 +13,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { AuthIdentifier, AuthPort } from "@/components/auth/auth";
 import LoadingButton from "@/components/loading-button";
 import { Button } from "@/components/ui/button";
-import { identifierSchema, passwordSchema } from "@/types";
+import { identifierSchema } from "@/types";
 import { getEmailByUsername } from "@/components/auth/actions";
 import { useQueryClient } from "@tanstack/react-query";
 import { FormField } from "@/components/form/form-field";
@@ -71,7 +71,7 @@ export default function Login({ setPort, identifier, identifierValue, setOpen }:
             return;
         }
         
-        queryClient.invalidateQueries({ queryKey: ['session'] })
+        queryClient.clear()
         setOpen(false)
         setPort('check')
     }

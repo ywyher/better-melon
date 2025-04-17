@@ -1,4 +1,4 @@
-import SettingsLinks from "@/app/settings/_components/settings-links";
+import SettingsLinks from "@/app/settings/settings-links";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

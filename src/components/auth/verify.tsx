@@ -89,7 +89,7 @@ export default function Verify({
             return;
         }
 
-        queryClient.invalidateQueries({ queryKey: ['session'] })
+        queryClient.clear()
         setOpen(false)
         setPort('check')
     }

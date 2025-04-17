@@ -23,7 +23,7 @@ export async function loginOnServer() {
     const data = await auth.api.signInAnonymous({
         headers: await headers(),
     })
-
+    
     if(!data?.token) return {
         message: null,
         error: "Couldn't login"

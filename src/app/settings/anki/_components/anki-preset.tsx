@@ -16,8 +16,8 @@ export default function AnkiPreset() {
     const { data: presets, isLoading: isPresetsLoading } = useQuery({
         queryKey: ['anki', 'presets'],
         queryFn: async () => {
-            const presets = await getPresets() || []
-            return presets as TAnkiPreset[]
+            const presets = await getPresets()
+            return presets as TAnkiPreset[] || []
         }
     })
     

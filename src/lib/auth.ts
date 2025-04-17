@@ -4,6 +4,8 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { anonymous, emailOTP, genericOAuth } from "better-auth/plugins"
 import * as schema from '@/lib/db/schema/index'
 import { nextCookies } from "better-auth/next-js";
+import { eq } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -55,8 +57,64 @@ export const auth = betterAuth({
   plugins: [
     anonymous({
       onLinkAccount: async ({ anonymousUser, newUser }) => {
-        // perform actions like moving the cart items from anonymous user to the new user
-        
+          // Fetch anonymous user data
+          const anonymousAnkiPresets = await db.select().from(schema.ankiPreset)
+            .where(eq(schema.ankiPreset.userId, anonymousUser.user.id));
+          const anonymousSubtitleSettings = await db.select().from(schema.subtitleSettings)
+            .where(eq(schema.subtitleSettings.userId, anonymousUser.user.id));
+          
+          // Fetch existing user data
+          const userAnkiPresets = await db.select().from(schema.ankiPreset)
+            .where(eq(schema.ankiPreset.userId, newUser.user.id));
+          const userSubtitleSettings = await db.select().from(schema.subtitleSettings)
+            .where(eq(schema.subtitleSettings.userId, newUser.user.id));
+          
+          // Handle ankiPresets migration
+          if (anonymousAnkiPresets.length > 0) {
+            // Check if user has a default preset
+            const userHasDefaultPreset = userAnkiPresets.some(preset => preset.isDefault);
+            
+            for (const anonPreset of anonymousAnkiPresets) {
+              // Find if a preset with the same name exists
+              const duplicatePreset = userAnkiPresets.find(p => p.name === anonPreset.name);
+              
+              if (!duplicatePreset) {
+                // No duplicate, migrate this preset
+                // If this is a default preset and user already has one, unmark it as default
+                if (anonPreset.isDefault && userHasDefaultPreset) {
+                  await db.update(schema.ankiPreset)
+                    .set({ 
+                      userId: newUser.user.id,
+                      isDefault: false 
+                    })
+                    .where(eq(schema.ankiPreset.id, anonPreset.id));
+                } else {
+                  await db.update(schema.ankiPreset)
+                    .set({ userId: newUser.user.id })
+                    .where(eq(schema.ankiPreset.id, anonPreset.id));
+                }
+              }
+            }
+          }
+          
+          // Handle subtitleSettings migration
+          if (anonymousSubtitleSettings.length > 0) {
+            for (const anonSetting of anonymousSubtitleSettings) {
+              // Find if user has settings for this transcription type and anime (or global)
+              const duplicateSetting = userSubtitleSettings.find(s => 
+                s.transcription === anonSetting.transcription && 
+                ((anonSetting.isGlobal && s.isGlobal) || 
+                 (anonSetting.animeId === s.animeId && anonSetting.animeId !== null))
+              );
+              
+              if (!duplicateSetting) {
+                // No conflict, migrate this setting
+                await db.update(schema.subtitleSettings)
+                  .set({ userId: newUser.user.id })
+                  .where(eq(schema.subtitleSettings.id, anonSetting.id));
+              }
+            }
+          }
       }
     }),
     emailOTP({ 

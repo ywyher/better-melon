@@ -19,7 +19,7 @@ export default function SubtitleSettings() {
     const [selectedTranscription, setSelectedTranscription] = useState<TSubtitleSettings['transcription']>('all')
     const [operation, setOperation] = useState<'create' | 'update'>('create')
 
-    const { data: subtitleSettings, isLoading: isSubtitleSettingsLoading, refetch, isRefetching, isRefetchError } = useQuery({
+    const { data: subtitleSettings, isLoading: isSubtitleSettingsLoading, isRefetching, isRefetchError } = useQuery({
         queryKey: ['settings', 'subtitle', selectedTranscription],
         queryFn: async () => {
             return await getGlobalSubtitleSettings({ transcription: selectedTranscription }) as TSubtitleSettings;
