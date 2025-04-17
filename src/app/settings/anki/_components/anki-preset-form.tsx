@@ -88,10 +88,8 @@ export default function AnkiPresetForm({
 
     useEffect(() => {
         if (preset) {
-          // Set the selected model first so model fields can update properly
           setSelectedModel(preset.model || "");
           
-          // Then reset the form with all values from the preset
           form.reset({
             name: preset.name || "",
             deck: preset.deck || "",
@@ -101,7 +99,6 @@ export default function AnkiPresetForm({
             isGui: preset.isGui || false,
           });
         } else {
-          // Reset to default values when no preset is selected (new preset)
           setSelectedModel("");
           form.reset({
             name: "",
@@ -164,10 +161,11 @@ export default function AnkiPresetForm({
 
         const defaultPreset = presets.find(preset => preset.isDefault === true)
             
+        queryClient.invalidateQueries({ queryKey: [ 'session' ] })
+        queryClient.invalidateQueries({ queryKey: [ 'anki' ] })
         setSelectedPresetId(defaultPreset?.id || "new")
         toast.message(result.message)
         setIsLoading(false)
-        queryClient.invalidateQueries({ queryKey: [ 'anki' ] })
     }
 
     const onError = (errors: FieldErrors<AnkiPresetSchema>) => {

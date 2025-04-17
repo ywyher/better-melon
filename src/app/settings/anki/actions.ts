@@ -26,13 +26,6 @@ export async function createPreset({ data }: { data: AnkiPresetSchema }) {
 
         userId = anon.user.id
     }
-
-    if(data.isDefault == true){
-        await db.update(ankiPreset).set({
-            isDefault: false,
-            updatedAt: new Date()
-        }).where(eq(ankiPreset.isDefault, true))
-    }
     
     const id = generateId()
     
@@ -94,7 +87,7 @@ export async function updatePreset({
     };
   }
 
-  if (data.isDefault === true) {
+  if (data.isDefault === true && !existingPreset.isDefault) {
     await db.update(ankiPreset)
       .set({
         isDefault: false,
@@ -202,7 +195,6 @@ export async function deletePreset({ id }: { id: string }) {
         ))
 
     if (anotherPreset) {
-      // Make another preset the default
       await db.update(ankiPreset)
         .set({
           isDefault: true,
