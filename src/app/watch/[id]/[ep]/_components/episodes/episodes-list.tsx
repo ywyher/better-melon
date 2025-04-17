@@ -85,7 +85,7 @@ export default function EpisodesList({
 
   return (
     <Card 
-      className="h-[80vh] max-w-[500px]"
+      className="h-fit max-h-[80vh] max-w-[450px] min-w-[450px]"
     >
       <CardHeader className="flex flex-col gap-3">
         <div className="flex flex-row gap-2 items-center w-full">
@@ -147,7 +147,7 @@ export default function EpisodesList({
       </CardHeader>
       <CardContent
         ref={scrollAreaRef}
-        className="relative w-full overflow-y-auto"
+        className="relative h-fit min-h-[10vh] w-full overflow-y-auto"
       >
         <div
           style={{

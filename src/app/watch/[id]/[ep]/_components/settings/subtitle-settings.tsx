@@ -75,7 +75,7 @@ export default function SubtitleSettings() {
         <div>
             <div className="flex flex-col gap-0 pt-4">
                 <div className="flex flex-col md:flex-row gap-3 justify-between">
-                    <div className="text-xl font-semibold">Subtitle Settings</div>
+                    <div className="text-lg font-semibold">Subtitle Settings</div>
                     <div className="flex flex-row gap-2">
                         <SubtitleTranscriptionSelector
                             selectedTranscription={selectedTranscription}

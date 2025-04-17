@@ -31,11 +31,12 @@ import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
 export function Menu({ user, isSmall }: { user: User, isSmall: boolean }) {
+  const [open, setOpen] = useState<boolean>(false)
   const router = useRouter();
   const queryClient = useQueryClient()
-  const isMedium = useIsMedium()
 
   const handleLogout = async () => {
     const { error } = await authClient.signOut()
@@ -47,11 +48,12 @@ export function Menu({ user, isSmall }: { user: User, isSmall: boolean }) {
 
     queryClient.invalidateQueries({ queryKey: ['session'] })
     router.push('/')
+    setOpen(false)
   }
 
-  if (isMedium)
+  if (isSmall)
     return (
-      <Sheet>
+      <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger>
           <Pfp className="min-w-10 max-w-10 min-h-10 max-h-10 rounded-sm" />
         </SheetTrigger>

@@ -96,7 +96,7 @@ export async function createSubtitleSettings({
         return {
             message: "Subtitle settings created successfully",
             error: null,
-            settingsId: newSettingsId
+            settingsId: newSettingsId,
         };
     } catch (error) {
         console.error("Error creating subtitle settings:", error);

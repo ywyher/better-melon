@@ -95,6 +95,7 @@ export default function SubtitleSettings() {
                 return;
             }
             
+            queryClient.invalidateQueries({ queryKey: ['session'] })
             queryClient.invalidateQueries({ queryKey: ['settings', 'subtitle'] })
             toast.success(result.message)
             setIsLoading(false)

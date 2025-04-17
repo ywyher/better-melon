@@ -12,7 +12,8 @@ export const subtitleTranscriptionEnum = pgEnum("transcription", [
 			
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
-  name: text('name').notNull().unique(),
+  // name: text('name').notNull().unique(),
+  name: text('name').notNull(),
   email: text('email').notNull().unique(),
   emailVerified: boolean('email_verified').notNull(),
   image: text('image').default("pfp.png"),
@@ -49,7 +50,7 @@ export const ankiPresetRelations = relations(ankiPreset, ({ one }) => ({
   })
 }))
 
-export const textShadowEnum = pgEnum("text_shadownum", [
+export const textShadowEnum = pgEnum("text_shadow_enum", [
   "none",
   "drop-shadow",
   "raised",

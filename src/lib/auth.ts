@@ -3,6 +3,7 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { anonymous, emailOTP, genericOAuth } from "better-auth/plugins"
 import * as schema from '@/lib/db/schema/index'
+import { nextCookies } from "better-auth/next-js";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -52,7 +53,12 @@ export const auth = betterAuth({
     }
   },
   plugins: [
-    anonymous(),
+    anonymous({
+      onLinkAccount: async ({ anonymousUser, newUser }) => {
+        // perform actions like moving the cart items from anonymous user to the new user
+        
+      }
+    }),
     emailOTP({ 
       async sendVerificationOTP({ email, otp, type }) { 
         if (type === "email-verification") {
@@ -140,6 +146,7 @@ export const auth = betterAuth({
           }
         },
       ]
-    })
+    }),
+    nextCookies()
   ]
 })

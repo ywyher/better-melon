@@ -1,103 +1,167 @@
 "use client"
 
-import { getGlobalSubtitleSettings } from "@/app/settings/subtitle/actions";
-import SubtitleSettingsControls from "@/components/subtitle/subtitle-settings-controls"
-import SubtitleTranscriptionSelector from "@/components/subtitle/subtitle-transcription-selector";
-import SubtitleSettingsSkeleton from "@/components/subtitle/subtitle-settings-skeleton";
-import { SubtitleSettings as TSubtitleSettings } from "@/lib/db/schema";
-import { useQuery } from "@tanstack/react-query"
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { subtitleSettingsSchema } from "@/app/settings/subtitle/types";
-import { z } from "zod";
-import { useSubtitleSettingsStore } from "@/lib/stores/subtitle-settings-store";
-import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
+import { getSessionServer, loginOnServer } from "@/app/playground/actions"
+import LoadingButton from "@/components/loading-button"
+import { authClient, getSession } from "@/lib/auth-client"
+import { User } from "@/lib/db/schema"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
+import { useEffect, useState } from "react"
+import { toast } from "sonner"
 
 export default function Playground() {
-    const [selectedTranscription, setSelectedTranscription] = useState<TSubtitleSettings['transcription']>('all')
+    const [isLoading, setIsLoading] = useState(false)
+    const queryClient = useQueryClient()
 
-    const { data: subtitleSettings, isLoading: isSubtitleSettingsLoading, isRefetching } = useQuery({
-        queryKey: ['settings', 'subtitle', selectedTranscription],
+    const { data, isLoading: isSessionLoading } = useQuery({
+        queryKey: ['session'],
         queryFn: async () => {
-            return await getGlobalSubtitleSettings({ transcription: selectedTranscription }) as TSubtitleSettings;
-        },
-    })
-    const store = useSubtitleSettingsStore()
-
-    const [isLoading] = useState<boolean>(false)
-
-    const form = useForm<z.infer<typeof subtitleSettingsSchema>>({
-        resolver: zodResolver(subtitleSettingsSchema),
-        defaultValues: {
-            transcription: selectedTranscription,
-            fontSize: subtitleSettings?.fontSize,
-            fontFamily: subtitleSettings?.fontFamily,
-            textShadow: subtitleSettings?.textShadow,
-            textColor: subtitleSettings?.textColor,
-            textOpacity: subtitleSettings?.textOpacity, 
-            backgroundColor: subtitleSettings?.backgroundColor, 
-            backgroundOpacity: subtitleSettings?.backgroundOpacity, 
-            backgroundBlur: subtitleSettings?.backgroundBlur,
-            backgroundRadius: subtitleSettings?.backgroundRadius,
+            const data = await getSession()
+            return data.data?.user as User || null
         }
     })
 
     useEffect(() => {
-        if(!subtitleSettings) return;
-        form.reset({
-            transcription: selectedTranscription,
-            fontSize: subtitleSettings.fontSize,
-            fontFamily: subtitleSettings.fontFamily || "Arial",
-            textShadow: subtitleSettings.textShadow || "Outline",
-            textColor: subtitleSettings.textColor,
-            textOpacity: subtitleSettings.textOpacity, 
-            backgroundColor: subtitleSettings.backgroundColor, 
-            backgroundOpacity: subtitleSettings.backgroundOpacity, 
-            backgroundBlur: subtitleSettings.backgroundBlur,
-            backgroundRadius: subtitleSettings.backgroundRadius,
-        })
-    }, [subtitleSettings])
+        console.log(data)
+    }, [data])
 
+    const logout = async () => {
+        setIsLoading(true)
+        const { error, data } = await authClient.signOut()
 
-    const onSubmit = (data: z.infer<typeof subtitleSettingsSchema>) => {
-        store.addSettings(data.transcription, data)
+        if(error) {
+            toast.error(error.message)
+            console.log(error)
+            setIsLoading(false)
+            return;
+        }
+
+        toast.message("Logged out")
+        queryClient.invalidateQueries({ queryKey: ['session'] })
+        setIsLoading(false)
+        console.log(data)
     }
 
-    const handleReset = () => {
-        store.deleteSettings(selectedTranscription)
+    const login = async () => {
+        setIsLoading(true)
+        const { error, data } = await authClient.signIn.anonymous()
+
+        if(error) {
+            toast.error(error.message)
+            console.log(error)
+            setIsLoading(false)
+            return;
+        }
+
+        toast.message("logged in")
+        queryClient.invalidateQueries({ queryKey: ['session'] })
+        setIsLoading(false)
+        console.log(data)
     }
 
-    if(!subtitleSettings || isSubtitleSettingsLoading || isRefetching) {
-        return <SubtitleSettingsSkeleton />
+    const session = async () => {
+        setIsLoading(true)
+        const { error, data } = await authClient.getSession()
+
+        if(error) {
+            toast.error(error.message)
+            console.log(error)
+            setIsLoading(false)
+            return;
+        }
+
+        toast.message("Get Session")
+        queryClient.invalidateQueries({ queryKey: ['session'] })
+        setIsLoading(false)
+        console.log(data)
     }
+
+    const loginServer = async () => {
+        setIsLoading(true)
+        const { message, error } = await loginOnServer()
+
+        if(error) {
+            toast.error(error)
+            console.log(error)
+            setIsLoading(false)
+            return;
+        }
+
+        toast.message(message)
+        queryClient.invalidateQueries({ queryKey: ['session'] })
+        setIsLoading(false)
+    }
+
+    const sessionServer = async () => {
+        setIsLoading(true)
+        const { data, error } = await getSessionServer()
+
+        if(error) {
+            toast.error(error)
+            console.log(error)
+            setIsLoading(false)
+            return;
+        }
+
+        console.log(data)
+
+        toast.message("session through server")
+        queryClient.invalidateQueries({ queryKey: ['session'] })
+        setIsLoading(false)
+    }
+
+    if(isSessionLoading) return <>Loading...</>
 
     return (
-        <div>
-            <div className="flex flex-col gap-0 pt-4">
-                <div className="flex flex-col md:flex-row gap-3 justify-between">
-                    <div className="text-xl font-semibold">Subtitle Settings</div>
-                    <div className="flex flex-row gap-2">
-                        <SubtitleTranscriptionSelector
-                            selectedTranscription={selectedTranscription}
-                            setSelectedTranscription={setSelectedTranscription}
-                        />
-                        <Button
-                            variant='destructive'
-                            onClick={() => handleReset()}
-                        >
-                            <X />
-                        </Button>
-                    </div>
+        <div className="h-screen flex justify-center items-center">
+            {data ? (
+                <div className="flex flex-col gap-5">
+                    <p className="text-xl">Logged in</p>
+                    <LoadingButton
+                        isLoading={isLoading}
+                        variant="secondary"
+                        onClick={() => session()}
+                    >
+                        Get session
+                    </LoadingButton>
+                    <LoadingButton
+                        isLoading={isLoading}
+                        variant="secondary"
+                        onClick={() => sessionServer()}
+                    >
+                        Get session through server
+                    </LoadingButton>
+                    <LoadingButton
+                        isLoading={isLoading}
+                        onClick={() => logout()}
+                    >
+                        Logout
+                    </LoadingButton>
                 </div>
-                <SubtitleSettingsControls
-                    form={form}
-                    isLoading={isLoading}
-                    onSubmit={(data: z.infer<typeof subtitleSettingsSchema>) => onSubmit(data)}
-                    method="watch"
-                />
-            </div>
+            ): (
+                <div className="flex flex-col gap-5">
+                    <p className="text-xl">Aint logged in</p>
+                    <LoadingButton
+                        isLoading={isLoading}
+                        onClick={() => login()}
+                    >
+                        Login
+                    </LoadingButton>
+                    <LoadingButton
+                        variant="secondary"
+                        isLoading={isLoading}
+                        onClick={() => loginServer()}
+                    >
+                        Login through server
+                    </LoadingButton>
+                    <LoadingButton
+                        isLoading={isLoading}
+                        variant="secondary"
+                        onClick={() => sessionServer()}
+                    >
+                        Get session through server
+                    </LoadingButton>
+                </div>
+            )}
         </div>
     )
 }

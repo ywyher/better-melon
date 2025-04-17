@@ -12,6 +12,12 @@ import { SubtitleTranscription } from "@/types/subtitle"
 import TooltipWrapper from "@/components/tooltip-wrapper"
 import { useCallback } from "react"
 import SubtitleSettings from "@/app/watch/[id]/[ep]/_components/settings/subtitle-settings"
+import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from "@/components/ui/accordion"
   
 export default function Settings({ episodesLength }: { episodesLength: number }) {
     const activeTranscriptions = useWatchStore((state) => state.activeTranscriptions)
@@ -30,7 +36,6 @@ export default function Settings({ episodesLength }: { episodesLength: number })
 
     return (
         <div className="flex flex-col gap-10">
-            <SubtitleSettings />
             <div className="flex flex-col gap-5">
                 <div className="flex flex-row gap-2">
                     <TooltipWrapper tooltip="Choose which scripts (like Romaji, Hiragana, etc.) are shown as subtitles">
@@ -96,6 +101,8 @@ export default function Settings({ episodesLength }: { episodesLength: number })
                         <EpisodeNavigation direction="next" episodesLength={episodesLength} />
                     </div>
                 </div>
+                <Separator />
+                <SubtitleSettings />
             </div>
         </div>
     )

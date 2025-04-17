@@ -30,40 +30,32 @@ export default function Header() {
 
   const isAuthenticated = user && !user.isAnonymous
   
-  // Track scroll position to toggle the scrolled state
   useEffect(() => {
     const handleScroll = () => {
-      // Change to scrolled state once we've scrolled a bit (e.g., 20px)
       const isScrolled = window.scrollY > 50;
       setScrolled(isScrolled);
     };
     
-    // Add scroll event listener
     window.addEventListener('scroll', handleScroll);
     
-    // Initial check
     handleScroll();
     
-    // Cleanup listener
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
   
+  const headerBaseClasses = "sticky top-0 container mx-auto z-10 flex flex-row items-center justify-between py-3 transition-all duration-300 ease-in-out";
+  
+  const scrolledClasses = scrolled ? cn(
+    "px-3 top-2 rounded-lg", 
+    "border border-gray-200 dark:border-gray-800 shadow-md",
+    "bg-gradient-to-r from-gray-50/70 to-white/70 dark:from-gray-900/70 dark:to-gray-950/70",
+    "backdrop-blur-md"
+  ) : 'bg-transparent';
+  
   return (
-    <header className={`
-      sticky top-0 container mx-auto z-10
-      flex flex-row items-center justify-between py-3
-      transition-all duration-300 ease-in-out
-      ${scrolled ? cn(
-          "px-3 top-2 rounded-lg", 
-          "border border-gray-200 dark:border-gray-800 shadow-md",
-          "bg-gradient-to-r from-gray-50/70 to-white/70 dark:from-gray-900/70 dark:to-gray-950/70",
-          "backdrop-blur-md"
-        ) : 
-        'bg-transparent'
-      }
-    `}>
+    <header className={`${headerBaseClasses} ${scrolledClasses}`}>
       <div className='flex flex-row gap-3 items-center'>
         <Logo />
         {!isSmall && (
