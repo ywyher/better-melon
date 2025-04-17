@@ -5,19 +5,22 @@ import Login from "@/components/auth/login"
 import Register from "@/components/auth/register"
 import Verify from "@/components/auth/verify"
 import DialogWrapper from "@/components/dialog-wrapper"
+import AnonymousLinkAccountAlert from "@/components/test"
 import { Button } from "@/components/ui/button"
+import { User } from "@/lib/db/schema"
 import { ArrowLeft } from "lucide-react"
-import { Dispatch, SetStateAction, useEffect, useState } from "react"
+import { Dispatch, SetStateAction, useState } from "react"
 
 export type AuthPort = "login" | "register" | "check" | "verify"
 export type AuthIdentifier = "email" | "username"
 
 type AuthProps = {
+    user?: User
     open: boolean,
     setOpen: Dispatch<SetStateAction<boolean>>
 }
 
-export default function Auth({ open, setOpen }: AuthProps) {
+export default function Auth({ user, open, setOpen }: AuthProps) {
     const [port, setPort] = useState<AuthPort>("check")
     const [identifier, setIdentifier] = useState<AuthIdentifier | null>(null)
     const [identifierValue, setIdentifierValue] = useState<string>("")
@@ -67,6 +70,11 @@ export default function Auth({ open, setOpen }: AuthProps) {
                     identifier={identifier as AuthIdentifier}
                     password={password}
                     setOpen={setOpen}
+                />
+            )}
+            {user && user.isAnonymous && (
+                <AnonymousLinkAccountAlert
+                    userId={user.id}
                 />
             )}
         </DialogWrapper>

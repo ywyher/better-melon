@@ -85,6 +85,7 @@ export default function Header() {
                 trigger={<Button variant="outline" className="rounded-sm">Auth</Button>}
               >
                 <Auth
+                  user={user || undefined}
                   open={authOpen}
                   setOpen={setAuthOpen}
                 />

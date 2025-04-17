@@ -156,6 +156,7 @@ export default function AnkiPresetForm({
 
         if(result.error) {
             toast.error(result.error)
+            setIsLoading(false)
             return;
         }
 
