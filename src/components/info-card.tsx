@@ -30,7 +30,7 @@ export default function InfoCard() {
   const { data: preset } = useQuery({
     queryKey: ['anki', 'preset'],
     queryFn: async () => {
-      return await getDefaultPreset() as AnkiPreset
+      return await getDefaultPreset() as AnkiPreset || null
     }
   })
   useEffect(() =>{ 

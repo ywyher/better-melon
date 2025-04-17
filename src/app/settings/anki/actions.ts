@@ -3,7 +3,7 @@
 import { AnkiPresetSchema } from "@/app/settings/anki/_components/anki-preset-form"
 import { auth } from "@/lib/auth"
 import db from "@/lib/db"
-import { AnkiPreset, ankiPreset } from "@/lib/db/schema"
+import { AnkiPreset, ankiPreset, User } from "@/lib/db/schema"
 import { generateId } from "better-auth"
 import { and, count, eq, ne } from "drizzle-orm"
 import { headers } from "next/headers"

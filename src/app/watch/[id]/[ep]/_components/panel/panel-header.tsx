@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { CardHeader, CardTitle } from "@/components/ui/card";
 import { TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { subtitleTranscriptions } from "@/lib/constants";
-import { ActiveSubtitleFile, SubtitleCue, SubtitleFile, SubtitleScript } from "@/types/subtitle";
+import { ActiveSubtitleFile, SubtitleCue, SubtitleFile, SubtitleTranscription } from "@/types/subtitle";
 import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction, useCallback, useTransition } from "react";
 
@@ -15,7 +15,7 @@ type PanelHeaderProps = {
     subtitleCues?: SubtitleCue[];
     activeSubtitleFile: ActiveSubtitleFile | null;
     subtitleFiles: SubtitleFile[];
-    setDisplayScript: Dispatch<SetStateAction<SubtitleScript>>
+    setDisplayTranscription: Dispatch<SetStateAction<SubtitleTranscription>>
 }
 
 export default function PanelHeader({
@@ -23,16 +23,16 @@ export default function PanelHeader({
     subtitleCues,
     activeSubtitleFile,
     subtitleFiles,
-    setDisplayScript
+    setDisplayTranscription
 }: PanelHeaderProps) {
     const router = useRouter();
     const [isPendingTransition, startTransition] = useTransition();
 
-    const handleScriptChange = useCallback((script: SubtitleScript) => {
+    const handleTranscriptionChange = useCallback((transcirption: SubtitleTranscription) => {
         startTransition(() => {
-            setDisplayScript(script);
+            setDisplayTranscription(transcirption);
         });
-    }, [setDisplayScript]);
+    }, [setDisplayTranscription]);
 
     return (
         <CardHeader className="flex flex-col gap-3">
@@ -63,15 +63,15 @@ export default function PanelHeader({
                         </Badge>
                     )}
                     <TabsList className="w-full">
-                        {subtitleTranscriptions.filter(s => s != 'english').map((script, index) => (
+                        {subtitleTranscriptions.filter(s => s != 'english').map((transcription, index) => (
                             <TabsTrigger
                                 key={index}
-                                value={script}
-                                onClick={() => handleScriptChange(script as SubtitleScript)}
+                                value={transcription}
+                                onClick={() => handleTranscriptionChange(transcription as SubtitleTranscription)}
                                 disabled={isPendingTransition || isLoading}
                                 className="cursor-pointer"
                             >
-                                {script}
+                                {transcription}
                             </TabsTrigger>
                         ))}
                     </TabsList>

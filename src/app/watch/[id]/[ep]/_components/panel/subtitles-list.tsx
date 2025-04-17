@@ -1,7 +1,7 @@
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import SubtitleCue from "@/app/watch/[id]/[ep]/_components/panel/subtitle-cue";
 import { TabsContent } from "@/components/ui/tabs";
-import { SubtitleCue as TSubtitleCue, SubtitleScript } from "@/types/subtitle";
+import { SubtitleCue as TSubtitleCue, SubtitleTranscription } from "@/types/subtitle";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { useWatchStore } from "@/app/watch/[id]/[ep]/store";
 import { srtTimestampToSeconds } from "@/lib/funcs";
@@ -11,12 +11,12 @@ const MemoizedSubtitleCue = memo(SubtitleCue);
 
 type SubtitlesListProps = {
     isLoading: boolean;
-    displayScript: SubtitleScript;
+    displayTranscription: SubtitleTranscription;
     displayCues: TSubtitleCue[]
 }
 
 export default function SubtitlesList({
-    displayScript,
+    displayTranscription,
     isLoading,
     displayCues
 }: SubtitlesListProps) {
@@ -113,7 +113,7 @@ export default function SubtitlesList({
             onScroll={handleManualScroll}
         >
             <TabsContent 
-                value={displayScript}
+                value={displayTranscription}
                 className="relative w-full"
                 style={{
                     height: `${rowVirtualizer.getTotalSize()}px`,

@@ -1,4 +1,4 @@
-import { SubtitleCue, SubtitleScript, SubtitleFormat, SubtitleToken } from "@/types/subtitle";
+import { SubtitleCue, SubtitleTranscription, SubtitleFormat, SubtitleToken } from "@/types/subtitle";
 import * as kuromoji from "kuromoji";
 // @ts-expect-error - Kuroshiro lacks proper TypeScript typings
 import Kuroshiro from "kuroshiro";
@@ -9,7 +9,7 @@ import nlp from 'compromise';
 
 interface KuroshiroInstance {
   init: (analyzer: unknown) => Promise<void>;
-  convert: (text: string, options?: { to?: string; script?: string }) => Promise<string>;
+  convert: (text: string, options?: { to?: string; transcription?: string }) => Promise<string>;
 }
 
 // Global instances to avoid re-initialization
@@ -34,11 +34,11 @@ export async function fetchSubtitles(source: string | File) {
 export async function parseSubtitleToJson({ 
   source, 
   format, 
-  script = 'japanese' 
+  transcription = 'japanese' 
 }: { 
   source: string | File, 
   format: SubtitleFormat, 
-  script?: SubtitleScript 
+  transcription?: SubtitleTranscription 
 }) {
   const content = await fetchSubtitles(source);
 
@@ -62,33 +62,33 @@ export async function parseSubtitleToJson({
     return [];
   }
 
-  // Now process the subtitles based on script type
-  if (script === 'english') {
+  // Now process the subtitles based on transcription type
+  if (transcription === 'english') {
     return processEnglishSubtitles(subtitles);
   } else {
     // Initialize Japanese processors
-    await initializeProcessors(script);
+    await initializeProcessors(transcription);
     
     // For Japanese, tokenize first
     const tokenizedSubs = tokenizeJapaneseSubtitles(subtitles);
     
-    // If not Japanese, convert to the target script
-    if (script !== 'japanese') {
-      return processSubtitlesForNonJapaneseScript(tokenizedSubs, script);
+    // If not Japanese, convert to the target transcription
+    if (transcription !== 'japanese') {
+      return processSubtitlesForNonJapaneseTranscription(tokenizedSubs, transcription);
     }
     
     return tokenizedSubs;
   }
 }
 
-async function initializeProcessors(script: SubtitleScript) {
+async function initializeProcessors(transcription: SubtitleTranscription) {
   // Initialize tokenizer if not already done
-  if (!tokenizer && script !== 'english') {
+  if (!tokenizer && transcription !== 'english') {
     tokenizer = await createTokenizer();
   }
   
-  // Initialize kuroshiro if not already done (for non-japanese scripts only)
-  if (!kuroshiro && script !== 'japanese' && script !== 'english') {
+  // Initialize kuroshiro if not already done (for non-japanese transcriptions only)
+  if (!kuroshiro && transcription !== 'japanese' && transcription !== 'english') {
     kuroshiro = new Kuroshiro();
     const analyzer = new KuromojiAnalyzer({ dictPath: "/dict" });
     await kuroshiro?.init(analyzer);
@@ -159,9 +159,9 @@ function tokenizeJapaneseSubtitles(subs: SubtitleCue[]): SubtitleCue[] {
   }));
 }
 
-async function processSubtitlesForNonJapaneseScript(subs: SubtitleCue[], script: SubtitleScript) {
+async function processSubtitlesForNonJapaneseTranscription(subs: SubtitleCue[], transcription: SubtitleTranscription) {
   if (!kuroshiro) {
-    throw new Error("Kuroshiro not initialized for script conversion");
+    throw new Error("Kuroshiro not initialized for transcription conversion");
   }
   
   return Promise.all(
@@ -170,15 +170,15 @@ async function processSubtitlesForNonJapaneseScript(subs: SubtitleCue[], script:
         return sub;
       }
       
-      const convertedContent = await kuroshiro!.convert(sub.content, { to: script });
+      const convertedContent = await kuroshiro!.convert(sub.content, { to: transcription });
       
-      // Converting the already tokenized text so we get consistent tokens across scripts
+      // Converting the already tokenized text so we get consistent tokens across transcriptions
       const convertedTokens = sub.tokens
         ? await Promise.all(
             sub.tokens
               .filter(token => token.surface_form !== ' ' && token.surface_form !== '　')
               .map(async token => {
-                const convertedToken = await kuroshiro!.convert(token.surface_form, { to: script });
+                const convertedToken = await kuroshiro!.convert(token.surface_form, { to: transcription });
                 return {
                   ...token,
                   surface_form: convertedToken

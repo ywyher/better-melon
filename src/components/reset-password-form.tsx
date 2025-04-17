@@ -84,7 +84,7 @@ export function ResetPasswordForm({ token }: { token: string }) {
             <FormItem>
               <FormLabel>New Password</FormLabel>
               <FormControl>
-                <PasswordInput {...field} />
+                <PasswordInput  {...field} />
               </FormControl>
             </FormItem>
           )}

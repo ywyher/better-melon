@@ -1,5 +1,14 @@
-import { InferSelectModel, relations } from "drizzle-orm";
-import { pgTable, text, timestamp, boolean, jsonb, integer, pgEnum } from "drizzle-orm/pg-core";
+import { InferSelectModel, relations, sql } from "drizzle-orm";
+import { pgTable, text, timestamp, boolean, jsonb, pgEnum, real, unique } from "drizzle-orm/pg-core";
+
+export const subtitleTranscriptionEnum = pgEnum("transcription", [
+  "all",
+  "japanese",
+  "hiragana",
+  "katakana",
+  "romaji",
+  "english",
+]);
 			
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -40,36 +49,34 @@ export const ankiPresetRelations = relations(ankiPreset, ({ one }) => ({
   })
 }))
 
-
-export const transcriptionEnum = pgEnum("transcription", [
-  "all",
-  "japanese",
-  "hiragan",
-  "katakana",
-  "romaji",
-  "english",
+export const textShadowEnum = pgEnum("text_shadownum", [
+  "none",
+  "drop-shadow",
+  "raised",
+  "depressed",
+  "outline"
 ]);
 
 export const subtitleSettings = pgTable("subtitle_settings", {
   id: text("id").primaryKey(),
-
-  fontSize: integer("font_size").default(16),
-  fontFamily: text("font_family").default('arial'),
   
-  textColor: text("text_color").default('#FFFFF'),
-  textOpeacity: integer("text_opeacity").default(1),
-  textShadow: text("text_shadow").default('outline'),
+  fontSize: real("font_size").notNull().default(16),
+  fontFamily: text("font_family").notNull().default('arial'),
   
-  bakgroundColor: text("background_color").default('#000000'),
-  bakgroundOpacity: integer("background_opacity").default(0.5),
-  bakgroundBlur: integer("background_blur").default(0.2),
-  bakgroundRadius: integer("background_radius").default(6),
-
+  textColor: text("text_color").notNull().default('#FFFFFF'),
+  textOpacity: real("text_opacity").notNull().default(1),
+  textShadow: textShadowEnum("text_shadow").notNull().default('outline'),
+  
+  backgroundColor: text("background_color").notNull().default('#000000'),
+  backgroundOpacity: real("background_opacity").notNull().default(1),
+  backgroundBlur: real("background_blur").notNull().default(0.2),
+  backgroundRadius: real("background_radius").notNull().default(6),
+  
   userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }),
-  animeId: text("animeId").unique(),
-
-  transcription: transcriptionEnum("transcription").default('all'),
-  isGlobal: boolean('is_global').default(false),
+  animeId: text("animeId"),
+  
+  transcription: subtitleTranscriptionEnum("transcription").notNull().default('all'),
+  isGlobal: boolean('is_global').notNull().default(false),
   createdAt: timestamp("created_at").notNull(),
   updatedAt: timestamp("updated_at").notNull()
 });
@@ -121,23 +128,4 @@ export type User = InferSelectModel<typeof user>;
 export type AnkiPreset = Omit<InferSelectModel<typeof ankiPreset>, 'fields'> & {
   fields: Record<string, string>;
 };
-export type SubtitleSettings = {
-  id: string;
-  globalSettings: {
-    font: {
-      size: number,
-      family: string
-    },
-    text: {
-      color: string,
-      opacity: number,
-      shadow: "none" | "drop-shadow" | "raised" | "depressed" | "outline"
-    }
-    background: {
-      color: string;
-      opacity: number;
-      blur: number;
-      radius: number;
-    }
-  }
-};
+export type SubtitleSettings = InferSelectModel<typeof subtitleSettings>

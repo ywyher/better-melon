@@ -1,5 +1,5 @@
 // src/components/form/color-input.tsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
@@ -9,8 +9,8 @@ interface ColorInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElemen
   onChange?: (value: string) => void;
 }
 
-export const ColorInput = React.forwardRef<HTMLInputElement, ColorInputProps>(
-  ({ value = "#FFFFFF", onChange, className, ...props }, ref) => {
+export const ColorInput =
+  ({ value = "#FFFFFF", onChange, className, ...props }: ColorInputProps) => {
     const [localValue, setLocalValue] = useState(value);
     
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,7 +22,12 @@ export const ColorInput = React.forwardRef<HTMLInputElement, ColorInputProps>(
         onChange?.(newValue);
       }
     };
-    
+
+    useEffect(() => {
+      if(!value) return
+      setLocalValue(value)
+    }, [value])
+
     const handleColorPickerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const newValue = e.target.value;
       setLocalValue(newValue);
@@ -56,7 +61,6 @@ export const ColorInput = React.forwardRef<HTMLInputElement, ColorInputProps>(
           </PopoverContent>
         </Popover>
         <Input
-          ref={ref}
           type="text"
           value={localValue}
           onChange={handleInputChange}
@@ -67,6 +71,5 @@ export const ColorInput = React.forwardRef<HTMLInputElement, ColorInputProps>(
       </div>
     );
   }
-);
 
 ColorInput.displayName = "ColorInput";

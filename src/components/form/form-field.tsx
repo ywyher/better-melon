@@ -1,15 +1,13 @@
-// src/components/form/FormField.tsx
 "use client";
-
 import React from "react";
-import { UseFormReturn, FieldPath, FieldValues } from "react-hook-form";
+import { UseFormReturn, FieldPath, FieldValues, Controller } from "react-hook-form";
 import {
+  FormField as ShadcnFormField,
   FormItem,
   FormLabel,
   FormControl,
   FormMessage,
 } from "@/components/ui/form";
-import { Controller } from "react-hook-form";
 
 interface FormFieldProps<
   TFieldValues extends FieldValues = FieldValues,
@@ -17,10 +15,10 @@ interface FormFieldProps<
 > {
   form: UseFormReturn<TFieldValues>;
   name: TName;
-  label?: string;
-  defaultValue?: string | number | string[];
+  label?: React.ReactNode;
   disabled?: boolean;
   optional?: boolean;
+  showError?: boolean;
   children: React.ReactNode;
 }
 
@@ -31,19 +29,15 @@ export function FormField<
   form,
   name,
   label,
-  defaultValue,
   disabled = false,
   optional = false,
+  showError = false,
   children,
 }: FormFieldProps<TFieldValues, TName>) {
-  const errorMessage = form.formState.errors[name]?.message as string | undefined;
-  
   return (
-    <Controller
+    <ShadcnFormField
       control={form.control}
       name={name}
-      defaultValue={defaultValue as any}
-      disabled={disabled}
       render={({ field }) => (
         <FormItem className="w-full">
           {label && (
@@ -55,14 +49,16 @@ export function FormField<
             </FormLabel>
           )}
           <FormControl>
-            {React.isValidElement(children) 
+            {React.isValidElement(children)
               ? React.cloneElement(children as React.ReactElement, {
-                  ...field,
-                  ...(disabled !== undefined ? { disabled } : {}),
+                  disabled,
+                  ...field
                 })
               : children}
           </FormControl>
-          <FormMessage>{errorMessage}</FormMessage>
+          {showError && (
+            <FormMessage />
+          )}
         </FormItem>
       )}
     />

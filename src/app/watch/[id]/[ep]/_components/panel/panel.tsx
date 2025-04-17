@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Indicator } from "@/components/indicator";
 import { useWatchStore } from "@/app/watch/[id]/[ep]/store";
 import { Tabs } from "@/components/ui/tabs";
-import type { SubtitleCue as TSubtitleCue, SubtitleScript, SubtitleFile } from "@/types/subtitle";
+import type { SubtitleCue as TSubtitleCue, SubtitleTranscription, SubtitleFile } from "@/types/subtitle";
 import { parseSubtitleToJson } from "@/lib/fetch-subs";
 import { subtitleTranscriptions } from "@/lib/constants";
 import PanelHeader from "@/app/watch/[id]/[ep]/_components/panel/panel-header";
@@ -14,14 +14,14 @@ import SubtitlesList from "@/app/watch/[id]/[ep]/_components/panel/subtitles-lis
 import PanelSkeleton from "@/app/watch/[id]/[ep]/_components/panel/panel-skeleton";
 
 export default function SubtitlePanel({ subtitleFiles }: { subtitleFiles: SubtitleFile[] }) {
-    const [displayScript, setDisplayScript] = useState<SubtitleScript>('japanese')
+    const [displayTranscription, setDisplayTranscription] = useState<SubtitleTranscription>('japanese')
     const [previousCues, setPreviousCues] = useState<TSubtitleCue[] | undefined>();
 
     const activeSubtitleFile = useWatchStore((state) => state.activeSubtitleFile);
     const setSubtitleCues = useWatchStore((state) => state.setSubtitleCues);
 
     const { data: subtitleCues, isLoading: isCuesLoading, error: cuesError, refetch } = useQuery({
-        queryKey: ['subs', displayScript, activeSubtitleFile],
+        queryKey: ['subs', displayTranscription, activeSubtitleFile],
         queryFn: async () => {
             if(activeSubtitleFile) {
                 const format = activeSubtitleFile?.source == 'remote' 
@@ -33,7 +33,7 @@ export default function SubtitlePanel({ subtitleFiles }: { subtitleFiles: Subtit
                         ? activeSubtitleFile.file.url 
                         : activeSubtitleFile.file,
                     format,
-                    script: displayScript
+                    transcription: displayTranscription
                 })
             }
             else throw new Error("Couldn't get the file")
@@ -73,19 +73,19 @@ export default function SubtitlePanel({ subtitleFiles }: { subtitleFiles: Subtit
 
     return (
         <Card className="flex flex-col gap-3 w-full max-w-[500px] h-fit">
-            <Tabs defaultValue={displayScript || subtitleTranscriptions[0]} value={displayScript}>
+            <Tabs defaultValue={displayTranscription || subtitleTranscriptions[0]} value={displayTranscription}>
                 <PanelHeader 
                     isLoading={isCuesLoading}
                     subtitleCues={subtitleCues}
                     activeSubtitleFile={activeSubtitleFile}
                     subtitleFiles={subtitleFiles}
-                    setDisplayScript={setDisplayScript}
+                    setDisplayTranscription={setDisplayTranscription}
                 />
                 <CardContent>
                     {activeSubtitleFile && displayCues ? (
                         <SubtitlesList
                             isLoading={isCuesLoading}
-                            displayScript={displayScript}
+                            displayTranscription={displayTranscription}
                             displayCues={displayCues}
                         />
                     ) : (

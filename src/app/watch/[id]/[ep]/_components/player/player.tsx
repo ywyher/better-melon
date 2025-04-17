@@ -26,7 +26,7 @@ type PlayerProps = {
     episodesLength: number
 }
 
-const MemoizedSubtitle = memo(SubtitleTranscriptions);
+const MemoizedSubtitleTranscriptions = memo(SubtitleTranscriptions);
 const MemoizedPlayerSkeleton = memo(PlayerSkeleton);
 const MemoizedSkipButton = memo(SkipButton);
 const MemoizedInfoCard = memo(InfoCard);

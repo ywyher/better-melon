@@ -181,7 +181,6 @@ export default function Watch() {
 
   return (
     <>
-      <Header />
       <div className="flex flex-row gap-10">
         <div className="flex flex-col gap-3 flex-1">
           <GoBack />

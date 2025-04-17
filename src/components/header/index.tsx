@@ -77,7 +77,7 @@ export default function Header() {
           </Button>
         )}
         <ThemeToggle className="w-10 h-10 rounded-sm" />
-        {isAuthenticated ? (
+        {user ? (
           <Menu user={user} isSmall={isSmall} />
         ) : (
           <>

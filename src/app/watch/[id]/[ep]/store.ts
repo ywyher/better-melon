@@ -1,5 +1,5 @@
 import { EpisodesListViewMode } from "@/types/anime";
-import { SubtitleScript, SubtitleCue, ActiveSubtitleFile } from "@/types/subtitle";
+import { SubtitleTranscription, SubtitleCue, ActiveSubtitleFile } from "@/types/subtitle";
 import { MediaPlayerInstance } from "@vidstack/react";
 import { createRef, RefObject } from "react";
 import { create } from "zustand";
@@ -15,8 +15,8 @@ export type WatchStore = {
   englishSubtitleUrl: string | null;
   setEnglishSubtitleUrl: (sub: WatchStore['englishSubtitleUrl']) => void;
 
-  activeScripts: SubtitleScript[];
-  setActiveScripts: (sub: WatchStore['activeScripts']) => void;
+  activeTranscriptions: SubtitleTranscription[];
+  setActiveTranscriptions: (sub: WatchStore['activeTranscriptions']) => void;
 
   subtitleCues: SubtitleCue[];
   setSubtitleCues: (sub: WatchStore['subtitleCues']) => void;
@@ -60,8 +60,8 @@ export const useWatchStore = create<WatchStore>()(
       englishSubtitleUrl: null,
       setEnglishSubtitleUrl: (englishSubtitleUrl: WatchStore['englishSubtitleUrl']) => set({ englishSubtitleUrl }),
 
-      activeScripts: ['japanese'],
-      setActiveScripts: (activeScripts: WatchStore['activeScripts']) => set({ activeScripts }),
+      activeTranscriptions: ['japanese'],
+      setActiveTranscriptions: (activeTranscriptions: WatchStore['activeTranscriptions']) => set({ activeTranscriptions }),
       
       subtitleCues: [],
       setSubtitleCues: (subtitleCues: WatchStore['subtitleCues']) => set({ subtitleCues }),
@@ -94,7 +94,7 @@ export const useWatchStore = create<WatchStore>()(
         set({
           activeSubtitleFile: null,
           englishSubtitleUrl: null,
-          activeScripts: ['japanese', 'english'],
+          activeTranscriptions: ['japanese', 'english'],
           subtitleCues: [],
           delay: {
             japanese: 0,
@@ -115,7 +115,7 @@ export const useWatchStore = create<WatchStore>()(
         autoPlay: state.autoPlay,
         autoSkip: state.autoSkip,
         autoNext: state.autoNext,
-        activeScripts: state.activeScripts,
+        activeTranscriptions: state.activeTranscriptions,
         episodesListViewMode: state.episodesListViewMode,
         episodesListSpoilerMode: state.episodesListSpoilerMode
       }),

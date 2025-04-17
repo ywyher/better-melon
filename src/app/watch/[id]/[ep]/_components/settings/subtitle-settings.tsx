@@ -14,19 +14,17 @@ import { z } from "zod";
 import { useSubtitleSettingsStore } from "@/lib/stores/subtitle-settings-store";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
+import { defaultSubtitleSettings } from "@/app/settings/subtitle/constants";
 
-export default function Playground() {
+export default function SubtitleSettings() {
+    const [isLoading] = useState<boolean>(false)
     const [selectedTranscription, setSelectedTranscription] = useState<TSubtitleSettings['transcription']>('all')
 
-    const { data: subtitleSettings, isLoading: isSubtitleSettingsLoading, isRefetching } = useQuery({
-        queryKey: ['settings', 'subtitle', selectedTranscription],
-        queryFn: async () => {
-            return await getGlobalSubtitleSettings({ transcription: selectedTranscription }) as TSubtitleSettings;
-        },
-    })
-    const store = useSubtitleSettingsStore()
-
-    const [isLoading] = useState<boolean>(false)
+    const subtitleSettings = 
+        useSubtitleSettingsStore((state) => state.getSettings(selectedTranscription))
+        || defaultSubtitleSettings
+    const addSettings = useSubtitleSettingsStore((state) => state.addSettings)
+    const deleteSettings = useSubtitleSettingsStore((state) => state.deleteSettings)
 
     const form = useForm<z.infer<typeof subtitleSettingsSchema>>({
         resolver: zodResolver(subtitleSettingsSchema),
@@ -62,14 +60,14 @@ export default function Playground() {
 
 
     const onSubmit = (data: z.infer<typeof subtitleSettingsSchema>) => {
-        store.addSettings(data.transcription, data)
+        addSettings(data.transcription, data)
     }
 
     const handleReset = () => {
-        store.deleteSettings(selectedTranscription)
+        deleteSettings(selectedTranscription)
     }
 
-    if(!subtitleSettings || isSubtitleSettingsLoading || isRefetching) {
+    if(!subtitleSettings) {
         return <SubtitleSettingsSkeleton />
     }
 
@@ -83,12 +81,14 @@ export default function Playground() {
                             selectedTranscription={selectedTranscription}
                             setSelectedTranscription={setSelectedTranscription}
                         />
-                        <Button
-                            variant='destructive'
-                            onClick={() => handleReset()}
-                        >
-                            <X />
-                        </Button>
+                        {subtitleSettings && (
+                            <Button
+                                variant='destructive'
+                                onClick={() => handleReset()}
+                            >
+                                <X />
+                            </Button>
+                        )}
                     </div>
                 </div>
                 <SubtitleSettingsControls

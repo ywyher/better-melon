@@ -1,6 +1,6 @@
 "use client"
 
-import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
+import { Form, FormControl, FormItem, FormLabel } from "@/components/ui/form";
 import { FieldErrors, useForm } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from "zod";
@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { identifierSchema, passwordSchema } from "@/types";
 import { getEmailByUsername } from "@/components/auth/actions";
 import { useQueryClient } from "@tanstack/react-query";
+import { FormField } from "@/components/form/form-field";
 
 export const loginSchema = z.object({
     identifier: identifierSchema,
@@ -118,29 +119,20 @@ export default function Login({ setPort, identifier, identifierValue, setOpen }:
             <form onSubmit={form.handleSubmit(onSubmit, onError)}>
                 <div className="flex flex-col gap-4">
                     <FormField
-                        control={form.control}
+                        form={form}
+                        label={identifier}
                         name="identifier"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel className="capitalize">{identifier}</FormLabel>
-                                <FormControl>
-                                    <Input {...field} />
-                                </FormControl>
-                            </FormItem>
-                        )}
-                    />
+                        disabled
+                    >
+                        <Input />
+                    </FormField>
                     <FormField
-                        control={form.control}
+                        form={form}
+                        label="Password"
                         name="password"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Password</FormLabel>
-                                <FormControl>
-                                    <PasswordInput {...field} />
-                                </FormControl>
-                            </FormItem>
-                        )}
-                    />
+                    >
+                        <PasswordInput />
+                    </FormField>
                 </div>
                 <Button
                     variant="link"

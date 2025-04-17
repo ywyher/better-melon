@@ -9,8 +9,13 @@ interface TextareaInputProps extends Omit<React.TextareaHTMLAttributes<HTMLTextA
   onChange?: (value: string) => void;
 }
 
-export const TextareaInput = React.forwardRef<HTMLTextAreaElement, TextareaInputProps>(
-  ({ placeholder = "", maxLength = 250, value = "", onChange, ...props }, ref) => {
+export const TextareaInput = ({ 
+    placeholder = "",
+    maxLength = 250,
+    value = "",
+    onChange,
+    ...props
+  }: TextareaInputProps) => {
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
       if (onChange) {
         onChange(e.target.value);
@@ -20,7 +25,6 @@ export const TextareaInput = React.forwardRef<HTMLTextAreaElement, TextareaInput
     return (
       <div className="w-full">
         <Textarea
-          ref={ref}
           placeholder={placeholder}
           maxLength={maxLength}
           value={value}
@@ -35,6 +39,5 @@ export const TextareaInput = React.forwardRef<HTMLTextAreaElement, TextareaInput
       </div>
     );
   }
-);
 
 TextareaInput.displayName = "TextareaInput";

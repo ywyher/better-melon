@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { defineConfig } from 'drizzle-kit';
+import { Config, defineConfig } from 'drizzle-kit';
 
 export default defineConfig({
   out: './drizzle',
@@ -8,4 +8,7 @@ export default defineConfig({
   dbCredentials: {
     url: process.env.DATABASE_URL!,
   },
-});
+  // This is important for handling custom types like enums
+  verbose: true,
+  strict: true,
+}) satisfies Config;
