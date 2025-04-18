@@ -10,7 +10,7 @@ import { useWatchStore } from "@/app/watch/[id]/[ep]/store";
 import { Button } from "@/components/ui/button";
 import { srtTimestampToSeconds } from "@/lib/funcs";
 import { Play } from "lucide-react";
-import { useInfoCardStore } from "@/lib/stores/info-card-store";
+import { useDefinitionStore } from "@/lib/stores/definition-store";
 
 type SubtitleCueProps = { 
     index: number;
@@ -30,9 +30,9 @@ export default function SubtitleCue({
     const player = useWatchStore((state) => state.player)
     const delay = useWatchStore((state) => state.delay)
 
-    const activeToken = useInfoCardStore((state) => state.token)
-    const setSentance = useInfoCardStore((state) => state.setSentance)
-    const setToken = useInfoCardStore((state) => state.setToken)
+    const activeToken = useDefinitionStore((state) => state.token)
+    const setSentance = useDefinitionStore((state) => state.setSentance)
+    const setToken = useDefinitionStore((state) => state.setToken)
       
     const handleSeek = () => {
         player.current?.remoteControl.seek(srtTimestampToSeconds(from) + delay.japanese)  

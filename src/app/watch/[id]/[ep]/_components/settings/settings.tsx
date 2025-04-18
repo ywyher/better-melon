@@ -11,7 +11,7 @@ import { subtitleTranscriptions } from "@/lib/constants"
 import { SubtitleTranscription } from "@/types/subtitle"
 import TooltipWrapper from "@/components/tooltip-wrapper"
 import { useCallback } from "react"
-import SubtitleSettings from "@/app/watch/[id]/[ep]/_components/settings/subtitle-settings"
+import SubtitleSettings from "@/app/watch/[id]/[ep]/_components/settings/subtitle-styles"
 import {
     Accordion,
     AccordionContent,

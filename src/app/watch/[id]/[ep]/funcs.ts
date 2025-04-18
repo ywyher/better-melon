@@ -1,4 +1,6 @@
+import { SubtitleSettings } from "@/lib/db/schema";
 import { fetchSubtitles, parseSrt, parseVtt } from "@/lib/fetch-subs";
+import { getExtension } from "@/lib/utils";
 import { SkipTime } from "@/types/anime";
 import { SubtitleFile } from "@/types/subtitle";
 import { franc } from "franc-min";
@@ -29,43 +31,71 @@ export const filterSubtitleFiles = (files: SubtitleFile[]) => {
   });
 };
 
-export const selectSubtitleFile = (files: SubtitleFile[]) => {
+export const selectSubtitleFile = ({ files, preferredFormat, matchPattern }: {
+  files: SubtitleFile[]
+  preferredFormat?: SubtitleSettings['preferredFormat']
+  matchPattern?: SubtitleSettings['matchPattern']
+}) => {
   if (!files || files.length === 0) {
     return null;
   }
-  
-  // Helper function to check for Netflix keyword
-  const hasNetflixKeyword = (file: SubtitleFile) => {
-    return file.name.toLowerCase().includes('netflix');
+
+  // Helper function to check if file matches pattern
+  const matchesPattern = (file: SubtitleFile) => {
+    if (!matchPattern) return false;
+    
+    // Try to use it as regex if it looks like one
+    if (/[\\^$.*+?()[\]{}|]/.test(matchPattern)) {
+      try {
+        const regex = new RegExp(matchPattern, 'i');
+        return regex.test(file.name);
+      } catch (error) {
+        // If regex fails, fall back to string matching
+        return file.name.toLowerCase().includes(matchPattern.toLowerCase());
+      }
+    }
+    
+    // Simple string matching
+    return file.name.toLowerCase().includes(matchPattern.toLowerCase());
   };
   
-  // Filter by file extensions
-  const srtFiles = files.filter(file => {
-    const extension = file.name.split('.').pop()?.toLowerCase();
-    return extension === 'srt';
-  });
-  
-  const vttFiles = files.filter(file => {
-    const extension = file.name.split('.').pop()?.toLowerCase();
-    return extension === 'vtt';
-  });
-  
-  if (srtFiles.length > 0) {
-    const netflixSrt = srtFiles.find(hasNetflixKeyword);
-    if (netflixSrt) {
-      return netflixSrt;
+  // First priority: Check if there's a file matching the pattern
+  if (matchPattern) {
+    // If we want to match pattern in preferred format first
+    const patternMatchInPreferredFormat = files.find(file => 
+      matchesPattern(file) && getExtension(file.name) === preferredFormat
+    );
+    
+    if (patternMatchInPreferredFormat) {
+      return patternMatchInPreferredFormat;
     }
-    return srtFiles[0];
+    
+    // If no match in preferred format, try any file matching the pattern
+    const patternMatch = files.find(matchesPattern);
+    if (patternMatch) {
+      return patternMatch;
+    }
+  }
+
+  const preferredFormatFiles = files.filter(file => 
+    getExtension(file.name) === preferredFormat
+  );
+  
+  if (preferredFormatFiles.length > 0) {
+    return preferredFormatFiles[0];
   }
   
-  if (vttFiles.length > 0) {
-    const netflixVtt = vttFiles.find(hasNetflixKeyword);
-    if (netflixVtt) {
-      return netflixVtt;
-    }
-    return vttFiles[0];
+  // Third priority: Return first subtitle file of any supported format
+  const supportedFormats = ["srt", "vtt", "ass"];
+  const supportedFile = files.find(file => 
+    supportedFormats.includes(getExtension(file.name) || '')
+  );
+  
+  if (supportedFile) {
+    return supportedFile;
   }
   
+  // Last resort: Return first file (regardless of extension)
   return files[0];
 };
 

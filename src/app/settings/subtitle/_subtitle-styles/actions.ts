@@ -1,42 +1,41 @@
 "use server"
 
-import { defaultSubtitleSettings } from "@/app/settings/subtitle/constants";
-import { subtitleSettingsSchema } from "@/app/settings/subtitle/types";
+import { defaultSubtitleStyles } from "@/app/settings/subtitle/_subtitle-styles/constants";
+import { subtitleStylesSchema } from "@/app/settings/subtitle/types";
 import { auth } from "@/lib/auth";
 import db from "@/lib/db";
-import { SubtitleSettings, subtitleSettings } from "@/lib/db/schema";
+import { SubtitleStyles, subtitleStyles } from "@/lib/db/schema";
 import { generateId } from "better-auth";
 import { and, eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { z } from "zod";
 
-export async function getGlobalSubtitleSettings({ transcription }: { transcription: SubtitleSettings['transcription'] }) {
+export async function getSubtitleStyles({ transcription }: { transcription: SubtitleStyles['transcription'] }) {
     const session = await auth.api.getSession({ headers: await headers() });
     
     if (!session?.user.id) {
-        return defaultSubtitleSettings;
+        return defaultSubtitleStyles;
     }
         
-    const [settings] = await db.select().from(subtitleSettings)
+    const [styles] = await db.select().from(subtitleStyles)
     .where(and(
-        eq(subtitleSettings.userId, session.user.id),
-        eq(subtitleSettings.isGlobal, true),
-        eq(subtitleSettings.transcription, transcription)
+        eq(subtitleStyles.userId, session.user.id),
+        eq(subtitleStyles.transcription, transcription)
     ))
 
-    if(settings) {
-        return settings
+    if(styles) {
+        return styles
     }else {
-        return defaultSubtitleSettings
+        return defaultSubtitleStyles
     }
 }
 
-export async function createSubtitleSettings({ 
+export async function createSubtitleStyles({ 
   data,
   transcription,
 }: { 
-  data: z.infer<typeof subtitleSettingsSchema>,
-  transcription: SubtitleSettings['transcription']
+  data: z.infer<typeof subtitleStylesSchema>,
+  transcription: SubtitleStyles['transcription']
 }) {
     // Get current user or create anonymous user
     const headersList = await headers();
@@ -60,7 +59,7 @@ export async function createSubtitleSettings({
     }
     
     try {
-        const newSettingsId = generateId();
+        const newStylesId = generateId();
 
         const {
             fontSize,
@@ -74,8 +73,8 @@ export async function createSubtitleSettings({
             backgroundRadius,
         } = data;
         
-        await db.insert(subtitleSettings).values({
-            id: newSettingsId,
+        await db.insert(subtitleStyles).values({
+            id: newStylesId,
             userId: userId,
             fontSize,
             fontFamily,
@@ -86,35 +85,32 @@ export async function createSubtitleSettings({
             backgroundOpacity,
             backgroundBlur,
             backgroundRadius,
-            transcription: transcription,
-            animeId: null,
-            isGlobal: true,
+            transcription,
             createdAt: new Date(),
             updatedAt: new Date(),
         });
 
         return {
-            message: "Subtitle settings created successfully",
+            message: "Subtitle styles created successfully",
             error: null,
-            settingsId: newSettingsId,
+            stylesId: newStylesId,
         };
-    } catch (error) {
-        console.error("Error creating subtitle settings:", error);
+    } catch (error: unknown) {
         return {
             message: null,
-            error: "Failed to create subtitle settings"
+            error: error instanceof Error ? error.message : "Failed to create subtitle styles",
         };
     }
 }
 
-export async function updateSubtitleSettings({ 
-  subtitleSettingsId,
+export async function updateSubtitleStyles({ 
+  subtitleStylesId,
   data,
   transcription
 }: { 
-  subtitleSettingsId: SubtitleSettings['id'],
-  data: z.infer<typeof subtitleSettingsSchema>,
-  transcription: SubtitleSettings['transcription']
+  subtitleStylesId: SubtitleStyles['id'],
+  data: z.infer<typeof subtitleStylesSchema>,
+  transcription: SubtitleStyles['transcription']
 }) {
     const headersList = await headers();
     const currentUser = await auth.api.getSession({ headers: headersList });
@@ -122,7 +118,7 @@ export async function updateSubtitleSettings({
     if (!currentUser?.user?.id) {
         return {
             message: null,
-            error: "Not authenticated. Please sign in to update settings."
+            error: "Not authenticated. Please sign in to update styles."
         };
     }
     
@@ -139,7 +135,7 @@ export async function updateSubtitleSettings({
             backgroundRadius,
         } = data;
         
-        await db.update(subtitleSettings).set({
+        await db.update(subtitleStyles).set({
             fontSize,
             fontFamily,
             textColor,
@@ -151,28 +147,27 @@ export async function updateSubtitleSettings({
             backgroundRadius,
             updatedAt: new Date(),
         }).where(and(
-            eq(subtitleSettings.userId, currentUser.user.id),
-            eq(subtitleSettings.id, subtitleSettingsId),
-            eq(subtitleSettings.transcription, transcription)
+            eq(subtitleStyles.userId, currentUser.user.id),
+            eq(subtitleStyles.id, subtitleStylesId),
+            eq(subtitleStyles.transcription, transcription)
         ));
         
         return {
-            message: "Subtitle settings updated successfully",
+            message: "Subtitle styles updated successfully",
             error: null
         };
-    } catch (error) {
-        console.error("Error updating subtitle settings:", error);
+    } catch (error: unknown) {
         return {
             message: null,
-            error: "Failed to update subtitle settings"
+            error: error instanceof Error ? error.message : "Failed to update subtitle styles",
         };
     }
 }
 
-export async function deleteSubtitleSettings({
-    subtitleSettingsId
+export async function deleteSubtitleStyles({
+    subtitleStylesId
 }: {
-    subtitleSettingsId: SubtitleSettings['id']
+    subtitleStylesId: SubtitleStyles['id']
 }) {
     const headersList = await headers();
     const currentUser = await auth.api.getSession({ headers: headersList });
@@ -180,24 +175,24 @@ export async function deleteSubtitleSettings({
     if (!currentUser?.user?.id) {
         return {
             message: null,
-            error: "Not authenticated. Please sign in to update settings."
+            error: "Not authenticated. Please sign in to delete styles."
         };
     }
 
     try {
-        await db.delete(subtitleSettings).where(and(
-            eq(subtitleSettings.id, subtitleSettingsId),
-            eq(subtitleSettings.userId, currentUser.user.id)
+        await db.delete(subtitleStyles).where(and(
+            eq(subtitleStyles.id, subtitleStylesId),
+            eq(subtitleStyles.userId, currentUser.user.id)
         ))        
         
         return {
-            message: "Subtitle settings deleted successfully",
+            message: "Subtitle styles deleted successfully",
             error: null
         };
-    } catch (error) {
+    } catch (error: unknown) {
         return {
             message: null,
-            error: "Failed to update subtitle settings"
+            error: error instanceof Error ? error.message : "Failed to delete subtitle styles",
         };
     }
 }

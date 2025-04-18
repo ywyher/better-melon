@@ -17,7 +17,7 @@ import PlayerSkeleton from '@/app/watch/[id]/[ep]/_components/player/player-skel
 import { useThrottledCallback } from 'use-debounce';
 import { useParams, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import InfoCard from '@/components/info-card';
+import DefinitionCard from '@/components/definition-card';
 
 type PlayerProps = { 
     streamingData: AnimeStreamingData;
@@ -29,7 +29,7 @@ type PlayerProps = {
 const MemoizedSubtitleTranscriptions = memo(SubtitleTranscriptions);
 const MemoizedPlayerSkeleton = memo(PlayerSkeleton);
 const MemoizedSkipButton = memo(SkipButton);
-const MemoizedInfoCard = memo(InfoCard);
+const MemoizedDefinitionCard = memo(DefinitionCard);
 
 export default function Player({ 
     streamingData,
@@ -235,7 +235,7 @@ export default function Player({
                         skipTimes={skipTimes}
                     />
                     <MemoizedSubtitleTranscriptions />
-                    <MemoizedInfoCard />
+                    <MemoizedDefinitionCard />
                 </MediaPlayer>
             </div>
         </div>

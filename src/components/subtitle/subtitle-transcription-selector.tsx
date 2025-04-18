@@ -6,13 +6,13 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { subtitleTranscriptions } from "@/lib/constants"
-import { SubtitleSettings } from "@/lib/db/schema"
+import { SubtitleStyles } from "@/lib/db/schema"
 import { Plus } from "lucide-react"
 import { Dispatch, SetStateAction } from "react"
 
 type SubtitleTranscriptionSelectorProps = {
-    selectedTranscription: SubtitleSettings['transcription'] | null
-    setSelectedTranscription: Dispatch<SetStateAction<SubtitleSettings['transcription']>>
+    selectedTranscription: SubtitleStyles['transcription'] | null
+    setSelectedTranscription: Dispatch<SetStateAction<SubtitleStyles['transcription']>>
 }
 
 export default function SubtitleTranscriptionSelector({ selectedTranscription, setSelectedTranscription }: SubtitleTranscriptionSelectorProps) {
@@ -23,7 +23,7 @@ export default function SubtitleTranscriptionSelector({ selectedTranscription, s
     ]
 
     return (
-        <Select value={selectedTranscription || "all"} onValueChange={(v: SubtitleSettings['transcription']) => setSelectedTranscription(v)}>
+        <Select value={selectedTranscription || "all"} onValueChange={(v: SubtitleStyles['transcription']) => setSelectedTranscription(v)}>
             <SelectTrigger className="w-[200px] capitalize cursor-pointer">
                 <SelectValue placeholder="Select preset" />
             </SelectTrigger>

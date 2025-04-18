@@ -1,7 +1,8 @@
-import { subtitleTranscriptions, textShadowTypes } from "@/lib/constants";
+import { textShadowTypes } from "@/app/settings/subtitle/_subtitle-styles/constants";
+import { subtitleTranscriptions } from "@/lib/constants";
 import { z } from "zod";
 
-export const subtitleSettingsSchema = z.object({
+export const subtitleStylesSchema = z.object({
   transcription: z.enum([...subtitleTranscriptions, 'all']).default('all'),
 
   fontSize: z.number().min(4).max(90).default(16),

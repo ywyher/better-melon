@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { invokeAnkiConnect } from "@/lib/anki";
-import { useInfoCardStore } from "@/lib/stores/info-card-store";
+import { useDefinitionStore } from "@/lib/stores/definition-store";
 import { X } from "lucide-react";
 import { toast } from "sonner";
 import { 
@@ -21,8 +21,8 @@ import { useQuery } from '@tanstack/react-query';
 import { AnkiPreset } from '@/lib/db/schema';
 import { getDefaultPreset } from '@/app/settings/anki/actions';
 
-export default function InfoCard() {
-  const { sentance, setSentance, setToken, token } = useInfoCardStore()
+export default function DefinitionCard() {
+  const { sentance, setSentance, setToken, token } = useDefinitionStore()
   const setActiveTokenId = useWatchStore((state) => state.setActiveTokenId)
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const player = useWatchStore((state) => state.player);
@@ -122,7 +122,7 @@ export default function InfoCard() {
 
   function FloatingCard() {
     const { attributes, listeners, setNodeRef, transform } = useDraggable({
-      id: 'info-card',
+      id: 'definition-card',
     });
     
     const style = transform ? {

@@ -2,9 +2,9 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 
-export default function SubtitleSettingsSkeleton() {
+export default function SubtitleStylesSkeleton() {
   return (
-    <div className="flex flex-col gap-0 pt-4">
+    <div className="flex flex-col gap-0">
       <div className="flex flex-col md:flex-row gap-3 justify-between">
         <Skeleton className="h-8 w-48" />
         <Skeleton className="h-10 w-[200px]" />

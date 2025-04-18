@@ -19,6 +19,10 @@ export const userRelations = relations(user, ({ many, one }) => ({
     fields: [user.id],
     references: [subtitleSettings.userId]
   }),
+  subtitleStyles: one(subtitleStyles, {
+    fields: [user.id],
+    references: [subtitleStyles.userId]
+  }),
 }))
 
 export const ankiPreset = pgTable('anki_preset', {
@@ -41,6 +45,30 @@ export const ankiPresetRelations = relations(ankiPreset, ({ one }) => ({
   })
 }))
 
+export const subtitleFormatEnum = pgEnum("subtitle_format", [
+  "srt",
+  "vtt",
+  "ass",
+]);
+
+export const subtitleSettings = pgTable("subtitle_settings", {
+  id: text("id").primaryKey(),
+  
+  preferredFormat: subtitleFormatEnum('preferred_format'),
+  matchPattern: text("match_pattern"), // fileNameMatchPattern
+
+  userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at").notNull(),
+  updatedAt: timestamp("updated_at").notNull()
+});
+
+export const subtitleSettingsRelations = relations(subtitleSettings, ({ one }) => ({
+  user: one(user, {
+    fields: [subtitleSettings.userId],
+    references: [user.id]
+  })
+}))
+
 export const textShadowEnum = pgEnum("text_shadow_enum", [
   "none",
   "drop-shadow",
@@ -49,7 +77,7 @@ export const textShadowEnum = pgEnum("text_shadow_enum", [
   "outline"
 ]);
 
-export const subtitleTranscriptionEnum = pgEnum("transcription", [
+export const subtitleTranscriptionEnum = pgEnum("subtitle_transcription", [
   "all",
   "japanese",
   "hiragana",
@@ -58,7 +86,7 @@ export const subtitleTranscriptionEnum = pgEnum("transcription", [
   "english",
 ]);
 
-export const subtitleSettings = pgTable("subtitle_settings", {
+export const subtitleStyles = pgTable("subtitle_styles", {
   id: text("id").primaryKey(),
   
   fontSize: real("font_size").notNull().default(16),
@@ -67,24 +95,21 @@ export const subtitleSettings = pgTable("subtitle_settings", {
   textColor: text("text_color").notNull().default('#FFFFFF'),
   textOpacity: real("text_opacity").notNull().default(1),
   textShadow: textShadowEnum("text_shadow").notNull().default('outline'),
-  
+
   backgroundColor: text("background_color").notNull().default('#000000'),
   backgroundOpacity: real("background_opacity").notNull().default(1),
   backgroundBlur: real("background_blur").notNull().default(0.2),
   backgroundRadius: real("background_radius").notNull().default(6),
   
   userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }),
-  animeId: text("animeId"),
-  
   transcription: subtitleTranscriptionEnum("transcription").notNull().default('all'),
-  isGlobal: boolean('is_global').notNull().default(false),
   createdAt: timestamp("created_at").notNull(),
   updatedAt: timestamp("updated_at").notNull()
 });
 
-export const subtitleSettingsRelations = relations(subtitleSettings, ({ one }) => ({
+export const subtitleStylesRelations = relations(subtitleStyles, ({ one }) => ({
   user: one(user, {
-    fields: [subtitleSettings.userId],
+    fields: [subtitleStyles.userId],
     references: [user.id]
   })
 }))
@@ -129,4 +154,5 @@ export type User = InferSelectModel<typeof user>;
 export type AnkiPreset = Omit<InferSelectModel<typeof ankiPreset>, 'fields'> & {
   fields: Record<string, string>;
 };
+export type SubtitleStyles = InferSelectModel<typeof subtitleStyles>
 export type SubtitleSettings = InferSelectModel<typeof subtitleSettings>

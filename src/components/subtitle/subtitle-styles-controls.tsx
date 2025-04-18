@@ -1,6 +1,6 @@
 'use client'
 
-import { subtitleSettingsSchema } from "@/app/settings/subtitle/types"
+import { subtitleStylesSchema } from "@/app/settings/subtitle/types"
 import { NumberInput } from "@/components/form/number-input"
 import { ColorInput } from "@/components/form/color-input"
 import { SelectInput } from "@/components/form/select-input" // The new component we just created
@@ -11,15 +11,15 @@ import { Separator } from "@/components/ui/separator"
 import { useIsSmall } from "@/hooks/useMediaQuery"
 import { FieldErrors, UseFormReturn } from "react-hook-form"
 import { toast } from "sonner"
-import { isValid, z } from "zod"
+import { z } from "zod"
 import { FormField } from "@/components/form/form-field"
 import { SliderInput } from "@/components/form/slider-input"
-import { fontFamilies, textShadowTypes } from "@/lib/constants"
 import { useEffect } from "react"
+import { textShadowTypes, fontFamilies } from "@/app/settings/subtitle/_subtitle-styles/constants"
 
-export default function SubtitleSettingsControls({ form, onSubmit, isLoading, method }: { 
-    form: UseFormReturn<z.infer<typeof subtitleSettingsSchema>, any, undefined>;
-    onSubmit: (data: z.infer<typeof subtitleSettingsSchema>) => void;
+export default function SubtitleStylesControls({ form, onSubmit, isLoading, method }: { 
+    form: UseFormReturn<z.infer<typeof subtitleStylesSchema>, any, undefined>;
+    onSubmit: (data: z.infer<typeof subtitleStylesSchema>) => void;
     isLoading: boolean;
     method: 'watch' | 'submit'
 }) {
@@ -31,7 +31,7 @@ export default function SubtitleSettingsControls({ form, onSubmit, isLoading, me
         label: type.charAt(0).toUpperCase() + type.slice(1).replace('-', ' ')
     }));
 
-    const onError = (errors: FieldErrors<z.infer<typeof subtitleSettingsSchema>>) => {
+    const onError = (errors: FieldErrors<z.infer<typeof subtitleStylesSchema>>) => {
 
         const position = isSmall ? "top-center" : "bottom-right"
         const firstError = Object.values(errors)[0];
@@ -53,7 +53,7 @@ export default function SubtitleSettingsControls({ form, onSubmit, isLoading, me
                     if (isValid) {
                         console.log('cool')
                         const validData = form.getValues();
-                        onSubmit(validData as z.infer<typeof subtitleSettingsSchema>);
+                        onSubmit(validData as z.infer<typeof subtitleStylesSchema>);
                     } else {
                         // timeout for the erros to have time to load
                         setTimeout(() => {
@@ -86,9 +86,9 @@ export default function SubtitleSettingsControls({ form, onSubmit, isLoading, me
                     </CardHeader>
                     <CardContent className="flex flex-col gap-3 p-0">
                         <div className="space-y-4">
-                            <div className="flex items-center gap-2 mb-1">
+                            <div className="flex items-center gap-2 mb-2">
                                 <div className="h-5 w-1 bg-foreground rounded-full"></div>
-                                <h3 className="text-lg font-medium">Font Settings</h3>
+                                <h3 className="text-lg font-medium">Font Styles</h3>
                             </div>
                             <div className="pl-3 pr-1 space-y-6">
                                 <div className="flex flex-col md:flex-row gap-6">
@@ -120,7 +120,7 @@ export default function SubtitleSettingsControls({ form, onSubmit, isLoading, me
                         
                         {/* Text Appearance Section */}
                         <div className="space-y-4">
-                            <div className="flex items-center gap-2 mb-1">
+                            <div className="flex items-center gap-2 mb-2">
                                 <div className="h-5 w-1 bg-foreground rounded-full"></div>
                                 <h3 className="text-lg font-medium">Text Appearance</h3>
                             </div>
@@ -167,7 +167,7 @@ export default function SubtitleSettingsControls({ form, onSubmit, isLoading, me
                         
                         {/* Background Style Section */}
                         <div className="space-y-4">
-                            <div className="flex items-center gap-2 mb-1">
+                            <div className="flex items-center gap-2 mb-2">
                                 <div className="h-5 w-1 bg-foreground rounded-full"></div>
                                 <h3 className="text-lg font-medium">Background Style</h3>
                             </div>
@@ -240,7 +240,7 @@ export default function SubtitleSettingsControls({ form, onSubmit, isLoading, me
                                 type="submit"
                                 onClick={form.handleSubmit(onSubmit, onError)}
                             >
-                                Apply
+                                Apply Styles
                             </LoadingButton>
                         </CardFooter>
                     )}

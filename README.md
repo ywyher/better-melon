@@ -42,6 +42,7 @@ Animelon doesn’t provide all animes by default, and its entries are rarely upd
   1. [ ] Subtitles delay
   2. [ ] Preferred subtitles formats
   3. [ ] Keyword (regex) when found on a subtitle name select it over the others
+- [ ] The ability to change transcriptions order
 - [ ] Video vtt thumbnails
 - [ ] Providers selector
 - [ ] Defintion on select functionality

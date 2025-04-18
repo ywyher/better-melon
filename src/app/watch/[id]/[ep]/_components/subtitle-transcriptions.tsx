@@ -1,14 +1,14 @@
 'use client'
 
-import { getGlobalSubtitleSettings } from "@/app/settings/subtitle/actions";
-import { defaultSubtitleSettings } from "@/app/settings/subtitle/constants";
+import { getSubtitleStyles } from "@/app/settings/subtitle/_subtitle-styles/actions";
+import { defaultSubtitleStyles } from "@/app/settings/subtitle/_subtitle-styles/constants";
 import { useWatchStore } from "@/app/watch/[id]/[ep]/store";
 import { subtitleTranscriptions } from "@/lib/constants";
-import { SubtitleSettings } from "@/lib/db/schema";
+import { SubtitleStyles } from "@/lib/db/schema";
 import { parseSubtitleToJson } from "@/lib/fetch-subs";
 import { srtTimestampToSeconds, vttTimestampToSeconds } from "@/lib/funcs";
-import { useInfoCardStore } from "@/lib/stores/info-card-store";
-import { useSubtitleSettingsStore } from "@/lib/stores/subtitle-settings-store";
+import { useDefinitionStore } from "@/lib/stores/definition-store";
+import { useSubtitleStylesStore } from "@/lib/stores/subtitle-styles-store";
 import { cn } from "@/lib/utils";
 import { SubtitleCue, SubtitleToken } from "@/types/subtitle";
 import { useQueries } from "@tanstack/react-query";
@@ -44,25 +44,25 @@ const calculateFontSize = (isFullscreen: boolean, activeTranscriptionsCount: num
 const getTokenStyles = (
   isFullscreen: boolean, 
   activeTranscriptionsCount: number, 
-  settings: Partial<SubtitleSettings>
+  styles: Partial<SubtitleStyles>
 ) => {
-  const fontSize = settings?.fontSize 
-    ? `${settings.fontSize}px` 
+  const fontSize = styles?.fontSize 
+    ? `${styles.fontSize}px` 
     : calculateFontSize(isFullscreen, activeTranscriptionsCount);
 
   return {
     default: {
       fontSize: fontSize,
-      fontFamily: settings?.fontFamily || 'inherit',
-      color: settings?.textColor || 'white',
-      opacity: settings?.textOpacity || 1,
-      WebkitTextStroke: settings?.textShadow === 'outline'
+      fontFamily: styles?.fontFamily || 'inherit',
+      color: styles?.textColor || 'white',
+      opacity: styles?.textOpacity || 1,
+      WebkitTextStroke: styles?.textShadow === 'outline'
         ? (isFullscreen ? '.5px black' : '.3px black') 
         : 'none',
       fontWeight: 'bold',
       transition: 'all 0.15s ease',
       display: 'inline-block',
-      textShadow: settings?.textShadow === 'drop-shadow' 
+      textShadow: styles?.textShadow === 'drop-shadow' 
         ? '1px 1px 2px rgba(0, 0, 0, 0.8)'
         : 'none',
       margin: '0 2px',
@@ -71,10 +71,10 @@ const getTokenStyles = (
     
     active: {
       fontSize: fontSize,
-      fontFamily: settings?.fontFamily || 'inherit',
+      fontFamily: styles?.fontFamily || 'inherit',
       color: '#4ade80', // Keeping the green for active tokens
-      opacity: settings?.textOpacity || 1,
-      WebkitTextStroke: settings?.textShadow === 'outline'
+      opacity: styles?.textOpacity || 1,
+      WebkitTextStroke: styles?.textShadow === 'outline'
         ? (isFullscreen ? '1px black' : '.5px black')
         : 'none',
       fontWeight: 'bold',
@@ -86,16 +86,16 @@ const getTokenStyles = (
 };
 
 // Helper function to get container styles
-const getContainerStyles = (settings: Partial<SubtitleSettings> | null): CSSProperties => {
-  if (!settings) return {};
+const getContainerStyles = (styles: Partial<SubtitleStyles> | null): CSSProperties => {
+  if (!styles) return {};
   
   return {
-    backgroundColor: `color-mix(in oklab, ${settings.backgroundColor} ${(((settings.backgroundOpacity || 0) * 100))}%, transparent)`,
-    backdropFilter: settings.backgroundBlur 
-      ? `blur(${settings.backgroundBlur * 4}px)` 
+    backgroundColor: `color-mix(in oklab, ${styles.backgroundColor} ${(((styles.backgroundOpacity || 0) * 100))}%, transparent)`,
+    backdropFilter: styles.backgroundBlur 
+      ? `blur(${styles.backgroundBlur * 4}px)` 
       : 'none',
-    borderRadius: settings.backgroundRadius 
-      ? `${settings.backgroundRadius}px` 
+    borderRadius: styles.backgroundRadius 
+      ? `${styles.backgroundRadius}px` 
       : '8px',
     padding: '.5rem 1rem',
     marginBottom: ".5rem",
@@ -106,9 +106,9 @@ export default function SubtitleTranscriptions() {
     const player = useWatchStore((state) => state.player);
     const englishSubtitleUrl = useWatchStore((state) => state.englishSubtitleUrl) || "";
     const activeSubtitleFile = useWatchStore((state) => state.activeSubtitleFile);
-    const activeToken = useInfoCardStore((state) => state.token);
-    const setSentance = useInfoCardStore((state) => state.setSentance);
-    const setToken = useInfoCardStore((state) => state.setToken);
+    const activeToken = useDefinitionStore((state) => state.token);
+    const setSentance = useDefinitionStore((state) => state.setSentance);
+    const setToken = useDefinitionStore((state) => state.setToken);
     
     const currentTime = useMediaState('currentTime', player);
     const isFullscreen = useMediaState('fullscreen', player);
@@ -120,10 +120,10 @@ export default function SubtitleTranscriptions() {
     const activeTranscriptions = useWatchStore((state) => state.activeTranscriptions);
     const delay = useWatchStore((state) => state.delay);
 
-    // Get the settings from the store
-    const getSubtitleSettingsFromStore = useSubtitleSettingsStore((state) => state.getSettings);
-    const addSubtitleSettingsInStore = useSubtitleSettingsStore((state) => state.addSettings);
-    const settingsFromStore = useSubtitleSettingsStore((state) => state.settings);
+    // Get the styles from the store
+    const getSubtitleStylesFromStore = useSubtitleStylesStore((state) => state.getStyles);
+    const addSubtitleStylesInStore = useSubtitleStylesStore((state) => state.addStyles);
+    const stylesFromStore = useSubtitleStylesStore((state) => state.styles);
 
     const activeTranscriptionsCount = activeTranscriptions.length;
 
@@ -131,20 +131,20 @@ export default function SubtitleTranscriptions() {
         const result: Record<SubtitleTranscription, StyleSet> = {} as Record<SubtitleTranscription, StyleSet>;
         
         activeTranscriptions.forEach(transcription => {
-            let settings = getSubtitleSettingsFromStore(transcription);
+            let styles = getSubtitleStylesFromStore(transcription);
             
-            // Fall back to 'all' settings if no specific settings
-            if (!settings) {
-                settings = getSubtitleSettingsFromStore('all');
+            // Fall back to 'all' styles if no specific styles
+            if (!styles) {
+                styles = getSubtitleStylesFromStore('all');
             }
             
-            // Use default settings if nothing is found
-            if (!settings) {
-                settings = defaultSubtitleSettings
+            // Use default styles if nothing is found
+            if (!styles) {
+                styles = defaultSubtitleStyles
             }
             
-            const tokenStyles = getTokenStyles(!!isFullscreen, activeTranscriptionsCount, settings);
-            const containerStyle = getContainerStyles(settings);
+            const tokenStyles = getTokenStyles(!!isFullscreen, activeTranscriptionsCount, styles);
+            const containerStyle = getContainerStyles(styles);
             
             result[transcription] = {
                 tokenStyles,
@@ -153,7 +153,7 @@ export default function SubtitleTranscriptions() {
         });
         
         return result;
-    }, [activeTranscriptions, isFullscreen, activeTranscriptionsCount, getSubtitleSettingsFromStore, settingsFromStore]);
+    }, [activeTranscriptions, isFullscreen, activeTranscriptionsCount, getSubtitleStylesFromStore, stylesFromStore]);
 
     const subtitleQueries = useQueries({
         queries: subtitleTranscriptions.filter(transcription => activeTranscriptions.includes(transcription)).map(transcription => ({
@@ -181,13 +181,13 @@ export default function SubtitleTranscriptions() {
                             ? activeSubtitleFile!.file.url.split('.').pop() as "srt" | "vtt"
                             : activeSubtitleFile!.file.name.split('.').pop() as "srt" | "vtt";
 
-                let settings = await getGlobalSubtitleSettings({ transcription });
+                let styles = await getSubtitleStyles({ transcription });
                 
-                if(JSON.stringify(settings) == JSON.stringify(defaultSubtitleSettings)) {
-                    settings = await getGlobalSubtitleSettings({ transcription: 'all' });
-                    addSubtitleSettingsInStore('all', settings)
+                if(JSON.stringify(styles) == JSON.stringify(defaultSubtitleStyles)) {
+                    styles = await getSubtitleStyles({ transcription: 'all' });
+                    addSubtitleStylesInStore('all', styles)
                 }else {
-                    addSubtitleSettingsInStore(transcription, settings)
+                    addSubtitleStylesInStore(transcription, styles)
                 }
                 
                 const cues = await parseSubtitleToJson({ 

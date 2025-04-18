@@ -21,3 +21,7 @@ export function getFileUrl(image: string | null) {
   }
   return image || "";
 }
+
+export const getExtension = (text: string) => {
+  return text.split('.').pop()?.toLowerCase();
+};
