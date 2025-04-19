@@ -9,6 +9,7 @@ import { Anime } from "@/types/anime"
 import { Indicator } from "@/components/indicator"
 import { gql, useQuery } from "@apollo/client"
 import { useRouter } from "next/navigation"
+import AddToList from "@/components/add-to-list/add-to-list"
 
 export const GET_ANIME = gql`
   query($id: Int!) {
@@ -35,7 +36,12 @@ export const GET_ANIME = gql`
 `
 
 export default function AnimeData({ id }: { id: string }) {
-    const { loading, error, data, refetch } = useQuery(GET_ANIME, { variables: { id: parseInt(id) } })
+    const { loading, error, data, refetch } = useQuery(GET_ANIME, { 
+        variables: { id: parseInt(id) },
+        fetchPolicy: 'cache-first',
+        nextFetchPolicy: 'cache-only',
+        notifyOnNetworkStatusChange: false
+     })
     const router = useRouter()
     
     if (loading) return <AnimeDataSkeleton />
@@ -64,6 +70,8 @@ export default function AnimeData({ id }: { id: string }) {
                 </div>
                 {/* Title, Description and Episodes */}
                 <div className="flex flex-col gap-6 md:col-span-2">
+                  <AddToList animeId={id} />
+
                   <AnimeEpisodes 
                       id={id}
                       episodes={anime.episodes}

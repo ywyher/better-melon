@@ -1,3 +1,5 @@
+import Anilist from "@/components/svg/anilist"
+import { AnimeListProivder, ConnectionProvider } from "@/types"
 import { AnimeFormat, AnimeSeason, AnimeSort, AnimeSource, AnimeStatus } from "@/types/anime"
 
 export const statuses: AnimeStatus[] = [
@@ -121,4 +123,18 @@ export const ankiFieldsValues = [
     "sentance",
     "image",
     "definition"
+]
+
+export const connectionProviders: ConnectionProvider[] = [
+    {
+        name: 'anilist',
+        icon: Anilist,
+    }
+]
+
+export const animeListProviders: AnimeListProivder[] = [
+    {
+        name: 'anilist',
+        icon: Anilist,
+    }
 ]

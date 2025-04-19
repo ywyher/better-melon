@@ -1,7 +1,7 @@
 import db from "@/lib/db";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { admin, anonymous, emailOTP, genericOAuth } from "better-auth/plugins"
+import { admin, anonymous, bearer, emailOTP, genericOAuth } from "better-auth/plugins"
 import * as schema from '@/lib/db/schema/index'
 import { nextCookies } from "better-auth/next-js";
 import { eq } from "drizzle-orm";
@@ -211,6 +211,15 @@ export const auth = betterAuth({
             }
           }
         },
+        {
+          providerId: "myanimelist",
+          clientId: process.env.MYANIMELIST_ID!,
+          clientSecret: process.env.MYANIMELIST_SECRET!,
+          authorizationUrl: "https://myanimelist.net/v1/oauth2/authorize",
+          tokenUrl: "https://myanimelist.net/v1/oauth2/token",
+          redirectURI: process.env.MYANIMELIST_REDIRECT_URL!,
+          pkce: true,
+        }
       ]
     }),
     nextCookies()

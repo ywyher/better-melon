@@ -35,7 +35,7 @@ export default function Auth({ user, open, setOpen }: AuthProps) {
             {(port === "register" || port === "login") && (
                 <Button
                     variant="link"
-                    className="p-0 text-sm m-0"
+                    className="flex justify-start text-sm m-0 p-0 w-fit"
                     onClick={handleGoBack}
                 >
                     <ArrowLeft size={12} /> Go Back

@@ -16,7 +16,7 @@ import {
 import { useIsSmall } from "@/hooks/useMediaQuery";
 
 type DialogWrapperProps = {
-  title: string;
+  title?: React.ReactNode;
   children: React.ReactNode;
   className?: string;
   open: boolean;

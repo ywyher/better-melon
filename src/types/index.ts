@@ -1,3 +1,4 @@
+import { ComponentType, SVGProps } from "react";
 import { z } from "zod";
 
 export type Option = {
@@ -13,4 +14,14 @@ export const identifierSchema = z.string().min(3, "Identifier should at least be
 export const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 export const usernameRegex = /^[a-zA-Z][a-zA-Z0-9._]{2,19}$/;
 
-export type OAuthProviders = "anilist"
+export type ConnectionProviders = "anilist"
+
+export type ConnectionProvider = {
+    name: ConnectionProviders
+    icon: ComponentType<SVGProps<SVGSVGElement>>
+}
+
+export type AnimeListProivder = {
+    name: ConnectionProviders
+    icon: ComponentType<SVGProps<SVGSVGElement>>
+}

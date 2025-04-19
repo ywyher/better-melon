@@ -1,6 +1,6 @@
 "use client"
 
-import ConnectionCard from "@/app/profile/connections/_components/connection-card";
+import ConnectionCard from "@/app/settings/connections/_components/connection-provider-card";
 import { authClient } from "@/lib/auth-client";
 import { OAuthProviders } from "@/types";
 import { useQuery } from "@tanstack/react-query";
