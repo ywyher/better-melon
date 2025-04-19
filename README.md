@@ -35,24 +35,12 @@ Animelon doesn’t provide all animes by default, and its entries are rarely upd
   1. All users settings before registration will be saved into his account after registration (Amazing UX)
   2. I won't have to implement the storing logic twice once for the DB and once for the localstorage each time i need it (Amazing DX lol)
 - [x] Subtitles settings (font and and stuff)
-- [ ] Global configuration for
-  1. [ ] Preferred subtitles formats
-  2. [ ] Keyword (regex) when found on a subtitle name select it over the others
-- [ ] Per anime configuration for
-  1. [ ] Subtitles delay
-  2. [ ] Preferred subtitles formats
-  3. [ ] Keyword (regex) when found on a subtitle name select it over the others
-- [ ] The ability to change transcriptions order
+- [x] The ability to change transcriptions order
 - [ ] Video vtt thumbnails
 - [ ] Providers selector
 - [ ] Defintion on select functionality
 - [ ] .ass support
 - [ ] User friendly/Modern UI
------
-probably wont happen:
-- [ ] public account page for each account where users can inspect the user account public data
-  1. [ ] the option to choose the data you wanna make public/private
-- [ ] Comments (maybe lol)
 
 # Self-Hosting
 > [!warning]
