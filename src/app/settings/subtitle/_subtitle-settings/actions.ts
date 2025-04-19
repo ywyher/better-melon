@@ -3,6 +3,7 @@
 import { defaultSubtitleSettings } from "@/app/settings/subtitle/_subtitle-settings/constants";
 import { auth } from "@/lib/auth"
 import db from "@/lib/db";
+import { ensureAuthenticated } from "@/lib/db/mutations";
 import { SubtitleSettings, subtitleSettings } from "@/lib/db/schema";
 import { generateId } from "better-auth";
 import { and, eq } from "drizzle-orm";
@@ -22,26 +23,13 @@ export async function getSubtitleSettings() {
 } 
 
 export async function handleSubtitleSettings() {
-    const headersList = await headers();
-    const currentUser = await auth.api.getSession({ headers: headersList });
+    const { userId, error } = await ensureAuthenticated()
 
-    let userId: string;
-
-    if (!currentUser || !currentUser.user.id) {
-        const anon = await auth.api.signInAnonymous();
-        
-        if (!anon?.user?.id) {
-            return {
-                message: null,
-                error: "Not authenticated nor were we able to authenticate you as an anonymous user. Please register."
-            };
-        }
-
-        userId = anon.user.id;
-    } else {
-        userId = currentUser.user.id;
+    if(!userId || error) return {
+        message: null,
+        error: error,
     }
-    
+
     try {
         const [exists] = await db.select().from(subtitleSettings).where(eq(subtitleSettings.userId, userId))
 

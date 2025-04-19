@@ -23,9 +23,9 @@ export const userRelations = relations(user, ({ many, one }) => ({
     fields: [user.id],
     references: [subtitleStyles.userId]
   }),
-  mediaSettings: one(mediaSettings, {
+  playerSettings: one(playerSettings, {
     fields: [user.id],
-    references: [mediaSettings.userId]
+    references: [playerSettings.userId]
   }),
 }))
 
@@ -120,19 +120,29 @@ export const subtitleStylesRelations = relations(subtitleStyles, ({ one }) => ({
   })
 }))
 
-export const mediaSettings = pgTable("mediaSettings", {
+export const transcriptionEnum = pgEnum("transcription_enum", [
+  "japanese",
+  "hiragana",
+  "katakana",
+  "romaji",
+  "english",
+])
+
+export const playerSettings = pgTable("player_settings", {
   id: text("id").primaryKey(),
 
   autoPlay: boolean('auto_play').notNull().default(false),
   autoNext: boolean('auto_next').notNull().default(false),
   autoSkip: boolean('auto_skip').notNull().default(false),
-  
+
+  enabledTranscriptions: transcriptionEnum('enabled_transcriptions').array().notNull().default(["japanese", "english"]),
+
   userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }),
   createdAt: timestamp("created_at").notNull(),
   updatedAt: timestamp("updated_at").notNull()
 });
 
-export const mediaSettingsRelations = relations(subtitleStyles, ({ one }) => ({
+export const playerSettingsRelations = relations(subtitleStyles, ({ one }) => ({
   user: one(user, {
     fields: [subtitleStyles.userId],
     references: [user.id]
@@ -181,3 +191,4 @@ export type AnkiPreset = Omit<InferSelectModel<typeof ankiPreset>, 'fields'> & {
 };
 export type SubtitleStyles = InferSelectModel<typeof subtitleStyles>
 export type SubtitleSettings = InferSelectModel<typeof subtitleSettings>
+export type PlayerSettings = InferSelectModel<typeof playerSettings>

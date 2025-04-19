@@ -2,7 +2,7 @@
 
 import { getSubtitleStyles } from "@/app/settings/subtitle/_subtitle-styles/actions";
 import { defaultSubtitleStyles } from "@/app/settings/subtitle/_subtitle-styles/constants";
-import { useMediaStore } from "@/lib/stores/media-store";
+import { usePlayerStore } from "@/lib/stores/player-store";
 import { subtitleTranscriptions } from "@/lib/constants";
 import { parseSubtitleToJson } from "@/lib/fetch-subs";
 import { useSubtitleStylesStore } from "@/lib/stores/subtitle-styles-store";
@@ -10,10 +10,10 @@ import { useQueries } from "@tanstack/react-query";
 import TranscriptionsContainer from "@/app/watch/[id]/[ep]/_components/transcriptions/transcriptions-container";
 
 export default function SubtitleTranscriptions() {
-    const englishSubtitleUrl = useMediaStore((state) => state.englishSubtitleUrl) || "";
-    const activeSubtitleFile = useMediaStore((state) => state.activeSubtitleFile);
+    const englishSubtitleUrl = usePlayerStore((state) => state.englishSubtitleUrl) || "";
+    const activeSubtitleFile = usePlayerStore((state) => state.activeSubtitleFile);
 
-    const activeTranscriptions = useMediaStore((state) => state.activeTranscriptions);
+    const activeTranscriptions = usePlayerStore((state) => state.activeTranscriptions);
 
     const addSubtitleStylesInStore = useSubtitleStylesStore((state) => state.addStyles);
 

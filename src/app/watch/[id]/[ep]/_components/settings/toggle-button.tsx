@@ -6,13 +6,13 @@ import { ReactNode } from "react";
 
 export default function ToggleButton({
     name,
-    state,
+    checked,
     onClick,
     className = "",
     tooltip,
 }: {
     name: string;
-    state: boolean;
+    checked: boolean;
     onClick: () => void;
     className?: string;
     tooltip?: ReactNode;
@@ -23,7 +23,7 @@ export default function ToggleButton({
             onClick={onClick}
             className={cn(className, "flex items-center gap-2")}
         >
-            {state ? <Check /> : <Square fill="#fff" />}
+            {checked ? <Check /> : <Square fill="#fff" />}
             {name}
         </Button>
     );

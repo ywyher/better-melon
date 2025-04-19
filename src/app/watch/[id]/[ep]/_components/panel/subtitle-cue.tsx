@@ -6,7 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import type { SubtitleCue, SubtitleToken } from "@/types/subtitle";
 import { cn } from "@/lib/utils";
 import { CSSProperties } from "react";
-import { useMediaStore } from "@/lib/stores/media-store";
+import { usePlayerStore } from "@/lib/stores/player-store";
 import { Button } from "@/components/ui/button";
 import { srtTimestampToSeconds } from "@/lib/funcs";
 import { Play } from "lucide-react";
@@ -27,8 +27,8 @@ export default function SubtitleCue({
     className = "",
 }: SubtitleCueProps) {
     const { from, tokens, content } = cue;
-    const player = useMediaStore((state) => state.player)
-    const delay = useMediaStore((state) => state.delay)
+    const player = usePlayerStore((state) => state.player)
+    const delay = usePlayerStore((state) => state.delay)
 
     const activeToken = useDefinitionStore((state) => state.token)
     const setSentance = useDefinitionStore((state) => state.setSentance)

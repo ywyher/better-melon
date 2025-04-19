@@ -7,7 +7,7 @@ import '@vidstack/react/player/styles/default/theme.css';
 import '@vidstack/react/player/styles/default/layouts/video.css';
 
 import { useCallback, useEffect, useRef, useState, useMemo, memo } from "react";
-import { useMediaStore } from "@/lib/stores/media-store";
+import { usePlayerStore } from "@/lib/stores/player-store";
 import { SubtitleFile } from '@/types/subtitle';
 import { AnimeEpisodeData, AnimeStreamingData, SkipTime } from '@/types/anime';
 import { generateWebVTTFromSkipTimes } from '@/app/watch/[id]/[ep]/funcs';
@@ -50,13 +50,13 @@ export default function Player({
 
     const isTransitioning = useRef(false);
 
-    const activeSubtitleFile = useMediaStore((state) => state.activeSubtitleFile);
-    const setActiveSubtitleFile = useMediaStore((state) => state.setActiveSubtitleFile);
-    const setPlayer = useMediaStore((state) => state.setPlayer);
+    const activeSubtitleFile = usePlayerStore((state) => state.activeSubtitleFile);
+    const setActiveSubtitleFile = usePlayerStore((state) => state.setActiveSubtitleFile);
+    const setPlayer = usePlayerStore((state) => state.setPlayer);
     
-    const autoSkip = useMediaStore((state) => state.autoSkip);
-    const autoNext = useMediaStore((state) => state.autoNext);
-    const autoPlay = useMediaStore((state) => state.autoPlay);
+    const autoSkip = usePlayerStore((state) => state.autoSkip);
+    const autoNext = usePlayerStore((state) => state.autoNext);
+    const autoPlay = usePlayerStore((state) => state.autoPlay);
 
     useEffect(() => {
         setPlayer(player)

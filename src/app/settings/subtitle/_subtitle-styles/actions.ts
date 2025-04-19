@@ -4,6 +4,7 @@ import { defaultSubtitleStyles } from "@/app/settings/subtitle/_subtitle-styles/
 import { subtitleStylesSchema } from "@/app/settings/subtitle/types";
 import { auth } from "@/lib/auth";
 import db from "@/lib/db";
+import { ensureAuthenticated } from "@/lib/db/mutations";
 import { SubtitleStyles, subtitleStyles } from "@/lib/db/schema";
 import { generateId } from "better-auth";
 import { and, eq } from "drizzle-orm";
@@ -16,7 +17,7 @@ export async function getSubtitleStyles({ transcription }: { transcription: Subt
     if (!session?.user.id) {
         return defaultSubtitleStyles;
     }
-        
+    
     const [styles] = await db.select().from(subtitleStyles)
     .where(and(
         eq(subtitleStyles.userId, session.user.id),
@@ -37,25 +38,11 @@ export async function createSubtitleStyles({
   data: z.infer<typeof subtitleStylesSchema>,
   transcription: SubtitleStyles['transcription']
 }) {
-    // Get current user or create anonymous user
-    const headersList = await headers();
-    const currentUser = await auth.api.getSession({ headers: headersList });
-    
-    let userId: string;
+    const { userId, error } = await ensureAuthenticated()
 
-    if (!currentUser || !currentUser.user.id) {
-        const anon = await auth.api.signInAnonymous();
-        
-        if (!anon?.user?.id) {
-            return {
-                message: null,
-                error: "Not authenticated nor were we able to authenticate you as an anonymous user. Please register."
-            };
-        }
-
-        userId = anon.user.id;
-    } else {
-        userId = currentUser.user.id;
+    if(!userId || error) return {
+        message: null,
+        error: error,
     }
     
     try {

@@ -5,7 +5,7 @@ import { TranscriptionItem } from "@/app/watch/[id]/[ep]/_components/transcripti
 import { SubtitleStyles } from "@/lib/db/schema";
 import { timestampToSeconds } from "@/lib/funcs";
 import { useDefinitionStore } from "@/lib/stores/definition-store";
-import { useMediaStore } from "@/lib/stores/media-store";
+import { usePlayerStore } from "@/lib/stores/player-store";
 import { useSubtitleStylesStore } from "@/lib/stores/subtitle-styles-store";
 import { cn } from "@/lib/utils";
 import { SubtitleCue, SubtitleFormat, SubtitleToken, SubtitleTranscription } from "@/types/subtitle";
@@ -104,8 +104,8 @@ export default function TranscriptionsContainer({
       })
     );
 
-    const player = useMediaStore((state) => state.player);
-    const activeTranscriptions = useMediaStore((state) => state.activeTranscriptions);
+    const player = usePlayerStore((state) => state.player);
+    const activeTranscriptions = usePlayerStore((state) => state.activeTranscriptions);
 
     const [order, setOrder] = useState(activeTranscriptions);
 
@@ -113,7 +113,7 @@ export default function TranscriptionsContainer({
     const controlsVisible = useMediaState('controlsVisible', player);
 
     const currentTime = useMediaState('currentTime', player);
-    const delay = useMediaStore((state) => state.delay);
+    const delay = usePlayerStore((state) => state.delay);
 
 
     const getSubtitleStylesFromStore = useSubtitleStylesStore((state) => state.getStyles);
@@ -232,7 +232,7 @@ export default function TranscriptionsContainer({
                     items={order}
                     strategy={verticalListSortingStrategy}
                 >
-                    {activeTranscriptions.map(transcription => {
+                    {order.map(transcription => {
                         if (!activeSubtitleSets[transcription]?.length) return null;
                         
                         return (

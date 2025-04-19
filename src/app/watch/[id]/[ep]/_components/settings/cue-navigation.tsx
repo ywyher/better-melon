@@ -1,7 +1,7 @@
 "use client"
 import { Button } from "@/components/ui/button";
 import { SkipBack, SkipForward } from "lucide-react";
-import { useMediaStore } from "@/lib/stores/media-store";
+import { usePlayerStore } from "@/lib/stores/player-store";
 import { srtTimestampToSeconds } from "@/lib/funcs";
 import { SubtitleCue } from "@/types/subtitle";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -12,10 +12,10 @@ interface CueNavigationProps {
 
 export default function CueNavigation({ direction }: CueNavigationProps) {
   const [currentCue, setCurrentCue] = useState<SubtitleCue | null>(null);
-  const player = useMediaStore((state) => state.player);
-  const activeSubtitleFile = useMediaStore((state) => state.activeSubtitleFile);
-  const delay = useMediaStore((state) => state.delay);
-  const subtitleCues = useMediaStore((state) => state.subtitleCues);
+  const player = usePlayerStore((state) => state.player);
+  const activeSubtitleFile = usePlayerStore((state) => state.activeSubtitleFile);
+  const delay = usePlayerStore((state) => state.delay);
+  const subtitleCues = usePlayerStore((state) => state.subtitleCues);
   
   const isNext = direction === 'next';
   const currentTimeRef = useRef<number>(0);

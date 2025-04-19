@@ -97,9 +97,13 @@ export default function SubtitleStylesControls({ form, onSubmit, isLoading, meth
                                         name="fontSize"
                                         label="Size"
                                     >
-                                        <NumberInput
+                                        <SliderInput
+                                            min={0}
+                                            max={90}
+                                            step={1}
+                                            showValue={true}
+                                            unit='percentage'
                                             className="w-full"
-                                            placeholder="Font size"
                                         />
                                     </FormField>
                                     <FormField

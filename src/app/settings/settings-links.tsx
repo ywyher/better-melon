@@ -9,8 +9,10 @@ export default function SettingsLinks() {
   const pathname = usePathname()
   const links = [
     { label: "General", href: '/settings' },
+    { label: "Player", href: '/settings/player' },
     { label: "Subtitle", href: '/settings/subtitle' },
     { label: "Anki", href: '/settings/anki' },
+    { label: "Connections", href: '/settings/connections' },
   ]
 
   const isLinkActive = (href: string) => {
@@ -21,7 +23,7 @@ export default function SettingsLinks() {
   }
 
   return (
-    <div className="flex flex-row gap-2 pb-1">
+    <div className="flex flex-row gap-2 flex-wrap pb-1">
       {links.map((l, idx) => {
         const isActive = isLinkActive(l.href)
         return (

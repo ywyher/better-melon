@@ -5,7 +5,7 @@ import { z } from "zod";
 export const subtitleStylesSchema = z.object({
   transcription: z.enum([...subtitleTranscriptions, 'all']).default('all'),
 
-  fontSize: z.number().min(4).max(90).default(16),
+  fontSize: z.number().min(0).max(90).default(16),
   fontFamily: z.string().min(1, { message: "Font family is required" }).default("Arial"),
 
   textColor: z.string().default("#FFFFFF"),
