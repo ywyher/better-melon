@@ -1,4 +1,5 @@
 import { Anime } from "@/types/anime";
+import { SubtitleFormat } from "@/types/subtitle";
 import { MediaPlayerInstance } from "@vidstack/react";
 
 export const formatDescription = (desc: Anime['description'], max?: number) => {
@@ -9,6 +10,20 @@ export const formatDescription = (desc: Anime['description'], max?: number) => {
 
 export const getTitle = (title: Anime['title']) => {
     return title.english || title.romaji || "Unknown Title";;
+}
+
+export function timestampToSeconds({ format, timestamp }: { format: SubtitleFormat, timestamp: string }): number {
+    switch (format) {
+        case 'srt':
+            return srtTimestampToSeconds(timestamp);
+        break;
+        case "vtt":
+            return vttTimestampToSeconds(timestamp);
+        break;
+        default:
+            return 0;
+        break;
+    }
 }
 
 /**

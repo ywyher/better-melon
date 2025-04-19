@@ -3,7 +3,7 @@ import SubtitleCue from "@/app/watch/[id]/[ep]/_components/panel/subtitle-cue";
 import { TabsContent } from "@/components/ui/tabs";
 import { SubtitleCue as TSubtitleCue, SubtitleTranscription } from "@/types/subtitle";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import { useWatchStore } from "@/app/watch/[id]/[ep]/store";
+import { useMediaStore } from "@/lib/stores/media-store";
 import { srtTimestampToSeconds } from "@/lib/funcs";
 
 // Create a memoized SubtitleCueItem component
@@ -29,8 +29,8 @@ export default function SubtitlesList({
     const autoScrollTimerRef = useRef<NodeJS.Timeout | null>(null);
     const lastUpdateTimeRef = useRef<number>(0);
     
-    const player = useWatchStore((state) => state.player);
-    const delay = useWatchStore((state) => state.delay);
+    const player = useMediaStore((state) => state.player);
+    const delay = useMediaStore((state) => state.delay);
 
     const cueTimeRanges = useMemo(() => {
         if (!displayCues?.length) return [];

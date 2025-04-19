@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query"
 import { useEffect, useMemo, useState } from "react"
 import { Card, CardContent } from "@/components/ui/card";
 import { Indicator } from "@/components/indicator";
-import { useWatchStore } from "@/app/watch/[id]/[ep]/store";
+import { useMediaStore } from "@/lib/stores/media-store";
 import { Tabs } from "@/components/ui/tabs";
 import type { SubtitleCue as TSubtitleCue, SubtitleTranscription, SubtitleFile } from "@/types/subtitle";
 import { parseSubtitleToJson } from "@/lib/fetch-subs";
@@ -17,8 +17,8 @@ export default function SubtitlePanel({ subtitleFiles }: { subtitleFiles: Subtit
     const [displayTranscription, setDisplayTranscription] = useState<SubtitleTranscription>('japanese')
     const [previousCues, setPreviousCues] = useState<TSubtitleCue[] | undefined>();
 
-    const activeSubtitleFile = useWatchStore((state) => state.activeSubtitleFile);
-    const setSubtitleCues = useWatchStore((state) => state.setSubtitleCues);
+    const activeSubtitleFile = useMediaStore((state) => state.activeSubtitleFile);
+    const setSubtitleCues = useMediaStore((state) => state.setSubtitleCues);
 
     const { data: subtitleCues, isLoading: isCuesLoading, error: cuesError, refetch } = useQuery({
         queryKey: ['subs', displayTranscription, activeSubtitleFile],

@@ -1,5 +1,5 @@
-import { InferSelectModel, relations, sql } from "drizzle-orm";
-import { pgTable, text, timestamp, boolean, jsonb, pgEnum, real, unique } from "drizzle-orm/pg-core";
+import { InferSelectModel, relations } from "drizzle-orm";
+import { pgTable, text, timestamp, boolean, jsonb, pgEnum, real } from "drizzle-orm/pg-core";
 			
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -22,6 +22,10 @@ export const userRelations = relations(user, ({ many, one }) => ({
   subtitleStyles: one(subtitleStyles, {
     fields: [user.id],
     references: [subtitleStyles.userId]
+  }),
+  mediaSettings: one(mediaSettings, {
+    fields: [user.id],
+    references: [mediaSettings.userId]
   }),
 }))
 
@@ -56,6 +60,8 @@ export const subtitleSettings = pgTable("subtitle_settings", {
   
   preferredFormat: subtitleFormatEnum('preferred_format'),
   matchPattern: text("match_pattern"), // fileNameMatchPattern
+  transcriptionOrder: text('transcription_order').array(),
+  // .default(["hiragana","katakana","romaji","japanese","english"])
 
   userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }),
   createdAt: timestamp("created_at").notNull(),
@@ -108,6 +114,25 @@ export const subtitleStyles = pgTable("subtitle_styles", {
 });
 
 export const subtitleStylesRelations = relations(subtitleStyles, ({ one }) => ({
+  user: one(user, {
+    fields: [subtitleStyles.userId],
+    references: [user.id]
+  })
+}))
+
+export const mediaSettings = pgTable("mediaSettings", {
+  id: text("id").primaryKey(),
+
+  autoPlay: boolean('auto_play').notNull().default(false),
+  autoNext: boolean('auto_next').notNull().default(false),
+  autoSkip: boolean('auto_skip').notNull().default(false),
+  
+  userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at").notNull(),
+  updatedAt: timestamp("updated_at").notNull()
+});
+
+export const mediaSettingsRelations = relations(subtitleStyles, ({ one }) => ({
   user: one(user, {
     fields: [subtitleStyles.userId],
     references: [user.id]

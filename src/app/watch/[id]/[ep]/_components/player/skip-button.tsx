@@ -1,7 +1,7 @@
 'use client'
 
 import { Button } from "@/components/ui/button";
-import { useWatchStore } from "@/app/watch/[id]/[ep]/store";
+import { useMediaStore } from "@/lib/stores/media-store";
 import { SkipTime } from "@/types/anime";
 import { Dispatch, SetStateAction, useMemo } from "react";
 import { useMediaState } from "@vidstack/react";
@@ -18,7 +18,7 @@ export default function SkipButton({
     skipTimes: SkipTime[];
     currentTime: number
 }) {
-    const player = useWatchStore((state) => state.player);
+    const player = useMediaStore((state) => state.player);
     const isFullscreen = useMediaState('fullscreen', player);
     const controlsVisible = useMediaState('controlsVisible', player);
 

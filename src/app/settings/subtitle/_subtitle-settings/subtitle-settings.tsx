@@ -18,13 +18,13 @@ export default function SubtitleSettings() {
     if(isSettingsLoading) return <SubtitleSettingsSkeleton />
 
     return (
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-5 px-4 sm:px-0">
             <div className="text-xl font-semibold">Subtitle Settings</div>
-            <SubtitleSettingsPreferredFormat 
+            <SubtitleSettingsPreferredFormat
                 settingsId={settings?.id ?? ""}
                 preferredFormat={settings?.preferredFormat ?? null}
             />
-            <SubtitleSettingsMatchPattern 
+            <SubtitleSettingsMatchPattern
                 settingsId={settings?.id ?? ""}
                 matchPattern={settings?.matchPattern ?? ""}
             />

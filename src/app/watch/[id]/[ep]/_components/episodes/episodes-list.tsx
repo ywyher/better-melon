@@ -8,7 +8,7 @@ import { useParams, useRouter } from "next/navigation";
 import GridView from "@/app/watch/[id]/[ep]/_components/episodes/grid-view";
 import ListView from "@/app/watch/[id]/[ep]/_components/episodes/list-view";
 import ImageView from "@/app/watch/[id]/[ep]/_components/episodes/image-view";
-import { useWatchStore } from "@/app/watch/[id]/[ep]/store";
+import { useMediaStore } from "@/lib/stores/media-store";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState, useMemo, useCallback, useRef } from "react";
@@ -22,10 +22,10 @@ export default function EpisodesList({
       animeData: Anime
   }) {
   const params = useParams<{ id: string, ep: string }>();
-  const episodesListViewMode = useWatchStore((state) => state.episodesListViewMode);
-  const setEpisodesListViewMode = useWatchStore((state) => state.setEpisodesListViewMode);
-  const episodesListSpoilerMode = useWatchStore((state) => state.episodesListSpoilerMode);
-  const setEpisodesListSpoilerMode = useWatchStore((state) => state.setEpisodesListSpoilerMode);
+  const episodesListViewMode = useMediaStore((state) => state.episodesListViewMode);
+  const setEpisodesListViewMode = useMediaStore((state) => state.setEpisodesListViewMode);
+  const episodesListSpoilerMode = useMediaStore((state) => state.episodesListSpoilerMode);
+  const setEpisodesListSpoilerMode = useMediaStore((state) => state.setEpisodesListSpoilerMode);
   const router = useRouter();
   const currentEpisode = parseInt(params.ep);
   const [filterText, setFilterText] = useState("");

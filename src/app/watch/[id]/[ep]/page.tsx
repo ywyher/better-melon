@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import Player from "@/app/watch/[id]/[ep]/_components/player/player";
 import { AnimeEpisodeData, AnimeStreamingData } from "@/types/anime";
 import { useParams } from 'next/navigation';
-import { useWatchStore } from '@/app/watch/[id]/[ep]/store';
+import { useMediaStore } from '@/lib/stores/media-store';
 import { filterSubtitleFiles, selectSubtitleFile } from '@/app/watch/[id]/[ep]/funcs';
 import GoBack from '@/app/watch/[id]/[ep]/_components/goback';
 import Settings from '@/app/watch/[id]/[ep]/_components/settings/settings';
@@ -114,7 +114,7 @@ export default function Watch() {
     refetchOnWindowFocus: false,
   })
 
-  const { setEnglishSubtitleUrl, setActiveSubtitleFile } = useWatchStore();
+  const { setEnglishSubtitleUrl, setActiveSubtitleFile } = useMediaStore();
 
   useEffect(() => {
     if(!streamingData || !subtitleFiles?.length) return;

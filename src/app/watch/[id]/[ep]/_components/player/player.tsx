@@ -7,11 +7,11 @@ import '@vidstack/react/player/styles/default/theme.css';
 import '@vidstack/react/player/styles/default/layouts/video.css';
 
 import { useCallback, useEffect, useRef, useState, useMemo, memo } from "react";
-import { useWatchStore } from "@/app/watch/[id]/[ep]/store";
+import { useMediaStore } from "@/lib/stores/media-store";
 import { SubtitleFile } from '@/types/subtitle';
 import { AnimeEpisodeData, AnimeStreamingData, SkipTime } from '@/types/anime';
 import { generateWebVTTFromSkipTimes } from '@/app/watch/[id]/[ep]/funcs';
-import SubtitleTranscriptions from '@/app/watch/[id]/[ep]/_components/subtitle-transcriptions';
+import SubtitleTranscriptions from '@/app/watch/[id]/[ep]/_components/transcriptions/transcriptions';
 import SkipButton from '@/app/watch/[id]/[ep]/_components/player/skip-button';
 import PlayerSkeleton from '@/app/watch/[id]/[ep]/_components/player/player-skeleton';
 import { useThrottledCallback } from 'use-debounce';
@@ -50,13 +50,13 @@ export default function Player({
 
     const isTransitioning = useRef(false);
 
-    const activeSubtitleFile = useWatchStore((state) => state.activeSubtitleFile);
-    const setActiveSubtitleFile = useWatchStore((state) => state.setActiveSubtitleFile);
-    const setPlayer = useWatchStore((state) => state.setPlayer);
+    const activeSubtitleFile = useMediaStore((state) => state.activeSubtitleFile);
+    const setActiveSubtitleFile = useMediaStore((state) => state.setActiveSubtitleFile);
+    const setPlayer = useMediaStore((state) => state.setPlayer);
     
-    const autoSkip = useWatchStore((state) => state.autoSkip);
-    const autoNext = useWatchStore((state) => state.autoNext);
-    const autoPlay = useWatchStore((state) => state.autoPlay);
+    const autoSkip = useMediaStore((state) => state.autoSkip);
+    const autoNext = useMediaStore((state) => state.autoNext);
+    const autoPlay = useMediaStore((state) => state.autoPlay);
 
     useEffect(() => {
         setPlayer(player)

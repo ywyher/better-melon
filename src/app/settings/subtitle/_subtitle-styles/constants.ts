@@ -1,7 +1,7 @@
 import { SubtitleStyles } from "@/lib/db/schema";
 
 export const defaultSubtitleStyles = {
-    fontSize: 16,
+    fontSize: 25,
     fontFamily: "Arial",
     textShadow: 'outline' as SubtitleStyles['textShadow'],
     textColor: "#FFFFFF",

@@ -4,7 +4,7 @@ import CueNavigation from "@/app/watch/[id]/[ep]/_components/settings/cue-naviga
 import DelaySlider from "@/app/watch/[id]/[ep]/_components/settings/delay-slider"
 import EpisodeNavigation from "@/app/watch/[id]/[ep]/_components/settings/episode-navigator"
 import ToggleButton from "@/app/watch/[id]/[ep]/_components/settings/toggle-button"
-import { useWatchStore } from "@/app/watch/[id]/[ep]/store"
+import { useMediaStore } from "@/lib/stores/media-store"
 import MultipleSelector from "@/components/multiple-selector"
 import { Separator } from "@/components/ui/separator"
 import { subtitleTranscriptions } from "@/lib/constants"
@@ -12,23 +12,17 @@ import { SubtitleTranscription } from "@/types/subtitle"
 import TooltipWrapper from "@/components/tooltip-wrapper"
 import { useCallback } from "react"
 import SubtitleSettings from "@/app/watch/[id]/[ep]/_components/settings/subtitle-styles"
-import {
-    Accordion,
-    AccordionContent,
-    AccordionItem,
-    AccordionTrigger,
-} from "@/components/ui/accordion"
   
 export default function Settings({ episodesLength }: { episodesLength: number }) {
-    const activeTranscriptions = useWatchStore((state) => state.activeTranscriptions)
-    const setActiveTranscriptions = useWatchStore((state) => state.setActiveTranscriptions)
+    const activeTranscriptions = useMediaStore((state) => state.activeTranscriptions)
+    const setActiveTranscriptions = useMediaStore((state) => state.setActiveTranscriptions)
 
-    const autoPlay = useWatchStore((state) => state.autoPlay)
-    const setAutoPlay = useWatchStore((state) => state.setAutoPlay)
-    const autoNext = useWatchStore((state) => state.autoNext)
-    const setAutoNext = useWatchStore((state) => state.setAutoNext)
-    const autoSkip = useWatchStore((state) => state.autoSkip)
-    const setAutoSkip = useWatchStore((state) => state.setAutoSkip)
+    const autoPlay = useMediaStore((state) => state.autoPlay)
+    const setAutoPlay = useMediaStore((state) => state.setAutoPlay)
+    const autoNext = useMediaStore((state) => state.autoNext)
+    const setAutoNext = useMediaStore((state) => state.setAutoNext)
+    const autoSkip = useMediaStore((state) => state.autoSkip)
+    const setAutoSkip = useMediaStore((state) => state.setAutoSkip)
 
     const handleTranscriptionsChange = useCallback((scripts: SubtitleTranscription[]) => {
         setActiveTranscriptions(scripts)

@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { toast } from "sonner";
 import DialogWrapper from "@/components/dialog-wrapper";
-import { useWatchStore } from "@/app/watch/[id]/[ep]/store";
+import { useMediaStore } from "@/lib/stores/media-store";
 import { SubtitleFile } from "@/types/subtitle";
 import { isFileJpn } from "@/app/watch/[id]/[ep]/funcs";
 
@@ -23,8 +23,8 @@ export default function SubtitleFileSelector({ subtitleFiles }: {
     const [localFileName, setLocalFileName] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    const activeSubtitleFile = useWatchStore((state) => state.activeSubtitleFile)
-    const setActiveSubtitleFile = useWatchStore((state) => state.setActiveSubtitleFile)
+    const activeSubtitleFile = useMediaStore((state) => state.activeSubtitleFile)
+    const setActiveSubtitleFile = useMediaStore((state) => state.setActiveSubtitleFile)
 
     useEffect(() => {
         if (activeSubtitleFile?.source === "local" && activeSubtitleFile.file) {

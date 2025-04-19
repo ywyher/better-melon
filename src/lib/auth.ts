@@ -1,7 +1,7 @@
 import db from "@/lib/db";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { anonymous, emailOTP, genericOAuth } from "better-auth/plugins"
+import { admin, anonymous, emailOTP, genericOAuth } from "better-auth/plugins"
 import * as schema from '@/lib/db/schema/index'
 import { nextCookies } from "better-auth/next-js";
 import { eq } from "drizzle-orm";
@@ -57,21 +57,21 @@ export const auth = betterAuth({
   plugins: [
     anonymous({
       onLinkAccount: async ({ anonymousUser, newUser }) => {
-          // Fetch anonymous user data
           const anonymousAnkiPresets = await db.select().from(schema.ankiPreset)
             .where(eq(schema.ankiPreset.userId, anonymousUser.user.id));
           const anonymousSubtitleSettings = await db.select().from(schema.subtitleSettings)
+          .where(eq(schema.subtitleSettings.userId, anonymousUser.user.id));
+          const anonymousSubtitleStyles = await db.select().from(schema.subtitleStyles)
             .where(eq(schema.subtitleSettings.userId, anonymousUser.user.id));
           
-          // Fetch existing user data
           const userAnkiPresets = await db.select().from(schema.ankiPreset)
             .where(eq(schema.ankiPreset.userId, newUser.user.id));
           const userSubtitleSettings = await db.select().from(schema.subtitleSettings)
             .where(eq(schema.subtitleSettings.userId, newUser.user.id));
+          const userSubtitleStyles = await db.select().from(schema.subtitleStyles)
+            .where(eq(schema.subtitleSettings.userId, newUser.user.id));
           
-          // Handle ankiPresets migration
           if (anonymousAnkiPresets.length > 0) {
-            // Check if user has a default preset
             const userHasDefaultPreset = userAnkiPresets.some(preset => preset.isDefault);
             
             for (const anonPreset of anonymousAnkiPresets) {
@@ -97,21 +97,29 @@ export const auth = betterAuth({
             }
           }
           
-          // Handle subtitleSettings migration
           if (anonymousSubtitleSettings.length > 0) {
             for (const anonSetting of anonymousSubtitleSettings) {
-              // Find if user has settings for this transcription type and anime (or global)
-              const duplicateSetting = userSubtitleSettings.find(s => 
-                s.transcription === anonSetting.transcription && 
-                ((anonSetting.isGlobal && s.isGlobal) || 
-                 (anonSetting.animeId === s.animeId && anonSetting.animeId !== null))
-              );
+              const duplicateSetting = userSubtitleSettings.length > 0;
               
               if (!duplicateSetting) {
                 // No conflict, migrate this setting
                 await db.update(schema.subtitleSettings)
                   .set({ userId: newUser.user.id })
                   .where(eq(schema.subtitleSettings.id, anonSetting.id));
+              }
+            }
+          }
+
+          if (anonymousSubtitleSettings.length > 0) {
+            for (const anonStyle of anonymousSubtitleStyles) {
+              const duplicateStyle = userSubtitleStyles.find(s => 
+                s.transcription === anonStyle.transcription
+              );
+              
+              if (!duplicateStyle) {
+                await db.update(schema.subtitleStyles)
+                  .set({ userId: newUser.user.id })
+                  .where(eq(schema.subtitleStyles.id, anonStyle.id));
               }
             }
           }

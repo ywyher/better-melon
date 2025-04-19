@@ -15,7 +15,7 @@ import {
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
-import { useWatchStore } from '@/app/watch/[id]/[ep]/store';
+import { useMediaStore } from '@/lib/stores/media-store';
 import { takeSnapshot } from '@/lib/funcs';
 import { useQuery } from '@tanstack/react-query';
 import { AnkiPreset } from '@/lib/db/schema';
@@ -23,9 +23,9 @@ import { getDefaultPreset } from '@/app/settings/anki/actions';
 
 export default function DefinitionCard() {
   const { sentance, setSentance, setToken, token } = useDefinitionStore()
-  const setActiveTokenId = useWatchStore((state) => state.setActiveTokenId)
+  const setActiveTokenId = useMediaStore((state) => state.setActiveTokenId)
   const [position, setPosition] = useState({ x: 0, y: 0 });
-  const player = useWatchStore((state) => state.player);
+  const player = useMediaStore((state) => state.player);
 
   const { data: preset } = useQuery({
     queryKey: ['anki', 'preset'],

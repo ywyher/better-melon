@@ -1,13 +1,13 @@
 "use client"
-import { useWatchStore } from "@/app/watch/[id]/[ep]/store";
+import { useMediaStore } from "@/lib/stores/media-store";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { Separator } from "@/components/ui/separator";
 
 export default function DelaySlider() {
-  const delay = useWatchStore((state) => state.delay);
-  const setDelay = useWatchStore((state) => state.setDelay);
+  const delay = useMediaStore((state) => state.delay);
+  const setDelay = useMediaStore((state) => state.setDelay);
   const [japaneseProgress, setJapaneseProgress] = useState([delay.japanese]);
   const [englishProgress, setEnglishProgress] = useState([delay.english]);
 

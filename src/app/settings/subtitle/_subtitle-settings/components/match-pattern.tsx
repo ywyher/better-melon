@@ -63,44 +63,45 @@ export default function SubtitleSettingsMatchPattern({ settingsId, matchPattern 
 
     return (
         <div className="flex flex-col gap-3">
-            <div className="grid grid-cols-8 items-center gap-4">
-                <div className="col-span-4 flex flex-row gap-1">
-                    <div className="flex flex-row gap-1.5 text-sm font-medium">
-                        <p>Prioritize files whose names match this</p> 
-                        <Badge variant='secondary'>keyword</Badge> 
-                        <p>or</p>
-                        <Badge variant='secondary'>regex</Badge>
-                        <p>pattern.</p>
-                    </div>
-                    <TooltipWrapper 
-                        tooltip="Prioritize the preferred subtitle format but if not found fallback to other formats"
-                    >
-                        <AlertCircle className="w-4 h-4 text-amber-300 cursor-pointer" />
-                    </TooltipWrapper>
-                </div>
-                <div className="col-span-4 flex flex-row gap-3">
-                    <Input
-                        placeholder="Keyword or Regex"
-                        value={inputValue}
-                        onChange={(e) => {
-                            if(isInitialRender) {
-                                setIsInitialRender(false)
-                            }
-                            setInputValue(e.currentTarget.value)
-                        }}
-                    />
-                    {matchPattern && (
-                        <LoadingButton
-                            isLoading={isLoading}
-                            variant="destructive"
-                            className="w-fit"
-                            onClick={() => onDeleteMatchPattern(settingsId)}
-                        >
-                            <X />
-                        </LoadingButton>
-                    )}
-                </div>
+        <div className="flex flex-col md:grid md:grid-cols-8 items-start md:items-center gap-4">
+            <div className="w-full md:col-span-4 flex flex-col md:flex-row gap-1">
+            <div className="flex flex-wrap gap-1.5 text-sm font-medium">
+                <p>Prioritize files whose names match this</p>
+                <Badge variant='secondary'>keyword</Badge>
+                <p>or</p>
+                <Badge variant='secondary'>regex</Badge>
+                <p>pattern.</p>
             </div>
+            <TooltipWrapper
+                tooltip="Prioritize the preferred subtitle format but if not found fallback to other formats"
+            >
+                <AlertCircle className="w-4 h-4 text-amber-300 cursor-pointer mt-1" />
+            </TooltipWrapper>
+            </div>
+            <div className="w-full md:col-span-4 flex flex-row gap-3">
+            <Input
+                placeholder="Keyword or Regex"
+                value={inputValue}
+                onChange={(e) => {
+                if(isInitialRender) {
+                    setIsInitialRender(false)
+                }
+                setInputValue(e.currentTarget.value)
+                }}
+                className="flex-1"
+            />
+            {matchPattern && (
+                <LoadingButton
+                isLoading={isLoading}
+                variant="destructive"
+                className="w-fit"
+                onClick={() => onDeleteMatchPattern(settingsId)}
+                >
+                <X />
+                </LoadingButton>
+            )}
+            </div>
+        </div>
         </div>
     )
 }
