@@ -32,7 +32,6 @@ export async function handleSubtitleSettings() {
 
     try {
         const [exists] = await db.select().from(subtitleSettings).where(eq(subtitleSettings.userId, userId))
-
         
         if(exists?.id) return {
             message: "Already exists, skipping...",

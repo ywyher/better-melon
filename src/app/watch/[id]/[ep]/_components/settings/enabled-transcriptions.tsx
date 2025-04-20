@@ -7,10 +7,9 @@ import TooltipWrapper from "@/components/tooltip-wrapper"
 import { subtitleTranscriptions } from "@/lib/constants"
 import { GeneralSettings, PlayerSettings } from "@/lib/db/schema"
 import { usePlayerStore } from "@/lib/stores/player-store"
-import { SyncStrategy } from "@/types"
 import { SubtitleTranscription } from "@/types/subtitle"
 import { useQueryClient } from "@tanstack/react-query"
-import { useCallback, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { toast } from "sonner"
 
 type EnabledTranscriptionsSettingProps = { 
@@ -53,7 +52,9 @@ export default function EnabledTranscriptionsSetting({ playerSettings, syncPlaye
         if (syncStrategy === 'always' || syncStrategy === 'ask') {
             try {
                 setIsLoading(true);
-                const { error, message } = await handleEnabledTranscriptions(transcriptions);
+                const { error, message } = await handleEnabledTranscriptions({
+                    transcriptions,
+                });
                 
                 if (error) {
                     toast.error(error);

@@ -6,8 +6,8 @@ import { useEffect, useState } from "react";
 import { GeneralSettings, PlayerSettings } from "@/lib/db/schema";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { handlePlaybackSetting } from "@/app/settings/player/actions";
 import { showSyncSettingsToast } from "@/components/sync-settings-toast";
+import { handlePlaybackSetting } from "@/app/settings/player/actions";
 
 type TogglesProps = { 
     playerSettings: PlayerSettings
@@ -64,7 +64,10 @@ export default function Toggles({ playerSettings, syncPlayerSettings }: TogglesP
         if (syncStrategy === 'always' || syncStrategy === 'ask') {
           try {
             setIsLoading(true);
-            const { error, message } = await handlePlaybackSetting(setting, value);
+            const { error, message } = await handlePlaybackSetting({
+                settingName: setting,
+                checked: value
+            });
             
             if (error) {
               toast.error(error);

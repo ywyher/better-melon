@@ -24,7 +24,7 @@ export default function EnabledTranscriptionsSettings({ playerSettings }: { play
         }
         
         setIsLoading(true);
-        const { message, error } = await handleEnabledTranscriptions(transcriptions);
+        const { message, error } = await handleEnabledTranscriptions({ transcriptions });
 
         if (error) {
             toast.error(error);

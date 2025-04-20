@@ -7,7 +7,7 @@ import { ensureAuthenticated } from "@/lib/db/mutations"
 import { playerSettings } from "@/lib/db/schema"
 import { SubtitleTranscription } from "@/types/subtitle"
 import { generateId } from "better-auth"
-import { eq } from "drizzle-orm"
+import { and, eq } from "drizzle-orm"
 import { headers } from "next/headers"
 
 export async function getPlayerSettings() {
@@ -29,7 +29,8 @@ export async function ensurePlayerSettingsExists() {
     if(!userId || error) return {
         message: null,
         error: error,
-        playerSettingsId: null
+        playerSettingsId: null,
+        userId: null
     }
 
     try {
@@ -39,6 +40,7 @@ export async function ensurePlayerSettingsExists() {
             message: "Already exists, skipping...",
             error: null,
             playerSettingsId: exists.id,
+            userId: exists.userId
         }
 
         const newSettingsId = generateId();
@@ -54,18 +56,22 @@ export async function ensurePlayerSettingsExists() {
             message: "Subtitle settings created successfully",
             error: null,
             playerSettingsId: newSettingsId,
+            userId
         }; 
     } catch (error: unknown) {
         return {
             message: null,
             error: error instanceof Error ? error.message : "Failed to update subtitle styles",
-            playerSettingsId: null
+            playerSettingsId: null,
+            userId: null
         }
     }
 }
 
-export async function handleEnabledTranscriptions(transcriptions: SubtitleTranscription[]) {
-    const { error, playerSettingsId } = await ensurePlayerSettingsExists()
+export async function handleEnabledTranscriptions({ transcriptions }: {
+    transcriptions: SubtitleTranscription[],
+}) {
+    const { error, playerSettingsId, userId } = await ensurePlayerSettingsExists()
     
     if (!playerSettingsId || error) return {
         message: null,
@@ -77,7 +83,10 @@ export async function handleEnabledTranscriptions(transcriptions: SubtitleTransc
             .set({
                 enabledTranscriptions: transcriptions
             })
-            .where(eq(playerSettings.id, playerSettingsId)) 
+            .where(and(
+                eq(playerSettings.id, playerSettingsId),
+                eq(playerSettings.userId, userId),
+            )) 
     
         if(!data) return {
             message: null,
@@ -96,7 +105,10 @@ export async function handleEnabledTranscriptions(transcriptions: SubtitleTransc
     }
 }
 
-export async function handlePlaybackSetting(settingName: 'autoPlay' | 'autoNext' | 'autoSkip', checked: boolean) {
+export async function handlePlaybackSetting({ checked, settingName }: {
+    settingName: 'autoPlay' | 'autoNext' | 'autoSkip', 
+    checked: boolean
+}) {
     const { error, playerSettingsId } = await ensurePlayerSettingsExists()
 
     if (!playerSettingsId || error) return {

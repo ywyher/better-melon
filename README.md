@@ -36,6 +36,7 @@ Animelon doesn’t provide all animes by default, and its entries are rarely upd
   2. I won't have to implement the storing logic twice once for the DB and once for the localstorage each time i need it (Amazing DX lol)
 - [x] Subtitles settings (font and and stuff)
 - [x] The ability to change transcriptions order
+- [x] Sync player settings with database
 - [ ] Video vtt thumbnails
 - [ ] Providers selector
 - [ ] Defintion on select functionality

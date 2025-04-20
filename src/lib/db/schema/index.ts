@@ -65,7 +65,7 @@ export const generalSettings = pgTable("general_settings", {
 
   syncPlayerSettings: syncStrategyEnum('sync_player_settings').default('ask').notNull(),
 
-  userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }),
+  userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }).unique(),
   createdAt: timestamp("created_at").notNull(),
   updatedAt: timestamp("updated_at").notNull()
 });
@@ -91,7 +91,7 @@ export const subtitleSettings = pgTable("subtitle_settings", {
   transcriptionOrder: text('transcription_order').array(),
   // .default(["hiragana","katakana","romaji","japanese","english"])
 
-  userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }),
+  userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }).unique(),
   createdAt: timestamp("created_at").notNull(),
   updatedAt: timestamp("updated_at").notNull()
 });
@@ -165,7 +165,7 @@ export const playerSettings = pgTable("player_settings", {
 
   enabledTranscriptions: transcriptionEnum('enabled_transcriptions').array().notNull().default(["japanese", "english"]),
 
-  userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }),
+  userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }).unique(),
   createdAt: timestamp("created_at").notNull(),
   updatedAt: timestamp("updated_at").notNull()
 });
