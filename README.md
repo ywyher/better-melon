@@ -1,8 +1,11 @@
+> [!note]
+> the hosted vercel instance won't always be up-to-date as long as we are in development, Therefore we recommend self-hosting for up-to-date experience
+
 # What is it ?
 An [Animleon](https://www.animelon.com/) alternative that aims to overcome all animelon's inconvenients
 
 # Why ?
-Animelon doesn’t provide all animes by default, and its entries are rarely updated, making it difficult for learners who want to watch modern anime with subtitles. That’s why I decided to create this website—to offer the latest animes with subtitles, along with real-time Japanese subtitle definitions, providing a more feature-rich alternative.
+Animelon doesn’t provide all animes, and its entries are rarely updated, making it difficult for learners who want to watch modern anime with subtitles. That’s why I decided to create this website—to offer the latest animes with subtitles, along with real-time Japanese subtitle definitions, providing a more feature-rich alternative.
 
 # Roadmap
 > [!warning]
@@ -52,6 +55,7 @@ Animelon doesn’t provide all animes by default, and its entries are rarely upd
 - Anki integration settings
 
 ## Planned Features
+- Add to list
 - Audio support for anki
 - Video VTT thumbnails
 - Providers selector
@@ -85,7 +89,8 @@ You need the following:
 - M3U8 proxy server
 - Consumet API
 
-**Option A: Using Docker Compose (Recommended)**
+
+**Option A: Using Docker Compose**
 ```sh
 docker compose -f docker.yaml up -d
 ```
