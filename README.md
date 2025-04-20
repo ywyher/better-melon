@@ -6,126 +6,162 @@ Animelon doesn’t provide all animes by default, and its entries are rarely upd
 
 # Roadmap
 > [!warning]
-> This project is still in beta 
+> This project is still in beta
 
 > [!note]
-> the only crucial feature that hasn't been added yet is the definition on select functionality, you could use yomitan instead for now
+> The only crucial feature not yet implemented is definition-on-select functionality. You can use Yomitan as an alternative for now.
 
-- [x] Search/Filtering system
-- [x] Watch functionality
-- [x] Subtitles panel
-- [x] Sync video subtitles with the panel subtitles
-- [x] Support for all japanese writing system
-- [x] Video chapters/timestamps
-- [x] Skip chapters/timestamps button
-- [x] Interactive video subtitles
-- [x] Delay subtitle feature
-- [x] Next/Previous cue buttons
-- [x] Support local subtitles
-- [x] Seperate delay sliders for japanese and english subs
-- [x] Episodes list/selector
-- [x] Authentication integration using better-auth 
-- [x] Account linking
-  1. [x] Anilist -> User can link anilist account to perform actions on his list
-  2. [ ] Myanimelist -> might not happen cause of term of use
-- [x] Anki integration
-  1. [x] Support for images
-  2. [ ] Support for audio
-- [x] Anonymous users -> instead of using localstorage we will create an anonymous record in the database which have the following benifits:
-  1. All users settings before registration will be saved into his account after registration (Amazing UX)
-  2. I won't have to implement the storing logic twice once for the DB and once for the localstorage each time i need it (Amazing DX lol)
-- [x] Subtitles settings (font and and stuff)
-- [x] The ability to change transcriptions order
-- [x] Sync player settings with database
-- [ ] Video vtt thumbnails
-- [ ] Providers selector
-- [ ] Defintion on select functionality
-- [ ] .ass support
-- [ ] User friendly/Modern UI
+## Completed Features
 
-# Self-Hosting
-> [!warning]
-> This section is outdated
+### Core Functionality
+- Search/Filtering system
+- Watch functionality
+- Subtitles panel
+- Video-subtitle synchronization
+- Support for all Japanese writing systems
+- Video chapters/timestamps
+- Chapter skip buttons
+- Interactive video subtitles
+- Subtitle delay feature
+- Next/Previous cue navigation
+- Local subtitle support
+- Separate delay sliders for Japanese and English subtitles
+- Episodes list/selector
 
+### User Experience
+- Subtitles styling options
+- Customizable transcription order
+- Player settings synchronization with database
+
+### Integrations
+- Authentication via better-auth
+- Account linking 
+  1. Anilist
+- Anki integration
+  1. Image support
+
+### User Data Management
+  - Anonymous user profiles
+  - Settings preserved after registration
+  - Unified storage implementation
+
+### Settings Categories
+- General preferences
+- Player configuration
+- Connection/account management
+- Anki integration settings
+
+## Planned Features
+- Audio support for anki
+- Video VTT thumbnails
+- Providers selector
+- Definition-on-select functionality
+- .ass subtitle support
+- User-friendly/modern UI redesign
+
+# Better Melon Self-Hosting Guide
 > [!warning]
 > This project is still in beta
 
 > [!note]
-> you can access this app without self hosting it via https://better-melon.vercel.app
+> You can access this app without self-hosting via https://better-melon.vercel.app
 
-### Clone the Repository
+## Quick Start
+
+### 1. Clone the Repository
 ```sh
 git clone https://github.com/ywyher/better-melon ./better-melon
 cd ./better-melon
 ```
 
-### Install Dependencies
-Use either `pnpm` or `npm`:
+### 2. Install Dependencies
 ```sh
 pnpm i  # or npm i
 ```
 
-### Run Required Services
+### 3. Set Up Required Services
+You need the following:
+- PostgreSQL database
+- M3U8 proxy server
+- Consumet API
 
-#### Using Docker Compose
-Run the following command to start the required services:
+**Option A: Using Docker Compose (Recommended)**
 ```sh
 docker compose -f docker.yaml up -d
 ```
 
-#### Running Manually
-If you prefer to run the services manually, use the following commands:
+**Option B: Running Services Individually**
 ```sh
+# Start Consumet API
 docker run -d \
   --name=consumet-api \
   -p 6969:3000 \
   --restart unless-stopped \
   riimuru/consumet-api
 
+# Start M3U8 Proxy
 docker run -d \
   --name=m3u8-proxy \
   -p 8080:8080 \
   --restart unless-stopped \
   dovakiin0/m3u8-proxy
+
+# Start PostgreSQL
+docker run -d \
+  --name=postgres \
+  -p 5432:5432 \
+  --restart unless-stopped \
+  postgres
 ```
 
-For more details on hosting the Consumet API on other platforms, refer to the official repo [GitHub repository](https://github.com/consumet/consumet-api).
+### 4. Register for External Services
+- Create an account on [Jimaku.cc](https://jimaku.cc) and generate an API token
+- Set up AniList API credentials at [anilist.co/settings/developer](https://anilist.co/settings/developer)
+- Register for [Resend](https://resend.com/) for email functionality
 
-### Register for Jimaku API (free)
-Create an account on [Jimaku.cc](https://jimaku.cc) and generate an API token through the profile page.
+### 5. Configure Environment Variables
+Create a `.env` file in the root directory with the following:
 
-### Configure Environment Variables
-Create a `.env` file in the root directory and fill the following:
-```.env
-CONSUMET_URL=
-JIMAKU_KEY=
-NEXT_PUBLIC_PROXY_URL=
-NEXT_PUBLIC_ANKI_CONNECT_URL=
-```
+```env
+APP_URL=http://localhost:3000
+ENV=DEVELOPMENT  # or PRODUCTION
+DATABASE_URL=postgres://postgres:postgres@localhost:5432/better-melon
 
-it should look something like this
-```.env
+BETTER_AUTH_URL=http://localhost:3000
+BETTER_AUTH_SECRET=your_secret_key_here
+
 CONSUMET_URL=http://localhost:6969
-JIMAKU_KEY=AAAAAasndaund9uhWIJHUSDAIDJamsdkoanmdIAUN
-NEXT_PUBLIC_PROXY_URL=http://localhost:8080/m3u8-proxy
-NEXT_PUBLIC_ANKI_CONNECT_URL=http://127.0.0.1:8765
+JIMAKU_KEY=your_jimaku_api_key
+
+NEXT_PUBLIC_PROXY_URL=http://localhost:8080
+NEXT_PUBLIC_ANKI_CONNECT_URL=http://localhost:8765
+
+ANILIST_ID=your_anilist_id
+ANILIST_SECRET=your_anilist_secret
+ANILIST_REDIRECT_URL=http://localhost:3000/api/auth/oauth2/callback/anilist
+
+RESEND_FROM_EMAIL=noreply@yourdomain.com
+RESEND_API_KEY=your_resend_api_key
 ```
 
-### Start the Application
-`For development` 
+### 6. Initialize Database and Start the Application
+
+**For Development:**
 ```sh
+npx drizzle-kit push
 pnpm run dev  # or npm run dev
 ```
 
-`For production & actual use`
-
+**For Production:**
 ```sh
+npx drizzle-kit push
 pnpm run build  # or npm run build
-pnpm start # or npm start
+pnpm start  # or npm start
 ```
 
 # Credit
 - [Anilist](https://anilist.co/) -> Used to fetch anime data 
 - [Consument](https://github.com/consumet/api.consumet.org) -> Used to fetch anime streaming data
 - [Jimaku](https://jimaku.cc/) -> Used to fetch japanese subtitles
+- [itzzzme](https://github.com/itzzzme/m3u8proxy) -> For the proxy <3
 - [ywyh (Me)](https://github.com/ywyher) – for being goated
