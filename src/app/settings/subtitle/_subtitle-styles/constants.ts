@@ -1,6 +1,7 @@
 import { SubtitleStyles } from "@/lib/db/schema";
 
-export const defaultSubtitleStyles = {
+export const defaultSubtitleStyles: SubtitleStyles = {
+    id: '',
     fontSize: 25,
     fontFamily: "Arial",
     textShadow: 'outline' as SubtitleStyles['textShadow'],
@@ -11,6 +12,9 @@ export const defaultSubtitleStyles = {
     backgroundBlur: 0,
     backgroundRadius: 6,
     transcription: "all" as SubtitleStyles['transcription'],
+    userId: '',
+    createdAt: null,
+    updatedAt: null
 };
 
 // Define text shadow types

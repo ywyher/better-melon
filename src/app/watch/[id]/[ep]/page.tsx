@@ -107,7 +107,7 @@ export default function Watch() {
     isLoading: isLoadingSubtitleSettings,
     error: subtitleSettingsError
   } = useQuery({
-    queryKey: ['settings', 'subtitle-settings'],
+    queryKey: ['settings', 'subtitle-settings', 'player-page'],
     queryFn: async () => {
       return await getSubtitleSettings() || null
     },

@@ -27,6 +27,10 @@ export const userRelations = relations(user, ({ many, one }) => ({
     fields: [user.id],
     references: [playerSettings.userId]
   }),
+  generalSettings: one(generalSettings, {
+    fields: [user.id],
+    references: [generalSettings.userId]
+  }),
 }))
 
 export const ankiPreset = pgTable('anki_preset', {
@@ -49,10 +53,34 @@ export const ankiPresetRelations = relations(ankiPreset, ({ one }) => ({
   })
 }))
 
+
+export const syncStrategyEnum = pgEnum("sync_strategy", [
+  "always",
+  "never",
+  "ask"
+]);
+
+export const generalSettings = pgTable("general_settings", {
+  id: text("id").primaryKey(),
+
+  syncPlayerSettings: syncStrategyEnum('sync_player_settings').default('ask').notNull(),
+
+  userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at").notNull(),
+  updatedAt: timestamp("updated_at").notNull()
+});
+
+export const generalSettingsRelations = relations(generalSettings, ({ one }) => ({
+  user: one(user, {
+    fields: [generalSettings.userId],
+    references: [user.id]
+  })
+}))
+
 export const subtitleFormatEnum = pgEnum("subtitle_format", [
   "srt",
   "vtt",
-  "ass",
+  "ass"
 ]);
 
 export const subtitleSettings = pgTable("subtitle_settings", {
@@ -109,8 +137,8 @@ export const subtitleStyles = pgTable("subtitle_styles", {
   
   userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }),
   transcription: subtitleTranscriptionEnum("transcription").notNull().default('all'),
-  createdAt: timestamp("created_at").notNull(),
-  updatedAt: timestamp("updated_at").notNull()
+  createdAt: timestamp("created_at").default(new Date()),
+  updatedAt: timestamp("updated_at").default(new Date())
 });
 
 export const subtitleStylesRelations = relations(subtitleStyles, ({ one }) => ({
@@ -192,3 +220,4 @@ export type AnkiPreset = Omit<InferSelectModel<typeof ankiPreset>, 'fields'> & {
 export type SubtitleStyles = InferSelectModel<typeof subtitleStyles>
 export type SubtitleSettings = InferSelectModel<typeof subtitleSettings>
 export type PlayerSettings = InferSelectModel<typeof playerSettings>
+export type GeneralSettings = InferSelectModel<typeof generalSettings>

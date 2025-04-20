@@ -51,14 +51,12 @@ export default function SubtitleStylesControls({ form, onSubmit, isLoading, meth
             timeout = setTimeout(() => {
                 form.trigger().then(isValid => {
                     if (isValid) {
-                        console.log('cool')
                         const validData = form.getValues();
                         onSubmit(validData as z.infer<typeof subtitleStylesSchema>);
                     } else {
                         // timeout for the erros to have time to load
                         setTimeout(() => {
                             const errors = form.formState.errors;
-                            console.log(errors)
                             if (Object.keys(errors).length > 0) {
                                 onError(errors);
                             }
@@ -102,7 +100,7 @@ export default function SubtitleStylesControls({ form, onSubmit, isLoading, meth
                                             max={90}
                                             step={1}
                                             showValue={true}
-                                            unit='percentage'
+                                            unit='px'
                                             className="w-full"
                                         />
                                     </FormField>

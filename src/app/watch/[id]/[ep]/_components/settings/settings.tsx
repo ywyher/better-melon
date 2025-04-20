@@ -6,12 +6,24 @@ import EpisodeNavigation from "@/app/watch/[id]/[ep]/_components/settings/episod
 import { Separator } from "@/components/ui/separator"
 import SubtitleStyles from "@/app/watch/[id]/[ep]/_components/settings/subtitle-styles"
 import PlayerSettings from "@/app/watch/[id]/[ep]/_components/settings/player-settings"
+import { useQuery } from "@tanstack/react-query"
+import { getGeneralSettings } from "@/app/settings/general/actions"
+import SettingsSkeleton from "@/app/watch/[id]/[ep]/_components/settings/settings-skeleton"
   
 export default function Settings({ episodesLength }: { episodesLength: number }) {
+    const { data: generalSettings, isLoading: isGeneralSettingsLoading } = useQuery({
+        queryKey: ['settings', 'general-settings', 'player-settings-component'],
+        queryFn: async () => {
+            return await getGeneralSettings()
+        }
+    })
+
+    if(!generalSettings || isGeneralSettingsLoading) return <SettingsSkeleton />
+
     return (
         <div className="flex flex-col gap-10">
             <div className="flex flex-col gap-5">
-                <PlayerSettings />
+                <PlayerSettings generalSettings={generalSettings} />
                 <Separator />
                 <DelaySlider />
                 <Separator />
@@ -27,7 +39,9 @@ export default function Settings({ episodesLength }: { episodesLength: number })
                     </div>
                 </div>
                 <Separator />
-                <SubtitleStyles />
+                <SubtitleStyles
+                    syncPlayerSettings={generalSettings.syncPlayerSettings}
+                />
             </div>
         </div>
     )

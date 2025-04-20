@@ -24,6 +24,8 @@ export async function getSubtitleStyles({ transcription }: { transcription: Subt
         eq(subtitleStyles.transcription, transcription)
     ))
 
+    console.log(styles)
+
     if(styles) {
         return styles
     }else {
@@ -80,12 +82,13 @@ export async function createSubtitleStyles({
         return {
             message: "Subtitle styles created successfully",
             error: null,
-            stylesId: newStylesId,
+            subtitleStylesId: newStylesId,
         };
     } catch (error: unknown) {
         return {
             message: null,
             error: error instanceof Error ? error.message : "Failed to create subtitle styles",
+            subtitleStylesId: null,
         };
     }
 }

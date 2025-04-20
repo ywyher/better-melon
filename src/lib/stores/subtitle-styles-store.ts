@@ -1,14 +1,11 @@
-import { subtitleStylesSchema } from '@/app/settings/subtitle/types';
-import { z } from 'zod';
+import { SubtitleStyles } from '@/lib/db/schema';
 import { create } from 'zustand'
-
-type SubtitleStyles = Omit<z.infer<typeof subtitleStylesSchema>, 'isGlobal'>
 
 type SubtitleStylesStore = {
   styles: Partial<Record<SubtitleStyles['transcription'], SubtitleStyles>> | null;
   getStyles: (transcription: SubtitleStyles['transcription']) => SubtitleStyles | null;
   addStyles: (transcription: SubtitleStyles['transcription'], styles: SubtitleStyles) => void;
-  updateStyles: (transcription: SubtitleStyles['transcription'], styles: SubtitleStyles) => void;
+  updateStyles: (transcription: SubtitleStyles['transcription'], styles: Partial<SubtitleStyles>) => void;
   deleteStyles: (transcription: SubtitleStyles['transcription']) => void;
 }
 
@@ -40,7 +37,7 @@ export const useSubtitleStylesStore = create<SubtitleStylesStore>()(
       };
     }),
     
-    updateStyles: (transcription: SubtitleStyles['transcription'], styles: SubtitleStyles) => set((state) => {
+    updateStyles: (transcription: SubtitleStyles['transcription'], styles: Partial<SubtitleStyles>) => set((state) => {
       // If styles is null or doesn't have this transcription type, initialize it
       if (!state.styles) {
         return {

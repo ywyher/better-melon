@@ -16,6 +16,5 @@ export const subtitleStylesSchema = z.object({
   backgroundOpacity: z.number().min(0).max(1).default(0.5),
   backgroundBlur: z.number().min(0).max(30).default(2),
   backgroundRadius: z.number().min(0).max(30).default(6),
-
-  isGlobal: z.boolean().default(false),
 })
+

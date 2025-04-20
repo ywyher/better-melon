@@ -1,5 +1,5 @@
 import Anilist from "@/components/svg/anilist"
-import { AnimeListProivder, ConnectionProvider } from "@/types"
+import { AnimeListProivder, ConnectionProvider, SyncStrategy } from "@/types"
 import { AnimeFormat, AnimeSeason, AnimeSort, AnimeSource, AnimeStatus } from "@/types/anime"
 
 export const statuses: AnimeStatus[] = [
@@ -137,4 +137,10 @@ export const animeListProviders: AnimeListProivder[] = [
         name: 'anilist',
         icon: Anilist,
     }
+]
+
+export const syncStrategies: SyncStrategy[] = [
+    'ask',
+    'always',
+    'never'
 ]

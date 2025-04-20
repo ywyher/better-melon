@@ -43,10 +43,12 @@ export default function SubtitleTranscriptions() {
                             ? activeSubtitleFile!.file.url.split('.').pop() as "srt" | "vtt"
                             : activeSubtitleFile!.file.name.split('.').pop() as "srt" | "vtt";
 
+
                 let styles = await getSubtitleStyles({ transcription });
-                
+
                 if(JSON.stringify(styles) == JSON.stringify(defaultSubtitleStyles)) {
                     styles = await getSubtitleStyles({ transcription: 'all' });
+
                     addSubtitleStylesInStore('all', styles)
                 }else {
                     addSubtitleStylesInStore(transcription, styles)

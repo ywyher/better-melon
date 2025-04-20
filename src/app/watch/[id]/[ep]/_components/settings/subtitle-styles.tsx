@@ -3,7 +3,7 @@
 import SubtitleStylesControls from "@/components/subtitle/subtitle-styles-controls"
 import SubtitleTranscriptionSelector from "@/components/subtitle/subtitle-transcription-selector";
 import SubtitleStylesSkeleton from "@/components/subtitle/subtitle-styles-skeleton";
-import { SubtitleStyles as TSubtitleStyles } from "@/lib/db/schema";
+import { GeneralSettings, SubtitleStyles as TSubtitleStyles } from "@/lib/db/schema";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,15 +13,27 @@ import { useSubtitleStylesStore } from "@/lib/stores/subtitle-styles-store";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 import { defaultSubtitleStyles } from "@/app/settings/subtitle/_subtitle-styles/constants";
+import { showSyncSettingsToast } from "@/components/sync-settings-toast";
+import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
+import { createSubtitleStyles, updateSubtitleStyles } from "@/app/settings/subtitle/_subtitle-styles/actions";
 
-export default function SubtitleStyles() {
-    const [isLoading] = useState<boolean>(false)
+type SubtitleStylesProps = {
+    syncPlayerSettings: GeneralSettings['syncPlayerSettings']
+}
+
+// Note: subtitle styles are being fetched and set in the store via
+// /watch/[id]/[ep]/_components/transcriptions/transcriptions.tsx
+export default function SubtitleStyles({ syncPlayerSettings }: SubtitleStylesProps) {
+    const [isLoading, setIsLoading] = useState<boolean>(false)
     const [selectedTranscription, setSelectedTranscription] = useState<TSubtitleStyles['transcription']>('all')
+
+    const queryClient = useQueryClient()
 
     const subtitleStyles =
         useSubtitleStylesStore((state) => state.getStyles(selectedTranscription))
         || defaultSubtitleStyles
-    const addStyles = useSubtitleStylesStore((state) => state.addStyles)
+    const updateStyles = useSubtitleStylesStore((state) => state.updateStyles)
     const deleteStyles = useSubtitleStylesStore((state) => state.deleteStyles)
 
     const form = useForm<z.infer<typeof subtitleStylesSchema>>({
@@ -56,9 +68,66 @@ export default function SubtitleStyles() {
         })
     }, [subtitleStyles])
 
+    const onSubmit = async (data: z.infer<typeof subtitleStylesSchema>) => {
+        updateStyles(data.transcription, {
+            ...data
+        })
 
-    const onSubmit = (data: z.infer<typeof subtitleStylesSchema>) => {
-        addStyles(data.transcription, data)
+        let syncStrategy = syncPlayerSettings;
+        
+        if (syncStrategy === 'ask') {
+            const { strategy, error } = await showSyncSettingsToast();
+            
+            if (error) {
+                toast.error(error);
+                updateStyles(data.transcription, subtitleStyles)
+                return;
+            }
+            if (!strategy) return;
+            
+            syncStrategy = strategy;
+        }
+
+        if (syncStrategy === 'always' || syncStrategy === 'ask') {
+            try {
+                let result;
+                setIsLoading(true);
+                
+                if(subtitleStyles?.id && (selectedTranscription == subtitleStyles.transcription)) {
+                    result = await updateSubtitleStyles({ 
+                        data,
+                        subtitleStylesId: subtitleStyles.id,
+                        transcription: selectedTranscription
+                    });
+                }else {
+                    result = await createSubtitleStyles({
+                        data,
+                        transcription: selectedTranscription
+                    });
+
+                    if (result.subtitleStylesId) {
+                        updateStyles(data.transcription, {
+                            id: result.subtitleStylesId
+                        })
+                    }
+                }
+                
+                if (result.error) {
+                    toast.error(result.error);
+                    updateStyles(data.transcription, {
+                        ...data
+                    })
+                    return;
+                }
+                
+                toast.success(result.message);
+                queryClient.invalidateQueries({ 
+                    queryKey: ['settings', 'general-settings', 'player-settings-component'] 
+                });
+            } finally {
+                setIsLoading(false);
+            }
+        }
     }
 
     const handleReset = () => {

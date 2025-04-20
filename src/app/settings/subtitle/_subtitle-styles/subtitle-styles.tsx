@@ -96,7 +96,7 @@ export default function SubtitleStyles() {
             }
             
             queryClient.invalidateQueries({ queryKey: ['session'] })
-            queryClient.invalidateQueries({ queryKey: ['settings', 'subtitle', 'styles'] })
+            queryClient.invalidateQueries({ queryKey: ['settings', 'subtitle-styles'] })
             toast.success(result.message)
             setIsLoading(false)
         } catch (error) {

@@ -25,3 +25,5 @@ export type AnimeListProivder = {
     name: ConnectionProviders
     icon: ComponentType<SVGProps<SVGSVGElement>>
 }
+
+export type SyncStrategy = 'always' | 'ask' | 'never'

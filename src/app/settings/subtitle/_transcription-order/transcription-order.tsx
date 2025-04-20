@@ -61,7 +61,7 @@ const defaultItems: TranscriptionItems = {
 
 export default function TranscriptionOrder() {
     const { data: settings, isLoading: isSettingsLoading } = useQuery({
-        queryKey: ['settings', 'subtitle-settings'],
+        queryKey: ['settings', 'subtitle-settings', 'transcription-order'],
         queryFn: async () => {
             return await getSubtitleSettings() as SubtitleSettings
         }

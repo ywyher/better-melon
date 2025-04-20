@@ -8,12 +8,14 @@ export default function ToggleButton({
     name,
     checked,
     onClick,
+    disabled = false,
     className = "",
     tooltip,
 }: {
     name: string;
     checked: boolean;
     onClick: () => void;
+    disabled?: boolean;
     className?: string;
     tooltip?: ReactNode;
 }) {
@@ -21,6 +23,7 @@ export default function ToggleButton({
         <Button 
             variant="ghost"
             onClick={onClick}
+            disabled={disabled}
             className={cn(className, "flex items-center gap-2")}
         >
             {checked ? <Check /> : <Square fill="#fff" />}

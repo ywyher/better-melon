@@ -21,7 +21,7 @@ export default function AddToList({ animeId }: { animeId: Anime['id'] }) {
         <DialogWrapper
             open={open}
             setOpen={setOpen}
-            trigger={<Button className="w-fit"><FilePenLine /> Add to list</Button>}
+            trigger={<Button variant='outline' className="w-fit"><FilePenLine /> Add to list</Button>}
             title={<SelectConnectionProvider selectedProvider={selectedProvider} setSelectedProvider={setSelectedProvider} />}
         >
             {selectedProvider.name == 'anilist' && (

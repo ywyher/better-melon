@@ -33,14 +33,6 @@ export default function DefinitionCard() {
       return await getDefaultPreset() as AnkiPreset || null
     }
   })
-  useEffect(() =>{ 
-    if(!preset) return;
-    console.log(preset)
-    Object.entries(preset?.fields).map(([field,value]) => {
-      console.log(`field`, field)
-      console.log(`value`, value)
-    })
-  }, [preset])
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
