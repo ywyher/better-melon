@@ -1,9 +1,9 @@
 "use client"
 
 import { Combobox } from "@/components/ui/combobox";
-import { seasons } from "@/lib/constants";
 import { Dispatch, SetStateAction } from "react";
 import { AnimeSeason } from "@/types/anime";
+import { animeSeasons } from "@/lib/constants/anime";
 
 export default function SeasonFilter({
     querySeason,
@@ -15,12 +15,12 @@ export default function SeasonFilter({
 
     const data = [
         "Any season",
-        ...seasons
+        ...animeSeasons
     ]
 
     return (
         <div className="w-full">
-            {seasons && (
+            {animeSeasons && (
                 <Combobox
                     options={data}
                     placeholder="Select a season"

@@ -6,8 +6,7 @@ import Player from "@/app/watch/[id]/[ep]/_components/player/player";
 import { AnimeEpisodeData, AnimeStreamingData } from "@/types/anime";
 import { useParams } from 'next/navigation';
 import { usePlayerStore } from '@/lib/stores/player-store';
-import { filterSubtitleFiles, selectSubtitleFile } from '@/app/watch/[id]/[ep]/funcs';
-import GoBack from '@/app/watch/[id]/[ep]/_components/goback';
+import GoBack from '@/components/goback';
 import Settings from '@/app/watch/[id]/[ep]/_components/settings/settings';
 import SubtitlePanel from '@/app/watch/[id]/[ep]/_components/panel/panel';
 import PlayerSkeleton from '@/app/watch/[id]/[ep]/_components/player/player-skeleton';
@@ -19,6 +18,7 @@ import { gql, useQuery as useGqlQuery } from "@apollo/client"
 import EpisodesListSkeleton from '@/app/watch/[id]/[ep]/_components/episodes/episodes-list-skeleton';
 import { getEpisodesData, getStreamingData, getSubtitleEntries, getSubtitleFiles } from '@/app/watch/[id]/[ep]/actions';
 import { getSubtitleSettings } from '@/app/settings/subtitle/_subtitle-settings/actions';
+import { filterSubtitleFiles, selectSubtitleFile } from '@/lib/subtitle';
 
 const GET_ANIME_DATA = gql`
   query($id: Int!) {
@@ -58,7 +58,7 @@ export default function Watch() {
     isLoading: isLoadingEpisodes, 
     error: episodesError 
   } = useQuery({
-    queryKey: ['episodesData', id],
+    queryKey: ['player', 'episodesData', id],
     queryFn: async () => await getEpisodesData(id),
     refetchOnWindowFocus: false
   });
@@ -72,7 +72,7 @@ export default function Watch() {
     isLoading: isLoadingStreamingData,
     error: streamingError
   } = useQuery({
-    queryKey: ['streamingData', episode?.id],
+    queryKey: ['player', 'streamingData', episode?.id],
     queryFn: async () => await getStreamingData(episode?.id || ""),
     refetchOnWindowFocus: false,
     enabled: !!episode
@@ -83,7 +83,7 @@ export default function Watch() {
     isLoading: isLoadingSubtitleEntries,
     error: subtitleEntriesError
   } = useQuery({
-    queryKey: ['subtitleEntries', id],
+    queryKey: ['player', 'subtitleEntries', id],
     queryFn: async () => await getSubtitleEntries(id),
     refetchOnWindowFocus: false
   });
@@ -93,7 +93,7 @@ export default function Watch() {
     isLoading: isLoadingSubtitleFiles,
     error: subtitleFilesError
   } = useQuery({
-    queryKey: ['subtitleFiles', subtitleEntries?.[0]?.id, ep],
+    queryKey: ['player', 'subtitleFiles', subtitleEntries?.[0]?.id, ep],
     queryFn: async () => {
       if(!subtitleEntries || !subtitleEntries[0].id || !episode) return;
       return await getSubtitleFiles(subtitleEntries[0].id, episode?.number)
@@ -107,7 +107,7 @@ export default function Watch() {
     isLoading: isLoadingSubtitleSettings,
     error: subtitleSettingsError
   } = useQuery({
-    queryKey: ['settings', 'subtitle-settings', 'player-page'],
+    queryKey: ['player', 'settings', 'subtitle-settings'],
     queryFn: async () => {
       return await getSubtitleSettings() || null
     },

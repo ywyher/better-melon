@@ -1,8 +1,6 @@
-import Anilist from "@/components/svg/anilist"
-import { AnimeListProivder, ConnectionProvider, SyncStrategy } from "@/types"
 import { AnimeFormat, AnimeSeason, AnimeSort, AnimeSource, AnimeStatus } from "@/types/anime"
 
-export const statuses: AnimeStatus[] = [
+export const animeStatuses: AnimeStatus[] = [
     "CANCELLED",
     "FINISHED",
     "HIATUS",
@@ -10,7 +8,7 @@ export const statuses: AnimeStatus[] = [
     "RELEASING"
 ]
 
-export const formats: AnimeFormat[] = [
+export const animeFormats: AnimeFormat[] = [
     "TV",
     "TV_SHORT",
     "MOVIE",
@@ -23,14 +21,14 @@ export const formats: AnimeFormat[] = [
     "ONE_SHOT",
 ]
 
-export const seasons: AnimeSeason[] = [
+export const animeSeasons: AnimeSeason[] = [
     "FALL",
     "SPRING",
     "SUMMER",
     "WINTER"
 ]
 
-export const sources: AnimeSource[] = [
+export const animeSources: AnimeSource[] = [
     "ORIGINAL",
     "MANGA",
     "LIGHT_NOVEL",
@@ -48,7 +46,7 @@ export const sources: AnimeSource[] = [
     "PICTURE_BOOK",
 ]
 
-export const sort: AnimeSort[] = [
+export const animeSort: AnimeSort[] = [
     "ID",	
     "ID_DESC",	
     "TITLE_ROMAJI",	
@@ -88,7 +86,7 @@ export const sort: AnimeSort[] = [
     "FAVOURITES_DESC"	
 ]
 
-export const countries = [
+export const animeCountries = [
     {
         value: "JP",
         label: "Japan"
@@ -106,41 +104,3 @@ export const countries = [
         label: "China"
     }
 ];
-
-export const subtitleTranscriptions = ['japanese', 'hiragana', 'katakana', 'romaji', 'english'] as const
-export const subtitleFormats = [
-    "vtt",
-    'srt',
-    'ass'
-] as const
-
-export const vttEn = "https://s.megastatics.com/subtitle/6422ef1d64b31a672f041ef180be0c1b/6422ef1d64b31a672f041ef180be0c1b.vtt"
-export const srtJp = "https://jimaku.cc/entry/2184/download/%5BAC%5D%20Boku%20dake%20ga%20Inai%20Machi%20-%2004%20%5B720p%5D%5BLucifer22%5D%5BCrunchyroll%20Timed%5D.ja.srt" 
-export const srtEn = "https://gist.githubusercontent.com/matibzurovski/d690d5c14acbaa399e7f0829f9d6888e/raw/63578ca30e7430be1fa4942d4d8dd599f78151c7/example.srt" 
-
-export const ankiFieldsValues = [
-    "expression",
-    "sentance",
-    "image",
-    "definition"
-]
-
-export const connectionProviders: ConnectionProvider[] = [
-    {
-        name: 'anilist',
-        icon: Anilist,
-    }
-]
-
-export const animeListProviders: AnimeListProivder[] = [
-    {
-        name: 'anilist',
-        icon: Anilist,
-    }
-]
-
-export const syncStrategies: SyncStrategy[] = [
-    'ask',
-    'always',
-    'never'
-]

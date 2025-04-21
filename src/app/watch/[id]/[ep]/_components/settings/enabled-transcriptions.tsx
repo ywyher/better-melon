@@ -4,7 +4,7 @@ import { handleEnabledTranscriptions } from "@/app/settings/player/actions"
 import MultipleSelector from "@/components/multiple-selector"
 import { showSyncSettingsToast } from "@/components/sync-settings-toast"
 import TooltipWrapper from "@/components/tooltip-wrapper"
-import { subtitleTranscriptions } from "@/lib/constants"
+import { subtitleTranscriptions } from "@/lib/constants/subtitle";
 import { GeneralSettings, PlayerSettings } from "@/lib/db/schema"
 import { usePlayerStore } from "@/lib/stores/player-store"
 import { SubtitleTranscription } from "@/types/subtitle"
@@ -17,7 +17,7 @@ type EnabledTranscriptionsSettingProps = {
     syncPlayerSettings: GeneralSettings['syncPlayerSettings']
 }
 
-export default function EnabledTranscriptionsSetting({ playerSettings, syncPlayerSettings }: EnabledTranscriptionsSettingProps ) {
+export default function EnabledTranscriptions({ playerSettings, syncPlayerSettings }: EnabledTranscriptionsSettingProps ) {
     const activeTranscriptions = usePlayerStore((state) => state.activeTranscriptions)
     const setActiveTranscriptions = usePlayerStore((state) => state.setActiveTranscriptions)
     const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -64,7 +64,7 @@ export default function EnabledTranscriptionsSetting({ playerSettings, syncPlaye
                 
                 toast.success(message);
                 queryClient.invalidateQueries({ 
-                    queryKey: ['settings', 'general-settings', 'player-settings-component'] 
+                    queryKey: ['settings', 'general-settings'] 
                 });
             } finally {
                 setIsLoading(false);

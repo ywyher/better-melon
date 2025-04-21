@@ -8,7 +8,7 @@ import AnkiPreset from '@/app/settings/anki/_components/anki-preset'
 
 export default function AnkiSettingsPage() {
   const { data, error, isLoading } = useQuery({
-    queryKey: ['ankiConnection'],
+    queryKey: ['anki-connection'],
     queryFn: async () => await invokeAnkiConnect('deckNames', 6),
     retry: 3,
     refetchOnWindowFocus: true,

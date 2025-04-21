@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-export default function SettingsLinks() {
+export default function SettingsTabs() {
   const pathname = usePathname()
   const links = [
     { label: "General", href: '/settings' },

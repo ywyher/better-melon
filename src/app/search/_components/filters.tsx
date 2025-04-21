@@ -11,7 +11,7 @@ import StatusFilter from "@/app/search/_components/filters/status";
 import TagsFilter from "@/app/search/_components/filters/tags";
 import YearFilter from "@/app/search/_components/filters/year";
 import { Button } from "@/components/ui/button";
-import { formats, seasons, sources, statuses } from "@/lib/constants";
+import { animeFormats, animeSeasons, animeSources, animeStatuses } from "@/lib/constants/anime";
 import { AnimeCountry, AnimeFormat, AnimeSeason, AnimeSource, AnimeStatus } from "@/types/anime";
 import { parseAsArrayOf, parseAsBoolean, parseAsInteger, parseAsString, parseAsStringEnum, useQueryState } from "nuqs";
 import { useState } from "react";
@@ -23,7 +23,7 @@ type AnimeFiltersProps = {
 export default function AnimeFilters({ refetch }: AnimeFiltersProps) {
     // single selector
     const [queryStatus, setQueryStatus] = useQueryState<AnimeStatus>('status',
-        parseAsStringEnum<AnimeStatus>(statuses)
+        parseAsStringEnum<AnimeStatus>(animeStatuses)
     )
     const [status, setStatus] = useState<AnimeStatus | null>(null)
 
@@ -31,17 +31,17 @@ export default function AnimeFilters({ refetch }: AnimeFiltersProps) {
     const [year, setYear] = useState<string | null>('')
 
     const [queryFormat, setQueryFormat] = useQueryState<AnimeFormat>('format',
-        parseAsStringEnum<AnimeFormat>(formats)
+        parseAsStringEnum<AnimeFormat>(animeFormats)
     )
     const [format, setFormat] = useState<AnimeFormat | null>(null)
 
     const [querySeason, setQuerySeason] = useQueryState<AnimeSeason>('season',
-        parseAsStringEnum<AnimeSeason>(seasons)
+        parseAsStringEnum<AnimeSeason>(animeSeasons)
     )
     const [season, setSeason] = useState<AnimeSeason | null>(null)
 
     const [querySource, setQuerySource] = useQueryState<AnimeSource>('source',
-        parseAsStringEnum<AnimeSource>(sources)
+        parseAsStringEnum<AnimeSource>(animeSources)
     )
     const [source, setSource] = useState<AnimeSource | null>(null)
     

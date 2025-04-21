@@ -1,9 +1,9 @@
 "use client"
 
 import { Combobox } from "@/components/ui/combobox";
-import { statuses } from "@/lib/constants";
 import { Dispatch, SetStateAction } from "react";
 import { AnimeStatus } from "@/types/anime";
+import { animeStatuses } from "@/lib/constants/anime";
 
 export default function StatusFilter({
     queryStatus,
@@ -15,12 +15,12 @@ export default function StatusFilter({
 
     const data = [
         "Any status",
-        ...statuses
+        ...animeStatuses
     ]
 
     return (
         <div className="w-full">
-            {statuses && (
+            {animeStatuses && (
                 <Combobox
                     options={data}
                     placeholder="Select a status"

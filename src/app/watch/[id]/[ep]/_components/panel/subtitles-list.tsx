@@ -1,10 +1,11 @@
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import SubtitleCue from "@/app/watch/[id]/[ep]/_components/panel/subtitle-cue";
 import { TabsContent } from "@/components/ui/tabs";
-import { SubtitleCue as TSubtitleCue, SubtitleTranscription } from "@/types/subtitle";
+import { SubtitleCue as TSubtitleCue, SubtitleTranscription, SubtitleFormat } from "@/types/subtitle";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { usePlayerStore } from "@/lib/stores/player-store";
-import { srtTimestampToSeconds } from "@/lib/funcs";
+import { timestampToSeconds } from "@/lib/subtitle";
+import { getExtension } from "@/lib/utils";
 
 // Create a memoized SubtitleCueItem component
 const MemoizedSubtitleCue = memo(SubtitleCue);
@@ -31,6 +32,7 @@ export default function SubtitlesList({
     
     const player = usePlayerStore((state) => state.player);
     const delay = usePlayerStore((state) => state.delay);
+    const activeSubtitleFile = usePlayerStore((state) => state.activeSubtitleFile);
 
     const cueTimeRanges = useMemo(() => {
         if (!displayCues?.length) return [];
@@ -38,8 +40,14 @@ export default function SubtitlesList({
         return displayCues.map(cue => ({
             id: cue.id,
             index: displayCues.indexOf(cue),
-            start: srtTimestampToSeconds(cue.from) + delay.japanese,
-            end: srtTimestampToSeconds(cue.to) + delay.japanese
+            start: timestampToSeconds({
+                timestamp: (cue.from) + delay.japanese,
+                format: getExtension(activeSubtitleFile?.file.name || "srt") as SubtitleFormat
+            }),
+            end: timestampToSeconds({
+                timestamp: (cue.to) + delay.japanese,
+                format: getExtension(activeSubtitleFile?.file.name || "srt") as SubtitleFormat
+            })
         }));
     }, [displayCues, delay.japanese]);
 

@@ -6,6 +6,7 @@ import {CSS} from '@dnd-kit/utilities';
 import { useDefinitionStore } from '@/lib/stores/definition-store';
 import { SubtitleCue, SubtitleToken, SubtitleTranscription } from '@/types/subtitle';
 import { TranscriptionStyleSet } from '@/app/watch/[id]/[ep]/_components/transcriptions/transcriptions-container';
+import { cn } from '@/lib/utils';
 
 type TranscriptionItemProps = {
     transcription: SubtitleTranscription;
@@ -61,6 +62,7 @@ export function TranscriptionItem({
             ...styles.containerStyle,
             ...style,
         }}
+        className={cn(transcription == 'english' && 'flex flex-row gap-1')}
         {...attributes}
         {...listeners}
     >

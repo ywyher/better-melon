@@ -13,7 +13,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { AuthIdentifier, AuthPort } from "@/components/auth/auth";
 import LoadingButton from "@/components/loading-button";
 import { Button } from "@/components/ui/button";
-import { identifierSchema } from "@/types";
+import { identifierSchema } from "@/types/auth";
 import { getEmailByUsername } from "@/components/auth/actions";
 import { useQueryClient } from "@tanstack/react-query";
 import { FormField } from "@/components/form/form-field";

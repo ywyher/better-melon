@@ -7,8 +7,8 @@ import { Indicator } from "@/components/indicator";
 import { usePlayerStore } from "@/lib/stores/player-store";
 import { Tabs } from "@/components/ui/tabs";
 import type { SubtitleCue as TSubtitleCue, SubtitleTranscription, SubtitleFile } from "@/types/subtitle";
-import { parseSubtitleToJson } from "@/lib/fetch-subs";
-import { subtitleTranscriptions } from "@/lib/constants";
+import { parseSubtitleToJson } from "@/lib/subtitle";
+import { subtitleTranscriptions } from "@/lib/constants/subtitle";
 import PanelHeader from "@/app/watch/[id]/[ep]/_components/panel/panel-header";
 import SubtitlesList from "@/app/watch/[id]/[ep]/_components/panel/subtitles-list";
 import PanelSkeleton from "@/app/watch/[id]/[ep]/_components/panel/panel-skeleton";
@@ -21,7 +21,7 @@ export default function SubtitlePanel({ subtitleFiles }: { subtitleFiles: Subtit
     const setSubtitleCues = usePlayerStore((state) => state.setSubtitleCues);
 
     const { data: subtitleCues, isLoading: isCuesLoading, error: cuesError, refetch } = useQuery({
-        queryKey: ['subs', displayTranscription, activeSubtitleFile],
+        queryKey: ['subtitle-cues', displayTranscription, activeSubtitleFile],
         queryFn: async () => {
             if(activeSubtitleFile) {
                 const format = activeSubtitleFile?.source == 'remote' 

@@ -1,4 +1,6 @@
 'use client'
+import { MediaPlayerInstance } from "@vidstack/react";
+
 
 export const invokeAnkiConnect = async (action: string, version: number, params = {}) => {
   try {
@@ -29,4 +31,22 @@ export const invokeAnkiConnect = async (action: string, version: number, params 
       error: error instanceof Error ? error.message : 'Failed to connect to Anki'
     }
   }
+}
+
+export function takeSnapshot(player: MediaPlayerInstance) {
+    const videoEl = player.el?.querySelector('video') as HTMLVideoElement;
+    if (!videoEl) return;
+    
+    const canvas = document.createElement('canvas');
+    canvas.width = videoEl.videoWidth;
+    canvas.height = videoEl.videoHeight;
+    
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    
+    ctx.drawImage(videoEl, 0, 0, canvas.width, canvas.height);
+    const dataURL = canvas.toDataURL('image/png');
+
+    // Extract the base64 data (remove the "data:image/png;base64," part)
+    return dataURL.split(',')[1];
 }

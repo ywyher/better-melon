@@ -5,7 +5,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { subtitleTranscriptions } from "@/lib/constants"
+import { subtitleTranscriptions } from "@/lib/constants/subtitle";
 import { SubtitleStyles } from "@/lib/db/schema"
 import { Plus } from "lucide-react"
 import { Dispatch, SetStateAction } from "react"

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { gql, useQuery } from "@apollo/client";
-import AnimeCard, { AnimeCardSkeleton } from "@/components/anime/card";
+import AnimeCard, { AnimeCardSkeleton } from "@/components/anime/anime-card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Anime } from "@/types/anime";
 

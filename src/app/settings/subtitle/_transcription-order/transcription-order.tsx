@@ -5,8 +5,6 @@ import { handleTranscriptionOrder } from '@/app/settings/subtitle/_transcription
 import { TranscriptionItem } from '@/app/settings/subtitle/_transcription-order/components/transcription-item';
 import TranscriptionOrderSkeleton from '@/app/settings/subtitle/_transcription-order/components/transcription-order-skeleton';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Skeleton } from "@/components/ui/skeleton";
-import { subtitleTranscriptions } from '@/lib/constants';
 import { SubtitleSettings } from '@/lib/db/schema';
 import { SubtitleTranscription } from '@/types/subtitle';
 import {
@@ -61,7 +59,7 @@ const defaultItems: TranscriptionItems = {
 
 export default function TranscriptionOrder() {
     const { data: settings, isLoading: isSettingsLoading } = useQuery({
-        queryKey: ['settings', 'subtitle-settings', 'transcription-order'],
+        queryKey: ['settings', 'subtitle-settings'],
         queryFn: async () => {
             return await getSubtitleSettings() as SubtitleSettings
         }

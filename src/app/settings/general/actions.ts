@@ -1,7 +1,7 @@
 'use server'
 
-import { defaultGeneralSettings } from "@/app/settings/general/constants"
 import { auth } from "@/lib/auth"
+import { defaultGeneralSettings } from "@/lib/constants/settings"
 import db from "@/lib/db"
 import { ensureAuthenticated } from "@/lib/db/mutations"
 import { GeneralSettings, generalSettings } from "@/lib/db/schema"

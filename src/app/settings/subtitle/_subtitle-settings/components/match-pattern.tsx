@@ -40,7 +40,7 @@ export default function SubtitleSettingsMatchPattern({ settingsId, matchPattern 
             return;
         }
         
-        queryClient.invalidateQueries({ queryKey: ['settings', 'subtitle-settings'], exact: true })
+        queryClient.invalidateQueries({ queryKey: ['settings', 'subtitle-settings'] })
         toast.success(message)
         setIsLoading(false)
     }
@@ -55,7 +55,7 @@ export default function SubtitleSettingsMatchPattern({ settingsId, matchPattern 
             return;
         }
         
-        queryClient.invalidateQueries({ queryKey: ['settings', 'subtitle-settings'], exact: true })
+        queryClient.invalidateQueries({ queryKey: ['settings', 'subtitle-settings'] })
         toast.success(message)
         setIsLoading(false)
         setInputValue("")

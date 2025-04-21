@@ -1,8 +1,8 @@
 "use client"
 
-import CueNavigation from "@/app/watch/[id]/[ep]/_components/settings/cue-navigation"
-import DelaySlider from "@/app/watch/[id]/[ep]/_components/settings/delay-slider"
-import EpisodeNavigation from "@/app/watch/[id]/[ep]/_components/settings/episode-navigator"
+import CueNavigations from "@/app/watch/[id]/[ep]/_components/settings/cue-navigations"
+import DelayController from "@/app/watch/[id]/[ep]/_components/settings/delay-controller"
+import EpisodeNavigations from "@/app/watch/[id]/[ep]/_components/settings/episode-navigations"
 import { Separator } from "@/components/ui/separator"
 import SubtitleStyles from "@/app/watch/[id]/[ep]/_components/settings/subtitle-styles"
 import PlayerSettings from "@/app/watch/[id]/[ep]/_components/settings/player-settings"
@@ -12,7 +12,7 @@ import SettingsSkeleton from "@/app/watch/[id]/[ep]/_components/settings/setting
   
 export default function Settings({ episodesLength }: { episodesLength: number }) {
     const { data: generalSettings, isLoading: isGeneralSettingsLoading } = useQuery({
-        queryKey: ['settings', 'general-settings', 'player-settings-component'],
+        queryKey: ['settings', 'general-settings'],
         queryFn: async () => {
             return await getGeneralSettings()
         }
@@ -25,17 +25,17 @@ export default function Settings({ episodesLength }: { episodesLength: number })
             <div className="flex flex-col gap-5">
                 <PlayerSettings generalSettings={generalSettings} />
                 <Separator />
-                <DelaySlider />
+                <DelayController />
                 <Separator />
                 <div className="flex flex-row gap-2 w-full justify-between items-center">
                     <div className="flex flex-col gap-2 w-full flex-1">
-                        <CueNavigation direction="previous" />
-                        <CueNavigation direction="next" />
+                        <CueNavigations direction="previous" />
+                        <CueNavigations direction="next" />
                     </div>
                     <Separator orientation="vertical" />
                     <div className="flex flex-col gap-2 w-full flex-1">
-                        <EpisodeNavigation direction="previous" episodesLength={episodesLength} />
-                        <EpisodeNavigation direction="next" episodesLength={episodesLength} />
+                        <EpisodeNavigations direction="previous" episodesLength={episodesLength} />
+                        <EpisodeNavigations direction="next" episodesLength={episodesLength} />
                     </div>
                 </div>
                 <Separator />

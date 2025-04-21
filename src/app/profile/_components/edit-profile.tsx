@@ -6,7 +6,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/
 import { Input } from "@/components/ui/input";
 import { useIsSmall } from "@/hooks/useMediaQuery";
 import { User } from "@/lib/db/schema";
-import { emailSchema, usernameSchema } from "@/types";
+import { emailSchema, usernameSchema } from "@/types/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { FieldErrors, useForm } from "react-hook-form";

@@ -17,7 +17,7 @@ import { authClient } from "@/lib/auth-client"
 import { useRouter } from "next/navigation"
 import { PasswordInput } from "@/components/form/password-input"
 import { useIsSmall } from "@/hooks/useMediaQuery"
-import { passwordSchema } from "@/types"
+import { passwordSchema } from "@/types/auth"
 
 const formSchema = z
   .object({

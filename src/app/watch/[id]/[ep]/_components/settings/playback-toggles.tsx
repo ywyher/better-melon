@@ -1,6 +1,6 @@
 "use client"
 
-import ToggleButton from "@/app/watch/[id]/[ep]/_components/settings/toggle-button";
+import ToggleButton from "@/components/toggle-button";
 import { usePlayerStore } from "@/lib/stores/player-store";
 import { useEffect, useState } from "react";
 import { GeneralSettings, PlayerSettings } from "@/lib/db/schema";
@@ -16,7 +16,7 @@ type TogglesProps = {
 
 type PlaybackSetting = 'autoPlay' | 'autoNext' | 'autoSkip';
 
-export default function Toggles({ playerSettings, syncPlayerSettings }: TogglesProps) {
+export default function PlaybackToggles({ playerSettings, syncPlayerSettings }: TogglesProps) {
     const [isLoading, setIsLoading] = useState<boolean>(false)
     
     const autoPlay = usePlayerStore((state) => state.autoPlay)
@@ -77,7 +77,7 @@ export default function Toggles({ playerSettings, syncPlayerSettings }: TogglesP
             
             toast.success(message);
             queryClient.invalidateQueries({ 
-              queryKey: ['settings', 'general-settings', 'player-settings-component'] 
+              queryKey: ['settings', 'general-settings'] 
             });
           } finally {
             setIsLoading(false);

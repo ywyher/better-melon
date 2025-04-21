@@ -3,8 +3,8 @@
 import { getSubtitleStyles } from "@/app/settings/subtitle/_subtitle-styles/actions";
 import { defaultSubtitleStyles } from "@/app/settings/subtitle/_subtitle-styles/constants";
 import { usePlayerStore } from "@/lib/stores/player-store";
-import { subtitleTranscriptions } from "@/lib/constants";
-import { parseSubtitleToJson } from "@/lib/fetch-subs";
+import { subtitleTranscriptions } from "@/lib/constants/subtitle";
+import { parseSubtitleToJson } from "@/lib/subtitle";
 import { useSubtitleStylesStore } from "@/lib/stores/subtitle-styles-store";
 import { useQueries } from "@tanstack/react-query";
 import TranscriptionsContainer from "@/app/watch/[id]/[ep]/_components/transcriptions/transcriptions-container";
@@ -19,7 +19,7 @@ export default function SubtitleTranscriptions() {
 
     const subtitleQueries = useQueries({
         queries: subtitleTranscriptions.filter(transcription => activeTranscriptions.includes(transcription)).map(transcription => ({
-            queryKey: ['subs', transcription, transcription === 'english' 
+            queryKey: ['transcriptions', transcription, transcription === 'english' 
                 ? englishSubtitleUrl 
                 : activeSubtitleFile?.source == 'remote'
                     ? activeSubtitleFile?.file.url 

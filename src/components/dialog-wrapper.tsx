@@ -21,7 +21,7 @@ type DialogWrapperProps = {
   className?: string;
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
-  trigger?: React.ReactNode; // Optional trigger element
+  trigger?: React.ReactNode;
 }
 
 export default function DialogWrapper({ 

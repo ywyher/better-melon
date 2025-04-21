@@ -3,7 +3,6 @@
 import { AnimeEpisodeData, AnimeStreamingData } from "@/types/anime";
 import { SubtitleEntry, SubtitleFile } from "@/types/subtitle";
 
-// Server action to fetch episodes data
 export async function getEpisodesData(id: string): Promise<AnimeEpisodeData[]> {
     try {
       const res = await fetch(`${process.env.CONSUMET_URL}/meta/anilist/episodes/${id}?provider=zoro`);
@@ -19,7 +18,6 @@ export async function getEpisodesData(id: string): Promise<AnimeEpisodeData[]> {
     }
 }
 
-// Server action to fetch streaming data
 export async function getStreamingData(episodeId: string): Promise<AnimeStreamingData> {
     try {
       const res = await fetch(`${process.env.CONSUMET_URL}/meta/anilist/watch/${episodeId}?provider=zoro`);
@@ -35,7 +33,6 @@ export async function getStreamingData(episodeId: string): Promise<AnimeStreamin
     }
 }
 
-  // Server action to fetch subtitle entries
 export async function getSubtitleEntries(id: string): Promise<SubtitleEntry[]> {
     try {
       const res = await fetch(`https://jimaku.cc/api/entries/search?anilist_id=${id}`, {
@@ -53,7 +50,6 @@ export async function getSubtitleEntries(id: string): Promise<SubtitleEntry[]> {
     }
 }
 
-// Server action to fetch subtitle files
 export async function getSubtitleFiles(entryId: number, ep: number): Promise<SubtitleFile[]> {
     try {
       const res = await fetch(`https://jimaku.cc/api/entries/${entryId}/files?episode=${ep}`, {

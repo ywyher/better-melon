@@ -1,7 +1,7 @@
 "use client"
 
 import { Combobox } from "@/components/ui/combobox";
-import { formats } from "@/lib/constants";
+import { animeFormats } from "@/lib/constants/anime";
 import { AnimeFormat } from "@/types/anime";
 import { Dispatch, SetStateAction } from "react";
 
@@ -15,12 +15,12 @@ export default function FormatFilter({
 
     const data = [
         "Any format",
-        ...formats
+        ...animeFormats
     ]
 
     return (
         <div className="w-full">
-            {formats && (
+            {animeFormats && (
                 <Combobox
                     options={data}
                     onChange={(e) => {

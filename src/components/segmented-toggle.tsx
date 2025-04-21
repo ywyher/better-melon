@@ -1,5 +1,3 @@
-import { ReactNode } from "react"
-
 function ToggleItem({ 
   option, 
   onSelect, 
@@ -27,7 +25,7 @@ function ToggleItem({
   )
 }
 
-export default function OptionToggleGroup<T extends string>({ 
+export default function SegmentedToggle<T extends string>({ 
   options,
   value,
   onValueChange,

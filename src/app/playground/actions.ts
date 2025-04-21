@@ -20,6 +20,7 @@ export async function getSessionServer() {
 }
 
 export async function loginOnServer() {
+
     const data = await auth.api.signInAnonymous({
         headers: await headers(),
     })

@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/lib/theme-provider";
-import { ReactQueryProvider } from "@/lib/react-query";
-import ApolloProvider from "@/lib/apollo-provider";
+import { ThemeProvider } from "@/lib/providers/theme-provider";
+import { ReactQueryProvider } from "@/lib/providers/react-query-provider";
+import ApolloProvider from "@/lib/providers/apollo-provider";
 import { Toaster } from "sonner";
-import { NuqsAdapter } from 'nuqs/adapters/next/app'
-import Navigation from "@/app/navigation";
+import { NuqsAdapter } from 'nuqs/adapters/next/app';
+import Navigations from "@/components/navigations";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -48,11 +48,11 @@ export default function RootLayout({
                 enableSystem
                 disableTransitionOnChange
               >
-                <Navigation>
+                <Navigations>
                   <main className="container mx-auto">
                     {children}
                   </main>
-                </Navigation>
+                </Navigations>
                 <Toaster theme="dark" />
               </ThemeProvider>
             </NuqsAdapter>

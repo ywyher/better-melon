@@ -11,13 +11,13 @@ import { Dispatch, SetStateAction } from "react"
 
 type PresetSelectorProps = {
     presets: AnkiPreset[]
-    selectedPresetId: string | null
-    setSelectedPresetId: Dispatch<SetStateAction<string>>
+    selectedPreset: string | null
+    setSelectedPreset: Dispatch<SetStateAction<string>>
 }
 
-export default function AnkiPresetSelector({ presets, selectedPresetId, setSelectedPresetId }: PresetSelectorProps) {
+export default function AnkiPresetSelector({ presets, selectedPreset, setSelectedPreset }: PresetSelectorProps) {
     return (
-        <Select value={selectedPresetId || "new"} onValueChange={setSelectedPresetId}>
+        <Select value={selectedPreset || "new"} onValueChange={setSelectedPreset}>
             <SelectTrigger className="w-[200px]">
                 <SelectValue placeholder="Select preset" />
             </SelectTrigger>

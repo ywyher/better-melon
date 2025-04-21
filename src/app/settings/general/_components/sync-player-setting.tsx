@@ -1,14 +1,14 @@
 "use client"
 
 import { handleSyncPlayerSettings } from "@/app/settings/general/actions";
-import OptionToggleGroup from "@/components/option-toggle-group";
+import SegmentedToggle from "@/components/segmented-toggle";
 import { syncStrategies } from "@/lib/constants";
 import { GeneralSettings } from "@/lib/db/schema";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
 
-export default function SyncPlayerSettings({ settings }: { settings: GeneralSettings }) {
+export default function SyncPlayerSetting({ settings }: { settings: GeneralSettings }) {
     const [selectedOption, setSelectedOption] = useState<GeneralSettings['syncPlayerSettings']>(settings.syncPlayerSettings || 'ask')
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
@@ -41,7 +41,7 @@ export default function SyncPlayerSettings({ settings }: { settings: GeneralSett
                 </p>
             </div>
             <div className="col-span-1 flex justify-end">
-                <OptionToggleGroup
+                <SegmentedToggle
                     options={syncStrategies} 
                     value={selectedOption}
                     onValueChange={handleValueChange}

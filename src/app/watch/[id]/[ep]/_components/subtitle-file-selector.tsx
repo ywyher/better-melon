@@ -12,7 +12,7 @@ import { toast } from "sonner";
 import DialogWrapper from "@/components/dialog-wrapper";
 import { usePlayerStore } from "@/lib/stores/player-store";
 import { SubtitleFile } from "@/types/subtitle";
-import { isFileJpn } from "@/app/watch/[id]/[ep]/funcs";
+import { isFileJpn } from "@/lib/subtitle";
 
 export default function SubtitleFileSelector({ subtitleFiles }: { 
     subtitleFiles: SubtitleFile[];

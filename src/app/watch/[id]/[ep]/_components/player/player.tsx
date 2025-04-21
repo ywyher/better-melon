@@ -10,7 +10,6 @@ import { useCallback, useEffect, useRef, useState, useMemo, memo } from "react";
 import { usePlayerStore } from "@/lib/stores/player-store";
 import { SubtitleFile } from '@/types/subtitle';
 import { AnimeEpisodeData, AnimeStreamingData, SkipTime } from '@/types/anime';
-import { generateWebVTTFromSkipTimes } from '@/app/watch/[id]/[ep]/funcs';
 import SubtitleTranscriptions from '@/app/watch/[id]/[ep]/_components/transcriptions/transcriptions';
 import SkipButton from '@/app/watch/[id]/[ep]/_components/player/skip-button';
 import PlayerSkeleton from '@/app/watch/[id]/[ep]/_components/player/player-skeleton';
@@ -18,6 +17,7 @@ import { useThrottledCallback } from 'use-debounce';
 import { useParams, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import DefinitionCard from '@/components/definition-card';
+import { generateWebVTTFromSkipTimes } from '@/lib/subtitle';
 
 type PlayerProps = { 
     streamingData: AnimeStreamingData;

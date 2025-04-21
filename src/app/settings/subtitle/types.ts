@@ -1,5 +1,5 @@
 import { textShadowTypes } from "@/app/settings/subtitle/_subtitle-styles/constants";
-import { subtitleTranscriptions } from "@/lib/constants";
+import { subtitleTranscriptions } from "@/lib/constants/subtitle";
 import { z } from "zod";
 
 export const subtitleStylesSchema = z.object({

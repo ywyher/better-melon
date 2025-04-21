@@ -2,7 +2,7 @@
 
 import { handleEnabledTranscriptions } from "@/app/settings/player/actions";
 import MultipleSelector from "@/components/multiple-selector";
-import { subtitleTranscriptions } from "@/lib/constants";
+import { subtitleTranscriptions } from "@/lib/constants/subtitle";
 import { PlayerSettings as TPlayerSettings } from "@/lib/db/schema";
 import { SubtitleTranscription } from "@/types/subtitle";
 import { useQueryClient } from "@tanstack/react-query";

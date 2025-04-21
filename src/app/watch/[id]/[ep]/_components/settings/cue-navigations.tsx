@@ -2,20 +2,21 @@
 import { Button } from "@/components/ui/button";
 import { SkipBack, SkipForward } from "lucide-react";
 import { usePlayerStore } from "@/lib/stores/player-store";
-import { srtTimestampToSeconds } from "@/lib/funcs";
-import { SubtitleCue } from "@/types/subtitle";
+import { SubtitleCue, SubtitleFormat } from "@/types/subtitle";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { getExtension } from "@/lib/utils";
+import { timestampToSeconds } from "@/lib/subtitle";
 
 interface CueNavigationProps {
   direction: 'next' | 'previous';
 }
 
-export default function CueNavigation({ direction }: CueNavigationProps) {
+export default function CueNavigations({ direction }: CueNavigationProps) {
   const [currentCue, setCurrentCue] = useState<SubtitleCue | null>(null);
   const player = usePlayerStore((state) => state.player);
-  const activeSubtitleFile = usePlayerStore((state) => state.activeSubtitleFile);
   const delay = usePlayerStore((state) => state.delay);
   const subtitleCues = usePlayerStore((state) => state.subtitleCues);
+  const activeSubtitleFile = usePlayerStore((state) => state.activeSubtitleFile);
   
   const isNext = direction === 'next';
   const currentTimeRef = useRef<number>(0);
@@ -28,8 +29,14 @@ export default function CueNavigation({ direction }: CueNavigationProps) {
     }
 
     const activeCue = subtitleCues.find(cue => {
-      const startTime = srtTimestampToSeconds(cue.from) + delay.japanese;
-      const endTime = srtTimestampToSeconds(cue.to) + delay.japanese;
+      const startTime = timestampToSeconds({
+        timestamp: (cue.from) + delay.japanese,
+        format: getExtension(activeSubtitleFile?.file.name || "srt") as SubtitleFormat
+      })
+      const endTime = timestampToSeconds({
+        timestamp: (cue.to) + delay.japanese,
+        format: getExtension(activeSubtitleFile?.file.name || "srt") as SubtitleFormat
+      })
       return (currentTime + .1) >= startTime && (currentTime + .1) <= endTime;
     });
     
@@ -69,8 +76,14 @@ export default function CueNavigation({ direction }: CueNavigationProps) {
       let minDistance = Infinity;
       
       for (const cue of subtitleCues) {
-        const cueStartTime = srtTimestampToSeconds(cue.from) + delay.japanese;
-        const cueEndTime = srtTimestampToSeconds(cue.to) + delay.japanese;
+        const cueStartTime = timestampToSeconds({
+          timestamp: (cue.from) + delay.japanese,
+          format: getExtension(activeSubtitleFile?.file.name || "srt") as SubtitleFormat
+        })
+        const cueEndTime = timestampToSeconds({
+          timestamp: (cue.to) + delay.japanese,
+          format: getExtension(activeSubtitleFile?.file.name || "srt") as SubtitleFormat
+        })
         
         // If we're looking for the next cue, find the closest one ahead of current time
         if (isNext && cueStartTime > currentTime) {
@@ -104,7 +117,11 @@ export default function CueNavigation({ direction }: CueNavigationProps) {
     if (targetCueId !== null) {
       const targetCue = subtitleCues.find(cue => cue.id === targetCueId);
       if (targetCue && player.current) {
-        const targetCueTime = srtTimestampToSeconds(targetCue.from) + delay.japanese;
+        const targetCueTime = timestampToSeconds({
+          timestamp: (targetCue.from) + delay.japanese,
+          format: getExtension(activeSubtitleFile?.file.name || "srt") as SubtitleFormat
+        })
+        
         player.current.currentTime = targetCueTime;
         setCurrentCue(targetCue);
       }

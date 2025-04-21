@@ -109,12 +109,32 @@ export default function Playground() {
         setIsLoading(false)
     }
 
+    const onDiscord = async () =>{ 
+        setIsLoading(true)
+        const { error, data } = await authClient.signIn.social({
+            provider: "discord"
+        })
+
+        if(error) {
+            toast.error(error?.message)
+            console.log(error)
+            setIsLoading(false)
+            return;
+        }
+
+        console.log(data)
+
+        toast.message("discord")
+        queryClient.invalidateQueries({ queryKey: ['session'] })
+        setIsLoading(false)
+    }
+
     if(isSessionLoading) return <>Loading...</>
 
     return (
         <div className="h-screen flex justify-center items-center">
             {data ? (
-                <div className="flex flex-col gap-5">
+            <div className="flex flex-col gap-5">
                     <p className="text-xl">Logged in</p>
                     <LoadingButton
                         isLoading={isLoading}
@@ -140,6 +160,13 @@ export default function Playground() {
             ): (
                 <div className="flex flex-col gap-5">
                     <p className="text-xl">Aint logged in</p>
+                    <LoadingButton
+                        isLoading={isLoading}
+                        variant="secondary"
+                        onClick={() => onDiscord()}
+                    >
+                        on Discord
+                    </LoadingButton>
                     <LoadingButton
                         isLoading={isLoading}
                         onClick={() => login()}

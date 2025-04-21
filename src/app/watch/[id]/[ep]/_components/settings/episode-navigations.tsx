@@ -4,7 +4,7 @@ import { useParams, useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { SkipBack, SkipForward } from "lucide-react"
 
-export default function EpisodeNavigation({ direction, episodesLength }: { direction: 'next' | 'previous', episodesLength: number }) {
+export default function EpisodeNavigations({ direction, episodesLength }: { direction: 'next' | 'previous', episodesLength: number }) {
     const router = useRouter();
     const params = useParams<{ id: string; ep: string }>();
 

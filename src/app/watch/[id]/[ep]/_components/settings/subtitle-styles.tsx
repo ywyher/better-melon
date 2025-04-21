@@ -122,7 +122,7 @@ export default function SubtitleStyles({ syncPlayerSettings }: SubtitleStylesPro
                 
                 toast.success(result.message);
                 queryClient.invalidateQueries({ 
-                    queryKey: ['settings', 'general-settings', 'player-settings-component'] 
+                    queryKey: ['settings', 'general-settings'] 
                 });
             } finally {
                 setIsLoading(false);

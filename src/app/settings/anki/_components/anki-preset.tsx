@@ -11,7 +11,7 @@ import AnkiPresetSelector from "@/app/settings/anki/_components/anki-preset-sele
 
 
 export default function AnkiPreset() {
-    const [selectedPresetId, setSelectedPresetId] = useState<string>("new")
+    const [selectedPreset, setSelectedPreset] = useState<string>("new")
 
     const { data: presets, isLoading: isPresetsLoading } = useQuery({
         queryKey: ['anki', 'presets'],
@@ -21,22 +21,22 @@ export default function AnkiPreset() {
         }
     })
     
-    const { data: selectedPreset, isLoading: isSelectedPresetLoading } = useQuery({
-        queryKey: ['anki', 'preset', selectedPresetId],
+    const { data: presetData, isLoading: isPresetDataLoading } = useQuery({
+        queryKey: ['anki', 'preset', selectedPreset],
         queryFn: async () => {
-            if(!selectedPresetId || selectedPresetId === "new") return null;
+            if(!selectedPreset || selectedPreset === "new") return null;
             
-            const preset = await getPreset({ id: selectedPresetId })
+            const preset = await getPreset({ id: selectedPreset })
             return preset as TAnkiPreset
         },
-        enabled: !!selectedPresetId && selectedPresetId !== "new"
+        enabled: !!selectedPreset && selectedPreset !== "new"
     })
 
     useEffect(() => {
         if (presets && presets.length > 0) {
             const defaultPreset = presets.find(preset => preset.isDefault === true)
             
-            setSelectedPresetId(defaultPreset?.id || "new")
+            setSelectedPreset(defaultPreset?.id || "new")
         }
     }, [presets])
     
@@ -48,20 +48,20 @@ export default function AnkiPreset() {
             <Card className="w-full">
                 <CardHeader className="flex flex-row items-center justify-between">
                     <CardTitle>
-                        {selectedPresetId === "new" ? "Create New Preset" : "Edit Preset"}
+                        {selectedPreset === "new" ? "Create New Preset" : "Edit Preset"}
                     </CardTitle>
                     <AnkiPresetSelector 
                         presets={presets} 
-                        selectedPresetId={selectedPresetId}
-                        setSelectedPresetId={setSelectedPresetId}
+                        selectedPreset={selectedPreset}
+                        setSelectedPreset={setSelectedPreset}
                     />
                 </CardHeader>
                 
-                {!isSelectedPresetLoading ? (
+                {!isPresetDataLoading ? (
                     <AnkiPresetForm
-                        preset={selectedPresetId === "new" ? null : selectedPreset || null}
+                        preset={selectedPreset === "new" ? null : presetData || null}
                         presets={presets}
-                        setSelectedPresetId={setSelectedPresetId}
+                        setSelectedPreset={setSelectedPreset}
                     />
                 ): (
                     <AnkiSkeleton />

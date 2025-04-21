@@ -1,7 +1,7 @@
 import db from "@/lib/db";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { admin, anonymous, bearer, emailOTP, genericOAuth } from "better-auth/plugins"
+import { admin, anonymous, bearer, emailOTP, genericOAuth, organization } from "better-auth/plugins"
 import * as schema from '@/lib/db/schema/index'
 import { nextCookies } from "better-auth/next-js";
 import { eq } from "drizzle-orm";
@@ -46,6 +46,12 @@ export const auth = betterAuth({
       }
     },
   },
+  socialProviders: {
+    discord: { 
+      clientId: process.env.DISCORD_CLIENT_ID as string, 
+      clientSecret: process.env.DISCORD_CLIENT_SECRET as string, 
+    }, 
+  },
   account: {
     accountLinking: {
         enabled: true, 
@@ -55,6 +61,7 @@ export const auth = betterAuth({
     }
   },
   plugins: [
+    organization(),
     anonymous({
       onLinkAccount: async ({ anonymousUser, newUser }) => {
           const anonymousAnkiPresets = await db.select().from(schema.ankiPreset)
@@ -222,6 +229,6 @@ export const auth = betterAuth({
         }
       ]
     }),
-    nextCookies()
+    nextCookies(),
   ]
 })

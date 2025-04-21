@@ -1,8 +1,8 @@
 "use client"
 
 import MultipleSelector from "@/components/multiple-selector";
+import { animeSort } from "@/lib/constants/anime";
 import { Dispatch, SetStateAction, useEffect } from "react";
-import { sort as data } from "@/lib/constants";
 
 export default function SortFilter({
     querySort,
@@ -21,12 +21,12 @@ export default function SortFilter({
 
     return (
         <div className="w-full">
-            {data && (
+            {animeSort && (
                 <MultipleSelector 
-                    options={data.map((srt) => {
+                    options={animeSort.map((sort) => {
                         return {
-                            value: srt,
-                            label: srt.charAt(0).toUpperCase() + srt.slice(1)
+                            value: sort,
+                            label: sort.charAt(0).toUpperCase() + sort.slice(1)
                         }
                     })}
                     placeholder="Select Sorting Option(s)"
@@ -34,10 +34,10 @@ export default function SortFilter({
                         const selectedValues = selections.map((selection) => selection.value);
                         setSort(selectedValues);
                       }}
-                    value={sort?.map((srt) => {
+                    value={sort?.map((sort) => {
                         return {
-                            value: srt,
-                            label: srt.charAt(0).toUpperCase() + srt.slice(1)
+                            value: sort,
+                            label: sort.charAt(0).toUpperCase() + sort.slice(1)
                         }
                     })}
                 />

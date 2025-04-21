@@ -11,7 +11,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
 import { useState } from "react"
 import LoadingButton from "@/components/loading-button"
 import { toast } from "sonner"
@@ -19,7 +18,7 @@ import { authClient } from "@/lib/auth-client"
 import { useRouter } from "next/navigation"
 import { PasswordInput } from "@/components/form/password-input"
 import { useIsSmall } from "@/hooks/useMediaQuery"
-import { passwordSchema } from "@/types"
+import { passwordSchema } from "@/types/auth"
 
 const formSchema = z
   .object({

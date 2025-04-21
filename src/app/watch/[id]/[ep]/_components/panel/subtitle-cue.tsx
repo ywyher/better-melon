@@ -3,14 +3,14 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
-import type { SubtitleCue, SubtitleToken } from "@/types/subtitle";
-import { cn } from "@/lib/utils";
+import type { SubtitleCue, SubtitleFormat, SubtitleToken } from "@/types/subtitle";
+import { cn, getExtension } from "@/lib/utils";
 import { CSSProperties } from "react";
 import { usePlayerStore } from "@/lib/stores/player-store";
 import { Button } from "@/components/ui/button";
-import { srtTimestampToSeconds } from "@/lib/funcs";
 import { Play } from "lucide-react";
 import { useDefinitionStore } from "@/lib/stores/definition-store";
+import { timestampToSeconds } from "@/lib/subtitle";
 
 type SubtitleCueProps = { 
     index: number;
@@ -29,13 +29,17 @@ export default function SubtitleCue({
     const { from, tokens, content } = cue;
     const player = usePlayerStore((state) => state.player)
     const delay = usePlayerStore((state) => state.delay)
-
+    const activeSubtitleFile = usePlayerStore((state) => state.activeSubtitleFile)
+    
     const activeToken = useDefinitionStore((state) => state.token)
     const setSentance = useDefinitionStore((state) => state.setSentance)
     const setToken = useDefinitionStore((state) => state.setToken)
       
     const handleSeek = () => {
-        player.current?.remoteControl.seek(srtTimestampToSeconds(from) + delay.japanese)  
+        player.current?.remoteControl.seek(timestampToSeconds({
+            timestamp: (from) + delay.japanese,
+            format: getExtension(activeSubtitleFile?.file.name || "srt") as SubtitleFormat
+        }))
     };
 
     const handleClick = (sentance: string, token: SubtitleToken) => {

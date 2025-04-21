@@ -1,11 +1,12 @@
 "use client"
+
 import { usePlayerStore } from "@/lib/stores/player-store";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { Separator } from "@/components/ui/separator";
 
-export default function DelaySlider() {
+export default function DelayController() {
   const delay = usePlayerStore((state) => state.delay);
   const setDelay = usePlayerStore((state) => state.setDelay);
   const [japaneseProgress, setJapaneseProgress] = useState([delay.japanese]);

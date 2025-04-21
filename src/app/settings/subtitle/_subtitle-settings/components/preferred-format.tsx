@@ -9,7 +9,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { subtitleFormats } from "@/lib/constants"
+import { subtitleFormats } from "@/lib/constants/subtitle"
 import { SubtitleSettings } from "@/lib/db/schema"
 import { useQueryClient } from "@tanstack/react-query"
 import { X } from "lucide-react"
@@ -33,7 +33,7 @@ export default function SubtitleSettingsPreferredFormat({ settingsId, preferredF
             return;
         }
         
-        queryClient.invalidateQueries({ queryKey: ['settings', 'subtitle-settings'], exact: true })
+        queryClient.invalidateQueries({ queryKey: ['settings', 'subtitle-settings'] })
         toast.success(message)
         setIsFormatLoading(false)
     }

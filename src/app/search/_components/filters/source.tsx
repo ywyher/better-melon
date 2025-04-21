@@ -1,9 +1,9 @@
 "use client"
 
 import { Combobox } from "@/components/ui/combobox";
-import { sources } from "@/lib/constants";
 import { Dispatch, SetStateAction } from "react";
 import { AnimeSource } from "@/types/anime";
+import { animeSources } from "@/lib/constants/anime";
 
 export default function SourceFilter({
     querySource,
@@ -15,12 +15,12 @@ export default function SourceFilter({
 
     const data = [
         "Any source",
-        ...sources
+        ...animeSources
     ]
 
     return (
         <div className="w-full">
-            {sources && (
+            {animeSources && (
                 <Combobox
                     options={data}
                     placeholder="Select source material"

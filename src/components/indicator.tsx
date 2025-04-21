@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 
-// Helper component for full screen centered messages
 export function Indicator({ 
     message, 
     color = "", 
@@ -27,7 +26,6 @@ export function Indicator({
       } else if (router && router.back) {
         router.back();
       } else {
-        // Fallback to browser history
         window.history.back();
       }
     };

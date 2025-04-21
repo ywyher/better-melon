@@ -11,7 +11,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { AuthIdentifier, AuthPort } from "@/components/auth/auth";
 import { checkEmail } from "@/components/auth/actions";
 import LoadingButton from "@/components/loading-button";
-import { emailRegex, identifierSchema, usernameRegex } from "@/types";
+import { emailRegex, identifierSchema, usernameRegex } from "@/types/auth";
 
 export const checkSchema = z.object({
     identifier: identifierSchema,

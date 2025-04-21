@@ -1,4 +1,4 @@
-import SettingsLinks from "@/app/settings/settings-links";
+import SettingsTabs from "@/app/settings/settings-tabs";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -26,7 +26,7 @@ export default function RootLayout({
                     <p className="font-bold text-3xl text-neutral-800 dark:text-neutral-100">Settings</p>
                 </div>
                 <div className="container mx-auto">
-                    <SettingsLinks />
+                    <SettingsTabs />
                 </div>
             </div>
         </div>

@@ -12,7 +12,7 @@ import { authClient } from "@/lib/auth-client";
 import { Dispatch, SetStateAction, useState } from "react";
 import { AuthPort } from "@/components/auth/auth";
 import LoadingButton from "@/components/loading-button";
-import { emailSchema, passwordSchema, usernameSchema } from "@/types";
+import { emailSchema, passwordSchema, usernameSchema } from "@/types/auth";
 
 export const registerSchema = z.object({
     username: usernameSchema,

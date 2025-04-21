@@ -3,17 +3,15 @@
 import { defaultSubtitleStyles } from "@/app/settings/subtitle/_subtitle-styles/constants";
 import { TranscriptionItem } from "@/app/watch/[id]/[ep]/_components/transcriptions/transcription-item";
 import { SubtitleStyles } from "@/lib/db/schema";
-import { timestampToSeconds } from "@/lib/funcs";
-import { useDefinitionStore } from "@/lib/stores/definition-store";
+import { timestampToSeconds } from "@/lib/subtitle";
 import { usePlayerStore } from "@/lib/stores/player-store";
 import { useSubtitleStylesStore } from "@/lib/stores/subtitle-styles-store";
-import { cn } from "@/lib/utils";
-import { SubtitleCue, SubtitleFormat, SubtitleToken, SubtitleTranscription } from "@/types/subtitle";
+import { SubtitleCue, SubtitleFormat, SubtitleTranscription } from "@/types/subtitle";
 import { closestCenter, DndContext, DragEndEvent, KeyboardSensor, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { UseQueryResult } from "@tanstack/react-query";
 import { useMediaState } from "@vidstack/react";
-import { CSSProperties, Fragment, useCallback, useEffect, useMemo, useState } from "react";
+import { CSSProperties, useMemo, useState } from "react";
 
 type TranscriptionsContainerProps = {
     subtitleQueries: UseQueryResult<{

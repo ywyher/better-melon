@@ -1,8 +1,8 @@
 "use client"
 
 import { getPlayerSettings } from "@/app/settings/player/actions";
-import EnabledTranscriptionsSetting from "@/app/watch/[id]/[ep]/_components/settings/enabled-transcriptions";
-import Toggles from "@/app/watch/[id]/[ep]/_components/settings/toggles";
+import EnabledTranscriptions from "@/app/watch/[id]/[ep]/_components/settings/enabled-transcriptions";
+import PlaybackToggles from "@/app/watch/[id]/[ep]/_components/settings/playback-toggles";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useQuery } from "@tanstack/react-query";
 import { GeneralSettings, PlayerSettings as TPlayerSettings } from "@/lib/db/schema/index"
@@ -16,7 +16,7 @@ export default function PlayerSettings({ generalSettings }: PlayerSettingsProps)
         data: playerSettings,
         isLoading: isPlayerSettingsLoading,
     } = useQuery({
-        queryKey: ['settings', 'player-settings', 'watch'],
+        queryKey: ['settings', 'player-settings'],
         queryFn: async () => await getPlayerSettings(),
         refetchOnWindowFocus: false,
     });
@@ -36,11 +36,11 @@ export default function PlayerSettings({ generalSettings }: PlayerSettingsProps)
 
     return (
         <div className="flex flex-row gap-2">
-            <EnabledTranscriptionsSetting
+            <EnabledTranscriptions
                 playerSettings={playerSettings as TPlayerSettings}
                 syncPlayerSettings={generalSettings.syncPlayerSettings}
             />
-            <Toggles 
+            <PlaybackToggles 
                 playerSettings={playerSettings as TPlayerSettings}
                 syncPlayerSettings={generalSettings.syncPlayerSettings}
             />

@@ -16,7 +16,7 @@ import {
   useSensors,
 } from '@dnd-kit/core';
 import { usePlayerStore } from '@/lib/stores/player-store';
-import { takeSnapshot } from '@/lib/funcs';
+import { takeSnapshot } from '@/lib/anki';
 import { useQuery } from '@tanstack/react-query';
 import { AnkiPreset } from '@/lib/db/schema';
 import { getDefaultPreset } from '@/app/settings/anki/actions';
@@ -28,7 +28,7 @@ export default function DefinitionCard() {
   const player = usePlayerStore((state) => state.player);
 
   const { data: preset } = useQuery({
-    queryKey: ['anki', 'preset'],
+    queryKey: ['anki', 'default-preset'],
     queryFn: async () => {
       return await getDefaultPreset() as AnkiPreset || null
     }

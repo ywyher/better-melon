@@ -18,7 +18,6 @@ import { z } from "zod"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormDescription } from "@/components/ui/form"
 import { useIsSmall } from "@/hooks/useMediaQuery"
 import { toast } from "sonner"
-import { ankiFieldsValues } from "@/lib/constants"
 import { X } from "lucide-react"
 import { createPreset, updatePreset } from "@/app/settings/anki/actions"
 import { useRouter } from "next/navigation"
@@ -26,11 +25,12 @@ import LoadingButton from "@/components/loading-button"
 import { Button } from "@/components/ui/button"
 import AnkiSkeleton from "@/app/settings/anki/_components/anki-skeleton"
 import AnkiDeletePreset from "@/app/settings/anki/_components/anki-delete-preset"
+import { ankiFieldsValues } from "@/lib/constants/anki"
 
 type PresetFormProps = {
     preset: AnkiPreset | null
     presets: AnkiPreset[];
-    setSelectedPresetId: Dispatch<SetStateAction<AnkiPreset['id']>>
+    setSelectedPreset: Dispatch<SetStateAction<AnkiPreset['id']>>
 }
 
 export const ankiPresetSchema = z.object({
@@ -47,7 +47,7 @@ export type AnkiPresetSchema = z.infer<typeof ankiPresetSchema>
 export default function AnkiPresetForm({ 
     preset,
     presets,
-    setSelectedPresetId
+    setSelectedPreset
 }: PresetFormProps) {
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [selectedModel, setSelectedModel] = useState<string>(preset?.model || "")
@@ -59,17 +59,17 @@ export default function AnkiPresetForm({
     const isFirstPreset = presets.length === 0
 
     const { data: deckNames, isLoading: isDeckNamesLoading } = useQuery({
-        queryKey: ['profile', 'settings', 'deckNames'],
+        queryKey: ['anki', 'deckNames'],
         queryFn: async () => await invokeAnkiConnect('deckNames', 6),
     })
 
     const { data: modelNames, isLoading: isModelNamesLoading } = useQuery({
-        queryKey: ['profile', 'settings', 'modelNames'],
+        queryKey: ['anki', 'modelNames'],
         queryFn: async () => await invokeAnkiConnect('modelNames', 6),
     })
 
     const { data: modelFieldNames } = useQuery({
-        queryKey: ['profile', 'settings', 'modelFieldNames', selectedModel],
+        queryKey: ['anki', 'modelFieldNames', selectedModel],
         queryFn: async () => await invokeAnkiConnect('modelFieldNames', 6, { modelName: selectedModel }),
         enabled: !!selectedModel
     })
@@ -164,7 +164,7 @@ export default function AnkiPresetForm({
             
         queryClient.invalidateQueries({ queryKey: [ 'session' ] })
         queryClient.invalidateQueries({ queryKey: [ 'anki' ] })
-        setSelectedPresetId(defaultPreset?.id || "new")
+        setSelectedPreset(defaultPreset?.id || "new")
         toast.message(result.message)
         setIsLoading(false)
     }
@@ -367,7 +367,7 @@ export default function AnkiPresetForm({
                 <AnkiDeletePreset
                     presets={presets}
                     presetId={preset.id}
-                    setSelectedPresetId={setSelectedPresetId}
+                    setSelectedPreset={setSelectedPreset}
                 />
             )}
         </CardContent>
