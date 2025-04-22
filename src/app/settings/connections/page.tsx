@@ -11,25 +11,14 @@ import ConnectionProviderCard from "@/app/settings/connections/_components/conne
 import TooltipWrapper from "@/components/tooltip-wrapper";
 import { AlertCircle } from "lucide-react";
 import { connectionProviders } from "@/lib/constants";
+import { userQueries, useSession } from "@/lib/queries/user";
 
 export default function Connections() {
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
     
-    const { data: user } = useQuery({
-        queryKey: ["session"],
-        queryFn: async () => {
-            const { data } = await getSession()
-            return (data?.user as User) || null;
-        },
-    });
+    const { data: user } = useSession()
 
-    const { data: connectedProviders, isLoading: isConnectedProvidersLoading } = useQuery({
-        queryKey: ['session', 'accounts-list'],
-        queryFn: async () =>{ 
-            const { data } = await authClient.listAccounts()
-            return data;
-        }
-    })
+    const { data: connectedProviders, isLoading: isConnectedProvidersLoading } = useQuery({ ...userQueries.listAccounts() })
 
     useEffect(() => {
         if(user) {

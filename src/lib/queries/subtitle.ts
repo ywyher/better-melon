@@ -2,9 +2,9 @@ import { parseSubtitleToJson } from "@/lib/subtitle";
 import { ActiveSubtitleFile, SubtitleTranscription } from "@/types/subtitle";
 import { createQueryKeys } from "@lukemorales/query-key-factory";
 
-export const subtitle = createQueryKeys('subtitle', {
+export const subtitleQueries = createQueryKeys('subtitle', {
     subtitleCues: (transcription: SubtitleTranscription, activeSubtitleFile: ActiveSubtitleFile) => ({
-        queryKey: ['subtitle-cues', transcription, activeSubtitleFile],
+        queryKey: ['cues', transcription, activeSubtitleFile],
         queryFn: async () => {
             if(activeSubtitleFile) {
                 const format = activeSubtitleFile?.source == 'remote' 

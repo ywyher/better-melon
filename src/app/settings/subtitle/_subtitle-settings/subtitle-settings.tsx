@@ -1,19 +1,13 @@
 'use client'
 
 import SubtitleSettingsSkeleton from "@/app/settings/subtitle/_components/subtitle-settings-skeleton"
-import { getSubtitleSettings } from "@/app/settings/subtitle/_subtitle-settings/actions"
 import SubtitleSettingsMatchPattern from "@/app/settings/subtitle/_subtitle-settings/components/match-pattern"
 import SubtitleSettingsPreferredFormat from "@/app/settings/subtitle/_subtitle-settings/components/preferred-format"
-import { SubtitleSettings as TSubtitleSettings } from "@/lib/db/schema"
+import { settingsQueries } from "@/lib/queries/settings"
 import { useQuery } from "@tanstack/react-query"
   
 export default function SubtitleSettings() {
-    const { data: settings, isLoading: isSettingsLoading } = useQuery({
-        queryKey: ['settings', 'subtitle-settings'],
-        queryFn: async () => {
-            return await getSubtitleSettings() as TSubtitleSettings
-        }
-    })
+    const { data: settings, isLoading: isSettingsLoading } = useQuery({ ...settingsQueries.subtitle() })
 
     if(isSettingsLoading) return <SubtitleSettingsSkeleton />
 

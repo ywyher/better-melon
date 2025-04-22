@@ -6,13 +6,11 @@ import PlayerSettingsSkeleton from "@/app/settings/player/_components/player-set
 import { getPlayerSettings } from "@/app/settings/player/actions"
 import { Separator } from "@/components/ui/separator"
 import { PlayerSettings as TPlayerSettings } from "@/lib/db/schema"
+import { settingsQueries } from "@/lib/queries/settings"
 import { useQuery } from "@tanstack/react-query"
 
 export default function PlayerSettingsPage() {
-  const { data: playerSettings, isLoading } = useQuery({
-      queryKey: ['settings', 'player-settings'],
-      queryFn: async () => await getPlayerSettings(),
-    })
+  const { data: playerSettings, isLoading } = useQuery({ ...settingsQueries.player() })
   
     if (isLoading) {
       return <PlayerSettingsSkeleton />

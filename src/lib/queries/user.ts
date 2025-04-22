@@ -1,8 +1,9 @@
 import { authClient, getSession } from "@/lib/auth-client";
 import { User } from "@/lib/db/schema";
 import { createQueryKeys } from "@lukemorales/query-key-factory";
+import { useQuery } from "@tanstack/react-query";
 
-export const user = createQueryKeys('user', {
+export const userQueries = createQueryKeys('user', {
     session: () => ({
         queryKey: ['session'],
         queryFn: async () => {
@@ -16,5 +17,11 @@ export const user = createQueryKeys('user', {
             const { data } = await authClient.listAccounts()
             return data;
         }
-    })
+    }),
 });
+
+export function useSession() {
+    return useQuery({
+        ...userQueries.session(),
+    })
+}

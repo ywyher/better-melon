@@ -16,9 +16,9 @@ import { Indicator } from '@/components/indicator';
 import EpisodesList from '@/app/watch/[id]/[ep]/_components/episodes/episodes-list';
 import { gql, useQuery as useGqlQuery } from "@apollo/client"
 import EpisodesListSkeleton from '@/app/watch/[id]/[ep]/_components/episodes/episodes-list-skeleton';
-import { getEpisodesData, getStreamingData, getSubtitleEntries, getSubtitleFiles } from '@/app/watch/[id]/[ep]/actions';
-import { getSubtitleSettings } from '@/app/settings/subtitle/_subtitle-settings/actions';
 import { filterSubtitleFiles, selectSubtitleFile } from '@/lib/subtitle';
+import { playerQueries } from '@/lib/queries/player';
+import { settingsQueries } from '@/lib/queries/settings';
 
 const GET_ANIME_DATA = gql`
   query($id: Int!) {
@@ -47,19 +47,18 @@ const GET_ANIME_DATA = gql`
 
 export default function Watch() {
   const params = useParams();
-  const id = params.id as string;
+  const animeId = params.id as string;
   const ep = params.ep as string;
   const episodeNumber = parseInt(ep);
 
-  const { loading: isLoadingAnime, error: animeError, data: animeData } = useGqlQuery(GET_ANIME_DATA, { variables: { id: parseInt(id) } })
+  const { loading: isLoadingAnime, error: animeError, data: animeData } = useGqlQuery(GET_ANIME_DATA, { variables: { id: parseInt(animeId) } })
 
   const { 
     data: episodesData, 
     isLoading: isLoadingEpisodes, 
     error: episodesError 
   } = useQuery({
-    queryKey: ['player', 'episodesData', id],
-    queryFn: async () => await getEpisodesData(id),
+    ...playerQueries.episodeData(animeId),
     refetchOnWindowFocus: false
   });
 
@@ -72,8 +71,7 @@ export default function Watch() {
     isLoading: isLoadingStreamingData,
     error: streamingError
   } = useQuery({
-    queryKey: ['player', 'streamingData', episode?.id],
-    queryFn: async () => await getStreamingData(episode?.id || ""),
+    ...playerQueries.streamingData(episode?.id || ""),
     refetchOnWindowFocus: false,
     enabled: !!episode
   });
@@ -83,8 +81,7 @@ export default function Watch() {
     isLoading: isLoadingSubtitleEntries,
     error: subtitleEntriesError
   } = useQuery({
-    queryKey: ['player', 'subtitleEntries', id],
-    queryFn: async () => await getSubtitleEntries(id),
+    ...playerQueries.subtitleEntries(animeId),
     refetchOnWindowFocus: false
   });
 
@@ -93,11 +90,7 @@ export default function Watch() {
     isLoading: isLoadingSubtitleFiles,
     error: subtitleFilesError
   } = useQuery({
-    queryKey: ['player', 'subtitleFiles', subtitleEntries?.[0]?.id, ep],
-    queryFn: async () => {
-      if(!subtitleEntries || !subtitleEntries[0].id || !episode) return;
-      return await getSubtitleFiles(subtitleEntries[0].id, episode?.number)
-    },
+    ...playerQueries.subtitleFiles(subtitleEntries?.[0]?.id || 1, episode?.number || 1),
     refetchOnWindowFocus: false,
     enabled: !!subtitleEntries && subtitleEntries.length > 0,
   });
@@ -107,10 +100,7 @@ export default function Watch() {
     isLoading: isLoadingSubtitleSettings,
     error: subtitleSettingsError
   } = useQuery({
-    queryKey: ['player', 'settings', 'subtitle-settings'],
-    queryFn: async () => {
-      return await getSubtitleSettings() || null
-    },
+    ...settingsQueries.subtitle(),
     refetchOnWindowFocus: false,
   })
 
@@ -157,7 +147,6 @@ export default function Watch() {
   const isPlayerLoading = isLoadingEpisodes || isLoadingStreamingData || !episode || !streamingData || isLoadingSubtitleSettings;
   const isPanelLoading = isLoadingSubtitleEntries || isLoadingSubtitleFiles || !subtitleFiles;
 
-  // Extract PlayerContent to a separate component for better readability
   const renderPlayerContent = () => {
     if (isPlayerLoading) {
       return (
@@ -185,7 +174,6 @@ export default function Watch() {
     );
   };
 
-  // When subtitles are empty but everything else is loaded
   if ((!subtitleEntries || subtitleEntries.length === 0) && streamingData) {
     return (
         <div>

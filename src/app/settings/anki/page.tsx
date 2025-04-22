@@ -5,11 +5,11 @@ import { invokeAnkiConnect } from '@/lib/anki'
 import AnkiSkeleton from '@/app/settings/anki/_components/anki-skeleton'
 import AnkiError from '@/app/settings/anki/_components/anki-error'
 import AnkiPreset from '@/app/settings/anki/_components/anki-preset'
+import { ankiQueries } from '@/lib/queries/anki'
 
 export default function AnkiSettingsPage() {
   const { data, error, isLoading } = useQuery({
-    queryKey: ['anki-connection'],
-    queryFn: async () => await invokeAnkiConnect('deckNames', 6),
+    ...ankiQueries.connection(),
     retry: 3,
     refetchOnWindowFocus: true,
   })

@@ -17,6 +17,7 @@ import { showSyncSettingsToast } from "@/components/sync-settings-toast";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { createSubtitleStyles, updateSubtitleStyles } from "@/app/settings/subtitle/_subtitle-styles/actions";
+import { settingsQueries } from "@/lib/queries/settings";
 
 type SubtitleStylesProps = {
     syncPlayerSettings: GeneralSettings['syncPlayerSettings']
@@ -121,9 +122,7 @@ export default function SubtitleStyles({ syncPlayerSettings }: SubtitleStylesPro
                 }
                 
                 toast.success(result.message);
-                queryClient.invalidateQueries({ 
-                    queryKey: ['settings', 'general-settings'] 
-                });
+                queryClient.invalidateQueries({ queryKey: settingsQueries.general._def })
             } finally {
                 setIsLoading(false);
             }

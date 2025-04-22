@@ -18,6 +18,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { ConnectionProvider } from "@/types/auth";
+import { userQueries } from "@/lib/queries/user";
 
 type ConnectionProviderCardProps = {
   provider: ConnectionProvider;
@@ -53,7 +54,7 @@ export default function ConnectionProviderCard({
       return;
     }
     
-    queryClient.invalidateQueries({ queryKey: ['session', 'list-accounts'] });
+    queryClient.invalidateQueries({ queryKey: userQueries.listAccounts._def });
     toast.success(`${provider.name} connected successfully`);
     setIsLinking(false);
   };
@@ -70,7 +71,7 @@ export default function ConnectionProviderCard({
       return;
     }
 
-    queryClient.invalidateQueries({ queryKey: ['session', 'list-accounts'] });
+    queryClient.invalidateQueries({ queryKey: userQueries.listAccounts._def });
     toast.success(`${provider.name} disconnected successfully`);
     setIsUnlinking(false);
     setIsAlertOpen(false);

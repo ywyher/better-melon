@@ -6,6 +6,7 @@ import PlaybackToggles from "@/app/watch/[id]/[ep]/_components/settings/playback
 import { Skeleton } from "@/components/ui/skeleton";
 import { useQuery } from "@tanstack/react-query";
 import { GeneralSettings, PlayerSettings as TPlayerSettings } from "@/lib/db/schema/index"
+import { settingsQueries } from "@/lib/queries/settings";
 
 type PlayerSettingsProps = {
     generalSettings: GeneralSettings
@@ -16,8 +17,7 @@ export default function PlayerSettings({ generalSettings }: PlayerSettingsProps)
         data: playerSettings,
         isLoading: isPlayerSettingsLoading,
     } = useQuery({
-        queryKey: ['settings', 'player-settings'],
-        queryFn: async () => await getPlayerSettings(),
+        ...settingsQueries.player(),
         refetchOnWindowFocus: false,
     });
 

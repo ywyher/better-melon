@@ -4,6 +4,7 @@ import { handleEnabledTranscriptions } from "@/app/settings/player/actions";
 import MultipleSelector from "@/components/multiple-selector";
 import { subtitleTranscriptions } from "@/lib/constants/subtitle";
 import { PlayerSettings as TPlayerSettings } from "@/lib/db/schema";
+import { settingsQueries } from "@/lib/queries/settings";
 import { SubtitleTranscription } from "@/types/subtitle";
 import { useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useState } from "react";
@@ -33,7 +34,7 @@ export default function EnabledTranscriptionsSettings({ playerSettings }: { play
             return;
         }
         
-        queryClient.invalidateQueries({ queryKey: ['settings', 'player-settings'], exact: true });
+        queryClient.invalidateQueries({ queryKey: settingsQueries.player._def });
         toast.success(message || "Transcription settings updated");
         setIsLoading(false);
     }, [playerSettings.enabledTranscriptions, queryClient]);

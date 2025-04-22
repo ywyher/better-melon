@@ -6,6 +6,7 @@ import { showSyncSettingsToast } from "@/components/sync-settings-toast"
 import TooltipWrapper from "@/components/tooltip-wrapper"
 import { subtitleTranscriptions } from "@/lib/constants/subtitle";
 import { GeneralSettings, PlayerSettings } from "@/lib/db/schema"
+import { settingsQueries } from "@/lib/queries/settings"
 import { usePlayerStore } from "@/lib/stores/player-store"
 import { SubtitleTranscription } from "@/types/subtitle"
 import { useQueryClient } from "@tanstack/react-query"
@@ -63,9 +64,7 @@ export default function EnabledTranscriptions({ playerSettings, syncPlayerSettin
                 }
                 
                 toast.success(message);
-                queryClient.invalidateQueries({ 
-                    queryKey: ['settings', 'general-settings'] 
-                });
+                queryClient.invalidateQueries({ queryKey: settingsQueries.general._def })
             } finally {
                 setIsLoading(false);
             }

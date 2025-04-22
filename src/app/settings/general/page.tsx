@@ -1,18 +1,14 @@
 "use client"
 
+import GeneralSettingsSkeleton from "@/app/settings/general/_components/general-settings-skeleton"
 import SyncPlayerSetting from "@/app/settings/general/_components/sync-player-setting"
-import { getGeneralSettings } from "@/app/settings/general/actions"
+import { settingsQueries } from "@/lib/queries/settings"
 import { useQuery } from "@tanstack/react-query"
 
 export default function GeneralSettingsPage() {
-    const { data: generalSettings, isLoading } = useQuery({
-        queryKey: ['settings', 'general-settings'],
-        queryFn: async () => await getGeneralSettings(),
-    })
+    const { data: generalSettings, isLoading } = useQuery({ ...settingsQueries.general() })
 
-    if (!generalSettings || isLoading) {
-        return <>Loading</>
-    }
+    if (!generalSettings || isLoading) return <GeneralSettingsSkeleton />
   
     return (
       <div className="flex flex-col gap-5 px-4 sm:px-0">

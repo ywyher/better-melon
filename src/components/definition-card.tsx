@@ -20,6 +20,7 @@ import { takeSnapshot } from '@/lib/anki';
 import { useQuery } from '@tanstack/react-query';
 import { AnkiPreset } from '@/lib/db/schema';
 import { getDefaultPreset } from '@/app/settings/anki/actions';
+import { ankiQueries } from '@/lib/queries/anki';
 
 export default function DefinitionCard() {
   const { sentance, setSentance, setToken, token } = useDefinitionStore()
@@ -27,12 +28,7 @@ export default function DefinitionCard() {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const player = usePlayerStore((state) => state.player);
 
-  const { data: preset } = useQuery({
-    queryKey: ['anki', 'default-preset'],
-    queryFn: async () => {
-      return await getDefaultPreset() as AnkiPreset || null
-    }
-  })
+  const { data: preset } = useQuery({ ...ankiQueries.defaultPreset() })
 
   const sensors = useSensors(
     useSensor(PointerSensor, {

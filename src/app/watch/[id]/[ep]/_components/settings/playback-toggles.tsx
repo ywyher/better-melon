@@ -8,6 +8,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { showSyncSettingsToast } from "@/components/sync-settings-toast";
 import { handlePlaybackSetting } from "@/app/settings/player/actions";
+import { settingsQueries } from "@/lib/queries/settings";
 
 type TogglesProps = { 
     playerSettings: PlayerSettings
@@ -76,9 +77,7 @@ export default function PlaybackToggles({ playerSettings, syncPlayerSettings }: 
             }
             
             toast.success(message);
-            queryClient.invalidateQueries({ 
-              queryKey: ['settings', 'general-settings'] 
-            });
+            queryClient.invalidateQueries({ queryKey: settingsQueries.general._def })          
           } finally {
             setIsLoading(false);
           }

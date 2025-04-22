@@ -14,16 +14,14 @@ import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 import { subtitleStylesSchema } from "@/app/settings/subtitle/types";
 import SubtitleStylesControls from "@/components/subtitle/subtitle-styles-controls";
+import { settingsQueries } from "@/lib/queries/settings";
 
 export default function SubtitleStyles() {
     const [selectedTranscription, setSelectedTranscription] = useState<TSubtitleStyles['transcription']>('all')
     const [operation, setOperation] = useState<'create' | 'update'>('create')
 
-    const { data: subtitleStyles, isLoading: isSubtitleStylesLoading, isRefetching, isRefetchError } = useQuery({
-        queryKey: ['settings', 'subtitle-styles', selectedTranscription],
-        queryFn: async () => {
-            return await getSubtitleStyles({ transcription: selectedTranscription }) as TSubtitleStyles;
-        },
+    const { data: subtitleStyles, isLoading: isSubtitleStylesLoading, isRefetching } = useQuery({
+        ...settingsQueries.subtitleStyles(selectedTranscription),
         refetchOnWindowFocus: false
     })
 
@@ -95,7 +93,7 @@ export default function SubtitleStyles() {
                 return;
             }
             
-            queryClient.invalidateQueries({ queryKey: ['settings', 'subtitle-styles'] })
+            queryClient.invalidateQueries({ queryKey: settingsQueries.subtitleStyles._def })
             toast.success(result.message)
             setIsLoading(false)
         } catch (error) {
@@ -117,7 +115,7 @@ export default function SubtitleStyles() {
             return;
         }
         
-        queryClient.invalidateQueries({ queryKey: ['settings', 'subtitle-styles'] })
+        queryClient.invalidateQueries({ queryKey: settingsQueries.subtitleStyles._def })
         toast.success(message)
         setIsLoading(false)
     }

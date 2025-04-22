@@ -1,4 +1,4 @@
-import { mysqlTable, varchar, text, timestamp, boolean, int } from "drizzle-orm/mysql-core";
+import { mysqlTable, varchar, text, timestamp, boolean, int, mysqlEnum } from "drizzle-orm/mysql-core";
 
 export const user = mysqlTable("user", {
 					id: varchar('id', { length: 36 }).primaryKey(),
@@ -8,8 +8,10 @@ export const user = mysqlTable("user", {
  image: text('image'),
  createdAt: timestamp('created_at').notNull(),
  updatedAt: timestamp('updated_at').notNull(),
- isAnonymous: boolean('is_anonymous'),
- role: text('role').notNull()
+ twoFactorEnabled: boolean('two_factor_enabled'),
+ username: varchar('username', { length: 255 }).unique(),
+ displayUsername: text('display_username'),
+ role: mysqlEnum('role', ['admin', 'user']).notNull()
 				});
 
 export const session = mysqlTable("session", {
@@ -20,8 +22,7 @@ export const session = mysqlTable("session", {
  updatedAt: timestamp('updated_at').notNull(),
  ipAddress: text('ip_address'),
  userAgent: text('user_agent'),
- userId: text('user_id').notNull().references(()=> user.id, { onDelete: 'cascade' }),
- activeOrganizationId: text('active_organization_id')
+ userId: text('user_id').notNull().references(()=> user.id, { onDelete: 'cascade' })
 				});
 
 export const account = mysqlTable("account", {
@@ -49,29 +50,9 @@ export const verification = mysqlTable("verification", {
  updatedAt: timestamp('updated_at')
 				});
 
-export const organization = mysqlTable("organization", {
+export const twoFactor = mysqlTable("two_factor", {
 					id: varchar('id', { length: 36 }).primaryKey(),
-					name: text('name').notNull(),
- slug: varchar('slug', { length: 255 }).unique(),
- logo: text('logo'),
- createdAt: timestamp('created_at').notNull(),
- metadata: text('metadata')
-				});
-
-export const member = mysqlTable("member", {
-					id: varchar('id', { length: 36 }).primaryKey(),
-					organizationId: text('organization_id').notNull().references(()=> organization.id, { onDelete: 'cascade' }),
- userId: text('user_id').notNull().references(()=> user.id, { onDelete: 'cascade' }),
- role: text('role').notNull(),
- createdAt: timestamp('created_at').notNull()
-				});
-
-export const invitation = mysqlTable("invitation", {
-					id: varchar('id', { length: 36 }).primaryKey(),
-					organizationId: text('organization_id').notNull().references(()=> organization.id, { onDelete: 'cascade' }),
- email: text('email').notNull(),
- role: text('role'),
- status: text('status').notNull(),
- expiresAt: timestamp('expires_at').notNull(),
- inviterId: text('inviter_id').notNull().references(()=> user.id, { onDelete: 'cascade' })
+					secret: text('secret').notNull(),
+ backupCodes: text('backup_codes').notNull(),
+ userId: text('user_id').notNull().references(()=> user.id, { onDelete: 'cascade' })
 				});

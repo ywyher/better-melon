@@ -1,11 +1,10 @@
 import db from "@/lib/db";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { admin, anonymous, bearer, emailOTP, genericOAuth, organization } from "better-auth/plugins"
+import { anonymous, emailOTP, genericOAuth, organization } from "better-auth/plugins"
 import * as schema from '@/lib/db/schema/index'
 import { nextCookies } from "better-auth/next-js";
 import { eq } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {

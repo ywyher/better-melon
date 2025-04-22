@@ -3,28 +3,19 @@
 import EditProfile from "@/app/profile/_components/edit-profile";
 import ProfileCard from "@/app/profile/_components/profile-card";
 import Header from "@/components/header";
-import { getSession } from "@/lib/auth-client";
 import { User } from "@/lib/db/schema";
-import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { UpdatePassword } from "@/components/update-password";
 import { Button } from "@/components/ui/button";
+import { useSession } from "@/lib/queries/user";
 
 export type ProfilePage = "edit"
 
 export default function Profile() {
     const [page, setPage] = useState<ProfilePage>('edit')
 
-    const { data, isLoading } = useQuery({
-        queryKey: ['session'],
-        queryFn: async () => {
-            const { data, error } = await getSession()
-            if(error) return toast.error(error.message);
-            return data.user as User;
-        }
-    })
+    const { data, isLoading } = useSession()
 
     if(isLoading) return <>Loading...</>
 

@@ -31,7 +31,7 @@ export const userRelations = relations(user, ({ many, one }) => ({
     fields: [user.id],
     references: [generalSettings.userId]
   }),
-}))
+}));
 
 export const ankiPreset = pgTable('anki_preset', {
   id: text("id").primaryKey(),

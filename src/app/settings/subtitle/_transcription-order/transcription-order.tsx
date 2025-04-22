@@ -6,6 +6,7 @@ import { TranscriptionItem } from '@/app/settings/subtitle/_transcription-order/
 import TranscriptionOrderSkeleton from '@/app/settings/subtitle/_transcription-order/components/transcription-order-skeleton';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { SubtitleSettings } from '@/lib/db/schema';
+import { settingsQueries } from '@/lib/queries/settings';
 import { SubtitleTranscription } from '@/types/subtitle';
 import {
     DndContext, 
@@ -58,20 +59,15 @@ const defaultItems: TranscriptionItems = {
 };
 
 export default function TranscriptionOrder() {
-    const { data: settings, isLoading: isSettingsLoading } = useQuery({
-        queryKey: ['settings', 'subtitle-settings'],
-        queryFn: async () => {
-            return await getSubtitleSettings() as SubtitleSettings
-        }
-    })
+    const { data: subtitleSettings, isLoading: isSubtitleSettingsLoading } = useQuery({ ...settingsQueries.subtitle() })
 
     const [items, setItems] = useState<TranscriptionItems>(defaultItems);
     
     useEffect(() => {
-        if (settings?.transcriptionOrder && settings.transcriptionOrder.length > 0) {
+        if (subtitleSettings?.transcriptionOrder && subtitleSettings.transcriptionOrder.length > 0) {
             const orderedItems: TranscriptionItems = {};
             
-            settings.transcriptionOrder.forEach(id => {
+            subtitleSettings.transcriptionOrder.forEach(id => {
                 if (defaultItems[id]) {
                     orderedItems[id] = defaultItems[id];
                 }
@@ -85,7 +81,7 @@ export default function TranscriptionOrder() {
             
             setItems(orderedItems);
         }
-    }, [settings]);
+    }, [subtitleSettings]);
     
     const itemIds = Object.keys(items);
     
@@ -126,7 +122,7 @@ export default function TranscriptionOrder() {
         toast.message(message)
     }
     
-    if (isSettingsLoading) {
+    if (isSubtitleSettingsLoading) {
         return <TranscriptionOrderSkeleton />;
     }
     

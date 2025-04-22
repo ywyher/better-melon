@@ -26,11 +26,13 @@ import { Button } from "@/components/ui/button"
 import AnkiSkeleton from "@/app/settings/anki/_components/anki-skeleton"
 import AnkiDeletePreset from "@/app/settings/anki/_components/anki-delete-preset"
 import { ankiFieldsValues } from "@/lib/constants/anki"
+import { userQueries } from "@/lib/queries/user"
+import { ankiQueries } from "@/lib/queries/anki"
 
 type PresetFormProps = {
     preset: AnkiPreset | null
     presets: AnkiPreset[];
-    setSelectedPreset: Dispatch<SetStateAction<AnkiPreset['id']>>
+    setSelectedPreset: Dispatch<SetStateAction<string>>
 }
 
 export const ankiPresetSchema = z.object({
@@ -58,19 +60,12 @@ export default function AnkiPresetForm({
     const queryClient = useQueryClient()
     const isFirstPreset = presets.length === 0
 
-    const { data: deckNames, isLoading: isDeckNamesLoading } = useQuery({
-        queryKey: ['anki', 'deckNames'],
-        queryFn: async () => await invokeAnkiConnect('deckNames', 6),
-    })
+    const { data: deckNames, isLoading: isDeckNamesLoading } = useQuery({ ...ankiQueries.deckNames() })
 
-    const { data: modelNames, isLoading: isModelNamesLoading } = useQuery({
-        queryKey: ['anki', 'modelNames'],
-        queryFn: async () => await invokeAnkiConnect('modelNames', 6),
-    })
+    const { data: modelNames, isLoading: isModelNamesLoading } = useQuery({ ...ankiQueries.modelNames() })
 
     const { data: modelFieldNames } = useQuery({
-        queryKey: ['anki', 'modelFieldNames', selectedModel],
-        queryFn: async () => await invokeAnkiConnect('modelFieldNames', 6, { modelName: selectedModel }),
+        ...ankiQueries.modelFieldNames(selectedModel),
         enabled: !!selectedModel
     })
 
@@ -162,8 +157,8 @@ export default function AnkiPresetForm({
 
         const defaultPreset = presets.find(preset => preset.isDefault === true)
             
-        queryClient.invalidateQueries({ queryKey: [ 'session' ] })
-        queryClient.invalidateQueries({ queryKey: [ 'anki' ] })
+        queryClient.invalidateQueries({ queryKey: userQueries.session._def })
+        queryClient.invalidateQueries({ queryKey: ankiQueries._def })
         setSelectedPreset(defaultPreset?.id || "new")
         toast.message(result.message)
         setIsLoading(false)

@@ -4,31 +4,17 @@ import { useEffect, useState } from "react"
 import { Card, CardHeader, CardTitle } from "@/components/ui/card"
 import AnkiPresetForm from "@/app/settings/anki/_components/anki-preset-form"
 import { useQuery } from "@tanstack/react-query"
-import { getPreset, getPresets } from "@/app/settings/anki/actions"
 import AnkiSkeleton from "@/app/settings/anki/_components/anki-skeleton"
-import { AnkiPreset as TAnkiPreset } from "@/lib/db/schema"
 import AnkiPresetSelector from "@/app/settings/anki/_components/anki-preset-selector"
-
+import { ankiQueries } from "@/lib/queries/anki"
 
 export default function AnkiPreset() {
     const [selectedPreset, setSelectedPreset] = useState<string>("new")
 
-    const { data: presets, isLoading: isPresetsLoading } = useQuery({
-        queryKey: ['anki', 'presets'],
-        queryFn: async () => {
-            const presets = await getPresets()
-            return presets as TAnkiPreset[] || []
-        }
-    })
+    const { data: presets, isLoading: isPresetsLoading } = useQuery({ ...ankiQueries.presets() })
     
     const { data: presetData, isLoading: isPresetDataLoading } = useQuery({
-        queryKey: ['anki', 'preset', selectedPreset],
-        queryFn: async () => {
-            if(!selectedPreset || selectedPreset === "new") return null;
-            
-            const preset = await getPreset({ id: selectedPreset })
-            return preset as TAnkiPreset
-        },
+        ...ankiQueries.preset(selectedPreset),
         enabled: !!selectedPreset && selectedPreset !== "new"
     })
 

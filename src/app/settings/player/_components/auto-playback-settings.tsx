@@ -2,6 +2,7 @@
 import { handlePlaybackSetting } from "@/app/settings/player/actions";
 import { Switch } from "@/components/ui/switch";
 import { PlayerSettings as TPlayerSettings } from "@/lib/db/schema";
+import { settingsQueries } from "@/lib/queries/settings";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -41,7 +42,7 @@ export default function AutoPlaybackSettings({ playerSettings }: { playerSetting
         return;
       }
       
-      queryClient.invalidateQueries({ queryKey: ['settings', 'player-settings'], exact: true });
+      queryClient.invalidateQueries({ queryKey: settingsQueries.player._def });
       toast.success(message || `${settingType} setting updated`);
     } catch (error) {
       setLocalSettings(prev => ({

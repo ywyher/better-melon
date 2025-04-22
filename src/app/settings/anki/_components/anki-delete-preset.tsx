@@ -9,17 +9,18 @@ import { useQueryClient } from "@tanstack/react-query"
 import { deletePreset } from "@/app/settings/anki/actions"
 import LoadingButton from "@/components/loading-button"
 import { Dispatch, SetStateAction, useState } from "react";
+import { ankiQueries } from "@/lib/queries/anki";
 
 type AnkiDeletePresetProps = {
     presets: AnkiPreset[];
     presetId: AnkiPreset['id']
-    setSelectedPresetId: Dispatch<SetStateAction<AnkiPreset['id']>>
+    setSelectedPreset: Dispatch<SetStateAction<string>>
 }
 
 export default function AnkiDeletePreset({ 
     presets,
     presetId,
-    setSelectedPresetId
+    setSelectedPreset
 }: AnkiDeletePresetProps ) {
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
@@ -45,11 +46,11 @@ export default function AnkiDeletePreset({
         
         toast.success(message)
         
-        queryClient.invalidateQueries({ queryKey: ['anki', 'presets'] })
+        queryClient.invalidateQueries({ queryKey: ankiQueries.presets._def })
         
         const defaultPreset = presets?.find(preset => preset.isDefault === true)
 
-        setSelectedPresetId(defaultPreset?.id || 'new')
+        setSelectedPreset(defaultPreset?.id || 'new')
         setIsLoading(false)
         setIsDeleteDialogOpen(false)
     }

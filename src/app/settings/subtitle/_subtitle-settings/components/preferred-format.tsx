@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/select"
 import { subtitleFormats } from "@/lib/constants/subtitle"
 import { SubtitleSettings } from "@/lib/db/schema"
+import { settingsQueries } from "@/lib/queries/settings"
 import { useQueryClient } from "@tanstack/react-query"
 import { X } from "lucide-react"
 import { useState } from "react"
@@ -33,7 +34,7 @@ export default function SubtitleSettingsPreferredFormat({ settingsId, preferredF
             return;
         }
         
-        queryClient.invalidateQueries({ queryKey: ['settings', 'subtitle-settings'] })
+        queryClient.invalidateQueries({ queryKey: settingsQueries.subtitle._def })
         toast.success(message)
         setIsFormatLoading(false)
     }
@@ -48,7 +49,7 @@ export default function SubtitleSettingsPreferredFormat({ settingsId, preferredF
             return;
         }
         
-        queryClient.invalidateQueries({ queryKey: ['settings', 'subtitle-settings'] })
+        queryClient.invalidateQueries({ queryKey: settingsQueries.subtitle._def })
         toast.success(message)
         setIsFormatLoading(false)
     }

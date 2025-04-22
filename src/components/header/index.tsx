@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { useIsSmall } from '@/hooks/useMediaQuery';
 import { getSession } from '@/lib/auth-client';
 import { User } from '@/lib/db/schema';
+import { useSession } from '@/lib/queries/user';
 import { cn } from '@/lib/utils';
 import { useQuery } from '@tanstack/react-query';
 import { SearchIcon } from 'lucide-react';
@@ -20,13 +21,8 @@ export default function Header() {
   const [authOpen, setAuthOpen] = useState<boolean>(false);
   const [scrolled, setScrolled] = useState<boolean>(false);
   const isSmall = useIsSmall();
-  const { data: user, isLoading } = useQuery({
-    queryKey: ["session", "header"],
-    queryFn: async () => {
-      const { data } = await getSession()
-      return (data?.user as User) || null;
-    },
-  });
+  
+  const { data: user, isLoading } = useSession()
 
   const isAuthenticated = user && !user.isAnonymous
   

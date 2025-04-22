@@ -4,6 +4,7 @@ import { getSessionServer, loginOnServer } from "@/app/playground/actions"
 import LoadingButton from "@/components/loading-button"
 import { authClient, getSession } from "@/lib/auth-client"
 import { User } from "@/lib/db/schema"
+import { userQueries, useSession } from "@/lib/queries/user"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
@@ -12,13 +13,7 @@ export default function Playground() {
     const [isLoading, setIsLoading] = useState(false)
     const queryClient = useQueryClient()
 
-    const { data, isLoading: isSessionLoading } = useQuery({
-        queryKey: ['session'],
-        queryFn: async () => {
-            const data = await getSession()
-            return data.data?.user as User || null
-        }
-    })
+    const { data, isLoading: isSessionLoading } = useSession()
 
     useEffect(() => {
         console.log(data)
@@ -36,14 +31,18 @@ export default function Playground() {
         }
 
         toast.message("Logged out")
-        queryClient.invalidateQueries({ queryKey: ['session'] })
+        queryClient.invalidateQueries({ queryKey: userQueries.session._def })
         setIsLoading(false)
         console.log(data)
     }
 
     const login = async () => {
         setIsLoading(true)
-        const { error, data } = await authClient.signIn.anonymous()
+        // const { error, data } = await authClient.signIn.anonymous()
+        const { error, data } = await authClient.signIn.email({
+            email: 'yassienwyh0@gmail.com',
+            password: 'Eywyh2001@'
+        })
 
         if(error) {
             toast.error(error.message)
@@ -53,7 +52,7 @@ export default function Playground() {
         }
 
         toast.message("logged in")
-        queryClient.invalidateQueries({ queryKey: ['session'] })
+        queryClient.invalidateQueries({ queryKey: userQueries.session._def })
         setIsLoading(false)
         console.log(data)
     }
@@ -70,7 +69,7 @@ export default function Playground() {
         }
 
         toast.message("Get Session")
-        queryClient.invalidateQueries({ queryKey: ['session'] })
+        queryClient.invalidateQueries({ queryKey: userQueries.session._def })
         setIsLoading(false)
         console.log(data)
     }
@@ -87,7 +86,7 @@ export default function Playground() {
         }
 
         toast.message(message)
-        queryClient.invalidateQueries({ queryKey: ['session'] })
+        queryClient.invalidateQueries({ queryKey: userQueries.session._def })
         setIsLoading(false)
     }
 
@@ -105,7 +104,7 @@ export default function Playground() {
         console.log(data)
 
         toast.message("session through server")
-        queryClient.invalidateQueries({ queryKey: ['session'] })
+        queryClient.invalidateQueries({ queryKey: userQueries.session._def })
         setIsLoading(false)
     }
 
@@ -125,7 +124,7 @@ export default function Playground() {
         console.log(data)
 
         toast.message("discord")
-        queryClient.invalidateQueries({ queryKey: ['session'] })
+        queryClient.invalidateQueries({ queryKey: userQueries.session._def })
         setIsLoading(false)
     }
 

@@ -4,6 +4,7 @@ import { handleSyncPlayerSettings } from "@/app/settings/general/actions";
 import SegmentedToggle from "@/components/segmented-toggle";
 import { syncStrategies } from "@/lib/constants";
 import { GeneralSettings } from "@/lib/db/schema";
+import { settingsQueries } from "@/lib/queries/settings";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -29,7 +30,7 @@ export default function SyncPlayerSetting({ settings }: { settings: GeneralSetti
 
         toast.success(message);
         setIsLoading(false);
-        queryClient.invalidateQueries({ queryKey: ['settings', 'general-settings'], exact: true });
+        queryClient.invalidateQueries({ queryKey: settingsQueries.general._def });
     };
         
     return (

@@ -9,13 +9,12 @@ import PlayerSettings from "@/app/watch/[id]/[ep]/_components/settings/player-se
 import { useQuery } from "@tanstack/react-query"
 import { getGeneralSettings } from "@/app/settings/general/actions"
 import SettingsSkeleton from "@/app/watch/[id]/[ep]/_components/settings/settings-skeleton"
+import { settingsQueries } from "@/lib/queries/settings"
   
 export default function Settings({ episodesLength }: { episodesLength: number }) {
     const { data: generalSettings, isLoading: isGeneralSettingsLoading } = useQuery({
-        queryKey: ['settings', 'general-settings'],
-        queryFn: async () => {
-            return await getGeneralSettings()
-        }
+        ...settingsQueries.general(),
+        refetchOnWindowFocus: false,
     })
 
     if(!generalSettings || isGeneralSettingsLoading) return <SettingsSkeleton />

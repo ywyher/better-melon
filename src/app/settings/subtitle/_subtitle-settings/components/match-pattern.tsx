@@ -6,6 +6,7 @@ import TooltipWrapper from "@/components/tooltip-wrapper"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { SubtitleSettings } from "@/lib/db/schema"
+import { settingsQueries } from "@/lib/queries/settings"
 import { useQueryClient } from "@tanstack/react-query"
 import { AlertCircle, X } from "lucide-react"
 import { useEffect, useState, useRef } from "react"
@@ -40,7 +41,7 @@ export default function SubtitleSettingsMatchPattern({ settingsId, matchPattern 
             return;
         }
         
-        queryClient.invalidateQueries({ queryKey: ['settings', 'subtitle-settings'] })
+        queryClient.invalidateQueries({ queryKey: settingsQueries.subtitle._def })
         toast.success(message)
         setIsLoading(false)
     }
@@ -55,7 +56,7 @@ export default function SubtitleSettingsMatchPattern({ settingsId, matchPattern 
             return;
         }
         
-        queryClient.invalidateQueries({ queryKey: ['settings', 'subtitle-settings'] })
+        queryClient.invalidateQueries({ queryKey: settingsQueries.subtitle._def })
         toast.success(message)
         setIsLoading(false)
         setInputValue("")
