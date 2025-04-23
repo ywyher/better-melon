@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import Player from "@/app/watch/[id]/[ep]/_components/player/player";
-import { AnimeEpisodeData, AnimeStreamingData } from "@/types/anime";
+import { gql, useQuery as useGqlQuery } from "@apollo/client";
 import { useParams } from 'next/navigation';
-import { usePlayerStore } from '@/lib/stores/player-store';
+
+import Player from "@/app/watch/[id]/[ep]/_components/player/player";
 import GoBack from '@/components/goback';
 import Settings from '@/app/watch/[id]/[ep]/_components/settings/settings';
 import SubtitlePanel from '@/app/watch/[id]/[ep]/_components/panel/panel';
@@ -14,12 +14,16 @@ import PanelSkeleton from '@/app/watch/[id]/[ep]/_components/panel/panel-skeleto
 import SettingsSkeleton from '@/app/watch/[id]/[ep]/_components/settings/settings-skeleton';
 import { Indicator } from '@/components/indicator';
 import EpisodesList from '@/app/watch/[id]/[ep]/_components/episodes/episodes-list';
-import { gql, useQuery as useGqlQuery } from "@apollo/client"
 import EpisodesListSkeleton from '@/app/watch/[id]/[ep]/_components/episodes/episodes-list-skeleton';
+
+import { usePlayerStore } from '@/lib/stores/player-store';
 import { filterSubtitleFiles, selectSubtitleFile } from '@/lib/subtitle';
 import { playerQueries } from '@/lib/queries/player';
-import { settingsQueries } from '@/lib/queries/settings';
+import { AnimeEpisodeData, AnimeStreamingData } from "@/types/anime";
+import { SubtitleFile } from '@/types/subtitle';
+import { SubtitleSettings } from '@/lib/db/schema';
 
+// GraphQL query moved outside component
 const GET_ANIME_DATA = gql`
   query($id: Int!) {
     Media(id: $id) {
@@ -43,82 +47,63 @@ const GET_ANIME_DATA = gql`
       seasonYear
     } 
   }
-`
+`;
 
 export default function Watch() {
   const params = useParams();
   const animeId = params.id as string;
   const ep = params.ep as string;
   const episodeNumber = parseInt(ep);
-
-  const { loading: isLoadingAnime, error: animeError, data: animeData } = useGqlQuery(GET_ANIME_DATA, { variables: { id: parseInt(animeId) } })
-
+  
+  // Fetch anime metadata
   const { 
-    data: episodesData, 
-    isLoading: isLoadingEpisodes, 
-    error: episodesError 
-  } = useQuery({
-    ...playerQueries.episodeData(animeId),
-    refetchOnWindowFocus: false
-  });
-
-  const episode = episodesData?.find(
-    (episode: AnimeEpisodeData) => episode.number === episodeNumber
-  );
-
-  const { 
-    data: streamingData, 
-    isLoading: isLoadingStreamingData,
-    error: streamingError
-  } = useQuery({
-    ...playerQueries.streamingData(episode?.id || ""),
-    refetchOnWindowFocus: false,
-    enabled: !!episode
-  });
-
-  const {
-    data: subtitleEntries,
-    isLoading: isLoadingSubtitleEntries,
-    error: subtitleEntriesError
-  } = useQuery({
-    ...playerQueries.subtitleEntries(animeId),
-    refetchOnWindowFocus: false
-  });
-
-  const {
-    data: subtitleFiles,
-    isLoading: isLoadingSubtitleFiles,
-    error: subtitleFilesError
-  } = useQuery({
-    ...playerQueries.subtitleFiles(subtitleEntries?.[0]?.id || 1, episode?.number || 1),
-    refetchOnWindowFocus: false,
-    enabled: !!subtitleEntries && subtitleEntries.length > 0,
+    loading: isLoadingAnime, 
+    error: animeError, 
+    data: animeData 
+  } = useGqlQuery(GET_ANIME_DATA, { 
+    variables: { id: parseInt(animeId) },
+    fetchPolicy: 'cache-first',
   });
   
+  // Fetch episode data
   const {
-    data: subtitleSettings,
-    isLoading: isLoadingSubtitleSettings,
-    error: subtitleSettingsError
+    data,
+    isLoading: isLoadingData,
+    error: dataError,
   } = useQuery({
-    ...settingsQueries.subtitle(),
+    ...playerQueries.episodeData(animeId, episodeNumber),
+    staleTime: 1000 * 60 * 5,
     refetchOnWindowFocus: false,
-  })
+  });
 
-  const { setEnglishSubtitleUrl, setActiveSubtitleFile } = usePlayerStore();
-
+  const loadingStartTime = useRef<number>(0);
+  const [loadingDuration, setLoadingDuration] = useState<number>(0);
+  
   useEffect(() => {
-    if(!streamingData || !subtitleFiles?.length) return;
+    if (isLoadingData) {
+      loadingStartTime.current = Date.now();
+    } else if (data && loadingStartTime.current > 0 && loadingDuration === 0) {
+      const duration = Date.now() - loadingStartTime.current;
+      setLoadingDuration(duration);
+    }
+  }, [isLoadingData, data]);
+  
+  const { setEnglishSubtitleUrl, setActiveSubtitleFile } = usePlayerStore();
+  
+  useEffect(() => {
+    if (!data || !data.episodeData) return;
     
     setActiveSubtitleFile(null);
     setEnglishSubtitleUrl(null);
     
-    if (subtitleFiles.length > 0) {
+    if (data.subtitleFiles?.length > 0) {
       const selected = selectSubtitleFile({ 
-        files: subtitleFiles,
-        preferredFormat: subtitleSettings?.preferredFormat,
-        matchPattern: subtitleSettings?.matchPattern,
+        files: data.subtitleFiles,
+        preferredFormat: data.subtitleSettings.preferredFormat,
+        matchPattern: data.subtitleSettings.matchPattern,
       });
-      if(selected) {
+      
+      if (selected) {
         setActiveSubtitleFile({
           source: 'remote',
           file: {
@@ -131,76 +116,73 @@ export default function Watch() {
       }
     }
     
-    if (streamingData) {
-      const englishSub = streamingData?.subtitles.find((s: AnimeStreamingData['subtitles'][0]) => s.lang === 'English')?.url || "";
+    if (data.episodeData.subtitles) {
+      const englishSub = data.episodeData.subtitles.find(
+        (s) => s.lang === 'English'
+      )?.url || "";
       setEnglishSubtitleUrl(englishSub);
     }
-  }, [episode?.id, streamingData, subtitleFiles, setActiveSubtitleFile, setEnglishSubtitleUrl]);
+  }, [data, setActiveSubtitleFile, setEnglishSubtitleUrl]);
 
-  const errors = [episodesError, streamingError, subtitleEntriesError, subtitleFilesError, animeError, subtitleSettingsError];
-  const errorMessages = errors.filter(error => error !== null && error !== undefined);
-  
-  if(errorMessages.length > 0) {
-    return <Indicator type='error' message={errorMessages[0]?.message || "An error occurred"} />;
+  const errors = [animeError, dataError].filter(Boolean);
+  if (errors.length > 0) {
+    return <Indicator type='error' message={errors[0]?.message || "An error occurred"} />;
   }
 
-  const isPlayerLoading = isLoadingEpisodes || isLoadingStreamingData || !episode || !streamingData || isLoadingSubtitleSettings;
-  const isPanelLoading = isLoadingSubtitleEntries || isLoadingSubtitleFiles || !subtitleFiles;
-
-  const renderPlayerContent = () => {
-    if (isPlayerLoading) {
-      return (
-        <div className="flex flex-col gap-3">
-          <div className="relative w-full aspect-video bg-gray-900">
-            <PlayerSkeleton isLoading={isPlayerLoading} />
-          </div>
-          <div className="w-full">
-            <SettingsSkeleton />
-          </div>
-        </div>
-      );
-    }
-    
-    return (
-      <div className='flex flex-col gap-3'>
-        <Player 
-          episode={episode} 
-          streamingData={streamingData} 
-          subtitleFiles={subtitleFiles ? filterSubtitleFiles(subtitleFiles) : []} 
-          episodesLength={episodesData?.length || 0}
-        />
-        <Settings episodesLength={episodesData?.length || 0} />
-      </div>
-    );
-  };
-
-  if ((!subtitleEntries || subtitleEntries.length === 0) && streamingData) {
-    return (
-        <div>
-        {renderPlayerContent()}
-      </div>
-    );
-  }
+  const currentEpisode = data?.episodesData?.find((e) => e.number == episodeNumber);
+  const isLoading = isLoadingData || !data || !currentEpisode;
+  const subtitleFiles = data?.subtitleFiles ? filterSubtitleFiles(data.subtitleFiles) : [];
+  const episodesLength = data?.episodesData?.length || 0;
 
   return (
     <>
       <div className="flex flex-row gap-10">
         <div className="flex flex-col gap-3 flex-1">
-          <GoBack />
-          {renderPlayerContent()}
+          <div className="flex items-center justify-between">
+            <GoBack />
+            {loadingDuration > 0 && (
+              <div className="text-sm text-gray-400">
+                Loaded in {(loadingDuration / 1000).toFixed(2)}s
+              </div>
+            )}
+          </div>
+          
+          {isLoading ? (
+            <div className="flex flex-col gap-3">
+              <div className="relative w-full aspect-video bg-gray-900">
+                <PlayerSkeleton isLoading={isLoadingData} />
+              </div>
+              <div className="w-full">
+                <SettingsSkeleton />
+              </div>
+            </div>
+          ) : (
+            <div className='flex flex-col gap-3'>
+              <Player 
+                episode={currentEpisode as AnimeEpisodeData} 
+                streamingData={data.episodeData} 
+                subtitleFiles={subtitleFiles} 
+                episodesLength={episodesLength}
+              />
+              <Settings episodesLength={episodesLength} />
+            </div>
+          )}
         </div>
+        
         <div className='flex flex-col gap-5'>
-          {isPanelLoading ? (
+          {isLoading ? (
             <PanelSkeleton />
           ) : (
-            <SubtitlePanel
-              subtitleFiles={filterSubtitleFiles(subtitleFiles || [])}
-            />
+            <SubtitlePanel subtitleFiles={subtitleFiles} />
           )}
-          {(isLoadingAnime || !episodesData) ? (
+          
+          {(isLoadingAnime || !data?.episodesData) ? (
             <EpisodesListSkeleton />
-          ): (
-            <EpisodesList animeData={animeData.Media} episodes={episodesData} />
+          ) : (
+            <EpisodesList 
+              animeData={animeData.Media} 
+              episodes={data.episodesData} 
+            />
           )}
         </div>
       </div>

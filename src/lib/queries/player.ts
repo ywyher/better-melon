@@ -1,10 +1,10 @@
-import { getEpisodesData, getStreamingData, getSubtitleEntries, getSubtitleFiles } from "@/app/watch/[id]/[ep]/actions";
+import { getCompleteData, getEpisodesData, getStreamingData, getSubtitleEntries, getSubtitleFiles } from "@/app/watch/[id]/[ep]/actions";
 import { createQueryKeys } from "@lukemorales/query-key-factory";
 
 export const playerQueries = createQueryKeys('player', {
-    episodeData: (animeId: string) => ({
-        queryKey: ['episodesData', animeId],
-        queryFn: async () => await getEpisodesData(animeId),
+    episodeData: (animeId: string, episodeNumber: number) => ({
+        queryKey: ['episodesData', animeId, episodeNumber],
+        queryFn: async () => await getCompleteData(animeId, episodeNumber),
     }),
     streamingData: (episodeId: string) => ({
         queryKey: ['streamingData', episodeId],

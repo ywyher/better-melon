@@ -16,6 +16,15 @@ export default function HeaderTabs() {
                     Anime
                 </Button>
             </Link>
+            <Link href={'/playground'}>
+                <Button
+                    variant="ghost"
+                    className="flex flex-row gap-2 text-md"
+                >
+                    <TvMinimalPlay className="h-4 w-4" />
+                    playground
+                </Button>
+            </Link>
         </div>
     )
 }
