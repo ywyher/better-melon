@@ -55,7 +55,6 @@ export default function Watch() {
   const ep = params.ep as string;
   const episodeNumber = parseInt(ep);
   
-  // Fetch anime metadata
   const { 
     loading: isLoadingAnime, 
     error: animeError, 
@@ -65,7 +64,6 @@ export default function Watch() {
     fetchPolicy: 'cache-first',
   });
   
-  // Fetch episode data
   const {
     data,
     isLoading: isLoadingData,

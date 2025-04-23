@@ -20,6 +20,10 @@ export default function SubtitlePanel({ subtitleFiles }: { subtitleFiles: Subtit
     const activeSubtitleFile = usePlayerStore((state) => state.activeSubtitleFile);
     const setSubtitleCues = usePlayerStore((state) => state.setSubtitleCues);
 
+    useEffect(() => {
+        console.log(activeSubtitleFile)
+    }, [activeSubtitleFile])
+
     const { data: subtitleCues, isLoading: isCuesLoading, error: cuesError, refetch } = useQuery({
         queryKey: ['subtitle-cues', displayTranscription, activeSubtitleFile],
         queryFn: async () => {
