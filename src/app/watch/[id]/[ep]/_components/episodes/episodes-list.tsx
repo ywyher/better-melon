@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Anime, AnimeEpisodeData } from "@/types/anime";
+import type { Anime, AnimeEpisodeData } from "@/types/anime";
 import { Grid, List, Image as ImageIcon, Eye, EyeOff, Search } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import GridView from "@/app/watch/[id]/[ep]/_components/episodes/grid-view";
@@ -27,7 +27,7 @@ export default function EpisodesList({
   const episodesListSpoilerMode = usePlayerStore((state) => state.episodesListSpoilerMode);
   const setEpisodesListSpoilerMode = usePlayerStore((state) => state.setEpisodesListSpoilerMode);
   const router = useRouter();
-  const currentEpisode = parseInt(params.ep);
+  const currentEpisode = Number(params.ep);
   const [filterText, setFilterText] = useState("");
   const [selectedChunk, setSelectedChunk] = useState("all");
   const scrollAreaRef = useRef<HTMLDivElement>(null);

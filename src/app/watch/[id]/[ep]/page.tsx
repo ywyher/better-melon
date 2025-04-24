@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { gql, useQuery as useGqlQuery } from "@apollo/client";
 import { useParams } from 'next/navigation';
 
@@ -19,11 +19,9 @@ import EpisodesListSkeleton from '@/app/watch/[id]/[ep]/_components/episodes/epi
 import { usePlayerStore } from '@/lib/stores/player-store';
 import { filterSubtitleFiles, selectSubtitleFile } from '@/lib/subtitle';
 import { playerQueries } from '@/lib/queries/player';
-import { AnimeEpisodeData, AnimeStreamingData } from "@/types/anime";
-import { SubtitleFile } from '@/types/subtitle';
-import { SubtitleSettings } from '@/lib/db/schema';
+import type { AnimeEpisodeData } from "@/types/anime";
+import { subtitleCuesOptions } from '@/lib/queries/subtitle';
 
-// GraphQL query moved outside component
 const GET_ANIME_DATA = gql`
   query($id: Int!) {
     Media(id: $id) {
@@ -53,14 +51,18 @@ export default function Watch() {
   const params = useParams();
   const animeId = params.id as string;
   const ep = params.ep as string;
-  const episodeNumber = parseInt(ep);
+  const episodeNumber = Number(ep);
+
+  const queryClient = useQueryClient()
+
+  const [isVideoReady, setIsVideoReady] = useState<boolean>(false)
   
   const { 
     loading: isLoadingAnime, 
     error: animeError, 
     data: animeData 
   } = useGqlQuery(GET_ANIME_DATA, { 
-    variables: { id: parseInt(animeId) },
+    variables: { id: Number(animeId) },
     fetchPolicy: 'cache-first',
   });
   
@@ -76,7 +78,11 @@ export default function Watch() {
 
   const loadingStartTime = useRef<number>(0);
   const [loadingDuration, setLoadingDuration] = useState<number>(0);
-  
+  const currentEpisode = data?.episodesData?.find((e) => e.number === episodeNumber);
+  const isLoading = isLoadingData || !data || !currentEpisode;
+  const subtitleFiles = data?.subtitleFiles ? filterSubtitleFiles(data.subtitleFiles) : [];
+  const episodesLength = data?.episodesData?.length || 0;
+
   useEffect(() => {
     if (isLoadingData) {
       loadingStartTime.current = Date.now();
@@ -84,12 +90,12 @@ export default function Watch() {
       const duration = Date.now() - loadingStartTime.current;
       setLoadingDuration(duration);
     }
-  }, [isLoadingData, data]);
-  
-  const { setEnglishSubtitleUrl, setActiveSubtitleFile } = usePlayerStore();
+  }, [isLoadingData, data, loadingDuration]);
+
+  const { setEnglishSubtitleUrl, setActiveSubtitleFile, activeSubtitleFile } = usePlayerStore();
   
   useEffect(() => {
-    if (!data || !data.episodeData) return;
+    if (!data || !data.episodeData || !data.subtitleSettings) return;
     
     setActiveSubtitleFile(null);
     setEnglishSubtitleUrl(null);
@@ -122,15 +128,28 @@ export default function Watch() {
     }
   }, [data, setActiveSubtitleFile, setEnglishSubtitleUrl]);
 
+  useEffect(() => {
+    if (data?.episodesData && episodeNumber < episodesLength) {
+      const nextEpisodeNumber = episodeNumber + 1;
+      
+      (async () => {
+        try {
+          await queryClient.prefetchQuery({
+            ...playerQueries.episodeData(animeId, nextEpisodeNumber),
+            staleTime: 1000 * 60 * 5,
+          });
+          console.log(`Prefetched episode ${nextEpisodeNumber} successfully`);
+        } catch (error) {
+          console.error(`Failed to prefetch episode ${nextEpisodeNumber}:`, error);
+        }
+      })();
+    }
+  }, [data, animeId, episodeNumber, episodesLength, queryClient]);
+  
   const errors = [animeError, dataError].filter(Boolean);
   if (errors.length > 0) {
     return <Indicator type='error' message={errors[0]?.message || "An error occurred"} />;
   }
-
-  const currentEpisode = data?.episodesData?.find((e) => e.number == episodeNumber);
-  const isLoading = isLoadingData || !data || !currentEpisode;
-  const subtitleFiles = data?.subtitleFiles ? filterSubtitleFiles(data.subtitleFiles) : [];
-  const episodesLength = data?.episodesData?.length || 0;
 
   return (
     <>
@@ -154,24 +173,43 @@ export default function Watch() {
                 <SettingsSkeleton />
               </div>
             </div>
+          ): (
+            <Player 
+              animeId={animeId}
+              episodeNumber={episodeNumber}
+              isVideoReady={isVideoReady}
+              setIsVideoReady={setIsVideoReady}
+              episode={currentEpisode} 
+              streamingData={data?.episodeData} 
+              episodesLength={episodesLength}
+            />
+          )}
+
+          {isLoading ? (
+            <div className="flex flex-col gap-3">
+              <div className="w-full">
+                <SettingsSkeleton />
+              </div>
+            </div>
           ) : (
             <div className='flex flex-col gap-3'>
-              <Player 
-                episode={currentEpisode as AnimeEpisodeData} 
-                streamingData={data.episodeData} 
-                subtitleFiles={subtitleFiles} 
-                episodesLength={episodesLength}
+              <Settings 
+                playerSettings={data.playerSettings}
+                generalSettings={data.generalSettings} 
+                episodesLength={episodesLength} 
               />
-              <Settings episodesLength={episodesLength} />
             </div>
           )}
         </div>
         
         <div className='flex flex-col gap-5'>
-          {isLoading ? (
+          {(isLoading) ? (
             <PanelSkeleton />
           ) : (
-            <SubtitlePanel subtitleFiles={subtitleFiles} />
+            <SubtitlePanel
+              subtitleFiles={subtitleFiles}
+              japaneseTranscription={data.japaneseTranscription}
+            />
           )}
           
           {(isLoadingAnime || !data?.episodesData) ? (

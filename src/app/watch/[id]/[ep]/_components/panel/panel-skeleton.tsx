@@ -20,14 +20,14 @@ export default function PanelSkeleton() {
         <Tabs defaultValue="japanese" className="w-full">
           <TabsList className="w-full space-x-5">
             {[1,2,3,4].map((_, index) => (
-              <Skeleton key={`${id}-tab-${index}`} className="w-full" />
+              <Skeleton key={`${id}-tab-${index+1}`} className="w-full" />
             ))}
           </TabsList>
           <TabsContent value="japanese" className="relative w-full">
             <div className="overflow-auto h-[80vh] w-full">
               {/* Virtual list of cue skeletons with predetermined widths */}
               {Array(20).fill(0).map((_, index) => (
-                <SubtitleCueSkeleton key={`${id}-cue-${index}`} index={index} />
+                <SubtitleCueSkeleton key={`${id}-cue-${index+1}`} index={index} />
               ))}
             </div>
           </TabsContent>
@@ -53,9 +53,9 @@ function SubtitleCueSkeleton({ index }: { index: number }) {
       <div className="flex flex-col gap-2 w-full">
         <div className="flex items-center flex-wrap">
           {/* Use predetermined widths from pattern */}
-          {widthPattern.map((width, idx) => (
+          {widthPattern.map((width, index) => (
             <Skeleton
-              key={`token-${idx}`}
+              key={`token-${index+1}`}
               className="h-7 mr-1 mb-1"
               style={{ width: `${width}px` }}
             />

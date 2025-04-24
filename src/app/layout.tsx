@@ -7,6 +7,7 @@ import ApolloProvider from "@/lib/providers/apollo-provider";
 import { Toaster } from "sonner";
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import Navigations from "@/components/navigations";
+import Script from "next/script";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,12 +31,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-        {process.env.ENV == 'DEVELOPMENT' && (
+        {process.env.ENV === 'DEVELOPMENT' && (
           <head>
-            {/* <Script
+            <Script
               crossOrigin="anonymous"
               src="//unpkg.com/react-scan/dist/auto.global.js"
-            /> */}
+            />
           </head>
         )}
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>

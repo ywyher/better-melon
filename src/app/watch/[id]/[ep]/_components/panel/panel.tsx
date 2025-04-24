@@ -6,49 +6,58 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Indicator } from "@/components/indicator";
 import { usePlayerStore } from "@/lib/stores/player-store";
 import { Tabs } from "@/components/ui/tabs";
-import type { SubtitleCue as TSubtitleCue, SubtitleTranscription, SubtitleFile } from "@/types/subtitle";
+import type { SubtitleCue as TSubtitleCue, SubtitleTranscription, SubtitleFile, SubtitleCue } from "@/types/subtitle";
 import { parseSubtitleToJson } from "@/lib/subtitle";
 import { subtitleTranscriptions } from "@/lib/constants/subtitle";
 import PanelHeader from "@/app/watch/[id]/[ep]/_components/panel/panel-header";
 import SubtitlesList from "@/app/watch/[id]/[ep]/_components/panel/subtitles-list";
 import PanelSkeleton from "@/app/watch/[id]/[ep]/_components/panel/panel-skeleton";
+import { subtitleCuesOptions } from "@/lib/queries/subtitle";
+import { Button } from "@/components/ui/button";
 
-export default function SubtitlePanel({ subtitleFiles }: { subtitleFiles: SubtitleFile[] }) {
+export default function SubtitlePanel({ 
+  subtitleFiles,
+  japaneseTranscription
+}: { 
+  subtitleFiles: SubtitleFile[],
+  japaneseTranscription: SubtitleCue[]
+}) {
     const [displayTranscription, setDisplayTranscription] = useState<SubtitleTranscription>('japanese')
     const [previousCues, setPreviousCues] = useState<TSubtitleCue[] | undefined>();
 
     const activeSubtitleFile = usePlayerStore((state) => state.activeSubtitleFile);
     const setSubtitleCues = usePlayerStore((state) => state.setSubtitleCues);
 
-    useEffect(() => {
-        console.log(activeSubtitleFile)
-    }, [activeSubtitleFile])
-
-    const { data: subtitleCues, isLoading: isCuesLoading, error: cuesError, refetch } = useQuery({
-        queryKey: ['subtitle-cues', displayTranscription, activeSubtitleFile],
-        queryFn: async () => {
-            if(activeSubtitleFile) {
-                const format = activeSubtitleFile?.source == 'remote' 
-                ? activeSubtitleFile!.file.url.split('.').pop() as "srt" | "vtt"
-                : activeSubtitleFile!.file.name.split('.').pop() as "srt" | "vtt";
-                
-                return await parseSubtitleToJson({ 
-                    source: activeSubtitleFile?.source == 'remote' 
-                        ? activeSubtitleFile.file.url 
-                        : activeSubtitleFile.file,
-                    format,
-                    transcription: displayTranscription
-                })
-            }
-            else throw new Error("Couldn't get the file")
-        },
-        staleTime: Infinity,
-        enabled: !!activeSubtitleFile
+    const { data: subtitleCues, isLoading: isCuesLoading, error: cuesError } = useQuery({
+      queryKey: ['cues', displayTranscription, activeSubtitleFile],
+      queryFn: async () => {
+        if (!activeSubtitleFile) return undefined;
+  
+        const format = activeSubtitleFile.source === 'remote' 
+          ? activeSubtitleFile.file.url.split('.').pop() as "srt" | "vtt"
+          : activeSubtitleFile.file.name.split('.').pop() as "srt" | "vtt";
+  
+        return await parseSubtitleToJson({ 
+          source: activeSubtitleFile.source === 'remote' 
+            ? activeSubtitleFile.file.url 
+            : activeSubtitleFile.file,
+          format,
+          transcription: displayTranscription
+        });
+      },
+      placeholderData: japaneseTranscription,
+      enabled: !!activeSubtitleFile
     })
 
+    // useEffect(() => {
+    //   if(activeSubtitleFile) {
+    //     refetch()
+    //   }
+    // }, [activeSubtitleFile, refetch])
+
     useEffect(() => {
-        refetch()
-    }, [activeSubtitleFile, refetch])
+      console.log(isCuesLoading)
+    }, [isCuesLoading])
 
     const displayCues = useMemo(() => {
         return isCuesLoading ? previousCues : subtitleCues;
@@ -76,8 +85,8 @@ export default function SubtitlePanel({ subtitleFiles }: { subtitleFiles: Subtit
     if(isCuesLoading) return <PanelSkeleton />
 
     return (
-        <Card className="flex flex-col gap-3 w-full max-w-[500px] h-fit">
-            <Tabs defaultValue={displayTranscription || subtitleTranscriptions[0]} value={displayTranscription}>
+        <Card className="flex flex-col gap-3 w-full max-w-[500px] min-h-[90vh] h-fit">
+            <Tabs className="h-full" defaultValue={displayTranscription || subtitleTranscriptions[0]} value={displayTranscription}>
                 <PanelHeader 
                     isLoading={isCuesLoading}
                     subtitleCues={subtitleCues}
@@ -85,22 +94,20 @@ export default function SubtitlePanel({ subtitleFiles }: { subtitleFiles: Subtit
                     subtitleFiles={subtitleFiles}
                     setDisplayTranscription={setDisplayTranscription}
                 />
-                <CardContent>
-                    {activeSubtitleFile && displayCues ? (
-                        <SubtitlesList
-                            isLoading={isCuesLoading}
-                            displayTranscription={displayTranscription}
-                            displayCues={displayCues}
-                        />
-                    ) : (
-                        !isCuesLoading && (
-                            <Card className="w-full p-4 bg-yellow-50 border-yellow-200">
-                                <CardContent className="p-0 text-center text-yellow-700">
-                                    <p>No subtitle files were found for this episode</p>
-                                </CardContent>
-                            </Card>
-                        )
-                    )}
+                <CardContent className="h-full flex justify-center items-center">
+                  {activeSubtitleFile && displayCues ? (
+                      <SubtitlesList
+                          isLoading={isCuesLoading}
+                          displayTranscription={displayTranscription}
+                          displayCues={displayCues}
+                      />
+                  ): (
+                    <Card className="w-full p-4 bg-yellow-50 border-yellow-200">
+                      <CardContent className="p-0 text-center text-yellow-700">
+                          <p>No subtitle files were found for this episode</p>
+                      </CardContent>
+                    </Card>
+                  )}
                 </CardContent>
             </Tabs>
         </Card>

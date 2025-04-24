@@ -1,23 +1,26 @@
 'use server'
 
+import { getGeneralSettings } from "@/app/settings/general/actions";
+import { getPlayerSettings } from "@/app/settings/player/actions";
 import { getSubtitleSettings } from "@/app/settings/subtitle/_subtitle-settings/actions";
-import { SubtitleSettings } from "@/lib/db/schema";
-import { AnimeEpisodeData, AnimeStreamingData } from "@/types/anime";
-import { SubtitleEntry, SubtitleFile } from "@/types/subtitle";
+import { parseSubtitleToJson, selectSubtitleFile } from "@/lib/subtitle";
+import { getExtension } from "@/lib/utils";
+import type { AnimeEpisodeData, AnimeStreamingData } from "@/types/anime";
+import type { ActiveSubtitleFile, SubtitleCue, SubtitleEntry, SubtitleFile, SubtitleFormat } from "@/types/subtitle";
 
 export async function getCompleteData(animeId: string, episodeNumber: number) {
   try {
-    const subtitleSettings = await getSubtitleSettings() as SubtitleSettings
-
-    
-    const [episodesData, subtitleEntries] = await Promise.all([
+    const [episodesData, subtitleEntries, subtitleSettings, generalSettings, playerSettings] = await Promise.all([
       getEpisodesData(animeId),
-      getSubtitleEntries(animeId)
+      getSubtitleEntries(animeId),
+      getSubtitleSettings(),
+      getGeneralSettings(),
+      getPlayerSettings(),
     ]);
     const episode = episodesData.find(
       (episode: AnimeEpisodeData) => episode.number === episodeNumber
     );
-    if(!episode) throw new Error(`Failed to fetch initial anime data`);
+    if(!episode) throw new Error("Failed to fetch initial anime data");
     
     const [episodeData, subtitleFiles] = await Promise.all([
       // getStreamingData('erased-151$episode$4040'),
@@ -29,7 +32,9 @@ export async function getCompleteData(animeId: string, episodeNumber: number) {
       episodesData,
       episodeData,
       subtitleFiles,
-      subtitleSettings
+      subtitleSettings,
+      generalSettings,
+      playerSettings,
     };
   } catch (error) {
     console.error('Error fetching initial anime data:', error);

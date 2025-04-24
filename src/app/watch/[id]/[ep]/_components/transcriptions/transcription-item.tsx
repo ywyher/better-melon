@@ -79,7 +79,9 @@ export function TranscriptionItem({
                                 key={tokenIdx}
                                 style={isActive ? styles.tokenStyles.active : styles.tokenStyles.default}
                                 onClick={() => {
+                                  if(transcription != 'english') {
                                     handleClick(cue.content, token)
+                                  }
                                 }}
                                 onMouseEnter={() => handleTokenMouseEnter(cue.id, token.id)}
                                 onMouseLeave={handleTokenMouseLeave}

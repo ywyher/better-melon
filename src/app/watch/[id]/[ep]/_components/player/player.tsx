@@ -1,15 +1,15 @@
 "use client";
 
-import { MediaPlayer, MediaPlayerInstance, MediaProvider, TextTrack } from '@vidstack/react';
+import { MediaPlayer, type MediaPlayerInstance, MediaProvider, type TextTrack } from '@vidstack/react';
 import { DefaultAudioLayout, defaultLayoutIcons, DefaultVideoLayout } from '@vidstack/react/player/layouts/default';
 import { Track } from "@vidstack/react";
 import '@vidstack/react/player/styles/default/theme.css';
 import '@vidstack/react/player/styles/default/layouts/video.css';
 
-import { useCallback, useEffect, useRef, useState, useMemo, memo } from "react";
+import { useCallback, useEffect, useRef, useState, useMemo, memo, Dispatch, SetStateAction } from "react";
 import { usePlayerStore } from "@/lib/stores/player-store";
-import { SubtitleFile } from '@/types/subtitle';
-import { AnimeEpisodeData, AnimeStreamingData, SkipTime } from '@/types/anime';
+import type { SubtitleFile } from '@/types/subtitle';
+import type { AnimeEpisodeData, AnimeStreamingData, SkipTime } from '@/types/anime';
 import SubtitleTranscriptions from '@/app/watch/[id]/[ep]/_components/transcriptions/transcriptions';
 import SkipButton from '@/app/watch/[id]/[ep]/_components/player/skip-button';
 import PlayerSkeleton from '@/app/watch/[id]/[ep]/_components/player/player-skeleton';
@@ -19,11 +19,14 @@ import { toast } from 'sonner';
 import DefinitionCard from '@/components/definition-card';
 import { generateWebVTTFromSkipTimes } from '@/lib/subtitle';
 
-type PlayerProps = { 
-    streamingData: AnimeStreamingData;
-    episode: AnimeEpisodeData;
-    subtitleFiles: SubtitleFile[];
-    episodesLength: number
+type PlayerProps = {
+  animeId: string;
+  episodeNumber: number;
+  isVideoReady: boolean;
+  setIsVideoReady: Dispatch<SetStateAction<boolean>>
+  episode: AnimeEpisodeData;
+  streamingData: AnimeStreamingData;
+  episodesLength: number
 }
 
 const MemoizedSubtitleTranscriptions = memo(SubtitleTranscriptions);
@@ -32,43 +35,54 @@ const MemoizedSkipButton = memo(SkipButton);
 const MemoizedDefinitionCard = memo(DefinitionCard);
 
 export default function Player({ 
-    streamingData,
-    episode, 
-    subtitleFiles,
-    episodesLength
+  animeId,
+  episodeNumber,
+  isVideoReady,
+  setIsVideoReady,
+  streamingData,
+  episode, 
+  episodesLength
 }: PlayerProps) {
-    const { id, ep } = useParams<{ id: string, ep: string }>()
     const router = useRouter()
     
     const player = useRef<MediaPlayerInstance>(null);
     const [videoSrc, setVideoSrc] = useState("");
     const [vttUrl, setVttUrl] = useState<string>('');
     const [isInitialized, setIsInitialized] = useState(false);
-    const [isVideoReady, setIsVideoReady] = useState(false);
     const [skipTimes, setSkipTimes] = useState<SkipTime[]>([])
     const [canSkip, setCanSkip] = useState(false)
-
     const isTransitioning = useRef(false);
 
-    const activeSubtitleFile = usePlayerStore((state) => state.activeSubtitleFile);
-    const setActiveSubtitleFile = usePlayerStore((state) => state.setActiveSubtitleFile);
     const setPlayer = usePlayerStore((state) => state.setPlayer);
-    
     const autoSkip = usePlayerStore((state) => state.autoSkip);
     const autoNext = usePlayerStore((state) => state.autoNext);
     const autoPlay = usePlayerStore((state) => state.autoPlay);
 
+    const [loadingDuration, setLoadingDuration] = useState<{
+      start: Date | undefined,
+      end: Date | undefined
+    }>({
+      start: undefined,
+      end: undefined
+    });
+
     useEffect(() => {
-        setPlayer(player)
+      setPlayer(player)
     }, [setPlayer]);
 
     useEffect(() => {
-        if(!streamingData) return;
-        
-        const url = encodeURIComponent(streamingData.sources[0].url);
-        setVideoSrc(`${process.env.NEXT_PUBLIC_PROXY_URL}?url=${url}`);
+      console.log(videoSrc)
+    }, [videoSrc]);
 
-        setIsInitialized(true);
+    useEffect(() => {
+      if(!streamingData) return;
+      console.log(new Date().getTime())
+      console.log('started')
+
+      const url = encodeURIComponent(streamingData.sources[0].url);
+      setVideoSrc(`${process.env.NEXT_PUBLIC_PROXY_URL}?url=${url}`);
+      setIsInitialized(true);
+      setLoadingDuration({ start: new Date(), end: undefined })
     }, [streamingData, isInitialized]);
 
     useEffect(() => {
@@ -97,8 +111,8 @@ export default function Player({
             skipTimes: skipTimesData,
             totalDuration: player.current?.duration || 0,
             episode: {
-                title: episode.title,
-                number: episode.number
+                title: episode?.title || "",
+                number: episode?.number || episodeNumber
             }
         });
         
@@ -112,25 +126,13 @@ export default function Player({
         };
     }, [episode, streamingData, player.current?.duration]);
 
-    const handleTrackChange = useCallback((track: TextTrack | null) => {
-        if (!track || !subtitleFiles.length || activeSubtitleFile?.file.name === track.label) return;
-    
-        const matchedSub = subtitleFiles.find(s => s.name === track.label);
-        if (matchedSub) {
-            setActiveSubtitleFile({
-                source: "remote",
-                file: {
-                    name: matchedSub.name,
-                    url: matchedSub.url,
-                    last_modified: matchedSub.last_modified,
-                    size: matchedSub.size
-                }
-            });
-        }
-    }, [subtitleFiles, activeSubtitleFile?.file.name, setActiveSubtitleFile]);
-    
     const handleCanPlay = useCallback(() => {
+        console.log('can play fucker')
         setIsVideoReady(true);
+        setLoadingDuration(prev => ({
+          ...prev,
+          end: new Date()
+        }));
     }, []);
 
     const handlePlaybackEnded = useCallback(() => {
@@ -140,11 +142,10 @@ export default function Player({
         }
     
         try {
-            const epNumber = parseInt(ep);
             player.current?.pause();
             
-            if (epNumber < episodesLength) {
-                router.push(`/watch/${id}/${epNumber + 1}`);
+            if (episodeNumber < episodesLength) {
+                router.push(`/watch/${animeId}/${episodeNumber + 1}`);
             } else {
                 console.log('No more episodes');
                 toast.message("No more episodes to watch :(");
@@ -154,7 +155,7 @@ export default function Player({
             console.error('Error moving to the next episode:', error);
             isTransitioning.current = false;
         }
-    }, [autoNext, ep, episodesLength, id, router]);
+    }, [autoNext, episodeNumber, episodesLength, animeId, router]);
 
     const onTimeUpdate = useThrottledCallback(() => {
         if (!player.current) return;
@@ -196,22 +197,32 @@ export default function Player({
     return (
         <div className="relative w-full aspect-video">
             {(!isVideoReady || !isInitialized) && (
-                <MemoizedPlayerSkeleton isLoading={!isVideoReady || !isInitialized} />
+              <>
+                  <MemoizedPlayerSkeleton isLoading={!isVideoReady || !isInitialized} />
+              </>
             )}
             <div className={containerClassName}>
+                {loadingDuration.start && loadingDuration.end && (
+                  <p>Loaded in: {
+                    ((loadingDuration.end.getTime() - loadingDuration.start.getTime()) / 1000).toFixed(2)
+                  }s</p>
+                )}
                 <MediaPlayer
-                    title={episode.title}
+                    title={episode?.title || ""}
                     src={videoSrc}
                     ref={player}
-                    onTextTrackChange={handleTrackChange}
                     onCanPlay={handleCanPlay}
                     onTimeUpdate={onTimeUpdate}
                     autoPlay={autoPlay}
+                    onLoadStart={() => {
+                      console.log('started loading')
+                    }}
                     muted={autoPlay} // for autoPlay to work
                     load='eager'
                     posterLoad='eager'
                     crossOrigin="anonymous"
                     className='relative w-full h-fit'
+                    aspectRatio="16/9"
                 >
                     <MediaProvider>
                         {/* <Poster
