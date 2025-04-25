@@ -117,12 +117,9 @@ export default function TranscriptionsContainer({
     const currentTime = useMediaState('currentTime', player);
     const delay = usePlayerStore((state) => state.delay);
 
-
     const getSubtitleStylesFromStore = useSubtitleStylesStore((state) => state.getStyles);
     const stylesFromStore = useSubtitleStylesStore((state) => state.styles);
-    
-    // const activeTranscriptionsCount = activeTranscriptions.length;
-    
+        
     const activeSubtitleSets = useMemo<Record<SubtitleTranscription, SubtitleCue[]>>(() => {
         if (!currentTime) {
             return {
@@ -132,7 +129,7 @@ export default function TranscriptionsContainer({
                 romaji: [],
                 english: []
             };
-        }
+        };
         
         const result: Record<SubtitleTranscription, SubtitleCue[]> = {
             japanese: [],

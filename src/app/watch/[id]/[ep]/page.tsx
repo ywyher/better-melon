@@ -13,14 +13,16 @@ import PlayerSkeleton from '@/app/watch/[id]/[ep]/_components/player/player-skel
 import PanelSkeleton from '@/app/watch/[id]/[ep]/_components/panel/panel-skeleton';
 import SettingsSkeleton from '@/app/watch/[id]/[ep]/_components/settings/settings-skeleton';
 import { Indicator } from '@/components/indicator';
-import EpisodesList from '@/app/watch/[id]/[ep]/_components/episodes/episodes-list';
-import EpisodesListSkeleton from '@/app/watch/[id]/[ep]/_components/episodes/episodes-list-skeleton';
-
 import { usePlayerStore } from '@/lib/stores/player-store';
 import { filterSubtitleFiles, selectSubtitleFile } from '@/lib/subtitle';
 import { playerQueries } from '@/lib/queries/player';
-import type { AnimeEpisodeData } from "@/types/anime";
-import { subtitleCuesOptions } from '@/lib/queries/subtitle';
+import SettingsDialog from '@/app/watch/[id]/[ep]/_components/settings/settings-dialog';
+import { Button } from '@/components/ui/button';
+import { Captions, Loader2 } from 'lucide-react';
+import { useIsMedium } from '@/hooks/use-media-query';
+import DialogWrapper from '@/components/dialog-wrapper';
+import EpisodesListSkeleton from '@/app/watch/[id]/[ep]/_components/episodes/episodes-list-skeleton';
+import EpisodesList from '@/app/watch/[id]/[ep]/_components/episodes/episodes-list';
 
 const GET_ANIME_DATA = gql`
   query($id: Int!) {
@@ -53,11 +55,12 @@ export default function Watch() {
   const ep = params.ep as string;
   const episodeNumber = Number(ep);
 
+  const isMedium = useIsMedium()
   const queryClient = useQueryClient()
 
   const [isVideoReady, setIsVideoReady] = useState<boolean>(false)
   
-  const { 
+  const {
     loading: isLoadingAnime, 
     error: animeError, 
     data: animeData 
@@ -92,10 +95,11 @@ export default function Watch() {
     }
   }, [isLoadingData, data, loadingDuration]);
 
-  const { setEnglishSubtitleUrl, setActiveSubtitleFile, activeSubtitleFile } = usePlayerStore();
+  const { setEnglishSubtitleUrl, setActiveSubtitleFile } = usePlayerStore();
   
   useEffect(() => {
-    if (!data || !data.episodeData || !data.subtitleSettings) return;
+    console.log(data)
+    if (!data || !data.episodeData) return;
     
     setActiveSubtitleFile(null);
     setEnglishSubtitleUrl(null);
@@ -103,8 +107,8 @@ export default function Watch() {
     if (data.subtitleFiles?.length > 0) {
       const selected = selectSubtitleFile({ 
         files: data.subtitleFiles,
-        preferredFormat: data.subtitleSettings.preferredFormat,
-        matchPattern: data.subtitleSettings.matchPattern,
+        preferredFormat: data.subtitleSettings?.preferredFormat || null,
+        matchPattern: data.subtitleSettings?.matchPattern || null,
       });
       
       if (selected) {
@@ -153,20 +157,54 @@ export default function Watch() {
 
   return (
     <>
-      <div className="flex flex-row gap-10">
-        <div className="flex flex-col gap-3 flex-1">
-          <div className="flex items-center justify-between">
+      <div className="flex flex-col md:flex-row w-full md:gap-10">
+        <div className="flex flex-col gap-3 w-full">
+          <div className="flex items-center justify-between w-full">
             <GoBack />
-            {loadingDuration > 0 && (
-              <div className="text-sm text-gray-400">
-                Loaded in {(loadingDuration / 1000).toFixed(2)}s
-              </div>
-            )}
+            <div className="flex flex-row gap-3 items-center">
+              {loadingDuration > 0 && (
+                <div className="text-sm text-gray-400">
+                  Loaded in {(loadingDuration / 1000).toFixed(2)}s
+                </div>
+              )}
+              {isLoading ? (
+                <div className="flex flex-row gap-2">
+                  <Button variant='outline'>
+                    <Loader2 className='animate-spin' />
+                  </Button>
+                  {isMedium && (
+                    <Button variant='outline'>
+                      <Loader2 className='animate-spin' />
+                    </Button>
+                  )}
+                </div>
+              ): (
+                <div className='flex flex-row gap-2'>
+                  <SettingsDialog 
+                    generalSettings={data.generalSettings}
+                  />
+                  {isMedium && (
+                    <DialogWrapper
+                      trigger={<Button variant='outline'>
+                        <Captions />
+                      </Button>}
+                      className="overflow-y-auto w-full flex flex-col"
+                      breakpoint='medium'
+                    >
+                      <SubtitlePanel
+                        subtitleFiles={subtitleFiles}
+                        japaneseTranscription={data.japaneseTranscription}
+                      />
+                    </DialogWrapper>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
           
           {isLoading ? (
-            <div className="flex flex-col gap-3">
-              <div className="relative w-full aspect-video bg-gray-900">
+            <div className="flex flex-col gap-3 w-full">
+              <div className="relative w-full lg:aspect-video bg-gray-900">
                 <PlayerSkeleton isLoading={isLoadingData} />
               </div>
               <div className="w-full">
@@ -186,13 +224,13 @@ export default function Watch() {
           )}
 
           {isLoading ? (
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-3 w-full">
               <div className="w-full">
                 <SettingsSkeleton />
               </div>
             </div>
           ) : (
-            <div className='flex flex-col gap-3'>
+            <div className='flex flex-col gap-3 w-full'>
               <Settings 
                 playerSettings={data.playerSettings}
                 generalSettings={data.generalSettings} 
@@ -202,25 +240,28 @@ export default function Watch() {
           )}
         </div>
         
-        <div className='flex flex-col gap-5'>
-          {(isLoading) ? (
-            <PanelSkeleton />
-          ) : (
-            <SubtitlePanel
-              subtitleFiles={subtitleFiles}
-              japaneseTranscription={data.japaneseTranscription}
-            />
-          )}
-          
-          {(isLoadingAnime || !data?.episodesData) ? (
-            <EpisodesListSkeleton />
-          ) : (
-            <EpisodesList 
-              animeData={animeData.Media} 
-              episodes={data.episodesData} 
-            />
-          )}
-        </div>
+        {!isMedium && (
+          <div className={`flex flex-col gap-5 w-full md:w-auto ${isMedium ? 'hidden' : 'block'}`}>
+              {(isLoading) ? (
+                <PanelSkeleton />
+              ) : (
+                <>
+                  <SubtitlePanel
+                    subtitleFiles={subtitleFiles}
+                    japaneseTranscription={data.japaneseTranscription}
+                  />
+                </>
+              )}
+              {(isLoadingAnime || !data?.episodesData) ? (
+                <EpisodesListSkeleton />
+              ) : (
+                <EpisodesList
+                  animeData={animeData.Media} 
+                  episodes={data.episodesData} 
+                />
+              )}
+          </div>
+        )}
       </div>
     </>
   );

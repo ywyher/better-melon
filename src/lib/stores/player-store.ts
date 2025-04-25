@@ -39,6 +39,9 @@ export type PlayerStore = {
   autoNext: boolean;
   setAutoNext: (sub: PlayerStore['autoNext']) => void;
 
+  autoCopy: boolean;
+  setAutoCopy: (sub: PlayerStore['autoCopy']) => void;
+
   episodesListViewMode: EpisodesListViewMode;
   setEpisodesListViewMode: (sub: PlayerStore['episodesListViewMode']) => void;
 
@@ -84,6 +87,9 @@ export const usePlayerStore = create<PlayerStore>()(
       autoNext: false,
       setAutoNext: (autoNext: PlayerStore['autoNext']) => set({ autoNext }),
       
+      autoCopy: false,
+      setAutoCopy: (autoCopy: PlayerStore['autoCopy']) => set({ autoCopy }),
+      
       episodesListViewMode: 'image',
       setEpisodesListViewMode: (episodesListViewMode: PlayerStore['episodesListViewMode']) => set({ episodesListViewMode }),
 
@@ -111,7 +117,6 @@ export const usePlayerStore = create<PlayerStore>()(
       storage: createJSONStorage(() => localStorage), // (optional) by default, 'localStorage' is used
       partialize: (state) => ({
         // only store these values
-        activeTranscriptions: state.activeTranscriptions,
         episodesListViewMode: state.episodesListViewMode,
         episodesListSpoilerMode: state.episodesListSpoilerMode
       }),

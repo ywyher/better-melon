@@ -4,7 +4,7 @@ import { editProfile } from "@/app/profile/actions";
 import LoadingButton from "@/components/loading-button";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useIsSmall } from "@/hooks/useMediaQuery";
+import { useIsSmall } from "@/hooks/use-media-query";
 import { User } from "@/lib/db/schema";
 import { emailSchema, usernameSchema } from "@/types/auth";
 import { zodResolver } from "@hookform/resolvers/zod";

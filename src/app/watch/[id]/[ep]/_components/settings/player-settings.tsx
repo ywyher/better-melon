@@ -11,7 +11,7 @@ type PlayerSettingsProps = {
 
 export default function PlayerSettings({ playerSettings, generalSettings }: PlayerSettingsProps) {
     return (
-        <div className="flex flex-row gap-2">
+        <div className="flex flex-col  md:flex-row gap-2">
             <EnabledTranscriptions
                 playerSettings={playerSettings as TPlayerSettings}
                 syncPlayerSettings={generalSettings.syncPlayerSettings}

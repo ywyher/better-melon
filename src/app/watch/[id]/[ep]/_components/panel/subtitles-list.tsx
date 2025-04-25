@@ -114,7 +114,7 @@ export default function SubtitlesList({
     return (
         <div 
             ref={scrollAreaRef} 
-            className="overflow-auto h-[80vh] w-full"
+            className="overflow-y-auto h-[80vh] w-full"
             style={{
                 opacity: isLoading ? 0.8 : 1,
             }}

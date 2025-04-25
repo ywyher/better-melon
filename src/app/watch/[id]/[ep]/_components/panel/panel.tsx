@@ -49,16 +49,6 @@ export default function SubtitlePanel({
       enabled: !!activeSubtitleFile
     })
 
-    // useEffect(() => {
-    //   if(activeSubtitleFile) {
-    //     refetch()
-    //   }
-    // }, [activeSubtitleFile, refetch])
-
-    useEffect(() => {
-      console.log(isCuesLoading)
-    }, [isCuesLoading])
-
     const displayCues = useMemo(() => {
         return isCuesLoading ? previousCues : subtitleCues;
     }, [isCuesLoading, previousCues, subtitleCues]);
@@ -85,7 +75,7 @@ export default function SubtitlePanel({
     if(isCuesLoading) return <PanelSkeleton />
 
     return (
-        <Card className="flex flex-col gap-3 w-full max-w-[500px] min-h-[90vh] h-fit">
+        <Card className="flex flex-col gap-3 w-full lg:max-w-[500px] lg:min-h-[80vh] h-fit border-0 lg:border-1 p-0 m-0 lg:py-5">
             <Tabs className="h-full" defaultValue={displayTranscription || subtitleTranscriptions[0]} value={displayTranscription}>
                 <PanelHeader 
                     isLoading={isCuesLoading}
@@ -94,7 +84,7 @@ export default function SubtitlePanel({
                     subtitleFiles={subtitleFiles}
                     setDisplayTranscription={setDisplayTranscription}
                 />
-                <CardContent className="h-full flex justify-center items-center">
+                <CardContent className="h-full flex justify-center items-center w-full">
                   {activeSubtitleFile && displayCues ? (
                       <SubtitlesList
                           isLoading={isCuesLoading}

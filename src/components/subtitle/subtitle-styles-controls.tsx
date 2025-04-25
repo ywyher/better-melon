@@ -8,7 +8,7 @@ import LoadingButton from "@/components/loading-button"
 import { Form } from "@/components/ui/form"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
-import { useIsSmall } from "@/hooks/useMediaQuery"
+import { useIsSmall } from "@/hooks/use-media-query"
 import { FieldErrors, UseFormReturn } from "react-hook-form"
 import { toast } from "sonner"
 import { z } from "zod"
@@ -85,11 +85,11 @@ export default function SubtitleStylesControls({ form, onSubmit, isLoading, meth
                     <CardContent className="flex flex-col gap-3 p-0">
                         <div className="space-y-4">
                             <div className="flex items-center gap-2 mb-2">
-                                <div className="h-5 w-1 bg-foreground rounded-full"></div>
+                                <div className="h-5 w-1 rounded-full"></div>
                                 <h3 className="text-lg font-medium">Font Styles</h3>
                             </div>
                             <div className="pl-3 pr-1 space-y-6">
-                                <div className="flex flex-col md:flex-row gap-6">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <FormField
                                         form={form}
                                         name="fontSize"
@@ -123,7 +123,7 @@ export default function SubtitleStylesControls({ form, onSubmit, isLoading, meth
                         {/* Text Appearance Section */}
                         <div className="space-y-4">
                             <div className="flex items-center gap-2 mb-2">
-                                <div className="h-5 w-1 bg-foreground rounded-full"></div>
+                                <div className="h-5 w-1 rounded-full"></div>
                                 <h3 className="text-lg font-medium">Text Appearance</h3>
                             </div>
                             <div className="pl-3 pr-1 space-y-6">
@@ -170,7 +170,7 @@ export default function SubtitleStylesControls({ form, onSubmit, isLoading, meth
                         {/* Background Style Section */}
                         <div className="space-y-4">
                             <div className="flex items-center gap-2 mb-2">
-                                <div className="h-5 w-1 bg-foreground rounded-full"></div>
+                                <div className="h-5 w-1 rounded-full"></div>
                                 <h3 className="text-lg font-medium">Background Style</h3>
                             </div>
                             <div className="pl-3 pr-1 space-y-6">

@@ -5,7 +5,7 @@ import { FieldErrors, useForm } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from "zod";
 import { toast } from "sonner";
-import { useIsSmall } from "@/hooks/useMediaQuery";
+import { useIsSmall } from "@/hooks/use-media-query";
 import React, { Dispatch, SetStateAction, useState } from "react";
 import { AuthIdentifier, AuthPort } from "@/components/auth/auth";
 import {

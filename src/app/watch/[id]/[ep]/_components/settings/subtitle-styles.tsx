@@ -138,8 +138,8 @@ export default function SubtitleStyles({ syncPlayerSettings }: SubtitleStylesPro
     }
 
     return (
-        <div>
-            <div className="flex flex-col gap-0 pt-4">
+        <div className="w-full">
+            <div className="flex flex-col gap-0">
                 <div className="flex flex-col md:flex-row gap-3 justify-between">
                     <div className="text-lg font-semibold">Subtitle Styles</div>
                     <div className="flex flex-row gap-2">

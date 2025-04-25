@@ -18,8 +18,6 @@ import {
 import { usePlayerStore } from '@/lib/stores/player-store';
 import { takeSnapshot } from '@/lib/anki';
 import { useQuery } from '@tanstack/react-query';
-import { AnkiPreset } from '@/lib/db/schema';
-import { getDefaultPreset } from '@/app/settings/anki/actions';
 import { ankiQueries } from '@/lib/queries/anki';
 
 export default function DefinitionCard() {
@@ -126,7 +124,7 @@ export default function DefinitionCard() {
         className="
           absolute top-5 left-1/2 
           -translate-x-1/2
-          z-20
+          z-50
           flex flex-col gap-5
           min-w-[300px]
           p-3

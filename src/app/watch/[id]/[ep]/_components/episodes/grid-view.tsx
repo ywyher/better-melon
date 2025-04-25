@@ -22,6 +22,7 @@ export default function GridView({ episodes, currentEpisode, animeId, router }: 
             variant="ghost"
             onClick={() => router.push(`/watch/${animeId}/${ep.number}`)}
             className={cn(
+              "hover:scale-105 transition-all",
               "py-0 w-10 rounded-lg bg-[#141414]",
               "hover:bg-[#2B2B2B] hover:border-white transition-all",
               "w-[70px] max-h-[100px] py-[0.4rem]",

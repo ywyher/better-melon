@@ -8,7 +8,7 @@ import { Menu } from '@/components/header/menu';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { Avatar } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { useIsSmall } from '@/hooks/useMediaQuery';
+import { useIsSmall } from '@/hooks/use-media-query';
 import { getSession } from '@/lib/auth-client';
 import { User } from '@/lib/db/schema';
 import { useSession } from '@/lib/queries/user';

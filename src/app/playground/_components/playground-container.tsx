@@ -1,6 +1,7 @@
 "use client"
 
 import { getCompleteData } from "@/app/watch/[id]/[ep]/actions"
+import { playerQueries } from "@/lib/queries/player";
 import { useQuery } from "@tanstack/react-query"
 import { useEffect, useState } from "react"
 
@@ -17,8 +18,7 @@ export default function PlaygroundContainer() {
     isLoading: isLoadingData,
     error: dataError,
   } = useQuery({
-    queryKey: ['anime', animeId],
-    queryFn: () => getCompleteData(animeId, episodeNumber),
+    ...playerQueries.episodeData(animeId, episodeNumber),
     staleTime: 5 * 60 * 1000,
   });
 

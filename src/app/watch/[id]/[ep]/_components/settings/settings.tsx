@@ -1,10 +1,8 @@
 "use client"
 
 import CueNavigations from "@/app/watch/[id]/[ep]/_components/settings/cue-navigations"
-import DelayController from "@/app/watch/[id]/[ep]/_components/settings/delay-controller"
 import EpisodeNavigations from "@/app/watch/[id]/[ep]/_components/settings/episode-navigations"
 import { Separator } from "@/components/ui/separator"
-import SubtitleStyles from "@/app/watch/[id]/[ep]/_components/settings/subtitle-styles"
 import type { GeneralSettings, PlayerSettings as TPlayerSettings } from "@/lib/db/schema"
 import PlayerSettings from "@/app/watch/[id]/[ep]/_components/settings/player-settings"
   
@@ -19,8 +17,6 @@ export default function Settings({ generalSettings, episodesLength, playerSettin
             <div className="flex flex-col gap-5">
                 <PlayerSettings playerSettings={playerSettings} generalSettings={generalSettings} />
                 <Separator />
-                <DelayController />
-                <Separator />
                 <div className="flex flex-row gap-2 w-full justify-between items-center">
                     <div className="flex flex-col gap-2 w-full flex-1">
                         <CueNavigations direction="previous" />
@@ -32,10 +28,6 @@ export default function Settings({ generalSettings, episodesLength, playerSettin
                         <EpisodeNavigations direction="next" episodesLength={episodesLength} />
                     </div>
                 </div>
-                <Separator />
-                <SubtitleStyles
-                    syncPlayerSettings={generalSettings.syncPlayerSettings}
-                />
             </div>
         </div>
     )

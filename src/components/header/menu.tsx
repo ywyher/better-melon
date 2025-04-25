@@ -23,7 +23,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
-import { useIsMedium } from "@/hooks/useMediaQuery";
+import { useIsMedium } from "@/hooks/use-media-query";
 import Pfp from "@/components/pfp";
 import Link from "next/link";
 import { User } from "@/lib/db/schema";

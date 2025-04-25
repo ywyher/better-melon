@@ -88,7 +88,10 @@ const GET_ANIMES = gql`
 `;
 
 export default function AnimeTabs() {
-  const { data, loading, error } = useQuery(GET_ANIMES);
+  const { data, loading, error } = useQuery(GET_ANIMES, {
+    fetchPolicy: 'cache-first',
+    nextFetchPolicy: 'cache-only',
+  });
   const [tab, setTab] = useState("popular");
 
   if (error)

@@ -26,6 +26,8 @@ export default function PlaybackToggles({ playerSettings, syncPlayerSettings }: 
     const setAutoNext = usePlayerStore((state) => state.setAutoNext)
     const autoSkip = usePlayerStore((state) => state.autoSkip)
     const setAutoSkip = usePlayerStore((state) => state.setAutoSkip)
+    const autoCopy = usePlayerStore((state) => state.autoCopy)
+    const setAutoCopy = usePlayerStore((state) => state.setAutoCopy)
 
     useEffect(() => {
         if (playerSettings) {
@@ -82,7 +84,11 @@ export default function PlaybackToggles({ playerSettings, syncPlayerSettings }: 
             setIsLoading(false);
           }
         }
-      };
+    };
+
+    const handleStopAtEachCue = async () => {
+      setAutoCopy(!autoCopy)
+    }
     
     return (
         <div className="flex flex-row gap-2">
@@ -116,6 +122,15 @@ export default function PlaybackToggles({ playerSettings, syncPlayerSettings }: 
                 className="w-fit"
                 disabled={isLoading}
                 tooltip="Automatically skip intros and outros"
+            />
+            
+            <ToggleButton
+                name="Auto Copy"
+                checked={autoCopy}
+                onClick={() => handleStopAtEachCue()}
+                className="w-fit"
+                disabled={isLoading}
+                tooltip="Automatically copy a sentance when it comes"
             />
         </div>
     );

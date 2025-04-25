@@ -2,7 +2,7 @@
 
 import Header from "@/components/header"
 import Bottombar from "@/components/sidebar/bottombar"
-import { useIsSmall } from "@/hooks/useMediaQuery"
+import { useIsSmall } from "@/hooks/use-media-query"
 
 export default function Navigations({ children }: { children: React.ReactNode }) {
     const isSmall = useIsSmall()

@@ -17,7 +17,7 @@ import { toast } from "sonner"
 import { authClient } from "@/lib/auth-client"
 import { useRouter } from "next/navigation"
 import { PasswordInput } from "@/components/form/password-input"
-import { useIsSmall } from "@/hooks/useMediaQuery"
+import { useIsSmall } from "@/hooks/use-media-query"
 import { passwordSchema } from "@/types/auth"
 
 const formSchema = z

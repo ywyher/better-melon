@@ -33,6 +33,7 @@ export default function ListView({
             onClick={() => router.push(`/watch/${animeId}/${ep.number}`)}
             variant="ghost"
             className={cn(
+              "hover:scale-105 transition-all",
               "w-full py-3 flex justify-start gap-3 items-center rounded-lg bg-[#141414]",
               "hover:bg-[#2B2B2B] transition-all",
               "text-gray-400 hover:text-white",

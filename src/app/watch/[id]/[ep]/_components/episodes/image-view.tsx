@@ -39,6 +39,7 @@ export default function ImageView({
             onClick={() => router.push(`/watch/${animeId}/${ep.number}`)}
             className={cn(
               "flex flex-row rounded-lg overflow-hidden cursor-pointer bg-[#141414]",
+              "hover:scale-105 transition-all",
               "transition-all duration-200 hover:bg-[#2B2B2B]",
               isActive && "ring-1 ring-[#8080CF]"
             )}
