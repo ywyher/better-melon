@@ -18,7 +18,6 @@ import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { createSubtitleStyles, updateSubtitleStyles } from "@/app/settings/subtitle/_subtitle-styles/actions";
 import { settingsQueries } from "@/lib/queries/settings";
-import { usePlayerStore } from "@/lib/stores/player-store";
 
 type SubtitleStylesProps = {
     syncPlayerSettings: GeneralSettings['syncPlayerSettings']
@@ -56,11 +55,7 @@ export default function SubtitleStyles({ syncPlayerSettings }: SubtitleStylesPro
     })
 
     useEffect(() => {
-      console.log(`is it gonna cahgne?`)
         if(!subtitleStyles) return;
-        console.log(`changed`)
-        console.log(`subtitleStyles`)
-        console.log(subtitleStyles)
         form.reset({
             transcription: selectedTranscription,
             fontSize: subtitleStyles.fontSize,
@@ -73,7 +68,7 @@ export default function SubtitleStyles({ syncPlayerSettings }: SubtitleStylesPro
             backgroundBlur: subtitleStyles.backgroundBlur,
             backgroundRadius: subtitleStyles.backgroundRadius,
         })
-    }, [subtitleStyles])
+    }, [subtitleStyles, form, selectedTranscription])
 
     const onSubmit = async (data: z.infer<typeof subtitleStylesSchema>) => {
         updateStyles(data.transcription, {

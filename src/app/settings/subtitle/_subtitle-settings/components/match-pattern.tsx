@@ -9,7 +9,7 @@ import { SubtitleSettings } from "@/lib/db/schema"
 import { settingsQueries } from "@/lib/queries/settings"
 import { useQueryClient } from "@tanstack/react-query"
 import { AlertCircle, X } from "lucide-react"
-import { useEffect, useState, useRef } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { toast } from "sonner"
 import { useDebounce } from "use-debounce"
   
@@ -23,28 +23,29 @@ export default function SubtitleSettingsMatchPattern({ settingsId, matchPattern 
     const [isInitialRender, setIsInitialRender] = useState<boolean>(true)
     const queryClient = useQueryClient()
 
+    const onMatchPattern = useCallback(async (matchPattern: SubtitleSettings['matchPattern']) => {
+      setIsLoading(true)
+      const { message, error } = await handleMatchPattern({ matchPattern })
+
+      if(error) {
+          toast.error(error)
+          setIsLoading(false)
+          return;
+      }
+      
+      queryClient.invalidateQueries({ queryKey: settingsQueries.subtitle._def })
+      toast.success(message)
+      setIsLoading(false)
+    }, [setIsLoading, queryClient,])
+
     useEffect(() => {
         if (isInitialRender) return;
         
         if(debouncedValue) {
             onMatchPattern(debouncedValue)
         }
-    }, [debouncedValue])
+    }, [debouncedValue, isInitialRender, onMatchPattern])
 
-    const onMatchPattern = async (matchPattern: SubtitleSettings['matchPattern']) => {
-        setIsLoading(true)
-        const { message, error } = await handleMatchPattern({ matchPattern })
-
-        if(error) {
-            toast.error(error)
-            setIsLoading(false)
-            return;
-        }
-        
-        queryClient.invalidateQueries({ queryKey: settingsQueries.subtitle._def })
-        toast.success(message)
-        setIsLoading(false)
-    }
 
     const onDeleteMatchPattern = async (settingsId: SubtitleSettings['id']) => {
         setIsLoading(true)

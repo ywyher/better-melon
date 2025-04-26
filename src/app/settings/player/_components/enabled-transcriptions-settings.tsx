@@ -42,7 +42,7 @@ export default function EnabledTranscriptionsSettings({ playerSettings }: { play
 
     useEffect(() => {
         onTranscriptionsChange(debouncedTranscriptions)
-    }, [debouncedTranscriptions])
+    }, [debouncedTranscriptions, onTranscriptionsChange])
 
     return (
         <div className="flex flex-col gap-5">

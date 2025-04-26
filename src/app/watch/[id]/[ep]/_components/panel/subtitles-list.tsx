@@ -48,7 +48,7 @@ export default function SubtitlesList({
                 format: getExtension(activeSubtitleFile?.file.name || "srt") as SubtitleFormat
             })
         }));
-    }, [displayCues, delay.japanese]);
+    }, [displayCues, delay.japanese, activeSubtitleFile]);
 
     const rowVirtualizer = useVirtualizer({
         count: displayCues?.length || 0,

@@ -102,7 +102,7 @@ export default function Search({ className = "" }: { className?: string }) {
   React.useEffect(() => {
     if (inputValue !== debouncedValue) return
     setIsTyping(false)
-  }, [debouncedValue])
+  }, [debouncedValue, inputValue])
 
   const animeResults = data?.Page?.media || []
   const filteredResults = !isTyping && animeResults.filter((anime: Anime) => anime.title?.english)

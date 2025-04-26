@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { UseFormReturn, FieldPath, FieldValues, Controller } from "react-hook-form";
+import { UseFormReturn, FieldPath, FieldValues } from "react-hook-form";
 import {
   FormField as ShadcnFormField,
   FormItem,

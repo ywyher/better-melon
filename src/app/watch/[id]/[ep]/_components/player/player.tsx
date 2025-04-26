@@ -1,6 +1,6 @@
 "use client";
 
-import { MediaPlayer, type MediaPlayerInstance, MediaProvider, type TextTrack } from '@vidstack/react';
+import { MediaPlayer, type MediaPlayerInstance, MediaProvider } from '@vidstack/react';
 import { DefaultAudioLayout, defaultLayoutIcons, DefaultVideoLayout } from '@vidstack/react/player/layouts/default';
 import { Track } from "@vidstack/react";
 import '@vidstack/react/player/styles/default/theme.css';
@@ -8,13 +8,12 @@ import '@vidstack/react/player/styles/default/layouts/video.css';
 
 import { useCallback, useEffect, useRef, useState, useMemo, memo, Dispatch, SetStateAction } from "react";
 import { usePlayerStore } from "@/lib/stores/player-store";
-import type { SubtitleFile } from '@/types/subtitle';
 import type { AnimeEpisodeMetadata, AnimeStreamingData, SkipTime } from '@/types/anime';
 import SubtitleTranscriptions from '@/app/watch/[id]/[ep]/_components/transcriptions/transcriptions';
 import SkipButton from '@/app/watch/[id]/[ep]/_components/player/skip-button';
 import PlayerSkeleton from '@/app/watch/[id]/[ep]/_components/player/player-skeleton';
 import { useThrottledCallback } from 'use-debounce';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import DefinitionCard from '@/components/definition-card';
 import { generateWebVTTFromSkipTimes } from '@/lib/subtitle';
@@ -124,7 +123,7 @@ export default function Player({
         return () => {
             if (blobUrl) URL.revokeObjectURL(blobUrl);
         };
-    }, [episode, streamingData, player.current?.duration]);
+    }, [episode, streamingData, player.current?.duration, episodeNumber]);
 
     const handleCanPlay = useCallback(() => {
         console.log('can play fucker')
@@ -133,7 +132,7 @@ export default function Player({
           ...prev,
           end: new Date()
         }));
-    }, []);
+    }, [setIsVideoReady, setLoadingDuration]);
 
     const handlePlaybackEnded = useCallback(() => {
         if (!autoNext) {

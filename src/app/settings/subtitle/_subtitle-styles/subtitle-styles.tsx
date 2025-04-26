@@ -1,6 +1,6 @@
 "use client"
 
-import { createSubtitleStyles, deleteSubtitleStyles, getSubtitleStyles, updateSubtitleStyles } from "@/app/settings/subtitle/_subtitle-styles/actions";
+import { createSubtitleStyles, deleteSubtitleStyles, updateSubtitleStyles } from "@/app/settings/subtitle/_subtitle-styles/actions";
 import SubtitleTranscriptionSelector from "@/components/subtitle/subtitle-transcription-selector";
 import SubtitleStylesSkeleton from "@/components/subtitle/subtitle-styles-skeleton";
 import { SubtitleStyles as TSubtitleStyles } from "@/lib/db/schema";
@@ -58,7 +58,7 @@ export default function SubtitleStyles() {
             backgroundBlur: subtitleStyles.backgroundBlur,
             backgroundRadius: subtitleStyles.backgroundRadius,
         })
-    }, [subtitleStyles])
+    }, [subtitleStyles, form, selectedTranscription])
 
     useEffect(() => {
         if(subtitleStyles?.id && (selectedTranscription == subtitleStyles.transcription)) {
@@ -66,7 +66,7 @@ export default function SubtitleStyles() {
         }else {
             setOperation('create')
         }
-    }, [subtitleStyles])
+    }, [subtitleStyles, selectedTranscription])
 
     const onSubmit = async (data: z.infer<typeof subtitleStylesSchema>) => {
         if(!operation || !subtitleStyles) return;
@@ -96,7 +96,7 @@ export default function SubtitleStyles() {
             queryClient.invalidateQueries({ queryKey: settingsQueries.subtitleStyles._def })
             toast.success(result.message)
             setIsLoading(false)
-        } catch (error) {
+        } catch {
             toast.error("Failed to apply styles")
             setIsLoading(false)
         }

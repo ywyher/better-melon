@@ -3,7 +3,7 @@
 import { AnkiPresetSchema } from "@/app/settings/anki/_components/anki-preset-form"
 import { auth } from "@/lib/auth"
 import db from "@/lib/db"
-import { AnkiPreset, ankiPreset, User } from "@/lib/db/schema"
+import { AnkiPreset, ankiPreset } from "@/lib/db/schema"
 import { generateId } from "better-auth"
 import { and, count, eq, ne } from "drizzle-orm"
 import { headers } from "next/headers"
@@ -60,7 +60,6 @@ export async function updatePreset({
   id: string; 
   data: AnkiPresetSchema 
 }) {
-  let userId;
   const currentUser = await auth.api.getSession({
     headers: await headers()
   });
@@ -72,7 +71,7 @@ export async function updatePreset({
     };
   }
 
-  userId = currentUser.user.id;
+  const userId = currentUser.user.id;
 
   const [existingPreset] = await db.select().from(ankiPreset)
     .where(and(
@@ -149,7 +148,6 @@ export async function updatePreset({
 }
 
 export async function deletePreset({ id }: { id: string }) {
-  let userId;
   const currentUser = await auth.api.getSession({
     headers: await headers()
   });
@@ -161,7 +159,7 @@ export async function deletePreset({ id }: { id: string }) {
     };
   }
 
-  userId = currentUser.user.id;
+  const userId = currentUser.user.id;
 
   const [existingPreset] = await db.select().from(ankiPreset)
     .where(and(

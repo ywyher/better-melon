@@ -2,7 +2,7 @@
 
 import DelayController from "@/app/watch/[id]/[ep]/_components/settings/delay-controller"
 import SubtitleStyles from "@/app/watch/[id]/[ep]/_components/settings/subtitle-styles"
-import type { GeneralSettings, PlayerSettings } from "@/lib/db/schema"
+import type { GeneralSettings } from "@/lib/db/schema"
 import DialogWrapper from "@/components/dialog-wrapper"
 import { Button } from "@/components/ui/button"
 import { Settings } from "lucide-react"

@@ -26,8 +26,6 @@ export default function PlaybackToggles({ playerSettings, syncPlayerSettings }: 
     const setAutoNext = usePlayerStore((state) => state.setAutoNext)
     const autoSkip = usePlayerStore((state) => state.autoSkip)
     const setAutoSkip = usePlayerStore((state) => state.setAutoSkip)
-    const autoCopy = usePlayerStore((state) => state.autoCopy)
-    const setAutoCopy = usePlayerStore((state) => state.setAutoCopy)
 
     useEffect(() => {
         if (playerSettings) {
@@ -86,10 +84,6 @@ export default function PlaybackToggles({ playerSettings, syncPlayerSettings }: 
         }
     };
 
-    const handleStopAtEachCue = async () => {
-      setAutoCopy(!autoCopy)
-    }
-    
     return (
         <div className="flex flex-row gap-2">
             <ToggleButton

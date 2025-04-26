@@ -6,10 +6,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(req: Request) {
   try {
-    const { email, url } = await req.json(); // Get the email address from the request body
-
-    console.log(`JU#HUNDjandansd`)
-    console.log(email, url)
+    const { email, url } = await req.json();
 
     const { data, error } = await resend.emails.send({
         from: `Acme <${process.env.RESEND_FROM_EMAIL}>`,
@@ -26,7 +23,7 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json(data);
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: "Failed to send email" },
       { status: 500 },

@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Dot, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 export default function LoadingButton({
   isLoading,
@@ -23,7 +23,7 @@ export default function LoadingButton({
 }) {
   return (
     <Button
-      type="submit"
+      type={type}
       className={`w-full ${className}`}
       disabled={disabled || isLoading}
       size={size}

@@ -14,7 +14,6 @@ import { useState } from "react"
 import LoadingButton from "@/components/loading-button"
 import { toast } from "sonner"
 import { authClient } from "@/lib/auth-client"
-import { useRouter } from "next/navigation"
 import { PasswordInput } from "@/components/form/password-input"
 import { useIsSmall } from "@/hooks/use-media-query"
 import { passwordSchema } from "@/types/auth"
@@ -35,7 +34,6 @@ type ResetPasswordValues = z.infer<typeof formSchema>
 export function UpdatePassword() {
   const [isLoading, setIsLoading] = useState(false)
   const isSmall = useIsSmall()
-  const router = useRouter()
 
   const form = useForm<ResetPasswordValues>({
     resolver: zodResolver(formSchema),

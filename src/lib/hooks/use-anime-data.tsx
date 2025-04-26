@@ -1,6 +1,5 @@
 import { Anime } from "@/types/anime";
 import { gql, useQuery } from "@apollo/client";
-import { useEffect } from "react";
 
 const GET_ANIME_DATA = gql`
   query($id: Int!) {

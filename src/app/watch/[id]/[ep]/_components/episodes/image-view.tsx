@@ -4,7 +4,7 @@ import { Anime, AnimeEpisodeMetadata } from "@/types/anime";
 import { Play } from "lucide-react";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 interface ImageViewProps {
   episodes: AnimeEpisodeMetadata[];

@@ -107,7 +107,6 @@ export default function SubtitleTranscriptions() {
   const delay = usePlayerStore((state) => state.delay);
 
   const getSubtitleStylesFromStore = useSubtitleStylesStore((state) => state.getStyles);
-  const stylesFromStore = useSubtitleStylesStore((state) => state.styles);
       
   const getActiveSubtitleSets = useCallback(() => {
       if (!currentTime) {
@@ -183,7 +182,7 @@ export default function SubtitleTranscriptions() {
       });
       
       return result;
-  }, [activeTranscriptions, isFullscreen, getSubtitleStylesFromStore, stylesFromStore]);
+  }, [activeTranscriptions, isFullscreen, getSubtitleStylesFromStore]);
 
   const getBottomPosition = useCallback(() => {
       if (isFullscreen) {

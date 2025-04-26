@@ -3,12 +3,10 @@
 import { getGeneralSettings } from "@/app/settings/general/actions";
 import { getPlayerSettings } from "@/app/settings/player/actions";
 import { getSubtitleSettings } from "@/app/settings/subtitle/_subtitle-settings/actions";
-import { parseSubtitleToJson, selectSubtitleFile } from "@/lib/subtitle";
-import { getExtension } from "@/lib/utils";
 import type { AnimeEpisodeMetadata, AnimeStreamingData } from "@/types/anime";
-import type { ActiveSubtitleFile, SubtitleCue, SubtitleEntry, SubtitleFile, SubtitleFormat } from "@/types/subtitle";
+import type { SubtitleEntry, SubtitleFile } from "@/types/subtitle";
 
-export async function getCompleteData(animeId: string, episodeNumber: number) {
+export async function getEpisodeContext(animeId: string, episodeNumber: number) {
   try {
     const [episodesMetadata, subtitleEntries, subtitleSettings, generalSettings, playerSettings] = await Promise.all([
       getEpisodesMetadata(animeId),

@@ -11,7 +11,7 @@ import ImageView from "@/app/watch/[id]/[ep]/_components/episodes/image-view";
 import { usePlayerStore } from "@/lib/stores/player-store";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useState, useMemo, useCallback, useRef, useEffect } from "react";
+import { useState, useMemo, useCallback, useRef } from "react";
 import { useVirtualizer } from "@tanstack/react-virtual";
 
 export default function EpisodesList({ 

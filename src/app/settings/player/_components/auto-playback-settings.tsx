@@ -44,7 +44,7 @@ export default function AutoPlaybackSettings({ playerSettings }: { playerSetting
       
       queryClient.invalidateQueries({ queryKey: settingsQueries.player._def });
       toast.success(message || `${settingType} setting updated`);
-    } catch (error) {
+    } catch {
       setLocalSettings(prev => ({
         ...prev,
         [settingType]: !checked

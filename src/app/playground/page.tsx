@@ -1,6 +1,4 @@
 import PlaygroundContainer from "@/app/playground/_components/playground-container";
-import { getCompleteData } from "@/app/watch/[id]/[ep]/actions";
-import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
 
 export default async function Playground() {
   // const animeId = '21234';

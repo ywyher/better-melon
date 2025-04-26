@@ -1,7 +1,6 @@
 'use client'
 
 import { useQuery } from '@tanstack/react-query'
-import { invokeAnkiConnect } from '@/lib/anki'
 import AnkiSkeleton from '@/app/settings/anki/_components/anki-skeleton'
 import AnkiError from '@/app/settings/anki/_components/anki-error'
 import AnkiPreset from '@/app/settings/anki/_components/anki-preset'

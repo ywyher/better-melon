@@ -17,7 +17,7 @@ export const auth = betterAuth({
     enabled: true, 
     autoSignIn: false,
     minPasswordLength: 8,
-    sendResetPassword: async ({ url, user }, request) => {
+    sendResetPassword: async ({ url, user }) => {
       try {
         const response = await fetch(
           `${process.env.APP_URL}/api/auth/forget/password`,

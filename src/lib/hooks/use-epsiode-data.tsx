@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { usePlayerStore } from '@/lib/stores/player-store';
-import { filterSubtitleFiles, selectSubtitleFile } from '@/lib/subtitle';
+import { selectSubtitleFile } from '@/lib/subtitle';
 import { playerQueries } from '@/lib/queries/player';
 
 export function useEpisodeData(animeId: string, episodeNumber: number) {

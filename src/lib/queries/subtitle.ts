@@ -6,7 +6,7 @@ import { useSubtitleStylesStore } from "@/lib/stores/subtitle-styles-store";
 import { parseSubtitleToJson } from "@/lib/subtitle";
 import type { ActiveSubtitleFile, SubtitleTranscription } from "@/types/subtitle";
 import { createQueryKeys } from "@lukemorales/query-key-factory";
-import { useQueries, useQuery } from "@tanstack/react-query";
+import { useQueries } from "@tanstack/react-query";
 
 export const subtitleQueries = createQueryKeys('subtitle', {
   cues: (activeSubtitleFile: ActiveSubtitleFile, transcription: SubtitleTranscription) => ({

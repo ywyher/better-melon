@@ -23,10 +23,8 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
-import { useIsMedium } from "@/hooks/use-media-query";
 import Pfp from "@/components/pfp";
 import Link from "next/link";
-import { User } from "@/lib/db/schema";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";

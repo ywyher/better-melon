@@ -1,6 +1,5 @@
 "use client"
 
-import { getCompleteData } from "@/app/watch/[id]/[ep]/actions"
 import { playerQueries } from "@/lib/queries/player";
 import { useQuery } from "@tanstack/react-query"
 import { useEffect, useState } from "react"
@@ -34,7 +33,7 @@ export default function PlaygroundContainer() {
         data: { ...prev.data, end: Date.now() }
       }));
     }
-  }, [isLoadingData, data]);
+  }, [isLoadingData, data, queryTimes.data]);
 
   const getLoadingTime = (startTime: number, endTime: number) => {
     if (startTime === 0) return "Not started";
@@ -42,7 +41,7 @@ export default function PlaygroundContainer() {
     return `${endTime - startTime}ms`;
   };
   
-  const getQueryStatus = (isLoading: boolean, error: any, data: any) => {
+  const getQueryStatus = (isLoading: boolean, error: unknown, data: unknown) => {
     if (isLoading) return "Loading...";
     if (error) return "Error";
     if (data) return "Success";

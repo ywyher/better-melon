@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
 import { useQueryClient } from "@tanstack/react-query";
-import { X, Loader2, LinkIcon, CheckCircle } from "lucide-react";
+import { X, Loader2, LinkIcon } from "lucide-react";
 import { toast } from "sonner";
 import {
   AlertDialog,

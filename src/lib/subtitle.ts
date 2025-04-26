@@ -484,7 +484,7 @@ export const selectSubtitleFile = ({ files, preferredFormat, matchPattern }: {
       try {
         const regex = new RegExp(matchPattern, 'i');
         return regex.test(file.name);
-      } catch (error) {
+      } catch {
         // If regex fails, fall back to string matching
         return file.name.toLowerCase().includes(matchPattern.toLowerCase());
       }

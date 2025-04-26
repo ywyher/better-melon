@@ -1,7 +1,6 @@
 'use client'
 
 import { subtitleStylesSchema } from "@/app/settings/subtitle/types"
-import { NumberInput } from "@/components/form/number-input"
 import { ColorInput } from "@/components/form/color-input"
 import { SelectInput } from "@/components/form/select-input" // The new component we just created
 import LoadingButton from "@/components/loading-button"

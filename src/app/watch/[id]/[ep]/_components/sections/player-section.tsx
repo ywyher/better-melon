@@ -5,14 +5,14 @@ import Player from "../player/player";
 import PlayerSkeleton from "../player/player-skeleton";
 import { usePlayerStore } from '@/lib/stores/player-store';
 import { TopControls } from '@/app/watch/[id]/[ep]/_components/sections/top-controls';
-import { AnimeEpisodeContext } from '@/types/anime';
+import { AnimeEpisodeContext, AnimeEpisodeMetadata } from '@/types/anime';
 
 interface PlayerSectionProps {
   animeId: string;
   episodeNumber: number;
   isLoading: boolean;
   loadingDuration: number;
-  currentEpisode: any;
+  currentEpisode: AnimeEpisodeMetadata;
   data?: AnimeEpisodeContext;
   episodesLength: number;
   isMedium: boolean;

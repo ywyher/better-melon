@@ -3,7 +3,6 @@
 import AutoPlaybackSettings from "@/app/settings/player/_components/auto-playback-settings"
 import EnabledTranscriptionsSettings from "@/app/settings/player/_components/enabled-transcriptions-settings"
 import PlayerSettingsSkeleton from "@/app/settings/player/_components/player-settings-skeleton"
-import { getPlayerSettings } from "@/app/settings/player/actions"
 import { Separator } from "@/components/ui/separator"
 import { PlayerSettings as TPlayerSettings } from "@/lib/db/schema"
 import { settingsQueries } from "@/lib/queries/settings"

@@ -4,8 +4,6 @@ import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { authClient, getSession } from "@/lib/auth-client";
-import { User } from "@/lib/db/schema";
 import { ConnectionProviders } from "@/types/auth";
 import ConnectionProviderCard from "@/app/settings/connections/_components/connection-provider-card";
 import TooltipWrapper from "@/components/tooltip-wrapper";

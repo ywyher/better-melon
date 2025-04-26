@@ -1,11 +1,9 @@
 "use client"
 
 import { cn } from "@/lib/utils"
-import { History, Home, LucideProps, Settings, TrendingDown, User } from "lucide-react"
+import { Home, LucideProps, Settings, User } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Button } from "@/components/ui/button" // Add Button import
-import { SearchIcon } from "lucide-react" // Add SearchIcon import
 import Search from "@/components/header/search/search"
 import { ForwardRefExoticComponent, RefAttributes } from "react"
 

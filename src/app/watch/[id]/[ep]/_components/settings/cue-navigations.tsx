@@ -1,4 +1,5 @@
-"use client"
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { SkipBack, SkipForward } from "lucide-react";
 import { usePlayerStore } from "@/lib/stores/player-store";
@@ -44,7 +45,7 @@ export default function CueNavigations({ direction }: CueNavigationProps) {
     if (activeCue?.id !== currentCue?.id) {
       setCurrentCue(activeCue || null);
     }
-  }, [subtitleCues, delay.japanese, currentCue]);
+  }, [subtitleCues, delay.japanese, currentCue, activeSubtitleFile]);
 
   // Subscribe to player updates without causing re-renders
   useEffect(() => {
@@ -126,7 +127,7 @@ export default function CueNavigations({ direction }: CueNavigationProps) {
         setCurrentCue(targetCue);
       }
     }
-  }, [subtitleCues, currentCue, isNext, delay.japanese, player]);
+  }, [subtitleCues, currentCue, isNext, delay.japanese, player, activeSubtitleFile]);
   
   const isDisabled = useMemo(() => {
     return !activeSubtitleFile || !subtitleCues || subtitleCues.length === 0 || 

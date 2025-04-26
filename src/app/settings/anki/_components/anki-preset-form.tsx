@@ -10,7 +10,6 @@ import {
 import { Input } from "@/components/ui/input"
 import { Switch } from "@/components/ui/switch"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
-import { invokeAnkiConnect } from "@/lib/anki"
 import { AnkiPreset } from "@/lib/db/schema"
 import { FieldErrors, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -20,7 +19,6 @@ import { useIsSmall } from "@/hooks/use-media-query"
 import { toast } from "sonner"
 import { X } from "lucide-react"
 import { createPreset, updatePreset } from "@/app/settings/anki/actions"
-import { useRouter } from "next/navigation"
 import LoadingButton from "@/components/loading-button"
 import { Button } from "@/components/ui/button"
 import AnkiSkeleton from "@/app/settings/anki/_components/anki-skeleton"
@@ -54,7 +52,6 @@ export default function AnkiPresetForm({
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [selectedModel, setSelectedModel] = useState<string>(preset?.model || "")
 
-    const router = useRouter()
     const isSmall = useIsSmall()
 
     const queryClient = useQueryClient()

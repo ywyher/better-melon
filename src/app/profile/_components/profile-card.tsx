@@ -1,9 +1,7 @@
 "use client"
 
-import EditProfile from "@/app/profile/_components/edit-profile";
-import ProfilePfp from "@/app/profile/_components/profile-pfp";
 import { User } from "@/lib/db/schema";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { ProfilePage } from "@/app/profile/page";

@@ -1,10 +1,9 @@
 "use client"
 
 import { User } from "@/lib/db/schema";
-import { cn, getFileUrl } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { Camera } from "lucide-react";
-import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
 
 type ProfilePfpProps = {
@@ -12,9 +11,8 @@ type ProfilePfpProps = {
     isEditing: boolean;
 };
 
-export default function ProfilePfp({ user, isEditing }: ProfilePfpProps) {
-    const [isHover, setIsHover] = useState<boolean>(false)
-    const [selectedFile, setSelectedFile] = useState<File | null>(null)
+export default function ProfilePfp({ isEditing }: ProfilePfpProps) {
+    const [,setSelectedFile] = useState<File | null>(null)
     const fileInputRef = useRef<HTMLInputElement | null>(null)
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,10 +35,6 @@ export default function ProfilePfp({ user, isEditing }: ProfilePfpProps) {
     const triggerFileInput = () => {
         if(!isEditing) return;
         fileInputRef.current?.click()
-    }
-
-    const tiggerUpload = () => {
-        
     }
 
     return (
