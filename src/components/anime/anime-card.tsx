@@ -46,7 +46,7 @@ export default function AnimeCard({
     <Card 
       className="
         h-full flex flex-col hover:shadow-lg overflow-hidden cursor-pointer
-        hover:scale-105 transition-all p-0 m-0
+        hover:md:scale-105 transition-all p-0 m-0
       "
       onClick={handleClick}
     >

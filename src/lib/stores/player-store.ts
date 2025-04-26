@@ -47,6 +47,9 @@ export type PlayerStore = {
 
   episodesListSpoilerMode: boolean;
   setEpisodesListSpoilerMode: (sub: PlayerStore['episodesListSpoilerMode']) => void;
+
+  panelState: 'visable' | 'hidden';
+  setPanelState: (state: PlayerStore['panelState']) => void;
   
   reset: () => void;
 };
@@ -96,6 +99,9 @@ export const usePlayerStore = create<PlayerStore>()(
       episodesListSpoilerMode: false,
       setEpisodesListSpoilerMode: (episodesListSpoilerMode: PlayerStore['episodesListSpoilerMode']) => set({ episodesListSpoilerMode }),
 
+      panelState: 'visable',
+      setPanelState: (panelState: PlayerStore['panelState']) => set({ panelState }),
+
       reset: () => {
         set({
           activeSubtitleFile: null,
@@ -109,6 +115,7 @@ export const usePlayerStore = create<PlayerStore>()(
           autoPlay: false, 
           autoSkip: false,
           autoNext: false,
+          panelState: 'visable'
         });
       },
     }),
@@ -118,7 +125,8 @@ export const usePlayerStore = create<PlayerStore>()(
       partialize: (state) => ({
         // only store these values
         episodesListViewMode: state.episodesListViewMode,
-        episodesListSpoilerMode: state.episodesListSpoilerMode
+        episodesListSpoilerMode: state.episodesListSpoilerMode,
+        panelState: state.panelState
       }),
     }
   ),

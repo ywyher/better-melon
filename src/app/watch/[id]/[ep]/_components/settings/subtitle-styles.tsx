@@ -18,6 +18,7 @@ import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { createSubtitleStyles, updateSubtitleStyles } from "@/app/settings/subtitle/_subtitle-styles/actions";
 import { settingsQueries } from "@/lib/queries/settings";
+import { usePlayerStore } from "@/lib/stores/player-store";
 
 type SubtitleStylesProps = {
     syncPlayerSettings: GeneralSettings['syncPlayerSettings']
@@ -31,12 +32,13 @@ export default function SubtitleStyles({ syncPlayerSettings }: SubtitleStylesPro
 
     const queryClient = useQueryClient()
 
+    const styles = useSubtitleStylesStore((state) => state.styles)
     const subtitleStyles =
         useSubtitleStylesStore((state) => state.getStyles(selectedTranscription))
         || defaultSubtitleStyles
     const updateStyles = useSubtitleStylesStore((state) => state.updateStyles)
     const deleteStyles = useSubtitleStylesStore((state) => state.deleteStyles)
-
+    
     const form = useForm<z.infer<typeof subtitleStylesSchema>>({
         resolver: zodResolver(subtitleStylesSchema),
         defaultValues: {
@@ -54,7 +56,11 @@ export default function SubtitleStyles({ syncPlayerSettings }: SubtitleStylesPro
     })
 
     useEffect(() => {
+      console.log(`is it gonna cahgne?`)
         if(!subtitleStyles) return;
+        console.log(`changed`)
+        console.log(`subtitleStyles`)
+        console.log(subtitleStyles)
         form.reset({
             transcription: selectedTranscription,
             fontSize: subtitleStyles.fontSize,
@@ -130,7 +136,7 @@ export default function SubtitleStyles({ syncPlayerSettings }: SubtitleStylesPro
     }
 
     const handleReset = () => {
-        deleteStyles(selectedTranscription)
+      deleteStyles(selectedTranscription)
     }
 
     if(!subtitleStyles) {
@@ -147,7 +153,7 @@ export default function SubtitleStyles({ syncPlayerSettings }: SubtitleStylesPro
                             selectedTranscription={selectedTranscription}
                             setSelectedTranscription={setSelectedTranscription}
                         />
-                        {subtitleStyles && (
+                        {(subtitleStyles && styles && styles[selectedTranscription]) && (
                             <Button
                                 variant='destructive'
                                 onClick={() => handleReset()}

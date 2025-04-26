@@ -1,3 +1,6 @@
+import { GeneralSettings, PlayerSettings, SubtitleSettings } from "@/lib/db/schema"
+import { SubtitleCue, SubtitleFile } from "@/types/subtitle"
+
 export type AnimeStatus = "CANCELLED" | "FINISHED" | "HIATUS" | "NOT_YET_RELEASED" | "RELEASING"
 export type AnimeSeason = "SPRING" | "FALL" | "SUMMER" | "WINTER"
 export type AnimeFormat = "TV" 
@@ -83,32 +86,43 @@ export interface AnimeDate {
 }
 
 export interface Anime {
-    id: number | string;
-    title: AnimeTitle;
-    coverImage: AnimeCoverImage;
-    genres: string[];
-    status: AnimeStatus;
-    startDate: AnimeDate
-    endDate: AnimeDate
-    description: string;
-    bannerImage: string;
-    episodes: number;
-    season: AnimeSeason;
-    seasonYear: number;
-    averageScore: number;
-    isAdult: boolean;
-    format: string;
+  id: number | string;
+  idMal: number | string;
+  title: AnimeTitle;
+  coverImage: AnimeCoverImage;
+  genres: string[];
+  status: AnimeStatus;
+  startDate: AnimeDate
+  endDate: AnimeDate
+  description: string;
+  bannerImage: string;
+  episodes: number;
+  season: AnimeSeason;
+  seasonYear: number;
+  averageScore: number;
+  isAdult: boolean;
+  format: string;
 }
 
-export type AnimeEpisodeData = {
-    id: string;
-    title: string;
-    image: string;
-    imageHash: string;
-    number: number;
-    createdAt: Date;
-    description?: string;
-    url: string;
+export type AnimeEpisodeContext = {
+  japaneseTranscription: SubtitleCue[];
+  episodesMetadata: AnimeEpisodeMetadata[];
+  episodeStreamingData: AnimeStreamingData;
+  subtitleFiles: SubtitleFile[];
+  subtitleSettings: SubtitleSettings;
+  generalSettings: GeneralSettings;
+  playerSettings: PlayerSettings;
+}
+
+export type AnimeEpisodeMetadata = {
+  id: string;
+  title: string;
+  image: string;
+  imageHash: string;
+  number: number;
+  createdAt: Date;
+  description?: string;
+  url: string;
 }
 
 export type AnimeStreamingData = {

@@ -2,12 +2,11 @@
 
 import DelayController from "@/app/watch/[id]/[ep]/_components/settings/delay-controller"
 import SubtitleStyles from "@/app/watch/[id]/[ep]/_components/settings/subtitle-styles"
-import type { GeneralSettings, PlayerSettings as TPlayerSettings } from "@/lib/db/schema"
+import type { GeneralSettings, PlayerSettings } from "@/lib/db/schema"
 import DialogWrapper from "@/components/dialog-wrapper"
 import { Button } from "@/components/ui/button"
-import { Settings, Settings2 } from "lucide-react"
+import { Settings } from "lucide-react"
 import { useState } from "react"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Separator } from "@/components/ui/separator"
   
 export default function SettingsDialog({ generalSettings }: 
@@ -31,12 +30,12 @@ export default function SettingsDialog({ generalSettings }:
       >
         <div className="
           flex flex-col gap-5
-          w-full overflow-y-scroll
+          w-full overflow-y-auto
         ">
           <DelayController />
           <Separator />
           <SubtitleStyles
-              syncPlayerSettings={generalSettings.syncPlayerSettings}
+            syncPlayerSettings={generalSettings.syncPlayerSettings}
           />
         </div>
       </DialogWrapper>

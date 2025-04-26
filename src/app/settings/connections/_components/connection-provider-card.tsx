@@ -80,9 +80,8 @@ export default function ConnectionProviderCard({
   return (
     <div className={`
       flex items-center justify-between 
-      bg-secondary/80 hover:bg-secondary/50 
       rounded-lg p-3 w-full
-      border border-border/50 shadow-sm
+      border border-white/50 shadow-sm
       transition-all duration-200
     `}>
       <div className="flex items-center gap-4">
@@ -106,7 +105,7 @@ export default function ConnectionProviderCard({
             <Button
               variant="outline"
               size="sm"
-              className="min-w-24 hover:bg-destructive/10 hover:text-destructive border-red-200/30"
+              className="min-w-24 hover:text-destructive hover:bg-transparent hover:scale-105 border-red-200/30"
               disabled={isUnlinking}
             >
               {isUnlinking ? (

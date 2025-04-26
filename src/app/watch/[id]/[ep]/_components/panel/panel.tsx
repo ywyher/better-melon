@@ -7,13 +7,11 @@ import { Indicator } from "@/components/indicator";
 import { usePlayerStore } from "@/lib/stores/player-store";
 import { Tabs } from "@/components/ui/tabs";
 import type { SubtitleCue as TSubtitleCue, SubtitleTranscription, SubtitleFile, SubtitleCue } from "@/types/subtitle";
-import { parseSubtitleToJson } from "@/lib/subtitle";
 import { subtitleTranscriptions } from "@/lib/constants/subtitle";
 import PanelHeader from "@/app/watch/[id]/[ep]/_components/panel/panel-header";
 import SubtitlesList from "@/app/watch/[id]/[ep]/_components/panel/subtitles-list";
 import PanelSkeleton from "@/app/watch/[id]/[ep]/_components/panel/panel-skeleton";
-import { subtitleCuesOptions } from "@/lib/queries/subtitle";
-import { Button } from "@/components/ui/button";
+import { subtitleQueries } from "@/lib/queries/subtitle";
 
 export default function SubtitlePanel({ 
   subtitleFiles,
@@ -22,44 +20,28 @@ export default function SubtitlePanel({
   subtitleFiles: SubtitleFile[],
   japaneseTranscription: SubtitleCue[]
 }) {
-    const [displayTranscription, setDisplayTranscription] = useState<SubtitleTranscription>('japanese')
+    const [selectedTranscription, setSelectedTranscription] = useState<SubtitleTranscription>('japanese')
     const [previousCues, setPreviousCues] = useState<TSubtitleCue[] | undefined>();
 
     const activeSubtitleFile = usePlayerStore((state) => state.activeSubtitleFile);
     const setSubtitleCues = usePlayerStore((state) => state.setSubtitleCues);
-
+    
     const { data: subtitleCues, isLoading: isCuesLoading, error: cuesError } = useQuery({
-      queryKey: ['cues', displayTranscription, activeSubtitleFile],
-      queryFn: async () => {
-        if (!activeSubtitleFile) return undefined;
-  
-        const format = activeSubtitleFile.source === 'remote' 
-          ? activeSubtitleFile.file.url.split('.').pop() as "srt" | "vtt"
-          : activeSubtitleFile.file.name.split('.').pop() as "srt" | "vtt";
-  
-        return await parseSubtitleToJson({ 
-          source: activeSubtitleFile.source === 'remote' 
-            ? activeSubtitleFile.file.url 
-            : activeSubtitleFile.file,
-          format,
-          transcription: displayTranscription
-        });
-      },
+      ...subtitleQueries.cues(activeSubtitleFile!, selectedTranscription),
       placeholderData: japaneseTranscription,
       enabled: !!activeSubtitleFile
     })
 
     const displayCues = useMemo(() => {
-        return isCuesLoading ? previousCues : subtitleCues;
+      return isCuesLoading ? previousCues : subtitleCues;
     }, [isCuesLoading, previousCues, subtitleCues]);
 
     useEffect(() => {
-        if (subtitleCues?.length) {
-            setSubtitleCues(subtitleCues);
-        }
+      if (subtitleCues?.length) {
+          setSubtitleCues(subtitleCues);
+      }
     }, [subtitleCues, setSubtitleCues]);
     
-    // If we have new subs that aren't loading, update our previous subs
     useEffect(() => {
         if (subtitleCues && !isCuesLoading && JSON.stringify(subtitleCues) !== JSON.stringify(previousCues)) {
             setPreviousCues(subtitleCues);
@@ -76,19 +58,19 @@ export default function SubtitlePanel({
 
     return (
         <Card className="flex flex-col gap-3 w-full lg:max-w-[500px] lg:min-h-[80vh] h-fit border-0 lg:border-1 p-0 m-0 lg:py-5">
-            <Tabs className="h-full" defaultValue={displayTranscription || subtitleTranscriptions[0]} value={displayTranscription}>
+            <Tabs className="h-full" defaultValue={selectedTranscription || subtitleTranscriptions[0]} value={selectedTranscription}>
                 <PanelHeader 
                     isLoading={isCuesLoading}
                     subtitleCues={subtitleCues}
                     activeSubtitleFile={activeSubtitleFile}
                     subtitleFiles={subtitleFiles}
-                    setDisplayTranscription={setDisplayTranscription}
+                    setSelectedTranscription={setSelectedTranscription}
                 />
                 <CardContent className="h-full flex justify-center items-center w-full">
                   {activeSubtitleFile && displayCues ? (
                       <SubtitlesList
                           isLoading={isCuesLoading}
-                          displayTranscription={displayTranscription}
+                          selectedTranscription={selectedTranscription}
                           displayCues={displayCues}
                       />
                   ): (

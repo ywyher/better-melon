@@ -123,15 +123,6 @@ export default function PlaybackToggles({ playerSettings, syncPlayerSettings }: 
                 disabled={isLoading}
                 tooltip="Automatically skip intros and outros"
             />
-            
-            <ToggleButton
-                name="Auto Copy"
-                checked={autoCopy}
-                onClick={() => handleStopAtEachCue()}
-                className="w-fit"
-                disabled={isLoading}
-                tooltip="Automatically copy a sentance when it comes"
-            />
         </div>
     );
 }

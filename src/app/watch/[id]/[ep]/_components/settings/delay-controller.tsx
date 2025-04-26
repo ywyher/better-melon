@@ -33,7 +33,7 @@ export default function DelayController() {
           size="sm"
           onClick={resetDelays}
         >
-          Reset All
+          Reset Subtitle Delay
         </Button>
       </div>
 

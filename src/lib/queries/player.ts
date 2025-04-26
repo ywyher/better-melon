@@ -1,4 +1,4 @@
-import { getCompleteData, getEpisodesData, getStreamingData, getSubtitleEntries, getSubtitleFiles } from "@/app/watch/[id]/[ep]/actions";
+import { getCompleteData, getStreamingData, getSubtitleEntries, getSubtitleFiles } from "@/app/watch/[id]/[ep]/actions";
 import { parseSubtitleToJson, selectSubtitleFile } from "@/lib/subtitle";
 import { getExtension } from "@/lib/utils";
 import { SubtitleFormat } from "@/types/subtitle";

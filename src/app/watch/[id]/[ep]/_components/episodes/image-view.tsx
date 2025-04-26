@@ -1,13 +1,13 @@
 import { ImageSkeleton } from "@/components/image-skeleton";
 import { cn } from "@/lib/utils";
-import { Anime, AnimeEpisodeData } from "@/types/anime";
+import { Anime, AnimeEpisodeMetadata } from "@/types/anime";
 import { Play } from "lucide-react";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface ImageViewProps {
-  episodes: AnimeEpisodeData[];
+  episodes: AnimeEpisodeMetadata[];
   currentEpisode: number;
   animeId: Anime['id'];
   router: AppRouterInstance;

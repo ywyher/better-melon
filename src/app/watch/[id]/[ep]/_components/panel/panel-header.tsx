@@ -15,7 +15,7 @@ type PanelHeaderProps = {
     subtitleCues?: SubtitleCue[];
     activeSubtitleFile: ActiveSubtitleFile | null;
     subtitleFiles: SubtitleFile[];
-    setDisplayTranscription: Dispatch<SetStateAction<SubtitleTranscription>>
+    setSelectedTranscription: Dispatch<SetStateAction<SubtitleTranscription>>
 }
 
 export default function PanelHeader({
@@ -23,16 +23,16 @@ export default function PanelHeader({
     subtitleCues,
     activeSubtitleFile,
     subtitleFiles,
-    setDisplayTranscription
+    setSelectedTranscription
 }: PanelHeaderProps) {
     const router = useRouter();
     const [isPendingTransition, startTransition] = useTransition();
 
     const handleTranscriptionChange = useCallback((transcirption: SubtitleTranscription) => {
         startTransition(() => {
-            setDisplayTranscription(transcirption);
+            setSelectedTranscription(transcirption);
         });
-    }, [setDisplayTranscription]);
+    }, [setSelectedTranscription]);
 
     return (
         <CardHeader className="flex flex-col gap-3">

@@ -11,7 +11,7 @@ export default function GeneralSettingsPage() {
     if (!generalSettings || isLoading) return <GeneralSettingsSkeleton />
   
     return (
-      <div className="flex flex-col gap-5 px-4 sm:px-0">
+      <div className="flex flex-col gap-5 pt-4 px-4 sm:px-0">
         <div className="text-xl font-semibold">General Settings</div>
         <SyncPlayerSetting settings={generalSettings} />
       </div>

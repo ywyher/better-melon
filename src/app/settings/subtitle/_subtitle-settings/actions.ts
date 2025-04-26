@@ -12,14 +12,14 @@ import { headers } from "next/headers"
 export async function getSubtitleSettings() {
     const session = await auth.api.getSession({ headers: await headers() });
     
-    if (!session?.user.id) return null;
+    if (!session?.user.id) return defaultSubtitleSettings;
         
     const [settings] = await db.select().from(subtitleSettings)
         .where(and(
             eq(subtitleSettings.userId, session.user.id),
         ))
 
-    return settings || null
+    return settings || defaultSubtitleSettings
 } 
 
 export async function handleSubtitleSettings() {

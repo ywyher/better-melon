@@ -8,7 +8,7 @@ export type SubtitleEntry = {
         movie: boolean;
         adult: boolean;
     };
-    last_modified: Date;
+    last_modified: string | Date;
     anilist_id: number;
     english_name: string;
     japanese_name: string;

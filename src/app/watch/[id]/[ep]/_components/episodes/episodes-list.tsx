@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import type { Anime, AnimeEpisodeData } from "@/types/anime";
+import type { Anime, AnimeEpisodeMetadata } from "@/types/anime";
 import { Grid, List, Image as ImageIcon, Eye, EyeOff, Search } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import GridView from "@/app/watch/[id]/[ep]/_components/episodes/grid-view";
@@ -11,15 +11,15 @@ import ImageView from "@/app/watch/[id]/[ep]/_components/episodes/image-view";
 import { usePlayerStore } from "@/lib/stores/player-store";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useState, useMemo, useCallback, useRef } from "react";
+import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import { useVirtualizer } from "@tanstack/react-virtual";
 
 export default function EpisodesList({ 
-    episodes,
+    episodesMetadata,
     animeData
   }: { 
-      episodes: AnimeEpisodeData[] 
-      animeData: Anime
+    episodesMetadata: AnimeEpisodeMetadata[] 
+    animeData: Anime
   }) {
   const params = useParams<{ id: string, ep: string }>();
   const episodesListViewMode = usePlayerStore((state) => state.episodesListViewMode);
@@ -31,10 +31,9 @@ export default function EpisodesList({
   const [filterText, setFilterText] = useState("");
   const [selectedChunk, setSelectedChunk] = useState("all");
   const scrollAreaRef = useRef<HTMLDivElement>(null);
-  
 
   const rowVirtualizer = useVirtualizer({
-      count: episodes?.length || 0,
+      count: episodesMetadata?.length || 0,
       getScrollElement: () => scrollAreaRef.current,
       estimateSize: useCallback(() => 60, []),
       overscan: 10,
@@ -45,21 +44,21 @@ export default function EpisodesList({
 
   const chunkSize = 100;
   const chunks = useMemo(() => {
-    if (episodes.length <= chunkSize) return null;
+    if (episodesMetadata.length <= chunkSize) return null;
     
-    const totalChunks = Math.ceil(episodes.length / chunkSize);
+    const totalChunks = Math.ceil(episodesMetadata.length / chunkSize);
     return Array.from({ length: totalChunks }, (_, i) => {
       const start = i * chunkSize + 1;
-      const end = Math.min((i + 1) * chunkSize, episodes.length);
+      const end = Math.min((i + 1) * chunkSize, episodesMetadata.length);
       return {
         value: `${start}-${end}`,
         label: `${start}-${end}`
       };
     });
-  }, [episodes.length]);
+  }, [episodesMetadata.length]);
 
   const filteredEpisodes = useMemo(() => {
-    return episodes.filter(episode => {
+    return episodesMetadata.filter(episode => {
       const matchesText = filterText === "" || 
         episode.number.toString().includes(filterText) || 
         (episode.title?.toLowerCase().includes(filterText.toLowerCase()));
@@ -71,7 +70,7 @@ export default function EpisodesList({
       
       return matchesText && inChunk;
     });
-  }, [episodes, filterText, selectedChunk]);
+  }, [episodesMetadata, filterText, selectedChunk]);
 
   const cycleViewMode = () => {
     if (episodesListViewMode === "grid") {
@@ -112,7 +111,7 @@ export default function EpisodesList({
             <div className="relative flex-1 w-full">
               <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Filter episodes..."
+                placeholder="Filter episodesMetadata..."
                 value={filterText}
                 onChange={(e) => setFilterText(e.target.value)}
                 className="pl-8 w-full"

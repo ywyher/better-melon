@@ -4,13 +4,13 @@ import SubtitleStyles from "@/app/settings/subtitle/_subtitle-styles/subtitle-st
 import { Separator } from "@/components/ui/separator";
 
 export default function SubtitleSettingsPage() {
-    return (
-        <div className="flex flex-col gap-5 pt-5">
-            <SubtitleSettings />
-            <Separator />
-            <TranscriptionOrder />
-            <Separator />
-            <SubtitleStyles />
-        </div>
-    )
+  return (
+    <div className="flex flex-col gap-5 pt-5">
+      <SubtitleSettings />
+      <Separator />
+      <TranscriptionOrder />
+      <Separator />
+      <SubtitleStyles />
+    </div>
+  )
 }

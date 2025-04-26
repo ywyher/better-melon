@@ -66,10 +66,6 @@ export default function SubtitleCue({
                 <Play className="hover:fill-[#fb923c]" />
             </Button>
             <div className="flex flex-col gap-2">
-                {/* <div className="flex flex-row gap-3">
-                    <p>{from} -</p>
-                    <p> {to}</p>
-                </div> */}
                 <div className="flex items-center flex-wrap">
                     {tokens?.length && tokens?.map((token, idx) => {
                         return (

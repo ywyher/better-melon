@@ -33,7 +33,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
-export function Menu({ user, isSmall }: { user: User, isSmall: boolean }) {
+export function Menu({ isSmall }: { isSmall: boolean }) {
   const [open, setOpen] = useState<boolean>(false)
   const router = useRouter();
   const queryClient = useQueryClient()

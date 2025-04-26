@@ -7,17 +7,16 @@ import { usePlayerStore } from "@/lib/stores/player-store";
 import { timestampToSeconds } from "@/lib/subtitle";
 import { getExtension } from "@/lib/utils";
 
-// Create a memoized SubtitleCueItem component
 const MemoizedSubtitleCue = memo(SubtitleCue);
 
 type SubtitlesListProps = {
     isLoading: boolean;
-    displayTranscription: SubtitleTranscription;
+    selectedTranscription: SubtitleTranscription;
     displayCues: TSubtitleCue[]
 }
 
 export default function SubtitlesList({
-    displayTranscription,
+    selectedTranscription,
     isLoading,
     displayCues
 }: SubtitlesListProps) {
@@ -121,7 +120,7 @@ export default function SubtitlesList({
             onScroll={handleManualScroll}
         >
             <TabsContent 
-                value={displayTranscription}
+                value={selectedTranscription}
                 className="relative w-full"
                 style={{
                     height: `${rowVirtualizer.getTotalSize()}px`,

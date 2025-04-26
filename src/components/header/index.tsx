@@ -2,19 +2,15 @@
 
 import Auth from '@/components/auth/auth';
 import DialogWrapper from '@/components/dialog-wrapper';
-import HeaderTabs from '@/components/header/header-tabs';
+import HeaderLinks from '@/components/header/header-links';
 import Logo from '@/components/header/logo';
 import { Menu } from '@/components/header/menu';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { Avatar } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { useIsSmall } from '@/hooks/use-media-query';
-import { getSession } from '@/lib/auth-client';
-import { User } from '@/lib/db/schema';
 import { useSession } from '@/lib/queries/user';
 import { cn } from '@/lib/utils';
-import { useQuery } from '@tanstack/react-query';
-import { SearchIcon } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 
 export default function Header() {
@@ -55,18 +51,13 @@ export default function Header() {
       <div className='flex flex-row gap-3 items-center'>
         <Logo />
         {!isSmall && (
-          <HeaderTabs />
+          <HeaderLinks />
         )}
       </div>
       <div className="flex flex-row gap-2 items-center justify-end">
-        {isSmall && (
-          <Button className="w-10 h-10 rounded-sm" variant="outline">
-            <SearchIcon />
-          </Button>
-        )}
         <ThemeToggle className="w-10 h-10 rounded-sm" />
         {isAuthenticated ? (
-          <Menu user={user} isSmall={isSmall} />
+          <Menu isSmall={isSmall} />
         ) : (
           <>
             {isLoading ? (

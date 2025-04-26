@@ -1,11 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Anime, AnimeEpisodeData } from "@/types/anime";
+import { Anime, AnimeEpisodeMetadata } from "@/types/anime";
 import { Play } from "lucide-react";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 interface GridViewProps {
-  episodes: AnimeEpisodeData[];
+  episodes: AnimeEpisodeMetadata[];
   currentEpisode: number;
   animeId: Anime['id'];
   router: AppRouterInstance;

@@ -15,7 +15,10 @@ type SubtitleTranscriptionSelectorProps = {
     setSelectedTranscription: Dispatch<SetStateAction<SubtitleStyles['transcription']>>
 }
 
-export default function SubtitleTranscriptionSelector({ selectedTranscription, setSelectedTranscription }: SubtitleTranscriptionSelectorProps) {
+export default function SubtitleTranscriptionSelector({ 
+  selectedTranscription, 
+  setSelectedTranscription
+}: SubtitleTranscriptionSelectorProps) {
 
     const transcriptions = [
         'all',

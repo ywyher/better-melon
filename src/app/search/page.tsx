@@ -67,7 +67,6 @@ const GET_ANIMES = gql`
     }
 `;
 
-// Content component that uses the search params
 function SearchContent() {
     const [genres] = useQueryState('genres', parseAsArrayOf(parseAsString))
     const [tags] = useQueryState('tags', parseAsArrayOf(parseAsString))
@@ -105,9 +104,9 @@ function SearchContent() {
     });
 
     if (error)
-        return (
-            <Indicator message={error.message} type="error" onRetry={() => refetch()} />
-        );
+      return (
+          <Indicator message={error.message} type="error" onRetry={() => refetch()} />
+      );
 
     return (
         <>
@@ -149,38 +148,36 @@ function SearchContent() {
     );
 }
 
-// Fallback UI for the suspense boundary
 function SearchFallback() {
-    return (
-        <>
-            <div className="animate-pulse p-4 rounded-lg border mb-6">
-                <div className="h-10 bg-gray-200 rounded w-1/3 mb-4"></div>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div className="h-8 bg-gray-200 rounded"></div>
-                    <div className="h-8 bg-gray-200 rounded"></div>
-                    <div className="h-8 bg-gray-200 rounded"></div>
-                    <div className="h-8 bg-gray-200 rounded"></div>
-                </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
-                {[1, 2, 3, 4, 5, 6].map((_, idx) => (
-                    <AnimeCardSkeleton key={idx} />
-                ))}
-            </div>
-        </>
-    );
+  return (
+    <>
+      <div className="animate-pulse p-4 rounded-lg border mb-6">
+          <div className="h-10 bg-gray-200 rounded w-1/3 mb-4"></div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="h-8 bg-gray-200 rounded"></div>
+              <div className="h-8 bg-gray-200 rounded"></div>
+              <div className="h-8 bg-gray-200 rounded"></div>
+              <div className="h-8 bg-gray-200 rounded"></div>
+          </div>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
+          {[1, 2, 3, 4, 5, 6].map((_, idx) => (
+              <AnimeCardSkeleton key={idx} />
+          ))}
+      </div>
+    </>
+  );
 }
 
-// Main component with suspense boundary
-export default function Search() {
-    return (
-        <>
-            <Header />
-            <div className="container mx-auto py-8 px-4">
-                <Suspense fallback={<SearchFallback />}>
-                    <SearchContent />
-                </Suspense>
-            </div>
-        </>
-    );
+export default function SearchPage() {
+  return (
+    <>
+      <Header />
+      <div className="container mx-auto py-8 px-4">
+          <Suspense fallback={<SearchFallback />}>
+              <SearchContent />
+          </Suspense>
+      </div>
+    </>
+  );
 }

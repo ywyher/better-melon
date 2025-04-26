@@ -53,7 +53,7 @@ export default function DialogWrapper({
     return (
       <Drawer open={isOpen} onOpenChange={onOpenChange}>
         {trigger && <DrawerTrigger asChild>{trigger}</DrawerTrigger>}
-        <DrawerContent className="max-h-[85vh]">
+        <DrawerContent className="min-h-[85vh] max-h-[85vh]">
           <div className={cn("pb-3 px-3", className)}>
             <DrawerHeader className="pt-6">
               <DrawerTitle className={

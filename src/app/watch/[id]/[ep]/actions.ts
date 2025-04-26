@@ -5,32 +5,32 @@ import { getPlayerSettings } from "@/app/settings/player/actions";
 import { getSubtitleSettings } from "@/app/settings/subtitle/_subtitle-settings/actions";
 import { parseSubtitleToJson, selectSubtitleFile } from "@/lib/subtitle";
 import { getExtension } from "@/lib/utils";
-import type { AnimeEpisodeData, AnimeStreamingData } from "@/types/anime";
+import type { AnimeEpisodeMetadata, AnimeStreamingData } from "@/types/anime";
 import type { ActiveSubtitleFile, SubtitleCue, SubtitleEntry, SubtitleFile, SubtitleFormat } from "@/types/subtitle";
 
 export async function getCompleteData(animeId: string, episodeNumber: number) {
   try {
-    const [episodesData, subtitleEntries, subtitleSettings, generalSettings, playerSettings] = await Promise.all([
-      getEpisodesData(animeId),
+    const [episodesMetadata, subtitleEntries, subtitleSettings, generalSettings, playerSettings] = await Promise.all([
+      getEpisodesMetadata(animeId),
       getSubtitleEntries(animeId),
       getSubtitleSettings(),
       getGeneralSettings(),
       getPlayerSettings(),
     ]);
-    const episode = episodesData.find(
-      (episode: AnimeEpisodeData) => episode.number === episodeNumber
+    const episode = episodesMetadata.find(
+      (episode: AnimeEpisodeMetadata) => episode.number === episodeNumber
     );
     if(!episode) throw new Error("Failed to fetch initial anime data");
     
-    const [episodeData, subtitleFiles] = await Promise.all([
+    const [episodeStreamingData, subtitleFiles] = await Promise.all([
       // getStreamingData('erased-151$episode$4040'),
       getStreamingData(episode.id),
       getSubtitleFiles(subtitleEntries[0].id, episodeNumber)
     ]);
 
     return {
-      episodesData,
-      episodeData,
+      episodesMetadata,
+      episodeStreamingData,
       subtitleFiles,
       subtitleSettings,
       generalSettings,
@@ -42,7 +42,7 @@ export async function getCompleteData(animeId: string, episodeNumber: number) {
   }
 }
 
-export async function getEpisodesData(animeId: string): Promise<AnimeEpisodeData[]> {
+export async function getEpisodesMetadata(animeId: string): Promise<AnimeEpisodeMetadata[]> {
   try {
     const res = await fetch(`${process.env.CONSUMET_URL}/meta/anilist/episodes/${animeId}?provider=zoro`);
     
@@ -50,7 +50,7 @@ export async function getEpisodesData(animeId: string): Promise<AnimeEpisodeData
       throw new Error(`Failed to fetch episodes data: ${res.status} ${res.statusText}`);
     }
     
-    return await res.json() as AnimeEpisodeData[];
+    return await res.json() as AnimeEpisodeMetadata[];
   } catch (error) {
     console.error('Error fetching episodes data:', error);
     throw new Error(`Failed to fetch episodes data: ${error instanceof Error ? error.message : 'Unknown error'}`);

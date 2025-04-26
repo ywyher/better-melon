@@ -8,8 +8,8 @@ import PlayerSettings from "@/app/watch/[id]/[ep]/_components/settings/player-se
   
 export default function Settings({ generalSettings, episodesLength, playerSettings }: 
   { 
-    generalSettings: GeneralSettings
     episodesLength: number
+    generalSettings: GeneralSettings
     playerSettings: TPlayerSettings
   }) {
     return (

@@ -9,7 +9,7 @@ import '@vidstack/react/player/styles/default/layouts/video.css';
 import { useCallback, useEffect, useRef, useState, useMemo, memo, Dispatch, SetStateAction } from "react";
 import { usePlayerStore } from "@/lib/stores/player-store";
 import type { SubtitleFile } from '@/types/subtitle';
-import type { AnimeEpisodeData, AnimeStreamingData, SkipTime } from '@/types/anime';
+import type { AnimeEpisodeMetadata, AnimeStreamingData, SkipTime } from '@/types/anime';
 import SubtitleTranscriptions from '@/app/watch/[id]/[ep]/_components/transcriptions/transcriptions';
 import SkipButton from '@/app/watch/[id]/[ep]/_components/player/skip-button';
 import PlayerSkeleton from '@/app/watch/[id]/[ep]/_components/player/player-skeleton';
@@ -24,7 +24,7 @@ type PlayerProps = {
   episodeNumber: number;
   isVideoReady: boolean;
   setIsVideoReady: Dispatch<SetStateAction<boolean>>
-  episode: AnimeEpisodeData;
+  episode: AnimeEpisodeMetadata;
   streamingData: AnimeStreamingData;
   episodesLength: number
 }
@@ -40,7 +40,7 @@ export default function Player({
   isVideoReady,
   setIsVideoReady,
   streamingData,
-  episode, 
+  episode,
   episodesLength
 }: PlayerProps) {
     const router = useRouter()
@@ -214,9 +214,6 @@ export default function Player({
                     onCanPlay={handleCanPlay}
                     onTimeUpdate={onTimeUpdate}
                     autoPlay={autoPlay}
-                    onLoadStart={() => {
-                      console.log('started loading')
-                    }}
                     muted={autoPlay} // for autoPlay to work
                     load='eager'
                     posterLoad='eager'
