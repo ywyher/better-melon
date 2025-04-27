@@ -6,6 +6,7 @@ import PlayerSkeleton from "../player/player-skeleton";
 import { usePlayerStore } from '@/lib/stores/player-store';
 import { TopControls } from '@/app/watch/[id]/[ep]/_components/sections/top-controls';
 import { AnimeEpisodeContext, AnimeEpisodeMetadata } from '@/types/anime';
+import SubtitleTranscriptions from '@/app/watch/[id]/[ep]/_components/transcriptions/transcriptions';
 
 interface PlayerSectionProps {
   animeId: string;
@@ -52,15 +53,17 @@ export default function PlayerSection({
         ) : (
           <>
             {data && (
-              <Player 
-                animeId={animeId}
-                episodeNumber={episodeNumber}
-                isVideoReady={isVideoReady}
-                setIsVideoReady={setIsVideoReady}
-                episode={currentEpisode} 
-                streamingData={data?.episodeStreamingData} 
-                episodesLength={episodesLength}
-              />
+              <>
+                <Player 
+                  animeId={animeId}
+                  episodeNumber={episodeNumber}
+                  isVideoReady={isVideoReady}
+                  setIsVideoReady={setIsVideoReady}
+                  episode={currentEpisode} 
+                  streamingData={data?.episodeStreamingData} 
+                  episodesLength={episodesLength}
+                />
+              </>
             )}
           </>
         )}

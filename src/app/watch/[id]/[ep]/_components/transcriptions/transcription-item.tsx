@@ -1,4 +1,3 @@
-// TranscriptionItem.tsx
 "use client"
 
 import React, { Fragment, useCallback, useState, useMemo } from 'react';
@@ -6,8 +5,8 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { useDefinitionStore } from '@/lib/stores/definition-store';
 import { SubtitleCue, SubtitleToken, SubtitleTranscription } from '@/types/subtitle';
-import { TranscriptionStyleSet } from '@/app/watch/[id]/[ep]/_components/transcriptions/transcriptions-container';
 import { cn } from '@/lib/utils';
+import { TranscriptionStyleSet } from '@/app/watch/[id]/[ep]/_components/transcriptions/transcriptions';
 
 type TranscriptionItemProps = {
   transcription: SubtitleTranscription;
@@ -70,7 +69,7 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
             
             return (
                 <span 
-                    key={tokenIdx}
+                    key={`${token.id || tokenIdx}-${tokenIdx}`} // More stable keys
                     style={tokenStyle}
                     onClick={() => {
                         if(transcription !== 'english') {
@@ -94,7 +93,16 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
                 </span>
             );
         });
-    }, [styles, hoveredCueId, hoveredTokenId, transcription, activeToken, handleClick, handleTokenMouseLeave, handleTokenMouseEnter]);
+    }, [
+        styles, // Important: ensure renderTokens updates when styles change
+        hoveredCueId, 
+        hoveredTokenId, 
+        transcription, 
+        activeToken, 
+        handleClick, 
+        handleTokenMouseLeave, 
+        handleTokenMouseEnter
+    ]);
     
     // Memoize container className
     const containerClassName = useMemo(() => 
@@ -117,7 +125,7 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
             {...listeners}
         >
             {activeCues.map((cue, idx) => (
-                <Fragment key={idx}>
+                <Fragment key={`cue-${cue.id || idx}`}>
                     {renderTokens(cue)}
                 </Fragment>
             ))}

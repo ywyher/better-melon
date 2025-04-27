@@ -17,6 +17,7 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import DefinitionCard from '@/components/definition-card';
 import { generateWebVTTFromSkipTimes } from '@/lib/subtitle';
+import SubtitleTranscriptionsContainer from '@/app/watch/[id]/[ep]/_components/transcriptions/transcriptions-container';
 
 type PlayerProps = {
   animeId: string;
@@ -28,7 +29,6 @@ type PlayerProps = {
   episodesLength: number
 }
 
-const MemoizedSubtitleTranscriptions = memo(SubtitleTranscriptions);
 const MemoizedPlayerSkeleton = memo(PlayerSkeleton);
 const MemoizedSkipButton = memo(SkipButton);
 const MemoizedDefinitionCard = memo(DefinitionCard);
@@ -241,7 +241,7 @@ export default function Player({
                         currentTime={player.current?.currentTime || 0}
                         skipTimes={skipTimes}
                     />
-                    <MemoizedSubtitleTranscriptions />
+                    <SubtitleTranscriptionsContainer />
                     <MemoizedDefinitionCard />
                 </MediaPlayer>
             </div>

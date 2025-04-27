@@ -7,11 +7,12 @@ import type { SubtitleStyles } from "@/lib/db/schema";
 import { timestampToSeconds } from "@/lib/subtitle";
 import { usePlayerStore } from "@/lib/stores/player-store";
 import { useSubtitleStylesStore } from "@/lib/stores/subtitle-styles-store";
-import type { SubtitleCue, SubtitleTranscription } from "@/types/subtitle";
+import type { SubtitleCue, SubtitleFormat, SubtitleTranscription } from "@/types/subtitle";
 import { closestCenter, DndContext, type DragEndEvent, KeyboardSensor, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { useMediaState } from "@vidstack/react";
-import { type CSSProperties, useCallback, useMemo, useState } from "react";
+import { type CSSProperties, useCallback, useEffect, useMemo, useState } from "react";
+import { UseQueryResult } from "@tanstack/react-query";
 
 export type TranscriptionStyleSet = {
     tokenStyles: {
@@ -76,11 +77,31 @@ const getContainerStyles = (styles: Partial<SubtitleStyles> | null): CSSProperti
       : '8px',
     padding: '.5rem 1rem',
     marginBottom: ".5rem",
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    textAlign: 'center',
+    width: 'fit-content'
   };
 };
 
-export default function SubtitleTranscriptions() {
-  const subtitleQueries = useSubtitleTranscriptions()
+export default function SubtitleTranscriptions({ subtitleQueries }: {
+  subtitleQueries: UseQueryResult<{
+      transcription: SubtitleTranscription;
+      format: SubtitleFormat;
+      cues: SubtitleCue[];
+  }, Error>[]
+}) {
+  const player = usePlayerStore((state) => state.player);
+  const activeTranscriptions = usePlayerStore((state) => state.activeTranscriptions);
+  const delay = usePlayerStore((state) => state.delay);
+  
+  const isFullscreen = useMediaState('fullscreen', player);
+  const controlsVisible = useMediaState('controlsVisible', player);
+  const currentTime = useMediaState('currentTime', player);
+
+  const styles = useSubtitleStylesStore((state) => state.styles);
+  const getSubtitleStylesFromStore = useSubtitleStylesStore((state) => state.getStyles);
   
   const isLoading = subtitleQueries.some(query => query.isLoading);
 
@@ -95,19 +116,12 @@ export default function SubtitleTranscriptions() {
     })
   );
 
-  const player = usePlayerStore((state) => state.player);
-  const activeTranscriptions = usePlayerStore((state) => state.activeTranscriptions);
-  
   const [order, setOrder] = useState<SubtitleTranscription[]>(() => [...activeTranscriptions]);
 
-  const isFullscreen = useMediaState('fullscreen', player);
-  const controlsVisible = useMediaState('controlsVisible', player);
+  useMemo(() => {
+    setOrder([...activeTranscriptions]);
+  }, [activeTranscriptions]);
 
-  const currentTime = useMediaState('currentTime', player);
-  const delay = usePlayerStore((state) => state.delay);
-
-  const getSubtitleStylesFromStore = useSubtitleStylesStore((state) => state.getStyles);
-      
   const getActiveSubtitleSets = useCallback(() => {
       if (!currentTime) {
           return {
@@ -159,15 +173,13 @@ export default function SubtitleTranscriptions() {
   const subtitleStyles = useMemo(() => {
       const result: Record<SubtitleTranscription, TranscriptionStyleSet> = {} as Record<SubtitleTranscription, TranscriptionStyleSet>;
       
-      activeTranscriptions.forEach(transcription => {
+      order.forEach(transcription => {
           let styles = getSubtitleStylesFromStore(transcription);
           
-          // Fall back to 'all' styles if no specific styles
           if (!styles) {
               styles = getSubtitleStylesFromStore('all');
           }
           
-          // Use default styles if nothing is found
           if (!styles) {
               styles = defaultSubtitleStyles;
           }
@@ -182,7 +194,7 @@ export default function SubtitleTranscriptions() {
       });
       
       return result;
-  }, [activeTranscriptions, isFullscreen, getSubtitleStylesFromStore]);
+  }, [order, isFullscreen, getSubtitleStylesFromStore, styles]);
 
   const getBottomPosition = useCallback(() => {
       if (isFullscreen) {
@@ -227,7 +239,6 @@ export default function SubtitleTranscriptions() {
                 strategy={verticalListSortingStrategy}
             >
                 {order.map(transcription => {
-                    // Early return if no subtitles to render
                     if (!activeSubtitleSets[transcription]?.length) return null;
                     
                     return (

@@ -10,6 +10,7 @@ import PlayerSection from '@/app/watch/[id]/[ep]/_components/sections/player-sec
 import ControlsSection from '@/app/watch/[id]/[ep]/_components/sections/controls-section';
 import PanelSection from '@/app/watch/[id]/[ep]/_components/sections/panel-section';
 import { usePrefetchNextEpisode } from '@/lib/hooks/use-prefetch-next-episode';
+import { useEffect } from 'react';
 
 export default function WatchPage() {
   const params = useParams();
@@ -28,6 +29,10 @@ export default function WatchPage() {
     currentEpisode, 
     episodesLength
   } = useEpisodeData(animeId, episodeNumber);
+
+  useEffect(() => {
+    console.log(data)
+  }, [data])
 
   usePrefetchNextEpisode(animeId, episodeNumber, episodesLength);
 

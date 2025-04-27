@@ -9,7 +9,6 @@ import { z } from "zod";
 type EditProfileProps = { data: z.infer<typeof editProfileSchema>, userId: User['id'] }
 
 export async function editProfile({ data, userId }: EditProfileProps) { 
-
     const [updatedUser] = await db.update(user).set({
         // email: data.email,
         name: data.username,
