@@ -10,8 +10,8 @@ import { useSubtitleStylesStore } from "@/lib/stores/subtitle-styles-store";
 import type { SubtitleCue, SubtitleFormat, SubtitleTranscription } from "@/types/subtitle";
 import { closestCenter, DndContext, type DragEndEvent, KeyboardSensor, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from "@dnd-kit/sortable";
-import { useMediaState } from "@vidstack/react";
-import { type CSSProperties, useCallback, useEffect, useMemo, useState } from "react";
+import { MediaPlayerInstance, useMediaState } from "@vidstack/react";
+import { type CSSProperties, RefObject, useCallback, useEffect, useMemo, useState } from "react";
 import { UseQueryResult } from "@tanstack/react-query";
 
 export type TranscriptionStyleSet = {
@@ -90,7 +90,7 @@ export default function SubtitleTranscriptions({ subtitleQueries }: {
       transcription: SubtitleTranscription;
       format: SubtitleFormat;
       cues: SubtitleCue[];
-  }, Error>[]
+  }, Error>[];
 }) {
   const player = usePlayerStore((state) => state.player);
   const activeTranscriptions = usePlayerStore((state) => state.activeTranscriptions);

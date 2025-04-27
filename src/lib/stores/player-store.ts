@@ -1,5 +1,5 @@
 import { EpisodesListViewMode } from "@/types/anime";
-import { SubtitleTranscription, SubtitleCue, ActiveSubtitleFile } from "@/types/subtitle";
+import { SubtitleTranscription, SubtitleCue, ActiveSubtitleFile, SubtitleDelay } from "@/types/subtitle";
 import { MediaPlayerInstance } from "@vidstack/react";
 import { createRef, RefObject } from "react";
 import { create } from "zustand";
@@ -24,10 +24,7 @@ export type PlayerStore = {
   activeTokenId: string | null;
   setActiveTokenId: (sub: PlayerStore['activeTokenId']) => void;
 
-  delay: {
-    japanese: number;
-    english: number;
-  };
+  delay: SubtitleDelay
   setDelay: (sub: PlayerStore['delay']) => void;
   
   autoPlay: boolean;

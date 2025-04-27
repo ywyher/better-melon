@@ -1,53 +1,31 @@
-'use client'
-
-import { Card, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { Skeleton } from "@/components/ui/skeleton";
-import type { SubtitleCue, SubtitleFormat, SubtitleToken } from "@/types/subtitle";
-import { cn, getExtension } from "@/lib/utils";
+// In SubtitleCue.tsx
+import { memo } from 'react';
+import { cn } from "@/lib/utils";
+import type { SubtitleCue as TSubtitleCue, SubtitleToken } from "@/types/subtitle";
 import { CSSProperties } from "react";
-import { usePlayerStore } from "@/lib/stores/player-store";
 import { Button } from "@/components/ui/button";
 import { Play } from "lucide-react";
-import { useDefinitionStore } from "@/lib/stores/definition-store";
-import { timestampToSeconds } from "@/lib/subtitle";
 
 type SubtitleCueProps = { 
     index: number;
-    cue: SubtitleCue, 
+    cue: TSubtitleCue
     isActive: boolean 
     style: CSSProperties,
     className?: string
+    activeToken: SubtitleToken | null;
+    handleSeek: (from: TSubtitleCue["from"]) => void
+    handleClick: (sentance: string, token: SubtitleToken) => void
 }
 
-export default function SubtitleCue({ 
-    cue,
-    isActive,
-    style,
-    className = "",
+function SubtitleCueBase({ 
+  isActive,
+  style,
+  cue,
+  className = "",
+  activeToken,
+  handleSeek,
+  handleClick,
 }: SubtitleCueProps) {
-    const { from, tokens, content } = cue;
-    const player = usePlayerStore((state) => state.player)
-    const delay = usePlayerStore((state) => state.delay)
-    const activeSubtitleFile = usePlayerStore((state) => state.activeSubtitleFile)
-    
-    const activeToken = useDefinitionStore((state) => state.token)
-    const setSentance = useDefinitionStore((state) => state.setSentance)
-    const setToken = useDefinitionStore((state) => state.setToken)
-      
-    const handleSeek = () => {
-        player.current?.remoteControl.seek(timestampToSeconds({
-            timestamp: (from) + delay.japanese,
-            format: getExtension(activeSubtitleFile?.file.name || "srt") as SubtitleFormat
-        }))
-    };
-
-    const handleClick = (sentance: string, token: SubtitleToken) => {
-        if(!sentance || !token) return;
-        setSentance(sentance)
-        setToken(token)
-    }
-    
     return (
         <div
             style={style}
@@ -59,7 +37,7 @@ export default function SubtitleCue({
             )}
         >
             <Button
-                onClick={(() => handleSeek())}
+                onClick={() => handleSeek(cue.from)}
                 className="me-2"
                 variant='ghost'
             >
@@ -67,47 +45,31 @@ export default function SubtitleCue({
             </Button>
             <div className="flex flex-col gap-2">
                 <div className="flex items-center flex-wrap">
-                    {tokens?.length && tokens?.map((token, idx) => {
-                        return (
-                            <span 
-                                key={idx}
-                                className={cn(
-                                    "hover:text-orange-400",
-                                    activeToken?.id == token.id && "text-orange-400"
-                                )}
-                                onClick={() => {
-                                    handleClick(content, token)
-                                }}
-                            >
-                                {token.surface_form}
-                            </span>
-                        )
-                    })}
+                    {cue.tokens?.length ? cue.tokens.map((token, idx) => (
+                        <span 
+                            key={idx}
+                            className={cn(
+                                "hover:text-orange-400",
+                                activeToken?.id === token.id && "text-orange-400"
+                            )}
+                            onClick={() => handleClick(cue.content, token)}
+                        >
+                            {token.surface_form}
+                        </span>
+                    )) : null}
                 </div>
             </div>
         </div>
     );
 }
 
-export function SubtitleCueSkeleton() {
-    return(
-        <Card className="mb-4">
-            <CardContent className="p-4 space-y-3">
-                <div className="flex justify-between items-center">
-                    <Skeleton className="h-6 w-3/4" />
-                    <div className="text-sm text-muted-foreground space-y-1">
-                        <Skeleton className="h-4 w-16" />
-                        <Skeleton className="h-4 w-16" />
-                    </div>
-                </div>
-                <Separator />
-                <Skeleton className="h-5 w-24" />
-                <div className="flex flex-wrap gap-2">
-                    {[...Array(5)].map((_, index) => (
-                        <Skeleton key={index} className="h-6 w-12 rounded-md" />
-                    ))}
-                </div>
-            </CardContent>
-        </Card>
-    )
-}
+const SubtitleCue = memo(SubtitleCueBase, (prevProps, nextProps) => {
+  return (
+    prevProps.isActive === nextProps.isActive &&
+    prevProps.cue.id === nextProps.cue.id &&
+    prevProps.activeToken?.id === nextProps.activeToken?.id &&
+    prevProps.style === nextProps.style
+  );
+});
+
+export default SubtitleCue;

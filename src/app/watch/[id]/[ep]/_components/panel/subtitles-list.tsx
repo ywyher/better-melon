@@ -6,19 +6,18 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 import { usePlayerStore } from "@/lib/stores/player-store";
 import { timestampToSeconds } from "@/lib/subtitle";
 import { getExtension } from "@/lib/utils";
-
-const MemoizedSubtitleCue = memo(SubtitleCue);
+import SubtitleCuesContainer from "@/app/watch/[id]/[ep]/_components/panel/subtitle-cues-container";
 
 type SubtitlesListProps = {
     isLoading: boolean;
     selectedTranscription: SubtitleTranscription;
-    displayCues: TSubtitleCue[]
+    cues: TSubtitleCue[]
 }
 
 export default function SubtitlesList({
     selectedTranscription,
     isLoading,
-    displayCues
+    cues
 }: SubtitlesListProps) {
 
     const [activeIndex, setActiveIndex] = useState<number>(-1);
@@ -33,121 +32,108 @@ export default function SubtitlesList({
     const delay = usePlayerStore((state) => state.delay);
     const activeSubtitleFile = usePlayerStore((state) => state.activeSubtitleFile);
 
+    // Optimize cueTimeRanges calculation to only run when necessary
     const cueTimeRanges = useMemo(() => {
-        if (!displayCues?.length) return [];
-        
-        return displayCues.map(cue => ({
-            id: cue.id,
-            index: displayCues.indexOf(cue),
-            start: timestampToSeconds({
-                timestamp: (cue.from) + delay.japanese,
-                format: getExtension(activeSubtitleFile?.file.name || "srt") as SubtitleFormat
-            }),
-            end: timestampToSeconds({
-                timestamp: (cue.to) + delay.japanese,
-                format: getExtension(activeSubtitleFile?.file.name || "srt") as SubtitleFormat
-            })
-        }));
-    }, [displayCues, delay.japanese, activeSubtitleFile]);
+      if (!cues?.length) return [];
+      
+      return cues.map(cue => ({
+          id: cue.id,
+          index: cues.indexOf(cue),
+          start: timestampToSeconds({
+              timestamp: (cue.from) + delay.japanese,
+              format: getExtension(activeSubtitleFile?.file.name || "srt") as SubtitleFormat
+          }),
+          end: timestampToSeconds({
+              timestamp: (cue.to) + delay.japanese,
+              format: getExtension(activeSubtitleFile?.file.name || "srt") as SubtitleFormat
+          })
+      }));
+  }, [cues, delay.japanese, activeSubtitleFile?.file.name]);
 
-    const rowVirtualizer = useVirtualizer({
-        count: displayCues?.length || 0,
-        getScrollElement: () => scrollAreaRef.current,
-        estimateSize: useCallback(() => 60, []),
-        overscan: 10,
-        measureElement: useCallback((element: Element) => {
-            return element.getBoundingClientRect().height || 60;
-        }, [])
-    });
+  // Use a fixed size estimate for better performance
+  const rowVirtualizer = useVirtualizer({
+      count: cues?.length || 0,
+      getScrollElement: () => scrollAreaRef.current,
+      estimateSize: () => 60,
+      overscan: 5,
+      measureElement: (element: Element) => {
+          return element.getBoundingClientRect().height || 60;
+      },
+  });
 
-    const findActiveCue = useCallback((currentTime: number) => {
-        const activeCue = cueTimeRanges.find(cue => 
-            currentTime >= cue.start && currentTime <= cue.end
-        );
-        
-        if (activeCue) {
-            if (activeCue.id !== activeCueIdRef.current) {
-                activeCueIdRef.current = activeCue.id;
-                
-                if (activeCue.index !== activeIndex) {
-                    setActiveIndex(activeCue.index);
-                    
-                    if (autoScroll) {
-                        rowVirtualizer.scrollToIndex(activeCue.index, { 
-                            align: 'center',
-                            behavior: 'smooth'
-                        });
-                    }
-                }
-            }
-        } else if (activeCueIdRef.current !== -1) {
-            activeCueIdRef.current = -1;
-            setActiveIndex(-1);
-        }
-    }, [cueTimeRanges, activeIndex, activeCueIdRef, autoScroll, rowVirtualizer]);
+  const findActiveCue = useCallback((currentTime: number) => {
+      const activeCue = cueTimeRanges.find(cue => 
+          currentTime >= cue.start && currentTime <= cue.end
+      );
+      
+      if (activeCue) {
+          if (activeCue.id !== activeCueIdRef.current) {
+              activeCueIdRef.current = activeCue.id;
+              
+              if (activeCue.index !== activeIndex) {
+                  setActiveIndex(activeCue.index);
+                  
+                  if (autoScroll) {
+                      rowVirtualizer.scrollToIndex(activeCue.index, { 
+                          align: 'center',
+                          behavior: 'smooth'
+                      });
+                  }
+              }
+          }
+      } else if (activeCueIdRef.current !== -1) {
+          activeCueIdRef.current = -1;
+          setActiveIndex(-1);
+      }
+  }, [cueTimeRanges, activeIndex, activeCueIdRef, autoScroll, rowVirtualizer]);
 
-    useEffect(() => {
-        if(!player.current || !displayCues?.length || !cueTimeRanges.length) return;
+  useEffect(() => {
+      if(!player.current || !cues?.length || !cueTimeRanges.length) return;
 
-        return player.current.subscribe(({ currentTime }) => {
-            const now = Date.now();
-            if (now - lastUpdateTimeRef.current > 100) {
-                lastUpdateTimeRef.current = now;
-                findActiveCue(currentTime);
-            }
-        });
-    }, [player, displayCues, cueTimeRanges, findActiveCue]);
+      return player.current.subscribe(({ currentTime }) => {
+          const now = Date.now();
+          if (now - lastUpdateTimeRef.current > 250) {
+              lastUpdateTimeRef.current = now;
+              findActiveCue(currentTime);
+          }
+      });
+  }, [player, cues, cueTimeRanges, findActiveCue]);
 
-    const handleManualScroll = useCallback(() => {
-        setAutoScroll(false);
-        
-        if (autoScrollTimerRef.current) {
-            clearTimeout(autoScrollTimerRef.current);
-        }
-        
-        autoScrollTimerRef.current = setTimeout(() => {
-            setAutoScroll(true);
-        }, 5000);
-    }, []);
+  const handleManualScroll = useCallback(() => {
+      setAutoScroll(false);
+      
+      if (autoScrollTimerRef.current) {
+          clearTimeout(autoScrollTimerRef.current);
+      }
+      
+      autoScrollTimerRef.current = setTimeout(() => {
+          setAutoScroll(true);
+      }, 5000);
+  }, []);
     
-    return (
-        <div 
-            ref={scrollAreaRef} 
-            className="overflow-y-auto h-[80vh] w-full"
-            style={{
-                opacity: isLoading ? 0.8 : 1,
-            }}
-            onScroll={handleManualScroll}
-        >
-            <TabsContent 
-                value={selectedTranscription}
-                className="relative w-full"
-                style={{
-                    height: `${rowVirtualizer.getTotalSize()}px`,
-                    position: 'relative',
-                }}
-            >
-                {rowVirtualizer.getVirtualItems().map((virtualRow) => {
-                    const cue = displayCues[virtualRow.index];
-                    
-                    return (
-                        <MemoizedSubtitleCue 
-                            key={virtualRow.key}
-                            cue={cue} 
-                            index={virtualRow.index}
-                            isActive={activeCueIdRef.current === cue.id}
-                            style={{
-                                position: 'absolute',
-                                top: 0,
-                                left: 0,
-                                width: '100%',
-                                height: `${virtualRow.size}px`,
-                                transform: `translateY(${virtualRow.start}px)`,
-                            }}
-                        />
-                    );
-                })}
-            </TabsContent>
-        </div>
-    )
+  return (
+      <div 
+          ref={scrollAreaRef} 
+          className="overflow-y-auto h-[80vh] w-full"
+          style={{
+              opacity: isLoading ? 0.8 : 1,
+          }}
+          onScroll={handleManualScroll}
+      >
+          <TabsContent 
+              value={selectedTranscription}
+              className="relative w-full"
+              style={{
+                  height: `${rowVirtualizer.getTotalSize()}px`,
+                  position: 'relative',
+              }}
+          >   
+            <SubtitleCuesContainer 
+              items={rowVirtualizer}
+              activeCueIdRef={activeCueIdRef}
+              cues={cues}
+            />
+          </TabsContent>
+      </div>
+  )
 }

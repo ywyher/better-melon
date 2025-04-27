@@ -56,7 +56,7 @@ export default function CueNavigations({ direction }: CueNavigationProps) {
       
       // Throttle state updates to avoid performance issues
       const now = Date.now();
-      if (now - lastUpdateTimeRef.current > 100) {
+      if (now - lastUpdateTimeRef.current > 250) {
         lastUpdateTimeRef.current = now;
         findActiveCue(currentTime);
       }

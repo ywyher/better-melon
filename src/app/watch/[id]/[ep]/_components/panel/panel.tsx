@@ -32,7 +32,7 @@ export default function SubtitlePanel({
       enabled: !!activeSubtitleFile
     })
 
-    const displayCues = useMemo(() => {
+    const cues = useMemo(() => {
       return isCuesLoading ? previousCues : subtitleCues;
     }, [isCuesLoading, previousCues, subtitleCues]);
 
@@ -67,11 +67,11 @@ export default function SubtitlePanel({
                     setSelectedTranscription={setSelectedTranscription}
                 />
                 <CardContent className="h-full flex justify-center items-center w-full">
-                  {activeSubtitleFile && displayCues ? (
+                  {activeSubtitleFile && cues ? (
                       <SubtitlesList
                           isLoading={isCuesLoading}
                           selectedTranscription={selectedTranscription}
-                          displayCues={displayCues}
+                          cues={cues}
                       />
                   ): (
                     <Card className="w-full p-4 bg-yellow-50 border-yellow-200">
