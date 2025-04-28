@@ -10,8 +10,9 @@ type SubtitleCueProps = {
     index: number;
     cue: TSubtitleCue
     isActive: boolean 
-    style: CSSProperties,
     className?: string
+    size: number;
+    start: number;
     activeToken: SubtitleToken | null;
     handleSeek: (from: TSubtitleCue["from"]) => void
     handleClick: (sentance: string, token: SubtitleToken) => void
@@ -19,16 +20,24 @@ type SubtitleCueProps = {
 
 function SubtitleCueBase({ 
   isActive,
-  style,
   cue,
   className = "",
+  size,
+  start,
   activeToken,
   handleSeek,
   handleClick,
 }: SubtitleCueProps) {
     return (
         <div
-            style={style}
+            style={{
+              position: 'absolute' as const,
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: `${size}px`,
+              transform: `translateY(${start}px)`,
+            }}
             className={cn(
                 "absolute top-0 left-0 w-full p-2 border-b",
                 "flex items-center",
@@ -63,13 +72,6 @@ function SubtitleCueBase({
     );
 }
 
-const SubtitleCue = memo(SubtitleCueBase, (prevProps, nextProps) => {
-  return (
-    prevProps.isActive === nextProps.isActive &&
-    prevProps.cue.id === nextProps.cue.id &&
-    prevProps.activeToken?.id === nextProps.activeToken?.id &&
-    prevProps.style === nextProps.style
-  );
-});
+const SubtitleCue = memo(SubtitleCueBase);
 
 export default SubtitleCue;

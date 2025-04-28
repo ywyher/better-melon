@@ -39,20 +39,10 @@ export default function SubtitleCuesContainer({
       setToken(token)
   }, [setSentance, setToken]);
 
-  const getItemStyle = useCallback((start: number, size: number) => ({
-    position: 'absolute' as const,
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: `${size}px`,
-    transform: `translateY(${start}px)`,
-  }), []);
-
   return (
     <>
       {items.getVirtualItems().map((row) => {
           const cue = cues[row.index];
-          const style = getItemStyle(row.start, row.size);
           
           return (
               <SubtitleCue
@@ -60,7 +50,8 @@ export default function SubtitleCuesContainer({
                   cue={cue} 
                   index={row.index}
                   isActive={activeCueIdRef.current === cue.id}
-                  style={style}
+                  size={row.size}
+                  start={row.start}
                   activeToken={activeToken}
                   handleSeek={handleSeek}
                   handleClick={handleClick}
