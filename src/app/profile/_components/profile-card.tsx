@@ -1,43 +1,59 @@
 "use client"
 
 import { User } from "@/lib/db/schema";
-import { Dispatch, SetStateAction } from "react";
 import { format } from "date-fns";
-import { Button } from "@/components/ui/button";
-import { ProfilePage } from "@/app/profile/page";
 import Image from "next/image";
 import { getFileUrl } from "@/lib/utils";
-import { Brush } from "lucide-react";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { CalendarIcon } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 
-type ProfileCardProps = { user: User, setPage: Dispatch<SetStateAction<ProfilePage>> }
+type ProfileCardProps = { user: User }
 
-export default function ProfileCard({ user, setPage }: ProfileCardProps) {
+export default function ProfileCard({ user }: ProfileCardProps) {
   return (
-    <div className="flex flex-col items-center gap-4 p-4 rounded-xl shadow-sm w-full">
-      <div className="flex flex-row items-end gap-3 w-full">
-        <div className="relative w-24 h-24">
-          <Image
+    <Card className="w-full">
+      <CardHeader className="pb-2">
+        <div className="flex items-center gap-4">
+          <div className="relative w-16 h-16 md:w-20 md:h-20">
+            <Image
               src={getFileUrl(user.image)}
-              alt={user.image || ""}
+              alt={user.name || "Profile picture"}
               fill
-              className={"object-cover rounded-full border-2 border-foreground"}
-          />
+              className="object-cover rounded-lg border-2 border-primary/20"
+            />
+          </div>
+          <div className="space-y-1">
+            <h3 className="font-semibold text-lg md:text-xl">{user.name}</h3>
+            <div className="flex items-center text-sm text-muted-foreground gap-1.5">
+              <CalendarIcon className="h-3.5 w-3.5" />
+              <span>Joined {format(user.createdAt, 'MMMM d, yyyy')}</span>
+            </div>
+          </div>
         </div>
-        <p className="text-lg font-bold">{user.name}</p>
-      </div>
-      <div className="flex justify-between gap-5 w-full items-center">
-        <div className="flex flex-row gap-2">
-          <p className="text-muted-foreground">Joined at</p>
-          {format(user.createdAt, 'yyyy MMMM d')}
+      </CardHeader>
+      <CardContent>
+        {/* Additional user info could go here */}
+      </CardContent>
+    </Card>
+  );
+}
+
+export function ProfileCardSkeleton() {
+  return (
+    <Card className="w-full">
+      <CardHeader className="pb-2">
+        <div className="flex items-center gap-4">
+          <Skeleton className="w-16 h-16 md:w-20 md:h-20 rounded-full" />
+          <div className="space-y-2 w-full">
+            <Skeleton className="h-6 w-32" />
+            <Skeleton className="h-4 w-40" />
+          </div>
         </div>
-        <Button 
-          onClick={() => setPage('edit')}
-          variant='outline'
-          className="p-1 px-2"
-        >
-          <Brush/>Edit profile
-        </Button>
-      </div>
-    </div>
+      </CardHeader>
+      <CardContent>
+        <Skeleton className="h-4 w-full mt-2" />
+      </CardContent>
+    </Card>
   );
 }

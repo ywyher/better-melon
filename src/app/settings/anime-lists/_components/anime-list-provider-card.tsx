@@ -17,20 +17,22 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { ConnectionProvider } from "@/types/auth";
 import { userQueries } from "@/lib/queries/user";
+import { AnimeListProivder } from "@/types/anime-list";
 
-type ConnectionProviderCardProps = {
-  provider: ConnectionProvider;
+type AnimeListProviderCardProps = {
+  provider: AnimeListProivder;
   isConnected: boolean;
   isAuthenticated: boolean;
+  callbackURL?: string;
 };
 
-export default function ConnectionProviderCard({ 
+export default function AnimeListProviderCard({ 
   provider, 
   isConnected, 
-  isAuthenticated 
-}: ConnectionProviderCardProps) {
+  isAuthenticated,
+  callbackURL = '/settings/anime-lists'
+}: AnimeListProviderCardProps) {
   const [isLinking, setIsLinking] = useState<boolean>(false);
   const [isUnlinking, setIsUnlinking] = useState<boolean>(false);
   const [isAlertOpen, setIsAlertOpen] = useState<boolean>(false);
@@ -45,7 +47,7 @@ export default function ConnectionProviderCard({
     setIsLinking(true);
     const res = await authClient.oauth2.link({
       providerId: provider.name,
-      callbackURL: "/settings/connections",
+      callbackURL,
     });
     
     if (res.error) {

@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 interface NumberInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'value'> {
   placeholder?: string;
   value?: number | string;
-  onChange?: (value: number) => void;
+  onChange?: (value: number | null) => void;
 }
 
 export function NumberInput({ 
@@ -15,7 +15,7 @@ export function NumberInput({
 }: NumberInputProps) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const stringValue = e.target.value.replace(/\D/g, ""); // Remove non-numeric characters
-    const numericValue = stringValue ? parseInt(stringValue, 10) : 0;
+    const numericValue = stringValue ? parseInt(stringValue, 10) : null;
     
     if (onChange) {
       onChange(numericValue);

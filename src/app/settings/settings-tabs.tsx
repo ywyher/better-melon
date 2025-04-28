@@ -12,7 +12,7 @@ export default function SettingsTabs() {
     { label: "Player", href: '/settings/player' },
     { label: "Subtitle", href: '/settings/subtitle' },
     { label: "Anki", href: '/settings/anki' },
-    { label: "Connections", href: '/settings/connections' },
+    { label: "Anime Lists", href: '/settings/anime-lists' },
   ]
 
   const isLinkActive = (href: string) => {

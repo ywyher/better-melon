@@ -1,8 +1,9 @@
 "use client";
 
 import { editProfile } from "@/app/profile/actions";
+import { FormField } from "@/components/form/form-field";
 import LoadingButton from "@/components/loading-button";
-import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useIsSmall } from "@/hooks/use-media-query";
 import { User } from "@/lib/db/schema";
@@ -12,10 +13,14 @@ import { useState } from "react";
 import { FieldErrors, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useQueryClient } from "@tanstack/react-query";
+import { userQueries } from "@/lib/queries/user";
 
 export const editProfileSchema = z.object({
-    username: usernameSchema,
-    email: emailSchema
+  username: usernameSchema,
+  email: emailSchema
 })
 
 type FormValues = z.infer<typeof editProfileSchema>
@@ -23,6 +28,7 @@ type FormValues = z.infer<typeof editProfileSchema>
 export default function EditProfile({ user }: { user: User }) {
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const isSmall = useIsSmall()
+    const queryClient = useQueryClient()
 
     const form = useForm<FormValues>({
         resolver: zodResolver(editProfileSchema),
@@ -33,17 +39,18 @@ export default function EditProfile({ user }: { user: User }) {
     })
 
     const onSubmit = async (data: FormValues) => {
-        setIsLoading(true)
+      setIsLoading(true)
 
-        const { message, error } = await editProfile({ data, userId: user.id })
+      const { message, error } = await editProfile({ data, userId: user.id })
 
-        if(error) {
-            toast.error(error)
-            return;
-        }
-        
-        toast.message(message)
-        setIsLoading(false)
+      if(error) {
+          toast.error(error)
+          return;
+      }
+      
+      queryClient.invalidateQueries({ queryKey: userQueries.session._def })
+      toast.message(message)
+      setIsLoading(false)
     }
 
     const onError = (errors: FieldErrors<FormValues>) => {
@@ -56,37 +63,67 @@ export default function EditProfile({ user }: { user: User }) {
     }
 
     return (
-        <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit, onError)} className="flex flex-col gap-4">
-                <FormField
-                    control={form.control}
-                    name="username"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Username</FormLabel>
-                            <FormControl>
-                                <Input {...field} />
-                            </FormControl>
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="email"
-                    disabled
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Email</FormLabel>
-                            <FormControl>
-                                <Input {...field} />
-                            </FormControl>
-                        </FormItem>
-                    )}
-                />
-                <LoadingButton isLoading={isLoading}>
-                    Save Changes
-                </LoadingButton>
-            </form>
-        </Form>
+        <Card>
+            <CardHeader>
+                <CardTitle>Account Information</CardTitle>
+                <CardDescription>Update your personal information</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit, onError)} className="flex flex-col gap-6">
+                        <FormField
+                            form={form}
+                            label="Username"
+                            name="username"
+                        >
+                            <Input 
+                                placeholder="Enter your username"
+                            />
+                        </FormField>
+                        
+                        <FormField
+                            form={form}
+                            label="Email"
+                            name="email"
+                            disabled
+                        >
+                            <Input 
+                                placeholder="Enter your email"
+                            />
+                        </FormField>
+
+                        <LoadingButton isLoading={isLoading} className="w-full md:w-auto md:self-end">
+                            Save Changes
+                        </LoadingButton>
+                    </form>
+                </Form>
+            </CardContent>
+        </Card>
+    )
+}
+
+export function EditProfileSkeleton() {
+    return (
+        <Card>
+            <CardHeader>
+                <Skeleton className="h-7 w-48 mb-1" />
+                <Skeleton className="h-5 w-64" />
+            </CardHeader>
+            <CardContent>
+                <div className="flex flex-col gap-6">
+                    <div className="space-y-2">
+                        <Skeleton className="h-5 w-24" />
+                        <Skeleton className="h-10 w-full" />
+                    </div>
+                    <div className="space-y-2">
+                        <Skeleton className="h-5 w-16" />
+                        <Skeleton className="h-10 w-full" />
+                    </div>
+                    <div className="flex justify-end">
+                        <Skeleton className="h-10 w-32" />
+                    </div>
+                </div>
+            </CardContent>
+        </Card>
     )
 }

@@ -4,14 +4,14 @@ import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ConnectionProviders } from "@/types/auth";
-import ConnectionProviderCard from "@/app/settings/connections/_components/connection-provider-card";
 import TooltipWrapper from "@/components/tooltip-wrapper";
 import { AlertCircle } from "lucide-react";
-import { connectionProviders } from "@/lib/constants";
 import { userQueries, useSession } from "@/lib/queries/user";
+import { AnimeListProivders } from "@/types/anime-list";
+import { animeListProviders } from "@/lib/constants/anime-list";
+import AnimeListProviderCard from "@/app/settings/anime-lists/_components/anime-list-provider-card";
 
-export default function Connections() {
+export default function AnimeLists() {
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
     
     const { data: user } = useSession()
@@ -19,12 +19,12 @@ export default function Connections() {
     const { data: connectedProviders, isLoading: isConnectedProvidersLoading } = useQuery({ ...userQueries.listAccounts() })
 
     useEffect(() => {
-        if(user) {
-            setIsAuthenticated(true)
-        }
+      if(user) {
+        setIsAuthenticated(true)
+      }
     }, [user])
 
-    const isConnected = (provider: ConnectionProviders) => {
+    const isConnected = (provider: AnimeListProivders) => {
         return connectedProviders?.find(d => d.provider === provider) ? true : false
     }
 
@@ -33,7 +33,7 @@ export default function Connections() {
             <Card className="border-0 p-0 shadow-md">
                 <CardHeader className="p-0">
                     <div className="flex flex-row gap-2 items-start">
-                        <CardTitle className="text-2xl">Connect Your Accounts</CardTitle>
+                        <CardTitle className="text-2xl">Connect Your Anime Lists</CardTitle>
                         {!isAuthenticated && (
                             <TooltipWrapper
                                 tooltip="Authentication required"
@@ -59,16 +59,16 @@ export default function Connections() {
                                 </div>
                             ))
                         ) : (
-                            connectionProviders.map((provider) => {
+                          animeListProviders.map((provider) => {
                                 const connected = isConnected(provider.name);
                                 
                                 return (
-                                    <ConnectionProviderCard
-                                        key={provider.name}
-                                        provider={provider}
-                                        isConnected={connected}
-                                        isAuthenticated={isAuthenticated}
-                                    />
+                                  <AnimeListProviderCard
+                                    key={provider.name}
+                                    provider={provider}
+                                    isConnected={connected}
+                                    isAuthenticated={isAuthenticated}
+                                  />
                                 )
                             })
                         )}

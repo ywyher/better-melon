@@ -1,6 +1,5 @@
 "use client"
 
-import { AnimeListProivder } from "@/types";
 import { Dispatch, SetStateAction } from "react";
 import {
     Select,
@@ -9,7 +8,8 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { animeListProviders } from "@/lib/constants";
+import { AnimeListProivder } from "@/types/anime-list";
+import { animeListProviders } from "@/lib/constants/anime-list";
 
 type SelectConnectionProviderProps = {
     selectedProvider: AnimeListProivder

@@ -8,8 +8,9 @@ import { AnimeDataSkeleton } from "@/app/info/[id]/_components/skeleton"
 import { Anime } from "@/types/anime"
 import { Indicator } from "@/components/indicator"
 import { gql, useQuery } from "@apollo/client"
-import { useParams, useRouter } from "next/navigation"
+import { useParams, useRouter, useSearchParams } from "next/navigation"
 import AddToList from "@/components/add-to-list/add-to-list"
+import { useEffect, useState } from "react"
 
 export const GET_ANIME = gql`
   query($id: Int!) {
@@ -37,19 +38,26 @@ export const GET_ANIME = gql`
 
 export default function AnimeData() {
   const params = useParams();
+  const searchParams = useSearchParams();
+  const [isAddToList, setIsAddToList] = useState<boolean>(false);
 
   const animeId = params.id as string;
+  const router = useRouter();
+
+  useEffect(() => {
+    const addToList = searchParams.get('addToList');
+    setIsAddToList(addToList === 'true');
+  }, [searchParams]);
 
   const { loading, error, data, refetch } = useQuery(GET_ANIME, { 
       variables: { id: parseInt(animeId) },
       fetchPolicy: 'cache-first',
-  })
-  const router = useRouter()
+  });
   
   if (loading) return <AnimeDataSkeleton />
-  if (error) return <Indicator onRetry={() => refetch()} type="error" message={error.message}  />
+  if (error) return <Indicator onRetry={() => refetch()} type="error" message={error.message} />
 
-  const anime: Anime = data?.Media
+  const anime: Anime = data?.Media;
 
   return (
       <AnimeLayout
@@ -70,7 +78,10 @@ export default function AnimeData() {
                   />
               </div>
               <div className="flex flex-col gap-6 md:col-span-2">
-                <AddToList animeId={animeId} />
+                <AddToList 
+                  animeId={animeId}
+                  isAddToList={isAddToList}
+                />
 
                 <AnimeEpisodes 
                     id={animeId}

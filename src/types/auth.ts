@@ -1,4 +1,3 @@
-import { ComponentType, SVGProps } from "react";
 import { z } from "zod";
 
 export const usernameSchema = z.string().min(3, "Username should at least be 3 characters.");
@@ -10,18 +9,11 @@ export const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 export const usernameRegex = /^[a-zA-Z][a-zA-Z0-9._]{2,19}$/;
 
 export interface OAuth2Tokens {
-    tokenType?: string;
-    accessToken?: string;
-    refreshToken?: string;
-    accessTokenExpiresAt?: Date;
-    refreshTokenExpiresAt?: Date;
-    scopes?: string[];
-    idToken?: string;
-}
-
-export type ConnectionProviders = "anilist"
-
-export type ConnectionProvider = {
-    name: ConnectionProviders
-    icon: ComponentType<SVGProps<SVGSVGElement>>
+  tokenType?: string;
+  accessToken?: string;
+  refreshToken?: string;
+  accessTokenExpiresAt?: Date;
+  refreshTokenExpiresAt?: Date;
+  scopes?: string[];
+  idToken?: string;
 }

@@ -72,6 +72,13 @@ function SubtitleCueBase({
     );
 }
 
-const SubtitleCue = memo(SubtitleCueBase);
+const SubtitleCue = memo(SubtitleCueBase, (prevProps, nextProps) => {
+  return (
+    prevProps.isActive === nextProps.isActive &&
+    prevProps.cue.id === nextProps.cue.id &&
+    prevProps.activeToken?.id === nextProps.activeToken?.id &&
+    prevProps.start === nextProps.start
+  );
+});
 
 export default SubtitleCue;

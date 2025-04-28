@@ -10,11 +10,14 @@ import { Avatar } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { useIsSmall } from '@/hooks/use-media-query';
 import { useSession } from '@/lib/queries/user';
+import { useAuthStore } from '@/lib/stores/auth-store';
 import { cn } from '@/lib/utils';
 import React, { useState, useEffect } from 'react';
 
 export default function Header() {
-  const [authOpen, setAuthOpen] = useState<boolean>(false);
+  const isAuthDialogOpen = useAuthStore((state) => state.isAuthDialogOpen)
+  const setIsAuthDialogOpen = useAuthStore((state) => state.setIsAuthDialogOpen)
+
   const [scrolled, setScrolled] = useState<boolean>(false);
   const isSmall = useIsSmall();
   
@@ -66,15 +69,15 @@ export default function Header() {
               </div>
             ): (
               <DialogWrapper
-                open={authOpen}
-                setOpen={setAuthOpen}
+                open={isAuthDialogOpen}
+                setOpen={setIsAuthDialogOpen}
                 title="Authenticate"
                 trigger={<Button variant="outline" className="rounded-sm">Auth</Button>}
               >
                 <Auth
                   user={user || undefined}
-                  open={authOpen}
-                  setOpen={setAuthOpen}
+                  open={isAuthDialogOpen}
+                  setOpen={setIsAuthDialogOpen}
                 />
               </DialogWrapper>
             )}

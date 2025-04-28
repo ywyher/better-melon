@@ -1,13 +1,20 @@
 import { z } from "zod";
 
-const statusEnum = ['watching', 'plan-to-watch', 'completed', 're-watching', 'paused', 'dropped'] as const
+const statusEnum = [
+  'CURRENT',
+  'PLANNING',
+  'COMPLETED',
+  'REPEATING',
+  'PAUSED',
+  'DROPPED'
+] as const
 
 export const anilistOptionsSchema = z.object({
-    status: z.enum([...statusEnum]),
-    episodeProgress: z.number(),
-    startDate: z.date(),
-    endDate: z.date().default(new Date()),
-    score: z.number().min(0).max(10),
-    totalRewatches: z.number(),
-    notes: z.string()
-})
+  status: z.enum([...statusEnum]).nullable(),
+  episodeProgress: z.number().nullable(),
+  startDate: z.date().nullable(),
+  endDate: z.date().default(new Date()).nullable(),
+  score: z.number().max(10).nullable(),
+  totalRewatches: z.number().nullable(),
+  notes: z.string().nullable()
+}).partial()
