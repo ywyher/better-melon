@@ -30,7 +30,7 @@ export function SelectInput({
   return (
     <Select 
       onValueChange={onChange} 
-      value={value} 
+      value={value}
       disabled={disabled}
       {...props}
     >

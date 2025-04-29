@@ -31,7 +31,7 @@ export function AnimeLayout({ bannerImage, title, router, children }: AnimeLayou
                 <div className="relative w-full h-48 md:h-64 lg:h-80 mb-6 rounded-lg overflow-hidden">
                     <Image 
                         src={bannerImage} 
-                        alt={title.english}
+                        alt={title.english || ""}
                         fill
                         className="object-cover"
                         priority

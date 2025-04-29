@@ -1,4 +1,5 @@
-import PlaygroundContainer from "@/app/playground/_components/playground-container";
+import PlaygroundContainer from "@/app/playground/_components/query-times";
+import SelectInputValue from "@/app/playground/_components/select-input-value";
 
 export default async function Playground() {
   // const animeId = '21234';
@@ -16,7 +17,7 @@ export default async function Playground() {
     // Neat! Serialization is now as easy as passing props.
     // HydrationBoundary is a Client Component, so hydration will happen there.
     // <HydrationBoundary state={dehydrate(queryClient)}>
-      <PlaygroundContainer />
+      <SelectInputValue />
     // </HydrationBoundary>
   );
 }

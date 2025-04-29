@@ -1,6 +1,7 @@
 "use client"
 
-import AnilistListOptions from "@/components/add-to-list/add-to-anilist";
+import AnilistListOptions from "@/components/add-to-list/lists/anilist/add-to-anilist";
+import { AddToAnilistSkeleton } from "@/components/add-to-list/lists/anilist/add-to-anilist-skeleton";
 import SelectConnectionProvider from "@/components/add-to-list/select-connection-provider";
 import DialogWrapper from "@/components/dialog-wrapper";
 import { Button } from "@/components/ui/button";
@@ -33,12 +34,6 @@ export default function AddToList({
     enabled: !!user
   })
 
-  useEffect(() => {
-    console.log(accounts?.find(a => a.provider == selectedProvider.name))
-  }, [accounts])
-
-  if(isUserLoading || isAccountsLoading) return <>Loading...</>
-
   return (
     <DialogWrapper
       open={open}
@@ -48,26 +43,33 @@ export default function AddToList({
       className="min-w-[50%]"
       breakpoint="medium"
     >
-      {!user ? (
-        <div className="flex justify-center items-center">
-          <Button 
-            variant='outline'
-            onClick={() => {
-              setIsAuthDialogOpen(true)
-              setOpen(false)
-            }}
-          >
-            Authenticate
-          </Button>
-        </div>
+      {isUserLoading || isAccountsLoading ? (
+         <AddToAnilistSkeleton />
       ): (
         <>
-          {selectedProvider.name == 'anilist' && (
-            <AnilistListOptions 
-              animeId={animeId}
-              provider={selectedProvider}
-              accountId={accounts?.find(a => a.provider == selectedProvider.name)?.accountId}
-            />
+          {!user ? (
+            <div className="flex justify-center items-center">
+              <Button 
+                variant='outline'
+                onClick={() => {
+                  setIsAuthDialogOpen(true)
+                  setOpen(false)
+                }}
+              >
+                Authenticate
+              </Button>
+            </div>
+          ): (
+            <>
+              {selectedProvider.name == 'anilist' && (
+                <AnilistListOptions 
+                  animeId={animeId}
+                  provider={selectedProvider}
+                  accountId={accounts?.find(a => a.provider == selectedProvider.name)?.accountId}
+                  setOpen={setOpen}
+                />
+              )}
+            </>
           )}
         </>
       )}

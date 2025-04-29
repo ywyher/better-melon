@@ -27,7 +27,7 @@ export const TextareaInput = ({
         <Textarea
           placeholder={placeholder}
           maxLength={maxLength}
-          value={value}
+          value={value || ""}
           onChange={handleChange}
           {...props}
         />
