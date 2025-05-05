@@ -1,3 +1,11 @@
+export type ParsedSubtitle = {
+  id: number
+  from: string;
+  to: string;
+  content: string;
+  tokens?: SubtitleToken[]
+}
+
 export type SubtitleEntry = {
     id: number;
     name: string;
@@ -18,7 +26,7 @@ export type SubtitleFile = {
     url: string;
     name: string;
     size: number;
-    last_modified: Date;
+    last_modified: Date | string;
 }
 
 export type ActiveSubtitleFile = 

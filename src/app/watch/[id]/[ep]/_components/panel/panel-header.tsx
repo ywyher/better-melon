@@ -37,7 +37,7 @@ export default function PanelHeader({
     return (
         <CardHeader className="flex flex-col gap-3">
             <div className="flex flex-row justify-between items-center w-full">
-                <CardTitle className="text-xl">Dialogue</CardTitle>
+                <CardTitle className="text-xl">Transcriptions</CardTitle>
                 {subtitleCues && !isLoading && (
                     <div className="flex flex-row gap-2">
                         {activeSubtitleFile?.source == 'remote' && (

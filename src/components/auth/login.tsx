@@ -72,6 +72,8 @@ export default function Login({ setPort, identifier, identifierValue, setOpen }:
         }
         
         queryClient.clear()
+        toast.success("Logged in successfully")
+        setIsLoading(false)
         setOpen(false)
         setPort('check')
     }

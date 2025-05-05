@@ -8,7 +8,7 @@ import '@vidstack/react/player/styles/default/layouts/video.css';
 
 import { useCallback, useEffect, useRef, useState, useMemo, memo, Dispatch, SetStateAction } from "react";
 import { usePlayerStore } from "@/lib/stores/player-store";
-import type { AnimeEpisodeMetadata, AnimeStreamingData, SkipTime } from '@/types/anime';
+import type { AnimeEpisodeMetadata, AnimeStreamingLinks, SkipTime } from '@/types/anime';
 import SkipButton from '@/app/watch/[id]/[ep]/_components/player/skip-button';
 import PlayerSkeleton from '@/app/watch/[id]/[ep]/_components/player/player-skeleton';
 import { useThrottledCallback } from 'use-debounce';
@@ -23,8 +23,8 @@ type PlayerProps = {
   episodeNumber: number;
   isVideoReady: boolean;
   setIsVideoReady: Dispatch<SetStateAction<boolean>>
-  episode: AnimeEpisodeMetadata;
-  streamingData: AnimeStreamingData;
+  metadata: AnimeEpisodeMetadata;
+  streamingLinks: AnimeStreamingLinks;
   episodesLength: number
 }
 
@@ -37,8 +37,8 @@ export default function Player({
   episodeNumber,
   isVideoReady,
   setIsVideoReady,
-  streamingData,
-  episode,
+  streamingLinks,
+  metadata,
   episodesLength
 }: PlayerProps) {
     const router = useRouter()
@@ -69,35 +69,30 @@ export default function Player({
     }, [setPlayer]);
 
     useEffect(() => {
-      console.log(videoSrc)
-    }, [videoSrc]);
+      if(!streamingLinks) return;
 
-    useEffect(() => {
-      if(!streamingData) return;
-      console.log(new Date().getTime())
-      console.log('started')
-
-      const url = encodeURIComponent(streamingData.sources[0].url);
+      const url = streamingLinks.sources[0].url;
       setVideoSrc(`${process.env.NEXT_PUBLIC_PROXY_URL}?url=${url}`);
+      console.log(`${process.env.NEXT_PUBLIC_PROXY_URL}?url=${streamingLinks.sources[0].url}`)
       setIsInitialized(true);
       setLoadingDuration({ start: new Date(), end: undefined })
-    }, [streamingData, isInitialized]);
+    }, [streamingLinks, isInitialized]);
 
     useEffect(() => {
-        if (!streamingData || !player.current) return;
+        if (!streamingLinks || !player.current) return;
 
         const skipTimesData = [
             {
                 interval: {
-                    startTime: streamingData.intro.start,
-                    endTime: streamingData.intro.end,
+                    startTime: streamingLinks.intro.start,
+                    endTime: streamingLinks.intro.end,
                 },
                 skipType: 'OP' as SkipTime['skipType']
             },
             {
                 interval: {
-                    startTime: streamingData.outro.start,
-                    endTime: streamingData.outro.end,
+                    startTime: streamingLinks.outro.start,
+                    endTime: streamingLinks.outro.end,
                 },
                 skipType: 'OT' as SkipTime['skipType']
             }
@@ -109,8 +104,8 @@ export default function Player({
             skipTimes: skipTimesData,
             totalDuration: player.current?.duration || 0,
             episode: {
-                title: episode?.title || "",
-                number: episode?.number || episodeNumber
+                title: metadata.title || "",
+                number: metadata.number || episodeNumber
             }
         });
         
@@ -122,10 +117,10 @@ export default function Player({
         return () => {
             if (blobUrl) URL.revokeObjectURL(blobUrl);
         };
-    }, [episode, streamingData, player.current?.duration, episodeNumber]);
+    }, [metadata, streamingLinks, player.current?.duration, episodeNumber]);
 
     const handleCanPlay = useCallback(() => {
-        console.log('can play fucker')
+        console.log('het')
         setIsVideoReady(true);
         setLoadingDuration(prev => ({
           ...prev,
@@ -135,7 +130,7 @@ export default function Player({
 
     const handlePlaybackEnded = useCallback(() => {
         if (!autoNext) {
-            isTransitioning.current = false; // Reset if not auto-next
+            isTransitioning.current = false;
             return;
         }
     
@@ -206,7 +201,7 @@ export default function Player({
                   }s</p>
                 )}
                 <MediaPlayer
-                    title={episode?.title || ""}
+                    title={metadata.title || ""}
                     src={videoSrc}
                     ref={player}
                     onCanPlay={handleCanPlay}

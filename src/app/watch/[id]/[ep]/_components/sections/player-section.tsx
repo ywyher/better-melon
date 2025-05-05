@@ -1,4 +1,3 @@
-// _components/layout/PlayerSection.tsx
 import { useState } from 'react';
 import GoBack from '@/components/goback';
 import Player from "../player/player";
@@ -6,15 +5,13 @@ import PlayerSkeleton from "../player/player-skeleton";
 import { usePlayerStore } from '@/lib/stores/player-store';
 import { TopControls } from '@/app/watch/[id]/[ep]/_components/sections/top-controls';
 import { AnimeEpisodeContext, AnimeEpisodeMetadata } from '@/types/anime';
-import SubtitleTranscriptions from '@/app/watch/[id]/[ep]/_components/transcriptions/transcriptions';
 
 interface PlayerSectionProps {
   animeId: string;
   episodeNumber: number;
   isLoading: boolean;
   loadingDuration: number;
-  currentEpisode: AnimeEpisodeMetadata;
-  data?: AnimeEpisodeContext;
+  episodeContext?: AnimeEpisodeContext;
   episodesLength: number;
   isMedium: boolean;
 }
@@ -24,8 +21,7 @@ export default function PlayerSection({
   episodeNumber,
   isLoading,
   loadingDuration,
-  currentEpisode,
-  data,
+  episodeContext,
   episodesLength,
   isMedium,
 }: PlayerSectionProps) {
@@ -40,7 +36,7 @@ export default function PlayerSection({
         <TopControls 
           isLoading={isLoading}
           loadingDuration={loadingDuration}
-          data={data}
+          episodeContext={episodeContext}
           isMedium={isMedium}
           panelState={panelState}
           setPanelState={setPanelState}
@@ -52,16 +48,16 @@ export default function PlayerSection({
           <PlayerSkeleton isLoading={true} />
         ) : (
           <>
-            {data && (
+            {episodeContext && (
               <>
                 <Player 
                   animeId={animeId}
                   episodeNumber={episodeNumber}
                   isVideoReady={isVideoReady}
                   setIsVideoReady={setIsVideoReady}
-                  episode={currentEpisode} 
-                  streamingData={data?.episodeStreamingData} 
-                  episodesLength={episodesLength}
+                  metadata={episodeContext.metadata}
+                  streamingLinks={episodeContext.data.streamingLinks}
+                  episodesLength={episodeContext.data.details.episodes} 
                 />
               </>
             )}

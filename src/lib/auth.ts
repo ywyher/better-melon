@@ -47,10 +47,10 @@ export const auth = betterAuth({
   },
   account: {
     accountLinking: {
-        enabled: true, 
-        trustedProviders: ['anilist'],
-        allowDifferentEmails: true,
-        allowUnlinkingAll: true,
+      enabled: true, 
+      trustedProviders: ['anilist'],
+      allowDifferentEmails: true,
+      allowUnlinkingAll: true,
     }
   },
   plugins: [

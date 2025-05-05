@@ -13,27 +13,27 @@ import AddToList from "@/components/add-to-list/add-to-list"
 import { useEffect, useState } from "react"
 
 export const GET_ANIME = gql`
-  query($id: Int!) {
-    Media(id: $id) {
-      id
-      idMal
-      bannerImage
-      format
-      title {
-        romaji
-        english
-      }  
-      episodes
-      coverImage {
-        large
-      }
-      description
-      genres
-      status
-      season
-      seasonYear
-    } 
-  }
+query($id: Int!) {
+  Media(id: $id) {
+    id
+    idMal
+    bannerImage
+    format
+    title {
+      romaji
+      english
+    }  
+    episodes
+    coverImage {
+      large
+    }
+    description
+    genres
+    status
+    season
+    seasonYear
+  } 
+}
 `
 
 export default function AnimeData() {

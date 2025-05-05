@@ -8,13 +8,13 @@ interface PanelSectionProps {
   isLoading: boolean;
   isLoadingAnime: boolean;
   animeData: Anime;
-  data?: AnimeEpisodeContext;
+  episodeContext?: AnimeEpisodeContext;
 }
 
 export default function PanelSection({
   isLoading,
   isLoadingAnime,
-  data,
+  episodeContext,
   animeData,
 }: PanelSectionProps) {
 
@@ -24,23 +24,24 @@ export default function PanelSection({
         <PanelSkeleton />
       ) : (
         <>
-          {(data?.subtitleFiles && data?.japaneseTranscription) && (
+          {(episodeContext && episodeContext.data.subtitles && episodeContext.japaneseTranscription) && (
             <SubtitlePanel
-              subtitleFiles={data.subtitleFiles}
-              japaneseTranscription={data.japaneseTranscription}
+              subtitleFiles={episodeContext.data.subtitles}
+              japaneseTranscription={episodeContext.japaneseTranscription}
             />
           )}
         </>
       )}
       
-      {(isLoadingAnime || !data?.episodesMetadata) ? (
+      {/*  */}
+      {/* {(isLoadingAnime || !episodeContext?.metadata) ? (
         <EpisodesListSkeleton />
       ) : (
         <EpisodesList
           animeData={animeData} 
-          episodesMetadata={data.episodesMetadata} 
+          episodesMetadata={episodeContext.metadata} 
         />
-      )}
+      )} */}
     </div>
   );
 }

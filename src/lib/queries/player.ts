@@ -1,17 +1,19 @@
-import { getEpisodeContext, getStreamingData, getSubtitleEntries, getSubtitleFiles } from "@/app/watch/[id]/[ep]/actions";
+import { getEpisodeContext } from "@/app/watch/[id]/[ep]/actions/index.actions";
+import { getSubtitleEntries, getSubtitleFiles } from "@/app/watch/[id]/[ep]/actions/subtitle.actions";
 import { parseSubtitleToJson, selectSubtitleFile } from "@/lib/subtitle";
 import { getExtension } from "@/lib/utils";
+import { AnimeEpisodeContext } from "@/types/anime";
 import { SubtitleFormat } from "@/types/subtitle";
 import { createQueryKeys } from "@lukemorales/query-key-factory";
 
 export const playerQueries = createQueryKeys('player', {
     episodeData: (animeId: string, episodeNumber: number) => ({
         queryKey: ['episodesData', animeId, episodeNumber],
-        queryFn: async () => {
-          const data = await getEpisodeContext(animeId, episodeNumber)
+        queryFn: async (): Promise<AnimeEpisodeContext> => {
+          const episodeContext = await getEpisodeContext(animeId, episodeNumber)
 
           const selectedFile = selectSubtitleFile({
-            files: data.subtitleFiles,
+            files: episodeContext.data.subtitles,
             preferredFormat: 'srt'
           })
       
@@ -24,14 +26,10 @@ export const playerQueries = createQueryKeys('player', {
           });
 
           return {
-            ...data,
+            ...episodeContext,
             japaneseTranscription
-          }
+          } as AnimeEpisodeContext
         },
-    }),
-    streamingData: (episodeId: string) => ({
-        queryKey: ['streamingData', episodeId],
-        queryFn: async () => await getStreamingData(episodeId || ""),
     }),
     subtitleEntries: (animeId: string) => ({
         queryKey: ['subtitleEntries', animeId],

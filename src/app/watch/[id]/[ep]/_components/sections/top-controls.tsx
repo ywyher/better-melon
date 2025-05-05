@@ -9,7 +9,7 @@ import { Captions, Loader2, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 type TopControlsProps = {
   isLoading: boolean;
   loadingDuration: number;
-  data?: AnimeEpisodeContext;
+  episodeContext?: AnimeEpisodeContext;
   isMedium: boolean;
   panelState: PlayerStore['panelState'];
   setPanelState: (state: PlayerStore['panelState']) => void;
@@ -18,7 +18,7 @@ type TopControlsProps = {
 export function TopControls({ 
   isLoading,
   loadingDuration,
-  data,
+  episodeContext,
   isMedium,
   panelState,
   setPanelState,
@@ -30,7 +30,7 @@ export function TopControls({
           Loaded in {(loadingDuration / 1000).toFixed(2)}s
         </div>
       )}
-      {(isLoading || !data) ? (
+      {(isLoading || !episodeContext) ? (
         <div className="flex flex-row gap-2">
           <Button variant='outline'>
             <Loader2 className='animate-spin' />
@@ -49,7 +49,7 @@ export function TopControls({
       ) : (
         <div className='flex flex-row gap-2'>
           <SettingsDialog 
-            generalSettings={data.generalSettings}
+            generalSettings={episodeContext.generalSettings}
           />
           {isMedium ? (
             <DialogWrapper
@@ -60,8 +60,8 @@ export function TopControls({
               breakpoint='medium'
             >
               <SubtitlePanel
-                subtitleFiles={data.subtitleFiles}
-                japaneseTranscription={data.japaneseTranscription}
+                subtitleFiles={episodeContext.data.subtitles}
+                japaneseTranscription={episodeContext.japaneseTranscription}
               />
             </DialogWrapper>
           ) : (

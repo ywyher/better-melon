@@ -90,7 +90,7 @@ export default function Search({ className = "" }: { className?: string }) {
 
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
-      if (e.key === "f" && (e.metaKey || e.ctrlKey)) {
+      if (e.key === "g" && (e.metaKey || e.ctrlKey)) {
         e.preventDefault()
         setOpen((open) => !open)
       }

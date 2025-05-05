@@ -11,7 +11,7 @@ export default function PanelSkeleton() {
     <Card className="flex flex-col gap-3 w-full max-w-[500px]">
       <CardHeader className="flex flex-col gap-3">
         <div className="flex flex-row justify-between items-center w-full">
-          <CardTitle className="text-xl">Dialogue</CardTitle>
+          <CardTitle className="text-xl">Transcriptions</CardTitle>
           <div className="flex flex-row gap-2">
             <Skeleton className="h-9 w-36" />
             <Skeleton className="h-9 w-32" />

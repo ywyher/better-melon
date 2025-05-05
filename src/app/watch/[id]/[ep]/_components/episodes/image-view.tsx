@@ -51,7 +51,7 @@ export default function ImageView({
                 {((spoilerMode ? genericImage : ep.image) && imageLoading) && <ImageSkeleton />}
                 {(spoilerMode ? genericImage : ep.image) ? (
                   <Image 
-                    src={spoilerMode ? (genericImage || "") : (ep.image || "")}
+                    src={spoilerMode ? (genericImage || "") : (ep.image || (genericImage || ""))}
                     alt={`Ep: ${ep.number}`}
                     fill
                     className="w-full h-full object-cover"

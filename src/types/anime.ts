@@ -1,5 +1,5 @@
 import { GeneralSettings, PlayerSettings, SubtitleSettings } from "@/lib/db/schema"
-import { SubtitleCue, SubtitleFile } from "@/types/subtitle"
+import { ParsedSubtitle, SubtitleCue, SubtitleFile } from "@/types/subtitle"
 
 export type AnimeStatus = "CANCELLED" | "FINISHED" | "HIATUS" | "NOT_YET_RELEASED" | "RELEASING"
 export type AnimeSeason = "SPRING" | "FALL" | "SUMMER" | "WINTER"
@@ -68,15 +68,15 @@ export type AnimeSort = "ID"
 export type AnimeCountry = "JP" | "KR" | "TW" | "CN"
 
 export interface AnimeTitle {
-    english: string;
-    romaji?: string;
-    native?: string;
+  english: string;
+  romaji?: string;
+  native?: string;
 }
 
 export interface AnimeCoverImage {
-    large: string;
-    medium: string;
-    color?: string
+  large: string;
+  medium: string;
+  color?: string
 }
 
 export interface AnimeDate {
@@ -104,45 +104,15 @@ export interface Anime {
   format: string;
 }
 
-export type AnimeEpisodeContext = {
-  japaneseTranscription: SubtitleCue[];
-  episodesMetadata: AnimeEpisodeMetadata[];
-  episodeStreamingData: AnimeStreamingData;
-  subtitleFiles: SubtitleFile[];
-  subtitleSettings: SubtitleSettings;
-  generalSettings: GeneralSettings;
-  playerSettings: PlayerSettings;
-}
-
 export type AnimeEpisodeMetadata = {
-  id: string;
+  // id: string;
+  number: number;
   title: string;
   image: string;
-  imageHash: string;
-  number: number;
-  createdAt: Date;
-  description?: string;
-  url: string;
-}
-
-export type AnimeStreamingData = {
-    intro: {
-        start: number;
-        end: number;
-    };
-    outro: {
-        start: number;
-        end: number;
-    };
-    sources: {
-        url: string;
-        isM3U8: boolean;
-        type: 'hls'
-    }[];
-    subtitles: {
-        url: string;
-        lang: string;
-    }[]
+  // imageHash: string;
+  // createdAt: Date;
+  // description?: string;
+  // url: string;
 }
 
 export type SkipTime = {
@@ -154,3 +124,48 @@ export type SkipTime = {
 };
 
 export type EpisodesListViewMode = "grid" | "list" | "image"
+
+
+export type AnimeProvider = 'hianime' 
+
+export type AnimeStreamingLinks = {
+  headers: {
+    Referer: string
+  },
+  tracks: {
+    file: string,
+    label?: string,
+    kind: 'captions' | 'thumbnails' | 'chapters',
+    default?: Boolean
+  }[],
+  intro: {
+    start: number,
+    end: number
+  },
+  outro: {
+    start: number,
+    end: number
+  },
+  sources: {
+    url: string,
+    type: string
+  }[],
+  anilistId?: number,
+  malId?: number
+}
+
+export type AnimeEpisodeData = {
+  provider: AnimeProvider,
+  details: Anime,
+  streamingLinks: AnimeStreamingLinks,
+  subtitles: SubtitleFile[]
+}
+
+export type AnimeEpisodeContext = {
+  data: AnimeEpisodeData;
+  metadata: AnimeEpisodeMetadata
+  subtitleSettings: SubtitleSettings;
+  generalSettings: GeneralSettings;
+  playerSettings: PlayerSettings;
+  japaneseTranscription: ParsedSubtitle[]
+}

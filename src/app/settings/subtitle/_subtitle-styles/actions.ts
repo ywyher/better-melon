@@ -24,8 +24,6 @@ export async function getSubtitleStyles({ transcription }: { transcription: Subt
         eq(subtitleStyles.transcription, transcription)
     ))
 
-    console.log(styles)
-
     if(styles) {
         return styles
     }else {

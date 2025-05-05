@@ -3,14 +3,16 @@ import { useQuery } from '@tanstack/react-query';
 import { usePlayerStore } from '@/lib/stores/player-store';
 import { selectSubtitleFile } from '@/lib/subtitle';
 import { playerQueries } from '@/lib/queries/player';
+import { AnimeStreamingLinks } from '@/types/anime';
 
 export function useEpisodeData(animeId: string, episodeNumber: number) {
   const loadingStartTime = useRef<number>(0);
+  const [episodesLength, setEpisodesLength] = useState<number>(0)
   const [loadingDuration, setLoadingDuration] = useState<number>(0);
   const { setEnglishSubtitleUrl, setActiveSubtitleFile } = usePlayerStore();
 
   const {
-    data,
+    data: episodeContext,
     isLoading,
     error,
   } = useQuery({
@@ -18,30 +20,31 @@ export function useEpisodeData(animeId: string, episodeNumber: number) {
     staleTime: 1000 * 60 * 5,
     refetchOnWindowFocus: false,
   });
-
-  const currentEpisode = data?.episodesMetadata?.find((e) => e.number === episodeNumber);
-  const episodesLength = data?.episodesMetadata?.length || 0;
+  
+  useEffect(() => {
+    if(!episodeContext) return;
+    setEpisodesLength(episodeContext.data.details.episodes);
+  }, [episodeContext])
 
   useEffect(() => {
     if (isLoading) {
       loadingStartTime.current = Date.now();
-    } else if (data && loadingStartTime.current > 0 && loadingDuration === 0) {
+    } else if (episodeContext && loadingStartTime.current > 0 && loadingDuration === 0) {
       const duration = Date.now() - loadingStartTime.current;
       setLoadingDuration(duration);
     }
-  }, [isLoading, data, loadingDuration]);
+  }, [isLoading, episodeContext, loadingDuration]);
 
   useEffect(() => {
-    if (!data || !data.episodeStreamingData) return;
+    if (!episodeContext || !episodeContext.data.streamingLinks) return;
     
     setActiveSubtitleFile(null);
     setEnglishSubtitleUrl(null);
     
-    if (data.subtitleFiles?.length > 0) {
+    if (episodeContext.data.subtitles?.length > 0) {
       const selected = selectSubtitleFile({ 
-        files: data.subtitleFiles,
-        preferredFormat: data.subtitleSettings?.preferredFormat || null,
-        matchPattern: data.subtitleSettings?.matchPattern || null,
+        files: episodeContext.data.subtitles,
+        preferredFormat: 'srt'
       });
       
       if (selected) {
@@ -57,20 +60,19 @@ export function useEpisodeData(animeId: string, episodeNumber: number) {
       }
     }
     
-    if (data.episodeStreamingData.subtitles) {
-      const englishSub = data.episodeStreamingData.subtitles.find(
-        (s) => s.lang === 'English'
-      )?.url || "";
+    if (episodeContext.data.streamingLinks.tracks) {
+      const englishSub = episodeContext.data.streamingLinks.tracks.find(
+        (s: AnimeStreamingLinks['tracks'][0]) => s.label === 'English'
+      )?.file || "";
       setEnglishSubtitleUrl(englishSub);
     }
-  }, [data, setActiveSubtitleFile, setEnglishSubtitleUrl]);
+  }, [episodeContext, setActiveSubtitleFile, setEnglishSubtitleUrl]);
 
   return {
-    data,
+    episodeContext,
     isLoading,
     error,
     loadingDuration,
-    currentEpisode,
     episodesLength
   };
 }

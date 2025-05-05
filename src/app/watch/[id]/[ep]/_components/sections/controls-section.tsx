@@ -4,13 +4,13 @@ import { AnimeEpisodeContext } from "@/types/anime";
 
 interface ControlsSectionProps {
   isLoading: boolean;
-  data?: AnimeEpisodeContext;
+  episodeContext?: AnimeEpisodeContext;
   episodesLength: number;
 }
 
 export default function ControlsSection({
   isLoading,
-  data,
+  episodeContext,
   episodesLength
 }: ControlsSectionProps) {
   if (isLoading) {
@@ -21,13 +21,13 @@ export default function ControlsSection({
     );
   }
 
-  if(!data) return;
+  if(!episodeContext) return;
 
   return (
     <div className='flex flex-col gap-3 w-full'>
       <Settings 
-        playerSettings={data.playerSettings}
-        generalSettings={data.generalSettings} 
+        playerSettings={episodeContext.playerSettings}
+        generalSettings={episodeContext.generalSettings} 
         episodesLength={episodesLength} 
       />
     </div>

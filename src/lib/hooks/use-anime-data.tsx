@@ -7,16 +7,16 @@ const GET_ANIME_DATA = gql`
       id
       idMal
       bannerImage
-      format
-      title {
-        romaji
-        english
-      }  
-      episodes
       coverImage {
         large
         medium
       }
+      title {
+        romaji
+        english
+      }  
+      format
+      episodes
       description
       genres
       status

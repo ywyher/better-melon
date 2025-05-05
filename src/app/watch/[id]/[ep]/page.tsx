@@ -10,7 +10,6 @@ import PlayerSection from '@/app/watch/[id]/[ep]/_components/sections/player-sec
 import ControlsSection from '@/app/watch/[id]/[ep]/_components/sections/controls-section';
 import PanelSection from '@/app/watch/[id]/[ep]/_components/sections/panel-section';
 import { usePrefetchNextEpisode } from '@/lib/hooks/use-prefetch-next-episode';
-import { useEffect } from 'react';
 
 export default function WatchPage() {
   const params = useParams();
@@ -22,17 +21,13 @@ export default function WatchPage() {
   const { animeData, isLoadingAnime, animeError } = useAnimeData(animeId);
   
   const { 
-    data, 
+    episodeContext, 
     isLoading: isLoadingData, 
     error: dataError,
     loadingDuration,
-    currentEpisode, 
     episodesLength
   } = useEpisodeData(animeId, episodeNumber);
 
-  useEffect(() => {
-    console.log(data)
-  }, [data])
 
   usePrefetchNextEpisode(animeId, episodeNumber, episodesLength);
 
@@ -48,18 +43,17 @@ export default function WatchPage() {
         <PlayerSection
           animeId={animeId}
           episodeNumber={episodeNumber}
-          isLoading={isLoadingData || !data || !currentEpisode}
+          isLoading={isLoadingData || !episodeContext || !episodeContext.metadata}
           loadingDuration={loadingDuration}
-          currentEpisode={currentEpisode}
-          data={data}
+          episodeContext={episodeContext}
           episodesLength={episodesLength}
           isMedium={isMedium}
         />
         
         {/* Settings below player */}
         <ControlsSection
-          isLoading={isLoadingData || !data || !currentEpisode}
-          data={data}
+          isLoading={isLoadingData || !episodeContext}
+          episodeContext={episodeContext}
           episodesLength={episodesLength}
         />
       </div>
@@ -67,10 +61,10 @@ export default function WatchPage() {
       {/* Side panel (visible based on state) */}
       {(!isMedium && panelState === 'visable') && (
         <PanelSection
-          isLoading={isLoadingData || !data || !currentEpisode}
+          isLoading={isLoadingData || !episodeContext}
           isLoadingAnime={isLoadingAnime}
           animeData={animeData}
-          data={data}
+          episodeContext={episodeContext}
         />
       )}
     </div>
