@@ -1,10 +1,11 @@
 'use client'
+import { env } from "@/lib/env/client";
 import { MediaPlayerInstance } from "@vidstack/react";
 
 
 export const invokeAnkiConnect = async (action: string, version: number, params = {}) => {
   try {
-    const response = await fetch(process.env.NEXT_PUBLIC_ANKI_CONNECT_URL!, {
+    const response = await fetch(env.NEXT_PUBLIC_ANKI_CONNECT_URL!, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

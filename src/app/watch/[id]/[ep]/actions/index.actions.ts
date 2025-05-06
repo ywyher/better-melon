@@ -3,12 +3,13 @@
 import { getGeneralSettings } from "@/app/settings/general/actions";
 import { getPlayerSettings } from "@/app/settings/player/actions";
 import { getSubtitleSettings } from "@/app/settings/subtitle/_subtitle-settings/actions";
+import { env } from "@/lib/env/server";
 import { AnimeEpisodeContext, AnimeEpisodeData, AnimeProvider } from "@/types/anime";
 
 export async function getEpisodeData(animeId: string, episodeNumber: number, provider: AnimeProvider): Promise<AnimeEpisodeData> {
   try {
     const dataRaw = await fetch(
-      `${process.env.MAPPER_URL}/${animeId}/${episodeNumber}/${provider}`
+      `${env.MAPPER_URL}/${animeId}/${episodeNumber}/${provider}`
     );
     
     if (!dataRaw.ok) {

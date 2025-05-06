@@ -5,6 +5,7 @@ import { anonymous, emailOTP, genericOAuth, organization } from "better-auth/plu
 import * as schema from '@/lib/db/schema/index'
 import { nextCookies } from "better-auth/next-js";
 import { eq } from "drizzle-orm";
+import { env } from "@/lib/env/server";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -20,7 +21,7 @@ export const auth = betterAuth({
     sendResetPassword: async ({ url, user }) => {
       try {
         const response = await fetch(
-          `${process.env.APP_URL}/api/auth/forget/password`,
+          `${env.APP_URL}/api/auth/forget/password`,
           {
             method: "POST",
             headers: {
@@ -130,7 +131,7 @@ export const auth = betterAuth({
         if (type === "email-verification") {
           try {
             const response = await fetch(
-              `${process.env.APP_URL}/api/auth/otp`,
+              `${env.APP_URL}/api/auth/otp`,
               {
                 method: "POST",
                 headers: {
@@ -159,11 +160,11 @@ export const auth = betterAuth({
       config: [
         {
           providerId: "anilist",
-          clientId: process.env.ANILIST_ID!,
-          clientSecret: process.env.ANILIST_SECRET!,
+          clientId: env.ANILIST_ID!,
+          clientSecret: env.ANILIST_SECRET!,
           authorizationUrl: "https://anilist.co/api/v2/oauth/authorize",
           tokenUrl: "https://anilist.co/api/v2/oauth/token",
-          redirectURI: process.env.ANILIST_REDIRECT_URL!,
+          redirectURI: env.ANILIST_REDIRECT_URL!,
           getUserInfo: async (tokens) => {
             const { accessToken } = tokens;
             // AniList uses GraphQL API for user data
@@ -211,15 +212,15 @@ export const auth = betterAuth({
             }
           }
         },
-        {
-          providerId: "myanimelist",
-          clientId: process.env.MYANIMELIST_ID!,
-          clientSecret: process.env.MYANIMELIST_SECRET!,
-          authorizationUrl: "https://myanimelist.net/v1/oauth2/authorize",
-          tokenUrl: "https://myanimelist.net/v1/oauth2/token",
-          redirectURI: process.env.MYANIMELIST_REDIRECT_URL!,
-          pkce: true,
-        }
+        // {
+        //   providerId: "myanimelist",
+        //   clientId: env.MYANIMELIST_ID!,
+        //   clientSecret: env.MYANIMELIST_SECRET!,
+        //   authorizationUrl: "https://myanimelist.net/v1/oauth2/authorize",
+        //   tokenUrl: "https://myanimelist.net/v1/oauth2/token",
+        //   redirectURI: env.MYANIMELIST_REDIRECT_URL!,
+        //   pkce: true,
+        // }
       ]
     }),
     nextCookies(),

@@ -1,8 +1,9 @@
 import { ForgetPassowrdEmailTemplate } from "@/components/templates/email/forget-password";
+import { env } from "@/lib/env/server";
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(env.RESEND_API_KEY);
 
 export async function POST(req: NextRequest) {
   try {
@@ -17,7 +18,7 @@ export async function POST(req: NextRequest) {
 
     // Use query parameters for your logic
     const { data, error } = await resend.emails.send({
-      from: `Acme <${process.env.RESEND_FROM_EMAIL}>`,
+      from: `Acme <${env.RESEND_FROM_EMAIL}>`,
       to: email,
       subject: "Hello world",
       react: await ForgetPassowrdEmailTemplate({ firstname: name, url: url }),

@@ -1,8 +1,9 @@
 import { OTPTemplate } from "@/components/templates/email/otp";
+import { env } from "@/lib/env/server";
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(env.RESEND_API_KEY);
 
 export async function POST(req: Request) {
   try {
@@ -10,7 +11,7 @@ export async function POST(req: Request) {
     console.log(email, otp)
 
     const { data, error } = await resend.emails.send({
-        from: `Acme <${process.env.RESEND_FROM_EMAIL}>`, // Use your verified domain
+        from: `Acme <${env.RESEND_FROM_EMAIL}>`, // Use your verified domain
         to: email,
         subject: 'Hello world',
         react: OTPTemplate({ firstName: 'John', otp: otp }),

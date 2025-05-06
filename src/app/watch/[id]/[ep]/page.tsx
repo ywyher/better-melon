@@ -20,14 +20,13 @@ export default function WatchPage() {
   
   const { animeData, isLoadingAnime, animeError } = useAnimeData(animeId);
   
-  const { 
-    episodeContext, 
+  const {
+    episodeContext,
     isLoading: isLoadingData, 
     error: dataError,
     loadingDuration,
     episodesLength
   } = useEpisodeData(animeId, episodeNumber);
-
 
   usePrefetchNextEpisode(animeId, episodeNumber, episodesLength);
 

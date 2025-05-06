@@ -17,6 +17,7 @@ import { toast } from 'sonner';
 import DefinitionCard from '@/components/definition-card';
 import { generateWebVTTFromSkipTimes } from '@/lib/subtitle';
 import SubtitleTranscriptionsContainer from '@/app/watch/[id]/[ep]/_components/transcriptions/transcriptions-container';
+import { env } from '@/lib/env/client';
 
 type PlayerProps = {
   animeId: string;
@@ -72,8 +73,7 @@ export default function Player({
       if(!streamingLinks) return;
 
       const url = streamingLinks.sources[0].url;
-      setVideoSrc(`${process.env.NEXT_PUBLIC_PROXY_URL}?url=${url}`);
-      console.log(`${process.env.NEXT_PUBLIC_PROXY_URL}?url=${streamingLinks.sources[0].url}`)
+      setVideoSrc(`${env.NEXT_PUBLIC_PROXY_URL}?url=${url}`);
       setIsInitialized(true);
       setLoadingDuration({ start: new Date(), end: undefined })
     }, [streamingLinks, isInitialized]);

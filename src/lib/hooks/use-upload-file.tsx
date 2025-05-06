@@ -1,3 +1,4 @@
+import { env } from "@/lib/env/client";
 import { getFileUrl } from "@/lib/utils";
 import { useState, useRef } from "react";
 import { toast } from "sonner";
@@ -69,7 +70,7 @@ export function useUploadFile() {
   ): Promise<UploadedFile> => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_APP_URL}/api/presigned-url`,
+        `${env.NEXT_PUBLIC_APP_URL}/api/presigned-url`,
         {
           method: "POST",
           headers: {

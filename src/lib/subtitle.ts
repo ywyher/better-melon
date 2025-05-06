@@ -1,4 +1,4 @@
-import { SubtitleCue, SubtitleTranscription, SubtitleFormat, SubtitleToken, ParsedSubtitle } from "@/types/subtitle";
+import { SubtitleCue, SubtitleTranscription, SubtitleFormat, SubtitleToken } from "@/types/subtitle";
 import * as kuromoji from "kuromoji";
 // @ts-expect-error - Kuroshiro lacks proper TypeScript typings
 import Kuroshiro from "kuroshiro";
@@ -43,7 +43,7 @@ export async function parseSubtitleToJson({
   source: string | File, 
   format: SubtitleFormat, 
   transcription?: SubtitleTranscription 
-}): Promise<ParsedSubtitle[]> {
+}): Promise<SubtitleCue[]> {
   const content = await fetchSubtitles(source);
 
   let subtitles: SubtitleCue[] = [];

@@ -71,9 +71,9 @@ export const useSubtitleTranscriptions = () => {
                 }
                 
                 const cues = await parseSubtitleToJson({ 
-                    source,
-                    format,
-                    transcription
+                  source,
+                  format,
+                  transcription
                 });
                 
                 return {
@@ -88,5 +88,7 @@ export const useSubtitleTranscriptions = () => {
     })
   }), [englishSubtitleUrl, activeSubtitleFile, activeTranscriptions, addSubtitleStylesInStore]);
 
-  return useQueries(queryConfig);
+  const queries = useQueries(queryConfig);
+
+  return queries;
 }

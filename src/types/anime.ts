@@ -1,5 +1,5 @@
 import { GeneralSettings, PlayerSettings, SubtitleSettings } from "@/lib/db/schema"
-import { ParsedSubtitle, SubtitleCue, SubtitleFile } from "@/types/subtitle"
+import { SubtitleCue, SubtitleFile } from "@/types/subtitle"
 
 export type AnimeStatus = "CANCELLED" | "FINISHED" | "HIATUS" | "NOT_YET_RELEASED" | "RELEASING"
 export type AnimeSeason = "SPRING" | "FALL" | "SUMMER" | "WINTER"
@@ -167,5 +167,5 @@ export type AnimeEpisodeContext = {
   subtitleSettings: SubtitleSettings;
   generalSettings: GeneralSettings;
   playerSettings: PlayerSettings;
-  japaneseTranscription: ParsedSubtitle[]
+  japaneseTranscription: SubtitleCue[]
 }

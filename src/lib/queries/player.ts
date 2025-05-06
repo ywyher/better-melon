@@ -19,11 +19,15 @@ export const playerQueries = createQueryKeys('player', {
       
           if(!selectedFile) throw new Error("Failed to select file")
       
+          const jpStart = performance.now()
           const japaneseTranscription = await parseSubtitleToJson({ 
             source: selectedFile.url,
             format: getExtension(selectedFile.name) as SubtitleFormat,
             transcription: 'japanese'
           });
+
+          const jpEnd = performance.now();
+          console.log(`japaneseTranscriptions completed in ${(jpEnd - jpStart).toFixed(2)}ms`);
 
           return {
             ...episodeContext,

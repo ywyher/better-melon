@@ -10,16 +10,17 @@ import { useSubtitleStylesStore } from "@/lib/stores/subtitle-styles-store";
 import type { SubtitleCue, SubtitleFormat, SubtitleTranscription } from "@/types/subtitle";
 import { closestCenter, DndContext, type DragEndEvent, KeyboardSensor, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from "@dnd-kit/sortable";
-import { MediaPlayerInstance, useMediaState } from "@vidstack/react";
-import { type CSSProperties, RefObject, useCallback, useEffect, useMemo, useState } from "react";
+import { useMediaState } from "@vidstack/react";
+import { type CSSProperties, useCallback, useMemo, useState } from "react";
 import { UseQueryResult } from "@tanstack/react-query";
+import { SubtitleQuery } from "@/app/watch/[id]/[ep]/types";
 
 export type TranscriptionStyleSet = {
-    tokenStyles: {
-      default: CSSProperties;
-      active: CSSProperties;
-    };
-    containerStyle: CSSProperties;
+  tokenStyles: {
+    default: CSSProperties;
+    active: CSSProperties;
+  };
+  containerStyle: CSSProperties;
 };
 
 export const getTokenStyles = (
@@ -86,11 +87,7 @@ const getContainerStyles = (styles: Partial<SubtitleStyles> | null): CSSProperti
 };
 
 export default function SubtitleTranscriptions({ subtitleQueries }: {
-  subtitleQueries: UseQueryResult<{
-      transcription: SubtitleTranscription;
-      format: SubtitleFormat;
-      cues: SubtitleCue[];
-  }, Error>[];
+  subtitleQueries: SubtitleQuery[]
 }) {
   const player = usePlayerStore((state) => state.player);
   const activeTranscriptions = usePlayerStore((state) => state.activeTranscriptions);

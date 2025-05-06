@@ -1,11 +1,3 @@
-export type ParsedSubtitle = {
-  id: number
-  from: string;
-  to: string;
-  content: string;
-  tokens?: SubtitleToken[]
-}
-
 export type SubtitleEntry = {
     id: number;
     name: string;
@@ -54,11 +46,11 @@ export type SubtitleToken = {
 }
 
 export type SubtitleCue = {
-    id: number;
-    from: string;
-    to: string;
-    content: string;
-    tokens?: SubtitleToken[];
+  id: number;
+  from: string;
+  to: string;
+  content: string;
+  tokens?: SubtitleToken[];
 }
 
 export type SubtitleFormat = 'srt' | 'vtt' | 'ass'

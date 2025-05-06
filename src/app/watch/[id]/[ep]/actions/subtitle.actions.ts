@@ -1,11 +1,12 @@
 'use server'
 
+import { env } from "@/lib/env/server";
 import { SubtitleEntry, SubtitleFile } from "@/types/subtitle";
 
 export async function getSubtitleEntries(animeId: string): Promise<SubtitleEntry[]> {
   try {
     const res = await fetch(`https://jimaku.cc/api/entries/search?anilist_id=${animeId}`, {
-      headers: { Authorization: `${process.env.JIMAKU_KEY}` },
+      headers: { Authorization: `${env.JIMAKU_KEY}` },
     });
     
     if (!res.ok) {
@@ -22,7 +23,7 @@ export async function getSubtitleEntries(animeId: string): Promise<SubtitleEntry
 export async function getSubtitleFiles(entryId: number, ep: number): Promise<SubtitleFile[]> {
   try {
     const res = await fetch(`https://jimaku.cc/api/entries/${entryId}/files?episode=${ep}`, {
-      headers: { Authorization: `${process.env.JIMAKU_KEY}` },
+      headers: { Authorization: `${env.JIMAKU_KEY}` },
     });
     
     if (!res.ok) {

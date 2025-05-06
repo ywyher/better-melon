@@ -8,6 +8,7 @@ import { Toaster } from "sonner";
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import Navigations from "@/components/navigations";
 import Script from "next/script";
+import { env } from "@/lib/env/server";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,7 +32,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-        {process.env.ENV === 'DEVELOPMENT' && (
+        {env.ENV === 'DEVELOPMENT' && (
           <head>
             <Script
               crossOrigin="anonymous"

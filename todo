@@ -3,7 +3,7 @@ better-melon doesnt wait for the request to end and some weird shitty stuff
 apperantly the filtering doesnt always work so it returns empty array
 
 episodes metadata for the episode selector
-
+  
 currentEpisode is hardcoded
 
 episode data

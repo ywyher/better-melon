@@ -1,5 +1,6 @@
 'use server'
 
+import { env } from '@/lib/env'
 import { redirect } from 'next/navigation'
 
 export default async function ResetPasswordPage({ searchParams }: { searchParams: { token?: string } }) {
@@ -7,7 +8,7 @@ export default async function ResetPasswordPage({ searchParams }: { searchParams
 
   if (token) {
     console.log('has token')
-    redirect(`${process.env.APP_URL}?reset-password-token=${token}`)
+    redirect(`${env.APP_URL}?reset-password-token=${token}`)
   } else {
     console.log('no token')
   }
