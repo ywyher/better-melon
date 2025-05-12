@@ -1,12 +1,11 @@
-currently the api is broken
-better-melon doesnt wait for the request to end and some weird shitty stuff
-apperantly the filtering doesnt always work so it returns empty array
+what needs to be done now is that we should implement useMutation for enabled-transcriptions
+afterwards we should check why the mapper is being called twice and check the cache and some stuff ig
+
+implement caching for the mapper
+
+active subtitle file doesnt change when episode change prob cause if the cache system ?
 
 episodes metadata for the episode selector
-  
-currentEpisode is hardcoded
-
-episode data
 
 for schedules dont use anilist its based on japanese tv
 

@@ -6,18 +6,75 @@ import { auth } from "@/lib/auth";
 import db from "@/lib/db";
 import { ensureAuthenticated } from "@/lib/db/mutations";
 import { SubtitleStyles, subtitleStyles } from "@/lib/db/schema";
+import { SubtitleTranscription } from "@/types/subtitle";
 import { generateId } from "better-auth";
-import { and, eq } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import { headers } from "next/headers";
 import { z } from "zod";
+
+export async function getMultipleTranscriptionsStyles(transcriptions: SubtitleTranscription[]) {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session?.user.id) {
+    // Return default styles for each requested transcription
+    return transcriptions.reduce((acc, transcription) => {
+      acc[transcription] = defaultSubtitleStyles;
+      return acc;
+    }, {} as Record<SubtitleTranscription, typeof defaultSubtitleStyles>);
+  }
+  
+  // Always include 'all' in our query since it's the fallback style
+  const transcriptionsToFetch = [...new Set([...transcriptions, 'all' as SubtitleTranscription])];
+  
+  const fetchedStyles = await db.select().from(subtitleStyles)
+    .where(and(
+      eq(subtitleStyles.userId, session.user.id),
+      inArray(subtitleStyles.transcription, transcriptionsToFetch)
+    ));
+  
+  // Create a map of transcription -> styles, but only for transcriptions that have
+  // explicit styles in the database
+  const stylesMap = fetchedStyles.reduce((acc, style) => {
+    acc[style.transcription] = style;
+    return acc;
+  }, {} as Record<SubtitleTranscription | 'all', typeof defaultSubtitleStyles>);
+
+  // We're no longer filling in missing transcriptions with default styles
+  // Only returning styles that were explicitly found in the database
+  
+  return stylesMap as Record<SubtitleTranscription, typeof defaultSubtitleStyles>;
+}
+
+export async function getAllSubtitleStyles() {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session?.user.id) {
+      return { all: defaultSubtitleStyles };
+  }
+  
+  const allStyles = await db.select().from(subtitleStyles)
+      .where(eq(subtitleStyles.userId, session.user.id));
+  
+  // Create a map of transcription -> styles
+  const stylesMap = allStyles.reduce((acc, style) => {
+      acc[style.transcription] = style;
+      return acc;
+  }, {} as Record<string, typeof defaultSubtitleStyles>);
+
+  // Make sure we have an "all" styles entry
+  if (!stylesMap.all) {
+      stylesMap.all = defaultSubtitleStyles;
+  }
+  
+  return stylesMap as Record<SubtitleTranscription, SubtitleStyles>;
+}
 
 export async function getSubtitleStyles({ transcription }: { transcription: SubtitleStyles['transcription'] }) {
     const session = await auth.api.getSession({ headers: await headers() });
     
     if (!session?.user.id) {
-        return defaultSubtitleStyles;
+      return defaultSubtitleStyles;
     }
     
+    const fetchStylesStart = performance.now()
     const [styles] = await db.select().from(subtitleStyles)
     .where(and(
         eq(subtitleStyles.userId, session.user.id),
@@ -25,9 +82,9 @@ export async function getSubtitleStyles({ transcription }: { transcription: Subt
     ))
 
     if(styles) {
-        return styles
+      return styles
     }else {
-        return defaultSubtitleStyles
+      return defaultSubtitleStyles
     }
 }
 

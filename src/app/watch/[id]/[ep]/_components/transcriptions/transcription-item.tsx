@@ -6,7 +6,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { useDefinitionStore } from '@/lib/stores/definition-store';
 import { SubtitleCue, SubtitleToken, SubtitleTranscription } from '@/types/subtitle';
 import { cn } from '@/lib/utils';
-import { TranscriptionStyleSet } from '@/app/watch/[id]/[ep]/_components/transcriptions/transcriptions';
+import { TranscriptionStyleSet } from '@/app/watch/[id]/[ep]/types';
 
 type TranscriptionItemProps = {
   transcription: SubtitleTranscription;
@@ -35,6 +35,8 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
     const activeToken = useDefinitionStore((state) => state.token);
     const setSentance = useDefinitionStore((state) => state.setSentance);
     const setToken = useDefinitionStore((state) => state.setToken);
+    const storeToken = useDefinitionStore((state) => state.token)
+    const storeSentance = useDefinitionStore((state) => state.sentance)
     
     const [hoveredTokenId, setHoveredTokenId] = useState<string | number | null>(null);
     const [hoveredCueId, setHoveredCueId] = useState<number | null>(null);
@@ -49,11 +51,24 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
         setHoveredTokenId(null);
     }, []);
 
-    const handleClick = useCallback((sentance: string, token: SubtitleToken) => {
-        if(!sentance || !token) return;
-        setSentance(sentance);
+    const handleClick = useCallback((sentence: string, token: SubtitleToken) => {
+      if (!sentence || !token) return;
+      
+      // Toggle token - if current stored token matches clicked token, clear it; otherwise set the new token
+      if (storeToken && storeToken.id === token.id) {
+        setToken(null);
+      } else {
         setToken(token);
-    }, [setSentance, setToken]);
+      }
+      
+      // Toggle sentence - if current stored sentence matches clicked sentence, clear it; otherwise set the new sentence
+      if (storeSentance && storeSentance === sentence) {
+        setSentance(null);
+      } else {
+        setSentance(sentence);
+      }
+    }, [storeToken, storeSentance, setToken, setSentance]);
+  
 
     const renderTokens = useCallback((cue: SubtitleCue) => {
         if (!cue.tokens?.length) {

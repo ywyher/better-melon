@@ -13,7 +13,7 @@ import {
   DrawerTitle,
   DrawerTrigger
 } from "@/components/ui/drawer";
-import useMediaQuery, { breakpoints } from "@/hooks/use-media-query";
+import useMediaQuery, { breakpoints } from "@/lib/hooks/use-media-query";
 import { cn } from "@/lib/utils";
 
 type DialogWrapperProps = {

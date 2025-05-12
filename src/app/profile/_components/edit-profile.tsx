@@ -5,7 +5,7 @@ import { FormField } from "@/components/form/form-field";
 import LoadingButton from "@/components/loading-button";
 import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useIsSmall } from "@/hooks/use-media-query";
+import { useIsSmall } from "@/lib/hooks/use-media-query";
 import { User } from "@/lib/db/schema";
 import { emailSchema, usernameSchema } from "@/types/auth";
 import { zodResolver } from "@hookform/resolvers/zod";

@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from "zod";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { useIsSmall } from "@/hooks/use-media-query";
+import { useIsSmall } from "@/lib/hooks/use-media-query";
 import { Dispatch, SetStateAction, useState } from "react";
 import { AuthIdentifier, AuthPort } from "@/components/auth/auth";
 import { checkEmail } from "@/components/auth/actions";

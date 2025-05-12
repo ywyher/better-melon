@@ -1,10 +1,10 @@
-import { useState } from 'react';
 import GoBack from '@/components/goback';
 import Player from "../player/player";
 import PlayerSkeleton from "../player/player-skeleton";
 import { usePlayerStore } from '@/lib/stores/player-store';
 import { TopControls } from '@/app/watch/[id]/[ep]/_components/sections/top-controls';
 import { AnimeEpisodeContext } from '@/types/anime';
+import { TranscriptionQuery, TranscriptionStyles } from '@/app/watch/[id]/[ep]/types';
 
 interface PlayerSectionProps {
   animeId: string;
@@ -14,6 +14,8 @@ interface PlayerSectionProps {
   episodeContext?: AnimeEpisodeContext;
   episodesLength: number;
   isMedium: boolean;
+  transcriptions: TranscriptionQuery[]
+  transcriptionsStyles: TranscriptionStyles
 }
 
 export default function PlayerSection({
@@ -24,8 +26,9 @@ export default function PlayerSection({
   episodeContext,
   episodesLength,
   isMedium,
+  transcriptions,
+  transcriptionsStyles
 }: PlayerSectionProps) {
-  const [isVideoReady, setIsVideoReady] = useState<boolean>(false);
   const panelState = usePlayerStore((state) => state.panelState);
   const setPanelState = usePlayerStore((state) => state.setPanelState);
 
@@ -50,14 +53,14 @@ export default function PlayerSection({
           <>
             {episodeContext && (
               <>
-                <Player 
+                <Player
                   animeId={animeId}
                   episodeNumber={episodeNumber}
-                  isVideoReady={isVideoReady}
-                  setIsVideoReady={setIsVideoReady}
                   metadata={episodeContext.metadata}
                   streamingLinks={episodeContext.data.streamingLinks}
                   episodesLength={episodeContext.data.details.episodes} 
+                  transcriptions={transcriptions}
+                  transcriptionsStyles={transcriptionsStyles}
                 />
               </>
             )}

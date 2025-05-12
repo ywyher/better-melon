@@ -1,8 +1,6 @@
-// In SubtitleCue.tsx
 import { memo } from 'react';
 import { cn } from "@/lib/utils";
 import type { SubtitleCue as TSubtitleCue, SubtitleToken } from "@/types/subtitle";
-import { CSSProperties } from "react";
 import { Button } from "@/components/ui/button";
 import { Play } from "lucide-react";
 
@@ -72,13 +70,17 @@ function SubtitleCueBase({
     );
 }
 
-const SubtitleCue = memo(SubtitleCueBase, (prevProps, nextProps) => {
-  return (
-    prevProps.isActive === nextProps.isActive &&
-    prevProps.cue.id === nextProps.cue.id &&
-    prevProps.activeToken?.id === nextProps.activeToken?.id &&
-    prevProps.start === nextProps.start
-  );
-});
+// memo doesnt really work here because the user would have to scroll from the current viewport for the list to update the current viewport
+// and the only solution found till now is to scroll the the bottom the back where we were again but it feels a bit sluggish compared to without it
+const SubtitleCue = SubtitleCueBase
+
+// const SubtitleCue = memo(SubtitleCueBase, (prevProps, nextProps) => {
+//   return (
+//     prevProps.isActive === nextProps.isActive &&
+//     prevProps.cue.id === nextProps.cue.id &&
+//     prevProps.activeToken?.id === nextProps.activeToken?.id &&
+//     prevProps.start === nextProps.start
+//   );
+// });
 
 export default SubtitleCue;

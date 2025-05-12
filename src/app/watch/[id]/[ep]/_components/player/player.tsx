@@ -15,18 +15,19 @@ import { useThrottledCallback } from 'use-debounce';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import DefinitionCard from '@/components/definition-card';
-import { generateWebVTTFromSkipTimes } from '@/lib/subtitle';
+import { generateWebVTTFromSkipTimes } from '@/lib/subtitle/utils';
 import SubtitleTranscriptionsContainer from '@/app/watch/[id]/[ep]/_components/transcriptions/transcriptions-container';
 import { env } from '@/lib/env/client';
+import { TranscriptionQuery, TranscriptionStyles } from '@/app/watch/[id]/[ep]/types';
 
 type PlayerProps = {
   animeId: string;
   episodeNumber: number;
-  isVideoReady: boolean;
-  setIsVideoReady: Dispatch<SetStateAction<boolean>>
   metadata: AnimeEpisodeMetadata;
   streamingLinks: AnimeStreamingLinks;
-  episodesLength: number
+  episodesLength: number;
+  transcriptions: TranscriptionQuery[]
+  transcriptionsStyles: TranscriptionStyles
 }
 
 const MemoizedPlayerSkeleton = memo(PlayerSkeleton);
@@ -36,11 +37,11 @@ const MemoizedDefinitionCard = memo(DefinitionCard);
 export default function Player({ 
   animeId,
   episodeNumber,
-  isVideoReady,
-  setIsVideoReady,
   streamingLinks,
   metadata,
-  episodesLength
+  episodesLength,
+  transcriptions,
+  transcriptionsStyles
 }: PlayerProps) {
     const router = useRouter()
     
@@ -53,6 +54,8 @@ export default function Player({
     const isTransitioning = useRef(false);
 
     const setPlayer = usePlayerStore((state) => state.setPlayer);
+    const isVideoReady = usePlayerStore((state) => state.isVideoReady);
+    const setIsVideoReady = usePlayerStore((state) => state.setIsVideoReady);
     const autoSkip = usePlayerStore((state) => state.autoSkip);
     const autoNext = usePlayerStore((state) => state.autoNext);
     const autoPlay = usePlayerStore((state) => state.autoPlay);
@@ -72,8 +75,8 @@ export default function Player({
     useEffect(() => {
       if(!streamingLinks) return;
 
-      const url = streamingLinks.sources[0].url;
-      setVideoSrc(`${env.NEXT_PUBLIC_PROXY_URL}?url=${url}`);
+      const url = `${env.NEXT_PUBLIC_PROXY_URL}?url=${streamingLinks.sources[0].url}`
+      setVideoSrc(url)
       setIsInitialized(true);
       setLoadingDuration({ start: new Date(), end: undefined })
     }, [streamingLinks, isInitialized]);
@@ -120,7 +123,6 @@ export default function Player({
     }, [metadata, streamingLinks, player.current?.duration, episodeNumber]);
 
     const handleCanPlay = useCallback(() => {
-        console.log('het')
         setIsVideoReady(true);
         setLoadingDuration(prev => ({
           ...prev,
@@ -191,7 +193,7 @@ export default function Player({
         <div className="relative w-full aspect-video">
             {(!isVideoReady || !isInitialized) && (
               <>
-                  <MemoizedPlayerSkeleton isLoading={!isVideoReady || !isInitialized} />
+                <MemoizedPlayerSkeleton isLoading={!isVideoReady || !isInitialized} />
               </>
             )}
             <div className={containerClassName}>
@@ -235,7 +237,10 @@ export default function Player({
                         currentTime={player.current?.currentTime || 0}
                         skipTimes={skipTimes}
                     />
-                    <SubtitleTranscriptionsContainer />
+                    <SubtitleTranscriptionsContainer
+                      transcriptions={transcriptions}
+                      styles={transcriptionsStyles}
+                    />
                     <MemoizedDefinitionCard />
                 </MediaPlayer>
             </div>

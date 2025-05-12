@@ -6,7 +6,7 @@ import { usePlayerStore } from "@/lib/stores/player-store";
 import { SubtitleCue, SubtitleFormat } from "@/types/subtitle";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { getExtension } from "@/lib/utils";
-import { timestampToSeconds } from "@/lib/subtitle";
+import { timestampToSeconds } from "@/lib/subtitle/utils";
 
 interface CueNavigationProps {
   direction: 'next' | 'previous';

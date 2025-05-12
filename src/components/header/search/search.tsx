@@ -17,7 +17,7 @@ import SearchItem from "@/components/header/search/search-item"
 import SearchItemSkeleton from "@/components/header/search/search-item-skeleton" // Import the skeleton component
 import { useDebounce } from "use-debounce"
 import { useRouter } from "next/navigation"
-import { useIsSmall } from "@/hooks/use-media-query"
+import { useIsSmall } from "@/lib/hooks/use-media-query"
 import {
   Drawer,
   DrawerContent,

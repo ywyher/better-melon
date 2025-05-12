@@ -1,39 +1,38 @@
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import SubtitleCue from "@/app/watch/[id]/[ep]/_components/panel/subtitle-cue";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { TabsContent } from "@/components/ui/tabs";
 import { SubtitleCue as TSubtitleCue, SubtitleTranscription, SubtitleFormat } from "@/types/subtitle";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { usePlayerStore } from "@/lib/stores/player-store";
-import { timestampToSeconds } from "@/lib/subtitle";
+import { timestampToSeconds } from "@/lib/subtitle/utils";
 import { getExtension } from "@/lib/utils";
 import SubtitleCuesContainer from "@/app/watch/[id]/[ep]/_components/panel/subtitle-cues-container";
 
-type SubtitlesListProps = {
+type SubtitleCuesListProps = {
     isLoading: boolean;
     selectedTranscription: SubtitleTranscription;
     cues: TSubtitleCue[]
 }
 
-export default function SubtitlesList({
+export default function SubtitleCuesList({
     selectedTranscription,
     isLoading,
     cues
-}: SubtitlesListProps) {
+}: SubtitleCuesListProps) {
 
-    const [activeIndex, setActiveIndex] = useState<number>(-1);
-    const [autoScroll, setAutoScroll] = useState<boolean>(true);
-    
-    const activeCueIdRef = useRef<number>(-1);
-    const scrollAreaRef = useRef<HTMLDivElement>(null);
-    const autoScrollTimerRef = useRef<NodeJS.Timeout | null>(null);
-    const lastUpdateTimeRef = useRef<number>(0);
-    
-    const player = usePlayerStore((state) => state.player);
-    const delay = usePlayerStore((state) => state.delay);
-    const activeSubtitleFile = usePlayerStore((state) => state.activeSubtitleFile);
+  const [activeIndex, setActiveIndex] = useState<number>(-1);
+  const [autoScroll, setAutoScroll] = useState<boolean>(true);
+  
+  const activeCueIdRef = useRef<number>(-1);
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const autoScrollTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const lastUpdateTimeRef = useRef<number>(0);
+  
+  const player = usePlayerStore((state) => state.player);
+  const delay = usePlayerStore((state) => state.delay);
+  const activeSubtitleFile = usePlayerStore((state) => state.activeSubtitleFile);
 
-    // Optimize cueTimeRanges calculation to only run when necessary
-    const cueTimeRanges = useMemo(() => {
+  // Optimize cueTimeRanges calculation to only run when necessary
+  const cueTimeRanges = useMemo(() => {
       if (!cues?.length) return [];
       
       return cues.map(cue => ({
@@ -57,7 +56,7 @@ export default function SubtitlesList({
       estimateSize: () => 60,
       overscan: 5,
       measureElement: (element: Element) => {
-          return element.getBoundingClientRect().height || 60;
+        return element.getBoundingClientRect().height || 60;
       },
   });
 

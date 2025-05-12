@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { usePlayerStore } from '@/lib/stores/player-store';
-import { selectSubtitleFile } from '@/lib/subtitle';
+import { selectSubtitleFile } from '@/lib/subtitle/utils';
 import { playerQueries } from '@/lib/queries/player';
 import { AnimeStreamingLinks } from '@/types/anime';
 
@@ -40,6 +40,14 @@ export function useEpisodeData(animeId: string, episodeNumber: number) {
     
     setActiveSubtitleFile(null);
     setEnglishSubtitleUrl(null);
+
+    console.log(selectSubtitleFile({ 
+      files: episodeContext.data.subtitles,
+      preferredFormat: 'srt'
+    }))
+    console.log(episodeContext.data.streamingLinks.tracks.find(
+      (s: AnimeStreamingLinks['tracks'][0]) => s.label === 'English'
+    )?.file)
     
     if (episodeContext.data.subtitles?.length > 0) {
       const selected = selectSubtitleFile({ 

@@ -1,5 +1,4 @@
-// In SubtitleCuesContainer.tsx
-import { memo } from 'react';
+import { memo, useEffect, useRef } from 'react';
 import { Virtualizer } from "@tanstack/react-virtual";
 import { SubtitleFormat, SubtitleToken, SubtitleCue as TSubtitleCue } from "@/types/subtitle";
 import SubtitleCue from "@/app/watch/[id]/[ep]/_components/panel/subtitle-cue";
@@ -7,7 +6,7 @@ import { RefObject, useCallback } from "react";
 import { usePlayerStore } from "@/lib/stores/player-store";
 import { useDefinitionStore } from "@/lib/stores/definition-store";
 import { getExtension } from "@/lib/utils";
-import { timestampToSeconds } from "@/lib/subtitle";
+import { timestampToSeconds } from "@/lib/subtitle/utils";
 
 export default function SubtitleCuesContainer({
   items,
@@ -25,6 +24,9 @@ export default function SubtitleCuesContainer({
   const activeToken = useDefinitionStore((state) => state.token)
   const setSentance = useDefinitionStore((state) => state.setSentance)
   const setToken = useDefinitionStore((state) => state.setToken)
+  
+  // Store a reference to the current cues array for the memo check
+  const cuesRef = useRef(cues);
     
   const handleSeek = useCallback((from: TSubtitleCue['from']) => {
       player.current?.remoteControl.seek(timestampToSeconds({
@@ -43,10 +45,11 @@ export default function SubtitleCuesContainer({
     <>
       {items.getVirtualItems().map((row) => {
           const cue = cues[row.index];
+          if (!cue) return null;
           
           return (
               <SubtitleCue
-                  key={row.key}
+                  key={`${row.key}-${cue.id}`} // Include cue.id in the key to force re-render
                   cue={cue} 
                   index={row.index}
                   isActive={activeCueIdRef.current === cue.id}

@@ -3,19 +3,20 @@ import PanelSkeleton from '../panel/panel-skeleton';
 import EpisodesListSkeleton from '../episodes/episodes-list-skeleton';
 import EpisodesList from '../episodes/episodes-list';
 import { Anime, AnimeEpisodeContext } from '@/types/anime';
+import { SubtitleCue, SubtitleFile } from '@/types/subtitle';
 
 interface PanelSectionProps {
   isLoading: boolean;
-  isLoadingAnime: boolean;
   animeData: Anime;
-  episodeContext?: AnimeEpisodeContext;
+  subtitleFiles?: SubtitleFile[];
+  japaneseTranscription?: SubtitleCue[];
 }
 
 export default function PanelSection({
   isLoading,
-  isLoadingAnime,
-  episodeContext,
   animeData,
+  subtitleFiles,
+  japaneseTranscription,
 }: PanelSectionProps) {
 
   return (
@@ -24,10 +25,10 @@ export default function PanelSection({
         <PanelSkeleton />
       ) : (
         <>
-          {(episodeContext && episodeContext.data.subtitles && episodeContext.japaneseTranscription) && (
+          {(japaneseTranscription && subtitleFiles) && (
             <SubtitlePanel
-              subtitleFiles={episodeContext.data.subtitles}
-              japaneseTranscription={episodeContext.japaneseTranscription}
+              subtitleFiles={subtitleFiles}
+              japaneseTranscription={japaneseTranscription}
             />
           )}
         </>

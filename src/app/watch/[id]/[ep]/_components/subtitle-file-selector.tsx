@@ -12,7 +12,7 @@ import { toast } from "sonner";
 import DialogWrapper from "@/components/dialog-wrapper";
 import { usePlayerStore } from "@/lib/stores/player-store";
 import { SubtitleFile } from "@/types/subtitle";
-import { isFileJpn } from "@/lib/subtitle";
+import { isFileJpn } from "@/lib/subtitle/utils";
 
 export default function SubtitleFileSelector({ subtitleFiles }: { 
     subtitleFiles: SubtitleFile[];
@@ -114,7 +114,7 @@ export default function SubtitleFileSelector({ subtitleFiles }: {
                             </div>
                             <div className="flex-grow overflow-hidden">
                                 <div className="font-medium text-sm break-all pr-8">
-                                    {localFileName || "Upload local subtitle file (.srt or .vtt)"}
+                                    {localFileName || "Upload a local subtitle file (.srt or .vtt)"}
                                 </div>
                                 {localFileName && (
                                     <span className="inline-flex items-center px-2 py-0.5 mt-1 rounded-full text-xs bg-muted">

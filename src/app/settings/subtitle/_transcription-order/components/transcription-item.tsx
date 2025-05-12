@@ -3,7 +3,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { SubtitleTranscription } from '@/types/subtitle';
 import { defaultSubtitleStyles } from '@/app/settings/subtitle/_subtitle-styles/constants';
-import { getTokenStyles } from '@/app/watch/[id]/[ep]/_components/transcriptions/transcriptions';
+import { getTokenStyles } from '@/hooks/use-subtitle-styles';
 
 type TranscriptionItemProps = {
   transcription: SubtitleTranscription;

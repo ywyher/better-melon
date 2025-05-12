@@ -23,6 +23,9 @@ export type PlayerStore = {
 
   activeTokenId: string | null;
   setActiveTokenId: (sub: PlayerStore['activeTokenId']) => void;
+  
+  isVideoReady: boolean;
+  setIsVideoReady: (sub: PlayerStore['isVideoReady']) => void;
 
   delay: SubtitleDelay
   setDelay: (sub: PlayerStore['delay']) => void;
@@ -72,6 +75,9 @@ export const usePlayerStore = create<PlayerStore>()(
       activeTokenId: null,
       setActiveTokenId: (activeTokenId: PlayerStore['activeTokenId']) => set({ activeTokenId }),
 
+      isVideoReady: false,
+      setIsVideoReady: (isVideoReady: PlayerStore['isVideoReady']) => set({ isVideoReady }),
+
       delay: {
         japanese: 0,
         english: 0
@@ -105,6 +111,7 @@ export const usePlayerStore = create<PlayerStore>()(
           englishSubtitleUrl: null,
           activeTranscriptions: ['japanese', 'english'],
           subtitleCues: [],
+          isVideoReady: false,
           delay: {
             japanese: 0,
             english: 0,

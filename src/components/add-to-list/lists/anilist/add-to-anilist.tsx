@@ -9,7 +9,7 @@ import { SelectInput } from "@/components/form/select-input";
 import { TextareaInput } from "@/components/form/textarea-input";
 import LoadingButton from "@/components/loading-button";
 import { Form } from "@/components/ui/form";
-import { useIsSmall } from "@/hooks/use-media-query";
+import { useIsSmall } from "@/lib/hooks/use-media-query";
 import { getAccessToken } from "@/lib/db/queries";
 import { Anime } from "@/types/anime";
 import { AnimeListProivder, AnimeListProivders } from "@/types/anime-list";

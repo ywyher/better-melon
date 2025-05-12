@@ -1,9 +1,7 @@
 import { getEpisodeContext } from "@/app/watch/[id]/[ep]/actions/index.actions";
 import { getSubtitleEntries, getSubtitleFiles } from "@/app/watch/[id]/[ep]/actions/subtitle.actions";
-import { parseSubtitleToJson, selectSubtitleFile } from "@/lib/subtitle";
-import { getExtension } from "@/lib/utils";
+import { selectSubtitleFile } from "@/lib/subtitle/utils";
 import { AnimeEpisodeContext } from "@/types/anime";
-import { SubtitleFormat } from "@/types/subtitle";
 import { createQueryKeys } from "@lukemorales/query-key-factory";
 
 export const playerQueries = createQueryKeys('player', {
@@ -19,20 +17,7 @@ export const playerQueries = createQueryKeys('player', {
       
           if(!selectedFile) throw new Error("Failed to select file")
       
-          const jpStart = performance.now()
-          const japaneseTranscription = await parseSubtitleToJson({ 
-            source: selectedFile.url,
-            format: getExtension(selectedFile.name) as SubtitleFormat,
-            transcription: 'japanese'
-          });
-
-          const jpEnd = performance.now();
-          console.log(`japaneseTranscriptions completed in ${(jpEnd - jpStart).toFixed(2)}ms`);
-
-          return {
-            ...episodeContext,
-            japaneseTranscription
-          } as AnimeEpisodeContext
+          return episodeContext as AnimeEpisodeContext
         },
     }),
     subtitleEntries: (animeId: string) => ({

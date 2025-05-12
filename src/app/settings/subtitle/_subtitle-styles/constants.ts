@@ -2,13 +2,13 @@ import { SubtitleStyles } from "@/lib/db/schema";
 
 export const defaultSubtitleStyles: SubtitleStyles = {
     id: '',
-    fontSize: 25,
+    fontSize: 35,
     fontFamily: "Arial",
     textShadow: 'outline' as SubtitleStyles['textShadow'],
     textColor: "#FFFFFF",
     textOpacity: 1,
     backgroundColor: "#000000",
-    backgroundOpacity: 0,
+    backgroundOpacity: .5,
     backgroundBlur: 0,
     backgroundRadius: 6,
     transcription: "all" as SubtitleStyles['transcription'],

@@ -1,15 +1,21 @@
 'use client'
 
 import SubtitleTranscriptions from "@/app/watch/[id]/[ep]/_components/transcriptions/transcriptions";
-import { useSubtitleTranscriptions } from "@/lib/queries/subtitle";
+import { TranscriptionQuery, TranscriptionStyles } from "@/app/watch/[id]/[ep]/types";
 
-export default function SubtitleTranscriptionsContainer() {
-  // having this inside of SubtitleTranscriptions cause it to re-render for no reason
-  const subtitleQueries = useSubtitleTranscriptions()
+type SubtitleTranscriptionsContainerProps = {
+  transcriptions: TranscriptionQuery[],
+  styles: TranscriptionStyles
+}
 
+export default function SubtitleTranscriptionsContainer({
+  transcriptions,
+  styles
+}: SubtitleTranscriptionsContainerProps) {
   return (
     <SubtitleTranscriptions 
-      subtitleQueries={subtitleQueries}
+      transcriptions={transcriptions}
+      styles={styles}
     />
   )
 }

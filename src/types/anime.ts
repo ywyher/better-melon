@@ -167,5 +167,4 @@ export type AnimeEpisodeContext = {
   subtitleSettings: SubtitleSettings;
   generalSettings: GeneralSettings;
   playerSettings: PlayerSettings;
-  japaneseTranscription: SubtitleCue[]
 }

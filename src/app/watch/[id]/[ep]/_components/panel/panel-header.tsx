@@ -12,7 +12,6 @@ import { Dispatch, SetStateAction, useCallback, useTransition } from "react";
 
 type PanelHeaderProps = {
     isLoading: boolean;
-    subtitleCues?: SubtitleCue[];
     activeSubtitleFile: ActiveSubtitleFile | null;
     subtitleFiles: SubtitleFile[];
     setSelectedTranscription: Dispatch<SetStateAction<SubtitleTranscription>>
@@ -20,7 +19,6 @@ type PanelHeaderProps = {
 
 export default function PanelHeader({
     isLoading,
-    subtitleCues,
     activeSubtitleFile,
     subtitleFiles,
     setSelectedTranscription
@@ -38,7 +36,7 @@ export default function PanelHeader({
         <CardHeader className="flex flex-col gap-3">
             <div className="flex flex-row justify-between items-center w-full">
                 <CardTitle className="text-xl">Transcriptions</CardTitle>
-                {subtitleCues && !isLoading && (
+                {!isLoading && (
                     <div className="flex flex-row gap-2">
                         {activeSubtitleFile?.source == 'remote' && (
                             <Button

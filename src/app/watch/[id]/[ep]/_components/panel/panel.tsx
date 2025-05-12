@@ -9,7 +9,7 @@ import { Tabs } from "@/components/ui/tabs";
 import type { SubtitleCue as TSubtitleCue, SubtitleTranscription, SubtitleFile, SubtitleCue } from "@/types/subtitle";
 import { subtitleTranscriptions } from "@/lib/constants/subtitle";
 import PanelHeader from "@/app/watch/[id]/[ep]/_components/panel/panel-header";
-import SubtitlesList from "@/app/watch/[id]/[ep]/_components/panel/subtitles-list";
+import SubtitleCuesList from "@/app/watch/[id]/[ep]/_components/panel/subtitles-cues-list";
 import PanelSkeleton from "@/app/watch/[id]/[ep]/_components/panel/panel-skeleton";
 import { subtitleQueries } from "@/lib/queries/subtitle";
 
@@ -38,19 +38,19 @@ export default function SubtitlePanel({
 
     useEffect(() => {
       if (subtitleCues?.length) {
-          setSubtitleCues(subtitleCues);
+        setSubtitleCues(subtitleCues);
       }
     }, [subtitleCues, setSubtitleCues]);
     
     useEffect(() => {
         if (subtitleCues && !isCuesLoading && JSON.stringify(subtitleCues) !== JSON.stringify(previousCues)) {
-            setPreviousCues(subtitleCues);
+          setPreviousCues(subtitleCues);
         }
     }, [subtitleCues, isCuesLoading, previousCues]);
 
     if (cuesError) {
         return (
-            <Indicator color="red" message={cuesError?.message || "Error"} type="error" />
+          <Indicator color="red" message={cuesError?.message || "Error"} type="error" />
         );
     }
 
@@ -61,14 +61,13 @@ export default function SubtitlePanel({
             <Tabs className="h-full" defaultValue={selectedTranscription || subtitleTranscriptions[0]} value={selectedTranscription}>
                 <PanelHeader 
                     isLoading={isCuesLoading}
-                    subtitleCues={subtitleCues}
                     activeSubtitleFile={activeSubtitleFile}
                     subtitleFiles={subtitleFiles}
                     setSelectedTranscription={setSelectedTranscription}
                 />
                 <CardContent className="h-full flex justify-center items-center w-full">
                   {activeSubtitleFile && cues ? (
-                      <SubtitlesList
+                      <SubtitleCuesList
                           isLoading={isCuesLoading}
                           selectedTranscription={selectedTranscription}
                           cues={cues}
