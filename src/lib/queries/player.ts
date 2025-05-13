@@ -1,5 +1,4 @@
 import { getEpisodeContext } from "@/app/watch/[id]/[ep]/actions/index.actions";
-import { getSubtitleEntries, getSubtitleFiles } from "@/app/watch/[id]/[ep]/actions/subtitle.actions";
 import { selectSubtitleFile } from "@/lib/subtitle/utils";
 import { AnimeEpisodeContext } from "@/types/anime";
 import { createQueryKeys } from "@lukemorales/query-key-factory";
@@ -20,15 +19,4 @@ export const playerQueries = createQueryKeys('player', {
           return episodeContext as AnimeEpisodeContext
         },
     }),
-    subtitleEntries: (animeId: string) => ({
-        queryKey: ['subtitleEntries', animeId],
-        queryFn: async () => await getSubtitleEntries(animeId),
-    }),
-    subtitleFiles: (entryId: number, episodeNumber: number) => ({
-        queryKey: ['subtitleFiles', entryId, episodeNumber],
-        queryFn: async () => {
-          if(!entryId || !episodeNumber) return;
-          return await getSubtitleFiles(entryId, episodeNumber)
-        },
-    })
 })
