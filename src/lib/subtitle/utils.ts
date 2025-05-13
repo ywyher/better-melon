@@ -19,16 +19,17 @@ export function removeHtmlTags(text: string): string {
   return text.replace(/<[^>]*>/g, '');
 }
 
-export function timestampToSeconds({ format, timestamp }: { format: SubtitleFormat, timestamp: string }): number {
+export function timestampToSeconds({ format, timestamp, delay = 0 }: { format: SubtitleFormat, timestamp: string, delay?: number }): number {
   switch (format) {
       case 'srt':
-          return srtTimestampToSeconds(timestamp);
+        // the + .10 somehow makes it feels more smooth idk why so why not
+        return srtTimestampToSeconds(timestamp) + delay + .10;
       break;
       case "vtt":
-          return vttTimestampToSeconds(timestamp);
+        return vttTimestampToSeconds(timestamp) + delay + .10;
       break;
       default:
-          return 0;
+        return 0;
       break;
   }
 }

@@ -3,6 +3,7 @@ import { handleSyncPlayerSettings } from "@/app/settings/general/actions";
 import { SyncStrategy } from "@/types";
 
 export function showSyncSettingsToast(): Promise<{ strategy: SyncStrategy | null; error: string | null }> {
+  sonnerToast.dismiss()
   return new Promise((resolve) => {
     sonnerToast(
       <div className="flex flex-col gap-2 w-full">
@@ -62,9 +63,21 @@ export function showSyncSettingsToast(): Promise<{ strategy: SyncStrategy | null
         </div>
       </div>,
       {
-        duration: 10000,
+        duration: 5000,
         className: "sync-settings-toast",
         closeButton: true,
+        onAutoClose: () => {
+          resolve({
+            strategy: null,
+            error: null
+          })
+        },
+        onDismiss: () => {
+          resolve({
+            strategy: null,
+            error: null
+          })
+        }
       }
     );
   });

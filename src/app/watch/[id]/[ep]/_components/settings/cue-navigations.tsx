@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { SkipBack, SkipForward } from "lucide-react";
 import { usePlayerStore } from "@/lib/stores/player-store";
 import { SubtitleCue, SubtitleFormat } from "@/types/subtitle";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { getExtension } from "@/lib/utils";
 import { timestampToSeconds } from "@/lib/subtitle/utils";
 
@@ -13,7 +13,7 @@ interface CueNavigationProps {
 }
 
 export default function CueNavigations({ direction }: CueNavigationProps) {
-  const [currentCue, setCurrentCue] = useState<SubtitleCue | null>(null);
+  // Get current player time directly from store instead of local state
   const player = usePlayerStore((state) => state.player);
   const delay = usePlayerStore((state) => state.delay);
   const subtitleCues = usePlayerStore((state) => state.subtitleCues);
@@ -21,125 +21,134 @@ export default function CueNavigations({ direction }: CueNavigationProps) {
   
   const isNext = direction === 'next';
   const currentTimeRef = useRef<number>(0);
-  const lastUpdateTimeRef = useRef<number>(0);
-
-  const findActiveCue = useCallback((currentTime: number) => {
-    if (!subtitleCues) {
-      if (currentCue !== null) setCurrentCue(null);
-      return;
-    }
-
-    const activeCue = subtitleCues.find(cue => {
-      const startTime = timestampToSeconds({
-        timestamp: (cue.from) + delay.japanese,
-        format: getExtension(activeSubtitleFile?.file.name || "srt") as SubtitleFormat
-      })
-      const endTime = timestampToSeconds({
-        timestamp: (cue.to) + delay.japanese,
-        format: getExtension(activeSubtitleFile?.file.name || "srt") as SubtitleFormat
-      })
-      return (currentTime + .1) >= startTime && (currentTime + .1) <= endTime;
-    });
-    
-    // Only update state if the cue has changed
-    if (activeCue?.id !== currentCue?.id) {
-      setCurrentCue(activeCue || null);
-    }
-  }, [subtitleCues, delay.japanese, currentCue, activeSubtitleFile]);
-
-  // Subscribe to player updates without causing re-renders
+  
+  // Listen to player time updates with minimal overhead
   useEffect(() => {
     if (!player.current) return;
-
-    return player.current.subscribe(({ currentTime }) => {
+    
+    const updateCurrentTime = ({ currentTime }: { currentTime: number }) => {
       currentTimeRef.current = currentTime;
+    };
+    
+    return player.current.subscribe(updateCurrentTime);
+  }, [player]);
+
+  // Find the current active cue without triggering state updates
+  const findCurrentCue = useCallback(() => {
+    if (!subtitleCues || !subtitleCues.length || !activeSubtitleFile) return null;
+    
+    const currentTime = player.current?.currentTime ?? currentTimeRef.current;
+    const format = getExtension(activeSubtitleFile.file.name || "srt") as SubtitleFormat;
+    
+    return subtitleCues.find(cue => {
+      const startTime = timestampToSeconds({
+        timestamp: cue.from,
+        format,
+        delay: delay.japanese
+      });
       
-      // Throttle state updates to avoid performance issues
-      const now = Date.now();
-      if (now - lastUpdateTimeRef.current > 250) {
-        lastUpdateTimeRef.current = now;
-        findActiveCue(currentTime);
-      }
-    });
-  }, [player, findActiveCue]);
+      const endTime = timestampToSeconds({
+        timestamp: cue.to,
+        format,
+        delay: delay.japanese
+      });
+      
+      return currentTime >= startTime && currentTime <= endTime;
+    }) || null;
+  }, [subtitleCues, activeSubtitleFile, delay.japanese, player]);
 
   const handleCueNavigation = useCallback(() => {
-    if (!player.current || !subtitleCues || subtitleCues.length === 0) return;
+    if (!player.current || !subtitleCues || subtitleCues.length === 0 || !activeSubtitleFile) return;
 
-    let targetCueId: number | null = null;
-    const currentTime = currentTimeRef.current;
+    const currentTime = player.current.currentTime;
+    const currentCue = findCurrentCue();
+    const format = getExtension(activeSubtitleFile.file.name || "srt") as SubtitleFormat;
+    
+    // Find target cue based on direction
+    let targetCue: SubtitleCue | null = null;
     
     if (currentCue) {
-      targetCueId = currentCue.id + (isNext ? 1 : -1);
+      // Move to next/previous based on current cue
+      const targetIndex = subtitleCues.findIndex(cue => cue.id === currentCue.id) + (isNext ? 1 : -1);
+      if (targetIndex >= 0 && targetIndex < subtitleCues.length) {
+        targetCue = subtitleCues[targetIndex];
+      }
     } else {
-      // Find the closest cue to the current time
-      let closestCue: SubtitleCue | null = null;
-      let minDistance = Infinity;
-      
-      for (const cue of subtitleCues) {
-        const cueStartTime = timestampToSeconds({
-          timestamp: (cue.from) + delay.japanese,
-          format: getExtension(activeSubtitleFile?.file.name || "srt") as SubtitleFormat
-        })
-        const cueEndTime = timestampToSeconds({
-          timestamp: (cue.to) + delay.japanese,
-          format: getExtension(activeSubtitleFile?.file.name || "srt") as SubtitleFormat
-        })
-        
-        // If we're looking for the next cue, find the closest one ahead of current time
-        if (isNext && cueStartTime > currentTime) {
-          const distance = cueStartTime - currentTime;
-          if (distance < minDistance) {
-            minDistance = distance;
-            closestCue = cue;
-          }
-        } 
-        // If we're looking for the previous cue, find the closest one before current time
-        else if (!isNext && cueEndTime < currentTime) {
-          const distance = currentTime - cueEndTime;
-          if (distance < minDistance) {
-            minDistance = distance;
-            closestCue = cue;
+      // No current cue, find closest in direction
+      if (isNext) {
+        // Find first cue after current time
+        targetCue = subtitleCues.find(cue => {
+          const startTime = timestampToSeconds({
+            timestamp: cue.from,
+            format,
+            delay: delay.japanese
+          });
+          return startTime > currentTime;
+        }) || subtitleCues[0]; // Default to first if none found
+      } else {
+        // Find last cue before current time
+        for (let i = subtitleCues.length - 1; i >= 0; i--) {
+          const startTime = timestampToSeconds({
+            timestamp: subtitleCues[i].from,
+            format,
+            delay: delay.japanese
+          });
+          if (startTime < currentTime) {
+            targetCue = subtitleCues[i];
+            break;
           }
         }
-      }
-      
-      // If no cue was found in the desired direction, take the first or last cue
-      if (!closestCue) {
-        closestCue = isNext ? subtitleCues[0] : subtitleCues[subtitleCues.length - 1];
-      }
-      
-      if (closestCue) {
-        targetCueId = closestCue.id;
+        // Default to last if none found
+        if (!targetCue) targetCue = subtitleCues[subtitleCues.length - 1];
       }
     }
     
-    // Find and navigate to the target cue
-    if (targetCueId !== null) {
-      const targetCue = subtitleCues.find(cue => cue.id === targetCueId);
-      if (targetCue && player.current) {
-        const targetCueTime = timestampToSeconds({
-          timestamp: (targetCue.from) + delay.japanese,
-          format: getExtension(activeSubtitleFile?.file.name || "srt") as SubtitleFormat
-        })
-        
-        player.current.currentTime = targetCueTime;
-        setCurrentCue(targetCue);
+    // Navigate to target cue
+    if (targetCue && player.current) {
+      const targetTime = timestampToSeconds({
+        timestamp: targetCue.from,
+        format,
+        delay: delay.japanese
+      });
+      
+      player.current.currentTime = targetTime;
+      
+      // Force player to play if paused for better UX
+      if (player.current.paused) {
+        player.current.play().catch(() => {
+          // Handle play() promise rejection (e.g., if autoplay is blocked)
+          console.warn("Failed to play after cue navigation");
+        });
       }
     }
-  }, [subtitleCues, currentCue, isNext, delay.japanese, player, activeSubtitleFile]);
+  }, [subtitleCues, isNext, delay.japanese, player, activeSubtitleFile, findCurrentCue]);
   
+  // Determine if button should be disabled
   const isDisabled = useMemo(() => {
-    return !activeSubtitleFile || !subtitleCues || subtitleCues.length === 0 || 
-      (!isNext && (currentCue && currentCue.id <= 1)) || 
-      (currentCue && isNext && currentCue.id >= subtitleCues.length);
-  }, [activeSubtitleFile, subtitleCues, currentCue, isNext]);
+    if (!activeSubtitleFile || !subtitleCues || subtitleCues.length === 0) {
+      return true;
+    }
+    
+    const currentCue = findCurrentCue();
+    
+    // For "previous" button: disable if at first cue
+    if (!isNext && currentCue && currentCue.id === 1) {
+      return true;
+    }
+    
+    // For "next" button: disable if at last cue
+    if (isNext && currentCue && currentCue.id === subtitleCues.length) {
+      return true;
+    }
+    
+    return false;
+  }, [activeSubtitleFile, subtitleCues, isNext, findCurrentCue]);
 
   return (
     <Button
       variant="outline"
       onClick={handleCueNavigation}
-      disabled={isDisabled || false}
+      disabled={isDisabled}
       className="w-full flex-1"
     >
       {!isNext && <SkipBack className="mr-2" size={16} />}

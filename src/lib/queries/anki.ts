@@ -38,7 +38,7 @@ export const ankiQueries = createQueryKeys('anki', {
     defaultPreset: () => ({
         queryKey: ['default-preset'],
         queryFn: async () => {
-          return await getDefaultPreset() as AnkiPreset
+          return await getDefaultPreset() as AnkiPreset || undefined
         }
     })
 })

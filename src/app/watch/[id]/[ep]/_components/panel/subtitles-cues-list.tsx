@@ -31,7 +31,6 @@ export default function SubtitleCuesList({
   const delay = usePlayerStore((state) => state.delay);
   const activeSubtitleFile = usePlayerStore((state) => state.activeSubtitleFile);
 
-  // Optimize cueTimeRanges calculation to only run when necessary
   const cueTimeRanges = useMemo(() => {
       if (!cues?.length) return [];
       
@@ -39,17 +38,18 @@ export default function SubtitleCuesList({
           id: cue.id,
           index: cues.indexOf(cue),
           start: timestampToSeconds({
-              timestamp: (cue.from) + delay.japanese,
-              format: getExtension(activeSubtitleFile?.file.name || "srt") as SubtitleFormat
+              timestamp: (cue.from) ,
+              format: getExtension(activeSubtitleFile?.file.name || "srt") as SubtitleFormat,
+              delay: delay.japanese
           }),
           end: timestampToSeconds({
-              timestamp: (cue.to) + delay.japanese,
-              format: getExtension(activeSubtitleFile?.file.name || "srt") as SubtitleFormat
+              timestamp: (cue.to) ,
+              format: getExtension(activeSubtitleFile?.file.name || "srt") as SubtitleFormat,
+              delay: delay.japanese
           })
       }));
-  }, [cues, delay.japanese, activeSubtitleFile?.file.name]);
+  }, [cues, activeSubtitleFile?.file.name, delay.japanese]);
 
-  // Use a fixed size estimate for better performance
   const rowVirtualizer = useVirtualizer({
       count: cues?.length || 0,
       getScrollElement: () => scrollAreaRef.current,
@@ -62,7 +62,7 @@ export default function SubtitleCuesList({
 
   const findActiveCue = useCallback((currentTime: number) => {
       const activeCue = cueTimeRanges.find(cue => 
-          currentTime >= cue.start && currentTime <= cue.end
+        currentTime >= cue.start && currentTime <= cue.end
       );
       
       if (activeCue) {

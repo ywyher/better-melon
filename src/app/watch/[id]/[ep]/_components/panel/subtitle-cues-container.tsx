@@ -24,14 +24,12 @@ export default function SubtitleCuesContainer({
   const activeToken = useDefinitionStore((state) => state.token)
   const setSentance = useDefinitionStore((state) => state.setSentance)
   const setToken = useDefinitionStore((state) => state.setToken)
-  
-  // Store a reference to the current cues array for the memo check
-  const cuesRef = useRef(cues);
     
   const handleSeek = useCallback((from: TSubtitleCue['from']) => {
       player.current?.remoteControl.seek(timestampToSeconds({
-          timestamp: (from) + delay.japanese,
-          format: getExtension(activeSubtitleFile?.file.name || "srt") as SubtitleFormat
+          timestamp: (from),
+          format: getExtension(activeSubtitleFile?.file.name || "srt") as SubtitleFormat,
+          delay: delay.japanese
       }))
   }, [player, activeSubtitleFile, delay.japanese]);
 
@@ -49,7 +47,7 @@ export default function SubtitleCuesContainer({
           
           return (
               <SubtitleCue
-                  key={`${row.key}-${cue.id}`} // Include cue.id in the key to force re-render
+                  key={`${row.key}-${cue.id}`}
                   cue={cue} 
                   index={row.index}
                   isActive={activeCueIdRef.current === cue.id}

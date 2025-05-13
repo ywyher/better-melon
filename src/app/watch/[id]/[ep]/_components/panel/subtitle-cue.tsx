@@ -50,7 +50,7 @@ function SubtitleCueBase({
             >
                 <Play className="hover:fill-[#fb923c]" />
             </Button>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-row gap-2">
                 <div className="flex items-center flex-wrap">
                     {cue.tokens?.length ? cue.tokens.map((token, idx) => (
                         <span 
@@ -65,6 +65,7 @@ function SubtitleCueBase({
                         </span>
                     )) : null}
                 </div>
+                {cue.from}
             </div>
         </div>
     );

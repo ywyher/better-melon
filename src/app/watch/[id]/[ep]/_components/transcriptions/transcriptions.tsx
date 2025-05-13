@@ -40,7 +40,6 @@ export default function SubtitleTranscriptions({ transcriptions, styles }: {
   }, [activeTranscriptions]);
 
   const getActiveSubtitleSets = useCallback(() => {
-      console.debug(`transcriptions`, transcriptions)
       if (!currentTime || !transcriptions.length) {
           return {
               japanese: [],
@@ -68,15 +67,13 @@ export default function SubtitleTranscriptions({ transcriptions, styles }: {
                   ? delay.japanese 
                   : delay.english;
               
-              const currentTimePlusBuffer = currentTime + 0.1;
+              const currentTimePlusBuffer = currentTime;
               
               const activeCues = cues.filter(cue => {
-                  const startTime = timestampToSeconds({ timestamp: cue.from, format });
-                  const endTime = timestampToSeconds({ timestamp: cue.to, format });
-                  const adjustedStartTime = startTime + transcriptionDelay;
-                  const adjustedEndTime = endTime + transcriptionDelay;
+                  const startTime = timestampToSeconds({ timestamp: cue.from, format, delay: transcriptionDelay });
+                  const endTime = timestampToSeconds({ timestamp: cue.to, format, delay: transcriptionDelay });
                   
-                  return currentTimePlusBuffer >= adjustedStartTime && currentTimePlusBuffer <= adjustedEndTime;
+                  return currentTimePlusBuffer >= startTime && currentTimePlusBuffer <= endTime;
               });
               
               result[transcription] = activeCues;

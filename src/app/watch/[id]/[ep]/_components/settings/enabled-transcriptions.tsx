@@ -44,9 +44,12 @@ export default function EnabledTranscriptions({ playerSettings, syncPlayerSettin
       
       if (syncStrategy === 'ask') {
         const { strategy, error } = await showSyncSettingsToast();
-        if (error || !strategy) {
+        if (error) {
           toast.error(error);
           setSelectedTranscriptions(activeTranscriptions);
+          return;
+        }
+        if(!strategy) {
           return;
         }
         syncStrategy = strategy;
