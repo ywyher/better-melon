@@ -16,7 +16,6 @@ Animelon doesn’t provide all animes, and its entries are rarely updated, makin
 
 ## Completed Features
 
-### Core Functionality
 - Search/Filtering system
 - Watch functionality
 - Subtitles panel
@@ -30,32 +29,24 @@ Animelon doesn’t provide all animes, and its entries are rarely updated, makin
 - Local subtitle support
 - Separate delay sliders for Japanese and English subtitles
 - Episodes list/selector
-
-### User Experience
 - Subtitles styling options
 - Customizable transcription order
 - Player settings synchronization with database
-
-### Integrations
 - Authentication via better-auth
 - Account linking 
   1. Anilist
 - Anki integration
   1. Image support
-
-### User Data Management
-  - Anonymous user profiles
-  - Settings preserved after registration
-  - Unified storage implementation
-
-### Settings Categories
+- Anonymous user profiles
+- Settings preserved after registration
+- Unified storage implementation
 - General preferences
 - Player configuration
 - Connection/account management
 - Anki integration settings
+- Add to list
 
 ## Planned Features
-- Add to list
 - Audio support for anki
 - Video VTT thumbnails
 - Providers selector
@@ -86,31 +77,14 @@ pnpm i  # or npm i
 ### 3. Set Up Required Services
 You need the following:
 - PostgreSQL database
-- M3U8 proxy server
-- Consumet API
-
 
 **Option A: Using Docker Compose**
 ```sh
 docker compose -f docker.yaml up -d
 ```
 
-**Option B: Running Services Individually**
+**Option B: Running Services Manually**
 ```sh
-# Start Consumet API
-docker run -d \
-  --name=consumet-api \
-  -p 6969:3000 \
-  --restart unless-stopped \
-  riimuru/consumet-api
-
-# Start M3U8 Proxy
-docker run -d \
-  --name=m3u8-proxy \
-  -p 8080:8080 \
-  --restart unless-stopped \
-  dovakiin0/m3u8-proxy
-
 # Start PostgreSQL
 docker run -d \
   --name=postgres \
@@ -120,6 +94,8 @@ docker run -d \
 ```
 
 ### 4. Register for External Services
+- Setup better-melon-mapper by following the steps shown [here](https://github.com/ywyher/better-melon-mapper)
+- Setup shinra proxy by following the steps shown [here](https://github.com/xciphertv/shrina-proxy)
 - Create an account on [Jimaku.cc](https://jimaku.cc) and generate an API token
 - Set up AniList API credentials at [anilist.co/settings/developer](https://anilist.co/settings/developer)
 - Register for [Resend](https://resend.com/) for email functionality
@@ -165,8 +141,9 @@ pnpm start  # or npm start
 ```
 
 # Credit
-- [Anilist](https://anilist.co/) -> Used to fetch anime data 
-- [Consument](https://github.com/consumet/api.consumet.org) -> Used to fetch anime streaming data
+- [Anilist](https://anilist.co/) -> Used to fetch anime general data
 - [Jimaku](https://jimaku.cc/) -> Used to fetch japanese subtitles
-- [itzzzme](https://github.com/itzzzme/m3u8proxy) -> For the proxy <3
-- [ywyh (Me)](https://github.com/ywyher) – for being goated
+- [Ciphertv](https://github.com/xciphertv/shrina-proxy) -> For the proxy <3
+- [better-auth](https://better-auth.com/) -> Simply the best auth library out there
+- [better-melon-mapper](https://github.com/ywyher/better-melon-mapper) -> our own mapper lol
+- [ywyh (Me)](https://github.com/ywyher) – for being goated ig
