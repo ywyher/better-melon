@@ -96,7 +96,6 @@ docker run -d \
 ### 4. Register for External Services
 - Setup better-melon-mapper by following the steps shown [here](https://github.com/ywyher/better-melon-mapper)
 - Setup shinra proxy by following the steps shown [here](https://github.com/xciphertv/shrina-proxy)
-- Create an account on [Jimaku.cc](https://jimaku.cc) and generate an API token
 - Set up AniList API credentials at [anilist.co/settings/developer](https://anilist.co/settings/developer)
 - Register for [Resend](https://resend.com/) for email functionality
 
@@ -108,13 +107,12 @@ APP_URL=http://localhost:3000
 ENV=DEVELOPMENT  # or PRODUCTION
 DATABASE_URL=postgres://postgres:postgres@localhost:5432/better-melon
 
-BETTER_AUTH_URL=http://localhost:3000
+NEXT_PUBLIC_BETTER_AUTH_URL=http://localhost:3000
 BETTER_AUTH_SECRET=your_secret_key_here
 
-CONSUMET_URL=http://localhost:6969
-JIMAKU_KEY=your_jimaku_api_key
+MAPPER_URL=http://localhost:6969/api
 
-NEXT_PUBLIC_PROXY_URL=http://localhost:8080
+NEXT_PUBLIC_PROXY_URL=http://localhost:8080/proxy
 NEXT_PUBLIC_ANKI_CONNECT_URL=http://localhost:8765
 
 ANILIST_ID=your_anilist_id
@@ -142,8 +140,7 @@ pnpm start  # or npm start
 
 # Credit
 - [Anilist](https://anilist.co/) -> Used to fetch anime general data
-- [Jimaku](https://jimaku.cc/) -> Used to fetch japanese subtitles
 - [Ciphertv](https://github.com/xciphertv/shrina-proxy) -> For the proxy <3
-- [better-auth](https://better-auth.com/) -> Simply the best auth library out there
-- [better-melon-mapper](https://github.com/ywyher/better-melon-mapper) -> our own mapper lol
+- [Better Auth](https://better-auth.com/) -> Simply the best auth library out there
+- [Better Melon Mapper](https://github.com/ywyher/better-melon-mapper) -> our own mapper lol
 - [ywyh (Me)](https://github.com/ywyher) – for being goated ig

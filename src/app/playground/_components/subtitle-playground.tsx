@@ -2,7 +2,7 @@
 
 import { getSession } from "@/lib/auth-client";
 import { User } from "@/lib/db/schema";
-import { useSubtitleTranscriptions } from "@/lib/queries/subtitle";
+import { useSubtitleTranscriptions } from "@/lib/hooks/use-subtitle-transcriptions";
 import { userQueries } from "@/lib/queries/user";
 import { usePlayerStore } from "@/lib/stores/player-store";
 import { useQuery } from "@tanstack/react-query";
