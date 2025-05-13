@@ -76,6 +76,8 @@ export default function Player({
       if(!streamingLinks) return;
 
       const url = `${env.NEXT_PUBLIC_PROXY_URL}?url=${streamingLinks.sources[0].url}`
+      // const url = '/video.mp4'
+      // console.debug(`url ${url}`)
       setVideoSrc(url)
       setIsInitialized(true);
       setLoadingDuration({ start: new Date(), end: undefined })

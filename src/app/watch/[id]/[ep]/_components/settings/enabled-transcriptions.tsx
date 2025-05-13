@@ -8,7 +8,7 @@ import { GeneralSettings, PlayerSettings } from "@/lib/db/schema"
 import { settingsQueries } from "@/lib/queries/settings"
 import { usePlayerStore } from "@/lib/stores/player-store"
 import { SubtitleTranscription } from "@/types/subtitle"
-import { useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useEffect, useState, useRef } from "react"
 import { toast } from "sonner"
 import { useDebounce } from "use-debounce"
@@ -23,45 +23,29 @@ export default function EnabledTranscriptions({ playerSettings, syncPlayerSettin
   const setActiveTranscriptions = usePlayerStore((state) => state.setActiveTranscriptions)
   const [selectedTranscriptions, setSelectedTranscriptions] = useState<SubtitleTranscription[]>([])
   const [debouncedTranscriptions] = useDebounce(selectedTranscriptions, 1000) // 1000ms debounce
-  const [isLoading, setIsLoading] = useState<boolean>(false)
+
+  const hasInitializedRef = useRef(false)
 
   useEffect(() => {
-    if (playerSettings) {
+    // Only set initial values from playerSettings if we haven't done so already
+    if (playerSettings && !hasInitializedRef.current) {
       setActiveTranscriptions(playerSettings.enabledTranscriptions);
       setSelectedTranscriptions(playerSettings.enabledTranscriptions);
+      hasInitializedRef.current = true;
     }
   }, [playerSettings, setActiveTranscriptions]);
 
   const queryClient = useQueryClient()
 
-  // Effect to handle the debounced changes
-  // Use a ref to track the initial render
-  const isInitialRender = useRef(true);
-
-  useEffect(() => {
-    // Skip the initial render completely
-    if (isInitialRender.current) {
-      isInitialRender.current = false;
-      return;
-    }
-    
-    // Skip if the values are the same (prevents infinite loop)
-    if (JSON.stringify(debouncedTranscriptions) === JSON.stringify(activeTranscriptions)) return;
-    
-    // Skip if both arrays are empty
-    if (debouncedTranscriptions.length === 0 && activeTranscriptions.length === 0) return;
-    
-    const updateTranscriptions = async () => {
+  const { mutate, isPending } = useMutation({
+    mutationKey: ['enabled-transcriptions'],
+    mutationFn: async (newTranscriptions: SubtitleTranscription[]) => {
       let syncStrategy = syncPlayerSettings;
       
       if (syncStrategy === 'ask') {
         const { strategy, error } = await showSyncSettingsToast();
-        if (error) {
+        if (error || !strategy) {
           toast.error(error);
-          setSelectedTranscriptions(activeTranscriptions);
-          return;
-        }
-        if (!strategy) {
           setSelectedTranscriptions(activeTranscriptions);
           return;
         }
@@ -70,9 +54,8 @@ export default function EnabledTranscriptions({ playerSettings, syncPlayerSettin
 
       if (syncStrategy === 'always' || syncStrategy === 'ask') {
         try {
-          setIsLoading(true);
           const { error, message } = await handleEnabledTranscriptions({
-            transcriptions: debouncedTranscriptions,
+            transcriptions: newTranscriptions,
           });
           
           if (error) {
@@ -82,26 +65,31 @@ export default function EnabledTranscriptions({ playerSettings, syncPlayerSettin
           }
           
           toast.success(message);
-          setActiveTranscriptions(debouncedTranscriptions);
+          setActiveTranscriptions(newTranscriptions);
           queryClient.invalidateQueries({ queryKey: settingsQueries.general._def });
-        } finally {
-          setIsLoading(false);
+        } catch (error) {
+          toast.error("Failed to update transcriptions");
+          setSelectedTranscriptions(activeTranscriptions);
         }
       } else {
-        // If no sync needed, just update local state
-        setActiveTranscriptions(debouncedTranscriptions);
+        setActiveTranscriptions(newTranscriptions);
       }
-    };
+    }
+  });
 
-    updateTranscriptions();
-  }, [debouncedTranscriptions, activeTranscriptions, syncPlayerSettings, queryClient, setActiveTranscriptions]);
+  useEffect(() => {
+    if((!debouncedTranscriptions.length && hasInitializedRef) 
+      || !playerSettings.enabledTranscriptions.length) return;
+    if(debouncedTranscriptions == playerSettings.enabledTranscriptions) return;
+    mutate(debouncedTranscriptions);
+  }, [debouncedTranscriptions, playerSettings, mutate]);
 
   return (
     <TooltipWrapper tooltip="Choose which scripts (like Romaji, Hiragana, etc.) are shown as subtitles">
       <div className="w-full flex-1">
         <MultipleSelector
           placeholder="Select transcription to display"
-          disabled={isLoading}
+          disabled={isPending}
           options={subtitleTranscriptions.map((transcription) => ({
             value: transcription,
             label: transcription,

@@ -175,10 +175,6 @@ export const useSubtitleStyles = () => {
     return result;
   }, [activeTranscriptions, isFullscreen, storeStyles, getStylesFromStore]);
 
-  useEffect(() => {
-    console.debug(`styles FUCK`, styles)
-  }, [styles])
-
   return {
     isLoading: stylesQuery.isLoading,
     error: stylesQuery.error,

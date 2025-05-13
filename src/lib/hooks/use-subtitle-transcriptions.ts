@@ -132,7 +132,7 @@ export const useSubtitleTranscriptions = () => {
         format: q.data.format,
         cues: q.data.cues,
       }
-    }) as TranscriptionQuery[],
+    }).filter(q => q != undefined) as TranscriptionQuery[],
     loadingDuration: loadingDuration,
     isTokenizerInitialized: isTokenizerInitialized
   };

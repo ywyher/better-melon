@@ -40,7 +40,8 @@ export default function SubtitleTranscriptions({ transcriptions, styles }: {
   }, [activeTranscriptions]);
 
   const getActiveSubtitleSets = useCallback(() => {
-      if (!currentTime) {
+      console.debug(`transcriptions`, transcriptions)
+      if (!currentTime || !transcriptions.length) {
           return {
               japanese: [],
               hiragana: [],
