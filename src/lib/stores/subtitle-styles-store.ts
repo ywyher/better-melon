@@ -1,7 +1,7 @@
 import { SubtitleStyles } from '@/lib/db/schema';
 import { create } from 'zustand'
 
-type SubtitleStylesStore = {
+export type SubtitleStylesStore = {
   styles: Partial<Record<SubtitleStyles['transcription'], SubtitleStyles>> | null;
   getStyles: (transcription: SubtitleStyles['transcription']) => SubtitleStyles | null;
   addStyles: (transcription: SubtitleStyles['transcription'], styles: SubtitleStyles) => void;

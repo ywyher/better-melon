@@ -50,6 +50,7 @@ export default function EnabledTranscriptions({ playerSettings, syncPlayerSettin
           return;
         }
         if(!strategy) {
+          setActiveTranscriptions(newTranscriptions);
           return;
         }
         syncStrategy = strategy;

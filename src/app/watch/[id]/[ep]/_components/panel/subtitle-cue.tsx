@@ -65,7 +65,6 @@ function SubtitleCueBase({
                         </span>
                     )) : null}
                 </div>
-                {cue.from}
             </div>
         </div>
     );

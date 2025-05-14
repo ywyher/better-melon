@@ -5,10 +5,10 @@ import { Anime } from "@/types/anime"
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime"
 
 type AnimeLayoutProps = {
-    bannerImage: Anime['bannerImage']
-    title: Anime['title']
-    children: React.ReactNode
-    router: AppRouterInstance
+  bannerImage: Anime['bannerImage']
+  title: Anime['title']
+  children: React.ReactNode
+  router: AppRouterInstance
 }
 
 export function AnimeLayout({ bannerImage, title, router, children }: AnimeLayoutProps) {

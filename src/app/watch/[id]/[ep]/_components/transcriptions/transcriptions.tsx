@@ -81,14 +81,10 @@ export default function SubtitleTranscriptions({ transcriptions, styles }: {
       });
 
       return result;
-  }, [transcriptions, currentTime, delay]);
+  }, [transcriptions,  currentTime, delay]);
 
   const activeSubtitleSets = useMemo(() => getActiveSubtitleSets(), [getActiveSubtitleSets]);
   
-  useEffect(() =>{ 
-    console.log(activeSubtitleSets)
-  }, [activeSubtitleSets])
-
   const getBottomPosition = useCallback(() => {
       if (isFullscreen) {
           return controlsVisible ? '5' : '2';

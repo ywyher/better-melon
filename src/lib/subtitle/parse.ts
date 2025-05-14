@@ -24,7 +24,10 @@ let tokenizer: Tokenizer | null = null;
 let tokenizerPromise: Promise<void> | null = null;
 
 export async function initializeTokenizer(name?: string) {
-  if(tokenizer) return tokenizer;
+  if(tokenizer) {
+    console.info(`~Tokenizer already exists`)
+    return tokenizer
+  };
   
   if(tokenizerPromise) {
     console.info(`~${name}-Waiting for existing tokenizer initialization`);
@@ -148,8 +151,7 @@ export async function parseSubtitleToJson({
   transcription?: SubtitleTranscription 
 }): Promise<SubtitleCue[]> {
   const cacheKey = getCacheKey(source);
-  console.debug(`cacheKey`, cacheKey)
-  console.info(`Processing ${transcription} subtitles for ${typeof source === 'string' ? source : source.name}`);
+  console.debug(`cacheKey`, subtitleCache.get(cacheKey))
   
   const fetchStart = performance.now();
   const content = await fetchSubtitles(source);

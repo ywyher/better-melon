@@ -2,6 +2,7 @@ import { getAllSubtitleStyles, getMultipleTranscriptionsStyles } from "@/app/set
 import { defaultSubtitleStyles } from "@/app/settings/subtitle/_subtitle-styles/constants";
 import { TranscriptionStyles, TranscriptionStyleSet } from "@/app/watch/[id]/[ep]/types";
 import { SubtitleStyles } from "@/lib/db/schema";
+import { subtitleQueries } from "@/lib/queries/subtitle";
 import { usePlayerStore } from "@/lib/stores/player-store";
 import { useSubtitleStylesStore } from "@/lib/stores/subtitle-styles-store";
 import { SubtitleTranscription } from "@/types/subtitle";
@@ -80,7 +81,7 @@ export const useSubtitleStyles = () => {
   const storeStyles = useSubtitleStylesStore((state) => state.styles);
   
   // Track loading duration
-  const [loadingDuration, setLoadingDuration] = useState<number | null>(null);
+  const [loadingDuration, setLoadingDuration] = useState<number>(0);
   
   // Track which transcriptions have already been checked against the database
   const checkedTranscriptions = useRef<Set<SubtitleTranscription>>(new Set());
@@ -97,42 +98,16 @@ export const useSubtitleStyles = () => {
   
   // Fetch styles from database only for transcriptions we haven't checked yet
   const stylesQuery = useQuery({
-    queryKey: [
-      'subtitle',
-      'styles',
+    ...subtitleQueries.styles({
+      addSubtitleStylesInStore,
+      checkedTranscriptions,
+      getStylesFromStore,
+      setLoadingDuration,
       transcriptionsToFetch,
-    ],
-    queryFn: async () => {
-      if (transcriptionsToFetch.length === 0) return {};
-      
-      const start = performance.now();
-      const stylesMap = await getMultipleTranscriptionsStyles(transcriptionsToFetch);
-      
-      // Store fetched styles in the Zustand store, but only for transcriptions
-      // that actually have styles in the database
-      Object.entries(stylesMap).forEach(([transcription, styles]) => {
-        if (transcription !== 'all') {
-          addSubtitleStylesInStore(transcription as SubtitleTranscription, styles);
-        } else if (!getStylesFromStore('all')) {
-          // Always store the 'all' style if we received it and don't have it yet
-          addSubtitleStylesInStore('all', styles);
-        }
-      });
-      
-      // Mark all checked transcriptions, even those without styles
-      transcriptionsToFetch.forEach(transcription => {
-        checkedTranscriptions.current.add(transcription);
-      });
-      
-      const end = performance.now();
-      const duration = end - start;
-      setLoadingDuration(duration);
-      console.debug(`~Subtitle styles fetched and stored in ${duration.toFixed(2)}ms for ${transcriptionsToFetch.length} transcriptions`);
-      
-      return stylesMap;
-    },
-    staleTime: 1000 * 60 * 60, // 1 hour
-    enabled: transcriptionsToFetch.length > 0
+    }),
+    staleTime: 1000 * 60 * 60,
+    enabled: transcriptionsToFetch.length > 0,
+    refetchOnWindowFocus: false
   });
 
   // Process styles from the store

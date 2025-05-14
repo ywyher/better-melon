@@ -13,7 +13,6 @@ interface CueNavigationProps {
 }
 
 export default function CueNavigations({ direction }: CueNavigationProps) {
-  // Get current player time directly from store instead of local state
   const player = usePlayerStore((state) => state.player);
   const delay = usePlayerStore((state) => state.delay);
   const subtitleCues = usePlayerStore((state) => state.subtitleCues);
@@ -22,22 +21,28 @@ export default function CueNavigations({ direction }: CueNavigationProps) {
   const isNext = direction === 'next';
   const currentTimeRef = useRef<number>(0);
   
-  // Listen to player time updates with minimal overhead
+  // Listen to player time updates safely
   useEffect(() => {
     if (!player.current) return;
     
-    const updateCurrentTime = ({ currentTime }: { currentTime: number }) => {
-      currentTimeRef.current = currentTime;
-    };
-    
-    return player.current.subscribe(updateCurrentTime);
+    try {
+      const updateCurrentTime = ({ currentTime }: { currentTime: number }) => {
+        currentTimeRef.current = currentTime;
+      };
+      
+      return player.current.subscribe(updateCurrentTime);
+    } catch (e) {
+      console.warn("Error subscribing to player:", e);
+      return undefined;
+    }
   }, [player]);
 
   // Find the current active cue without triggering state updates
   const findCurrentCue = useCallback(() => {
     if (!subtitleCues || !subtitleCues.length || !activeSubtitleFile) return null;
     
-    const currentTime = player.current?.currentTime ?? currentTimeRef.current;
+    // Use the reference value to avoid the this.$state is null error
+    const currentTime = currentTimeRef.current;
     const format = getExtension(activeSubtitleFile.file.name || "srt") as SubtitleFormat;
     
     return subtitleCues.find(cue => {
@@ -55,21 +60,24 @@ export default function CueNavigations({ direction }: CueNavigationProps) {
       
       return currentTime >= startTime && currentTime <= endTime;
     }) || null;
-  }, [subtitleCues, activeSubtitleFile, delay.japanese, player]);
+  }, [subtitleCues, activeSubtitleFile, delay.japanese]);
 
   const handleCueNavigation = useCallback(() => {
     if (!player.current || !subtitleCues || subtitleCues.length === 0 || !activeSubtitleFile) return;
 
-    const currentTime = player.current.currentTime;
+    // Always use the ref for current time
+    const currentTime = currentTimeRef.current;
     const currentCue = findCurrentCue();
     const format = getExtension(activeSubtitleFile.file.name || "srt") as SubtitleFormat;
     
     // Find target cue based on direction
-    let targetCue: SubtitleCue | null = null;
+    let targetCue: SubtitleCue | undefined = undefined;
     
     if (currentCue) {
-      // Move to next/previous based on current cue
-      const targetIndex = subtitleCues.findIndex(cue => cue.id === currentCue.id) + (isNext ? 1 : -1);
+      // Get the index instead of using ID which might have gaps
+      const currentIndex = subtitleCues.findIndex(cue => cue.id === currentCue.id);
+      const targetIndex = currentIndex + (isNext ? 1 : -1);
+      
       if (targetIndex >= 0 && targetIndex < subtitleCues.length) {
         targetCue = subtitleCues[targetIndex];
       }
@@ -84,7 +92,10 @@ export default function CueNavigations({ direction }: CueNavigationProps) {
             delay: delay.japanese
           });
           return startTime > currentTime;
-        }) || subtitleCues[0]; // Default to first if none found
+        });
+        
+        // If no cue found ahead, go to first cue
+        if (!targetCue) targetCue = subtitleCues[0];
       } else {
         // Find last cue before current time
         for (let i = subtitleCues.length - 1; i >= 0; i--) {
@@ -98,12 +109,12 @@ export default function CueNavigations({ direction }: CueNavigationProps) {
             break;
           }
         }
-        // Default to last if none found
+        // If no cue found before, go to last cue
         if (!targetCue) targetCue = subtitleCues[subtitleCues.length - 1];
       }
     }
     
-    // Navigate to target cue
+    // Navigate to target cue with error handling
     if (targetCue && player.current) {
       const targetTime = timestampToSeconds({
         timestamp: targetCue.from,
@@ -111,14 +122,17 @@ export default function CueNavigations({ direction }: CueNavigationProps) {
         delay: delay.japanese
       });
       
-      player.current.currentTime = targetTime;
-      
-      // Force player to play if paused for better UX
-      if (player.current.paused) {
-        player.current.play().catch(() => {
-          // Handle play() promise rejection (e.g., if autoplay is blocked)
-          console.warn("Failed to play after cue navigation");
-        });
+      try {
+        player.current.currentTime = targetTime;
+        
+        // Try to play if paused, for better UX when navigating
+        if (player.current.paused) {
+          player.current.play().catch(() => {
+            console.warn("Failed to play after cue navigation");
+          });
+        }
+      } catch (e) {
+        console.warn("Error navigating to cue:", e);
       }
     }
   }, [subtitleCues, isNext, delay.japanese, player, activeSubtitleFile, findCurrentCue]);
@@ -131,13 +145,17 @@ export default function CueNavigations({ direction }: CueNavigationProps) {
     
     const currentCue = findCurrentCue();
     
+    if (!currentCue) {
+      return false; // Always enable if no current cue
+    }
+    
     // For "previous" button: disable if at first cue
-    if (!isNext && currentCue && currentCue.id === 1) {
+    if (!isNext && currentCue.id === Math.min(...subtitleCues.map(c => c.id))) {
       return true;
     }
     
     // For "next" button: disable if at last cue
-    if (isNext && currentCue && currentCue.id === subtitleCues.length) {
+    if (isNext && currentCue.id === Math.max(...subtitleCues.map(c => c.id))) {
       return true;
     }
     

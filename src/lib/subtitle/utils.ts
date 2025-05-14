@@ -2,9 +2,32 @@ import { subtitleFormats } from "@/lib/constants/subtitle";
 import { SubtitleSettings } from "@/lib/db/schema";
 import { fetchSubtitles, parseSrt, parseVtt } from "@/lib/subtitle/parse";
 import { getExtension } from "@/lib/utils";
-import { SkipTime } from "@/types/anime";
+import { AnimeStreamingLinks, SkipTime } from "@/types/anime";
 import { ActiveSubtitleFile, SubtitleFile, SubtitleFormat } from "@/types/subtitle";
 import {franc, francAll} from 'franc-min'
+
+export const getActiveSubtitleFile = (subtitleFiles: SubtitleFile[]) => {
+  const selectedFile = selectSubtitleFile({
+    files: subtitleFiles,
+    preferredFormat: 'srt'
+  })
+
+  return {
+    source: 'remote',
+    file: {
+      name: selectedFile?.name,
+      url: selectedFile?.url,
+      last_modified: selectedFile?.last_modified,
+      size: selectedFile?.size
+    }
+  }
+}
+
+export const getEnglishSubtitleUrl = (tracks: AnimeStreamingLinks['tracks']) => {
+  return tracks.find(
+    (s: AnimeStreamingLinks['tracks'][0]) => s.label === 'English'
+  )?.file || "";
+}
 
 // Helper function to normalize timestamps to HH:MM:SS.mmm format
 export function normalizeTimestamp(hoursPart: string | undefined, minuteSecondsPart: string): string {

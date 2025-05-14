@@ -1,4 +1,5 @@
 'use client';
+
 import { useParams } from 'next/navigation';
 import { Indicator } from '@/components/indicator';
 import { usePlayerStore } from '@/lib/stores/player-store';
@@ -7,12 +8,10 @@ import { useEpisodeData } from '@/lib/hooks/use-epsiode-data';
 import PlayerSection from '@/app/watch/[id]/[ep]/_components/sections/player-section';
 import ControlsSection from '@/app/watch/[id]/[ep]/_components/sections/controls-section';
 import PanelSection from '@/app/watch/[id]/[ep]/_components/sections/panel-section';
-import { usePrefetchNextEpisode } from '@/lib/hooks/use-prefetch-next-episode';
+import { usePrefetchEpisode } from '@/lib/hooks/use-prefetch-episode';
 import { useSubtitleTranscriptions } from '@/lib/hooks/use-subtitle-transcriptions';
 import { useSubtitleStyles } from '@/lib/hooks/use-subtitle-styles';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { clearSubtitleCache } from '@/lib/subtitle/parse';
-import { ActiveSubtitleFile } from '@/types/subtitle';
 
 export default function WatchPage() {
   const params = useParams();
@@ -38,7 +37,8 @@ export default function WatchPage() {
   const { 
     transcriptions, 
     isLoading: isTranscriptionsLoading, 
-    loadingDuration: transcriptionsLoadingDuration 
+    loadingDuration: transcriptionsLoadingDuration,
+    isTokenizerInitialized 
   } = useSubtitleTranscriptions();
   
   const { 
@@ -48,27 +48,46 @@ export default function WatchPage() {
   } = useSubtitleStyles();
 
   const isLoading = useMemo(() => {
-    return (isEpisodeContextLoading || isTranscriptionsLoading || isStylesLoading) && !isVideoReady
+    return (isEpisodeContextLoading || isTranscriptionsLoading || isStylesLoading) && !isVideoReady;
   }, [isEpisodeContextLoading, isTranscriptionsLoading, isStylesLoading, isVideoReady]);
 
   useEffect(() => {
-    if (!isLoading && isVideoReady && episodeContextLoadingDuration && transcriptionsLoadingDuration && stylesLoadingDuration) {
+    if (!isLoading && 
+        isVideoReady && 
+        episodeContextLoadingDuration >= 0 && 
+        transcriptionsLoadingDuration >= 0 && 
+        stylesLoadingDuration >= 0) {
+      
       const loadEndTime = performance.now();
       const elapsed = loadEndTime - loadStartTimeRef.current;
+      
+      console.debug('Calculating loading duration:', {
+        start: loadStartTimeRef.current,
+        end: loadEndTime,
+        elapsed,
+        episodeNumber
+      });
+      
       setTotalDuration(elapsed);
     }
-  }, [isLoading, episodeContextLoadingDuration, transcriptionsLoadingDuration, stylesLoadingDuration, isVideoReady]);
+  }, [
+    isLoading, 
+    isVideoReady, 
+    episodeContextLoadingDuration, 
+    transcriptionsLoadingDuration, 
+    stylesLoadingDuration, 
+    episodeNumber // Include episodeNumber to track when it changes
+  ]);
 
+  // Reset timers and flags when episode or anime changes
   useEffect(() => {
-    if (isLoading) {
-      loadStartTimeRef.current = performance.now();
-      setTotalDuration(0);
-    }
-    // clearSubtitleCache(activeSubtitleFile?.source)
-    setIsVideoReady(false)
-  }, [animeId, episodeNumber]); // Reset timer on page navigation
+    console.debug('Resetting load timer for episode:', episodeNumber);
+    loadStartTimeRef.current = performance.now();
+    setTotalDuration(0);
+    setIsVideoReady(false);
+  }, [animeId, episodeNumber, setIsVideoReady]);
 
-  usePrefetchNextEpisode(animeId, episodeNumber, episodesLength, isVideoReady);
+  usePrefetchEpisode(animeId, episodeNumber+1, episodesLength, isVideoReady);
 
   const errors = [dataError].filter(Boolean);
   if (errors.length > 0) {

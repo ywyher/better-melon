@@ -1,8 +1,7 @@
 import { TranscriptionQuery } from "@/app/watch/[id]/[ep]/types";
-import { useTokenizer } from "@/lib/hooks/use-initialize-tokenizer";
+import { useInitializeTokenizer } from "@/lib/hooks/use-initialize-tokenizer";
+import { subtitleQueries } from "@/lib/queries/subtitle";
 import { usePlayerStore } from "@/lib/stores/player-store";
-import { parseSubtitleToJson } from "@/lib/subtitle/parse";
-import { getSubtitleFormat, getSubtitleSource } from "@/lib/subtitle/utils";
 import { SubtitleTranscription } from "@/types/subtitle";
 import { useQueries } from "@tanstack/react-query";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -23,65 +22,27 @@ export const useSubtitleTranscriptions = () => {
     return storeActiveTranscriptions;
   }, [storeActiveTranscriptions]);
 
-  // Use the tokenizer hook
-  const { isInitialized: isTokenizerInitialized, isLoading: isTokenizerLoading, error: tokenizerError } = useTokenizer();
+  const { isInitialized: isTokenizerInitialized, isLoading: isTokenizerLoading, error: tokenizerError } = useInitializeTokenizer();
+
+  useEffect(() => {
+    console.debug(`debug isTokenizerInitialized ${isTokenizerInitialized}`)
+  }, [isTokenizerInitialized])
   
   const hookStartTime = useRef<number>(performance.now());
-  const [loadingDuration, setLoadingDuration] = useState<number | null>(null);
+  const [loadingDuration, setLoadingDuration] = useState<number>(0);
 
   const queryConfig = useMemo(() => ({
     queries: activeTranscriptions.map(transcription => {
       const isEnglish = transcription === 'english';
-
-      console.debug(`is ready`, isTokenizerInitialized && (
-        (isEnglish && !!englishSubtitleUrl) || 
-        (!isEnglish && !!activeSubtitleFile)
-      ))
       
       return {
-        queryKey: [
-          'subtitle',
-          'transcriptions',
-          transcription,
-          activeSubtitleFile
-        ],
-        queryFn: async () => {
-          if ((isEnglish && !englishSubtitleUrl) 
-            || (!isEnglish && !activeSubtitleFile)) {
-            throw new Error(`Couldn't get the file for ${transcription} subtitles`);
-          }
-
-          if (!activeSubtitleFile) {
-            throw new Error(`Active subtitle file is null`);
-          }
-          
-          if (!isTokenizerInitialized) {
-            throw new Error(`tokenizer isn't initialized`);
-          }
-          
-          const startQuery = performance.now();
-          console.info(`~Starting query for ${transcription} subtitles...`);
-          
-          const source = getSubtitleSource(isEnglish, englishSubtitleUrl, activeSubtitleFile);
-          const format = getSubtitleFormat(isEnglish, englishSubtitleUrl, activeSubtitleFile);
-          
-          const cues = await parseSubtitleToJson({
-            source,
-            format,
-            transcription
-          });
-          
-          const endQuery = performance.now();
-          console.info(`~Query for ${transcription} subtitles completed in ${(endQuery - startQuery).toFixed(2)}ms`);
-
-          console.debug(`hook fuck`, cues)
-          
-          return {
-            transcription,
-            format,
-            cues
-          };
-        },
+        ...subtitleQueries.transcriptions({
+          activeSubtitleFile: activeSubtitleFile || undefined,
+          englishSubtitleUrl,
+          isEnglish,
+          isTokenizerInitialized,
+          transcription
+        }),
         staleTime: 1000 * 60 * 60,
         enabled: isTokenizerInitialized && (
           (isEnglish && !!englishSubtitleUrl) || 
@@ -91,24 +52,24 @@ export const useSubtitleTranscriptions = () => {
     })
   }), [englishSubtitleUrl, activeSubtitleFile, activeTranscriptions, isTokenizerInitialized]);
 
-  const subtitleQueries = useQueries(queryConfig);
+  const queries = useQueries(queryConfig);
 
   // Calculate total execution time when all queries are done
   useEffect(() => {
-    const allQueriesFinished = subtitleQueries.every(
+    const allQueriesFinished = queries.every(
       query => !query.isLoading && (query.isSuccess || query.isError)
     );
 
-    if (allQueriesFinished && subtitleQueries.length > 0 && !loadingDuration) {
+    if (allQueriesFinished && queries.length > 0 && !loadingDuration) {
       const endTime = performance.now();
       const executionTime = endTime - hookStartTime.current;
       setLoadingDuration(executionTime);
       console.debug(`~Total hook execution time: ${executionTime.toFixed(2)}ms`);
     }
-  }, [subtitleQueries, loadingDuration]);
+  }, [queries, loadingDuration]);
 
   // Combine the tokenizer and subtitle loading states
-  const transcriptions = subtitleQueries.map((q) => {
+  const transcriptions = queries.map((q) => {
     if (!q.data) return;
     return {
       transcription: q.data.transcription,
@@ -118,14 +79,14 @@ export const useSubtitleTranscriptions = () => {
   });
   const japanese = transcriptions.find(t => t?.transcription === 'japanese');
 
-  const isLoading = isTokenizerLoading || subtitleQueries.some(q => q.isLoading);
-  const error = tokenizerError || subtitleQueries.find(q => q.error)?.error || !japanese;
+  const isLoading = isTokenizerLoading || queries.some(q => q.isLoading);
+  const error = tokenizerError || queries.find(q => q.error)?.error || !japanese;
 
   
   return {
     isLoading,
     error,
-    transcriptions: subtitleQueries.map((q) => {
+    transcriptions: queries.map((q) => {
       if(!q.data) return;
       return {
         transcription: q.data.transcription,
