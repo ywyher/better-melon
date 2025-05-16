@@ -89,6 +89,7 @@ export async function ensureSubtitlStylesExists({ transcription }: { transcripti
       await db.insert(subtitleStyles).values({
           id: newStylesId,
           userId: userId,
+          transcription,
           createdAt: new Date(),
           updatedAt: new Date(),
       });
@@ -167,7 +168,7 @@ export async function deleteSubtitleStyles({
         ))        
         
         return {
-            message: "Subtitle styles deleted successfully",
+            message: "Subtitle styles removed successfully",
             error: null
         };
     } catch (error: unknown) {

@@ -1,16 +1,10 @@
-use-prefetch hook uses the old add style 
+maybe one queryClient and pass it to all controllers instead of an instance for each ?
 
-cuz styles hook set even if not exists so they doesnt use all 
-
-somehow the styles doesnt apply to the transcriptions
+reset styles button dumb fucking ass
 
 when changing transcription order in the player it doesnt ask for sync player settings maybe you add that
 
-so currently in the watch page the database values aint getting set to the store for the styles probably from use-subtitle-store
-
 use cache for session which are being fetched from the server ??
-
-rename syncPlayerSettings to syncStrategy ig ??
 
 input validation/sanitization 
 

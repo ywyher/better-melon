@@ -3,10 +3,11 @@ import SubtitleTranscriptionSelector from "@/components/subtitle/subtitle-transc
 import SubtitleStylesSkeleton from "@/components/subtitle/styles/subtitle-styles-skeleton";
 import { GeneralSettings, SubtitleStyles as TSubtitleStyles } from "@/lib/db/schema";
 import { useQuery } from "@tanstack/react-query"
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import SubtitleStylesControls from "@/components/subtitle/styles/subtitle-styles-controls";
 import { settingsQueries } from "@/lib/queries/settings";
 import { useSubtitleStylesStore } from "@/lib/stores/subtitle-styles-store";
+import DeleteSubtitleStyles from "@/components/subtitle/styles/delete-subtitle-styles";
 
 type SubtitleStylesProps = {
   source: 'store' | 'database',
@@ -60,9 +61,21 @@ export default function SubtitleStyles({ syncPlayerSettings: propSyncStrategy, s
       <div className="flex flex-col md:flex-row gap-3 justify-between">
         <div className="text-xl font-semibold">Subtitle Styles</div>
         <div className="flex flex-row gap-2">
-          <SubtitleTranscriptionSelector
-            selectedTranscription={selectedTranscription}
-            setSelectedTranscription={setSelectedTranscription}
+          <div className="flex flex-row gap-2">
+            <SubtitleTranscriptionSelector
+              selectedTranscription={selectedTranscription}
+              setSelectedTranscription={setSelectedTranscription}
+            />
+          </div>
+          <DeleteSubtitleStyles
+            syncPlayerSettings={syncPlayerSettings}
+            transcription={selectedTranscription}
+            source={source}
+            subtitleStylesId={
+              source == 'database' 
+              ? remoteStyles?.id || ""
+              : styles['id']
+            }
           />
         </div>
       </div>

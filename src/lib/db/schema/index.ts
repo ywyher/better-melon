@@ -123,8 +123,8 @@ export const subtitleTranscriptionEnum = pgEnum("subtitle_transcription", [
 export const subtitleStyles = pgTable("subtitle_styles", {
   id: text("id").primaryKey(),
   
-  fontSize: real("font_size").notNull().default(16),
-  fontFamily: text("font_family").notNull().default('arial'),
+  fontSize: real("font_size").notNull().default(35),
+  fontFamily: text("font_family").notNull().default('Arial'),
   
   textColor: text("text_color").notNull().default('#FFFFFF'),
   textOpacity: real("text_opacity").notNull().default(1),
