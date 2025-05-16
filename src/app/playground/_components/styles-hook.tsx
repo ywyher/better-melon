@@ -63,6 +63,7 @@ export default function StylesHook() {
       <SubtitleTranscriptions 
         transcriptions={transcriptions}
         styles={styles}
+        syncPlayerSettings="ask"
       />
     </div>
   )

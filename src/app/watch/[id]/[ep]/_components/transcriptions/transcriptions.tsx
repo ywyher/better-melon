@@ -7,23 +7,35 @@ import type { SubtitleCue, SubtitleTranscription } from "@/types/subtitle";
 import { closestCenter, DndContext, type DragEndEvent, KeyboardSensor, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { useMediaState } from "@vidstack/react";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { TranscriptionQuery, TranscriptionStyles } from "@/app/watch/[id]/[ep]/types";
+import { useDebounce } from "@/components/multiple-selector";
+import { handleTranscriptionOrder } from "@/app/settings/subtitle/_transcription-order/actions";
+import { toast } from "sonner";
+import { GeneralSettings } from "@/lib/db/schema";
+import { useMutation } from "@tanstack/react-query";
+import { SyncStrategy } from "@/types";
+import { showSyncSettingsToast } from "@/components/sync-settings-toast";
+import { arraysAreEqual } from "@/lib/utils";
 
-export default function SubtitleTranscriptions({ transcriptions, styles }: {
+export default function SubtitleTranscriptions({ transcriptions, styles, syncPlayerSettings }: {
   transcriptions: TranscriptionQuery[];
-  styles: TranscriptionStyles
+  styles: TranscriptionStyles;
+  syncPlayerSettings: GeneralSettings['syncPlayerSettings']
 }) {
-  // const player = usePlayerStore((state) => state.player);
+  const player = usePlayerStore((state) => state.player);
   const activeTranscriptions = usePlayerStore((state) => state.activeTranscriptions);
   const delay = usePlayerStore((state) => state.delay);
-  
-  // const isFullscreen = useMediaState('fullscreen', player);
-  const isFullscreen = true;
-  // const controlsVisible = useMediaState('controlsVisible', player);
-  const controlsVisible = true;
-  // const currentTime = useMediaState('currentTime', player);
-  const currentTime = 1200;
+  const [order, setOrder] = useState<SubtitleTranscription[]>(() => [...activeTranscriptions]);
+  const debouncedOrder = useDebounce<SubtitleTranscription[]>(order, 1500);
+  const hasUserInteracted = useRef(false);
+    
+  const isFullscreen = useMediaState('fullscreen', player);
+  const controlsVisible = useMediaState('controlsVisible', player);
+  const currentTime = useMediaState('currentTime', player);
+  // const isFullscreen = true;
+  // const controlsVisible = true;
+  // const currentTime = 1200;
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -35,8 +47,6 @@ export default function SubtitleTranscriptions({ transcriptions, styles }: {
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
-  
-  const [order, setOrder] = useState<SubtitleTranscription[]>(() => [...activeTranscriptions]);
 
   useMemo(() => {
     setOrder([...activeTranscriptions]);
@@ -105,14 +115,55 @@ export default function SubtitleTranscriptions({ transcriptions, styles }: {
       const {active, over} = event;
       
       if(!active || !over || active.id === over.id) return;
+      
+      hasUserInteracted.current = true;
               
       setOrder(currentOrder => {
-          const oldIndex = currentOrder.indexOf(active.id.toString() as SubtitleTranscription);
-          const newIndex = currentOrder.indexOf(over.id.toString() as SubtitleTranscription);
-          
-          return arrayMove(currentOrder, oldIndex, newIndex);
+        const oldIndex = currentOrder.indexOf(active.id.toString() as SubtitleTranscription);
+        const newIndex = currentOrder.indexOf(over.id.toString() as SubtitleTranscription);
+        
+        return arrayMove(currentOrder, oldIndex, newIndex);
       });
   }, []);
+
+  const { mutate } = useMutation({
+    mutationFn: async () => {
+      let resolvedStrategy = syncPlayerSettings as SyncStrategy;
+      
+      if (resolvedStrategy === 'ask') {
+        const { error, strategy } = await showSyncSettingsToast();
+        if (error) {
+          toast.error(error);
+          return;
+        }
+        if(!strategy) return;
+        resolvedStrategy = strategy;
+      }
+      
+      if (resolvedStrategy === 'always' || resolvedStrategy === 'once') {
+        const { message, error } = await handleTranscriptionOrder({ 
+          transcriptions: debouncedOrder 
+        });
+  
+        if (error) {
+          toast.error(error);
+          return;
+        }
+  
+        toast.success(message || `Transcription order updated successfully`);
+      }
+    }
+  })
+
+  useEffect(() => {
+    const shouldTriggerUpdate = 
+      debouncedOrder.length > 0 && 
+      hasUserInteracted.current
+    
+    if (shouldTriggerUpdate) {
+      mutate();
+    }
+  }, [debouncedOrder, mutate, hasUserInteracted]);
 
   return (
     <div
@@ -156,4 +207,3 @@ export default function SubtitleTranscriptions({ transcriptions, styles }: {
     </div>
   );
 }
-

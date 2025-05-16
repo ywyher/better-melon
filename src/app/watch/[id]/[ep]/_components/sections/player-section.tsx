@@ -61,9 +61,10 @@ export default function PlayerSection({
                   metadata={episodeContext.metadata}
                   streamingLinks={episodeContext.data.streamingLinks}
                   episodesLength={episodeContext.data.details.episodes} 
+                  syncPlayerSettings={episodeContext.generalSettings.syncPlayerSettings}
                   transcriptions={transcriptions}
                   transcriptionsStyles={transcriptionsStyles}
-                />
+                  />
               </>
             )}
           </>
