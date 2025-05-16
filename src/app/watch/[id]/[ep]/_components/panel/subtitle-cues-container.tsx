@@ -1,4 +1,3 @@
-import { memo, useEffect, useRef } from 'react';
 import { Virtualizer } from "@tanstack/react-virtual";
 import { SubtitleFormat, SubtitleToken, SubtitleCue as TSubtitleCue } from "@/types/subtitle";
 import SubtitleCue from "@/app/watch/[id]/[ep]/_components/panel/subtitle-cue";

@@ -134,7 +134,7 @@ export default function AnkiPresetForm({
     };
 
     const onSubmit = async (data: AnkiPresetSchema) => {
-        if(!data.fields || (Object.entries(data.fields).filter(([_, value]) => value).length == 0)) {
+        if(!data.fields || (Object.entries(data.fields).filter(([, value]) => value).length == 0)) {
             toast.error("At least one field need to be mapped")
             return;
         };

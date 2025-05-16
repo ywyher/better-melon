@@ -33,7 +33,7 @@ export function showSyncSettingsToast(): Promise<{ strategy: SyncStrategy | null
           <button
             onClick={() => {
               sonnerToast.dismiss();
-              resolve({ strategy: "ask", error: null });
+              resolve({ strategy: "once", error: null });
             }}
             className="cursor-pointer text-xs px-2 py-1 text-gray-500 hover:text-gray-600 hover:underline"
           >

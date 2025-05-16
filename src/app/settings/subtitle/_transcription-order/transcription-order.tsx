@@ -25,6 +25,7 @@ import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import { useDebounce } from 'use-debounce';
 
 type TranscriptionItemType = {
     id: string;
@@ -58,8 +59,9 @@ const defaultItems: TranscriptionItems = {
 
 export default function TranscriptionOrder() {
   const { data: subtitleSettings, isLoading: isSubtitleSettingsLoading } = useQuery({ ...settingsQueries.subtitle() })
-
   const [items, setItems] = useState<TranscriptionItems>(defaultItems);
+  const [transcriptionOrder, setTranscriptionOrder] = useState<string[]>([]);
+  const [debouncedOrder] = useDebounce(transcriptionOrder, 1500);
   
   useEffect(() => {
     if (subtitleSettings?.transcriptionOrder && subtitleSettings.transcriptionOrder.length > 0) {
@@ -67,7 +69,7 @@ export default function TranscriptionOrder() {
       
       subtitleSettings.transcriptionOrder.forEach(id => {
           if (defaultItems[id]) {
-              orderedItems[id] = defaultItems[id];
+            orderedItems[id] = defaultItems[id];
           }
       });
       
@@ -81,6 +83,25 @@ export default function TranscriptionOrder() {
     }
   }, [subtitleSettings]);
   
+  useEffect(() => {
+    const updateOrder = async () => {
+      if (debouncedOrder.length > 0) {
+        const { message, error } = await handleTranscriptionOrder({ 
+          transcriptions: debouncedOrder 
+        });
+
+        if (error) {
+          toast.error(error);
+          return;
+        }
+
+        toast.message(message);
+      }
+    };
+
+    updateOrder();
+  }, [debouncedOrder]);
+
   const itemIds = Object.keys(items);
   
   const sensors = useSensors(
@@ -109,15 +130,7 @@ export default function TranscriptionOrder() {
       });
 
       setItems(newItems);
-      const { message, error } = await handleTranscriptionOrder({ transcriptions: Object.keys(newItems) })
-
-      if(error) {
-          toast.error(error)
-          setItems(oldOrder)
-          return
-      }
-
-      toast.message(message)
+      setTranscriptionOrder(newOrder);
   }
   
   if (isSubtitleSettingsLoading) {

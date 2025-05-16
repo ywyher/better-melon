@@ -18,7 +18,7 @@ export function usePrefetchEpisode(
   const [networkCondition, setNetworkCondition] = useState<'good'|'poor'|'n'>('n');
   const storeActiveTranscriptions = usePlayerStore((state) => state.activeTranscriptions) || [];
   const isLastEpisode = episodesLength > 0 && episodeNumber >= episodesLength;
-  const addSubtitleStylesInStore = useSubtitleStylesStore((state) => state.addStyles);
+  const handleSubtitleStylesInStore = useSubtitleStylesStore((state) => state.handleStyles);
   const getStylesFromStore = useSubtitleStylesStore((state) => state.getStyles);
 
 
@@ -158,7 +158,7 @@ export function usePrefetchEpisode(
     isLoading: isStylesQueryLoading
   } = useQuery({
     ...subtitleQueries.styles({
-      addSubtitleStylesInStore,
+      handleSubtitleStylesInStore,
       checkedTranscriptions,
       getStylesFromStore,
       transcriptionsToFetch,

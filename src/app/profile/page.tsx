@@ -4,7 +4,7 @@ import EditProfile, { EditProfileSkeleton } from "@/app/profile/_components/edit
 import ProfileCard, { ProfileCardSkeleton } from "@/app/profile/_components/profile-card";
 import { User } from "@/lib/db/schema";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { UpdatePassword, UpdatePasswordSkeleton } from "@/components/update-password";
+import { UpdatePassword } from "@/components/update-password";
 import { useSession } from "@/lib/queries/user";
 import { UserIcon, KeyIcon } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";

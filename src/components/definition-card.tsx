@@ -51,7 +51,7 @@ export default function DefinitionCard() {
     }
   
     const noteFields = Object.entries(preset.fields)
-    .filter(([_, value]) => value)
+    .filter(([, value]) => value)
     .map(([key, value]) => {
       return {
         [key]: value === "expression"
@@ -79,7 +79,7 @@ export default function DefinitionCard() {
         "tags": [
           "better-melon"
         ],
-        "picture": (Object.entries(preset.fields).find(([_,value]) => value == 'image') && player.current) ? [
+        "picture": (Object.entries(preset.fields).find(([,value]) => value == 'image') && player.current) ? [
           {
             "data": takeSnapshot(player.current),
             "filename": `frame_${Date.now()}.png`,

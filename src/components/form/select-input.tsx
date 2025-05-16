@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface SelectOption {
@@ -14,6 +14,7 @@ interface SelectInputProps {
   className?: string;
   value?: string;
   onChange?: (value: string) => void;
+  onBlur?: (value: string) => void;
   name?: string;
   disabled?: boolean;
 }
@@ -24,6 +25,7 @@ export function SelectInput({
   className = "",
   value,
   onChange,
+  onBlur,
   disabled = false,
   ...props
 }: SelectInputProps) {

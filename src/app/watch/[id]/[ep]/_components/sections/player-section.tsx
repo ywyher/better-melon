@@ -5,6 +5,7 @@ import { usePlayerStore } from '@/lib/stores/player-store';
 import { TopControls } from '@/app/watch/[id]/[ep]/_components/sections/top-controls';
 import { AnimeEpisodeContext } from '@/types/anime';
 import { TranscriptionQuery, TranscriptionStyles } from '@/app/watch/[id]/[ep]/types';
+import { SubtitleCue } from '@/types/subtitle';
 
 interface PlayerSectionProps {
   animeId: string;
@@ -27,7 +28,7 @@ export default function PlayerSection({
   episodesLength,
   isMedium,
   transcriptions,
-  transcriptionsStyles
+  transcriptionsStyles,
 }: PlayerSectionProps) {
   const panelState = usePlayerStore((state) => state.panelState);
   const setPanelState = usePlayerStore((state) => state.setPanelState);
@@ -43,6 +44,7 @@ export default function PlayerSection({
           isMedium={isMedium}
           panelState={panelState}
           setPanelState={setPanelState}
+          japaneseTranscriptions={transcriptions.find(t => t?.transcription == 'japanese')?.cues}
         />
       </div>
       

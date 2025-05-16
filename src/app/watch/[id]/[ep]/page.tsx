@@ -4,7 +4,7 @@ import { useParams } from 'next/navigation';
 import { Indicator } from '@/components/indicator';
 import { usePlayerStore } from '@/lib/stores/player-store';
 import { useIsMedium } from '@/lib/hooks/use-media-query';
-import { useEpisodeData } from '@/lib/hooks/use-epsiode-data';
+import { useEpisodeData } from '@/lib/hooks/use-episode-data';
 import PlayerSection from '@/app/watch/[id]/[ep]/_components/sections/player-section';
 import ControlsSection from '@/app/watch/[id]/[ep]/_components/sections/controls-section';
 import PanelSection from '@/app/watch/[id]/[ep]/_components/sections/panel-section';
@@ -38,7 +38,6 @@ export default function WatchPage() {
     transcriptions, 
     isLoading: isTranscriptionsLoading, 
     loadingDuration: transcriptionsLoadingDuration,
-    isTokenizerInitialized 
   } = useSubtitleTranscriptions();
   
   const { 

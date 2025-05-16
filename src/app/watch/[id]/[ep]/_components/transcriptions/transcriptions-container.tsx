@@ -2,6 +2,7 @@
 
 import SubtitleTranscriptions from "@/app/watch/[id]/[ep]/_components/transcriptions/transcriptions";
 import { TranscriptionQuery, TranscriptionStyles } from "@/app/watch/[id]/[ep]/types";
+import { useEffect } from "react";
 
 type SubtitleTranscriptionsContainerProps = {
   transcriptions: TranscriptionQuery[],

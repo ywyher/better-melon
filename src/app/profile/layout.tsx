@@ -1,4 +1,3 @@
-import SettingsTabs from "@/app/settings/settings-tabs";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

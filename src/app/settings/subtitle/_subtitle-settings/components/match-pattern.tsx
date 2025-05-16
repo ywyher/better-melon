@@ -18,7 +18,7 @@ export default function SubtitleSettingsMatchPattern({ settingsId, matchPattern 
     matchPattern: SubtitleSettings['matchPattern']
 }) {
     const [inputValue, setInputValue] = useState<string>(matchPattern ?? "")
-    const [debouncedValue] = useDebounce(inputValue, 500)
+    const [debouncedValue] = useDebounce(inputValue, 1000)
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [isInitialRender, setIsInitialRender] = useState<boolean>(true)
     const queryClient = useQueryClient()
@@ -74,11 +74,11 @@ export default function SubtitleSettingsMatchPattern({ settingsId, matchPattern 
                 <Badge variant='secondary'>regex</Badge>
                 <p>pattern.</p>
             </div>
-            <TooltipWrapper
+            {/* <TooltipWrapper
                 tooltip="Prioritize the preferred subtitle format but if not found fallback to other formats"
             >
                 <AlertCircle className="w-4 h-4 text-amber-300 cursor-pointer mt-1" />
-            </TooltipWrapper>
+            </TooltipWrapper> */}
             </div>
             <div className="w-full md:col-span-4 flex flex-row gap-3">
             <Input

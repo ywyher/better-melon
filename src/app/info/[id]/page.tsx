@@ -6,8 +6,6 @@ type Params = Promise<{ id: Anime['id'] }>
 export default async function AnimeData({ params }: { params: Params }) {
   const { id } = await params;
 
-  console.debug(`debug animeId ${id}`)
-
   return (
     <AnimeInfo
       animeId={id}

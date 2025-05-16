@@ -36,3 +36,20 @@ export const formatDescription = (desc: Anime['description'], max?: number) => {
 export const getTitle = (title: Anime['title']) => {
     return title.english || title.romaji || "Unknown Title";;
 };
+
+/**
+ * Converts a camelCase string to Title Case with spaces
+ * @param camelCase - A string in camelCase format (e.g., "oneTwo")
+ * @returns The string converted to Title Case with spaces (e.g., "One Two")
+ */
+export function camelCaseToTitleCase(camelCase: string): string {
+  if (!camelCase) return "";
+  
+  // Step 1: Insert a space before each capital letter
+  const withSpaces = camelCase.replace(/([A-Z])/g, ' $1');
+  
+  // Step 2: Capitalize the first letter and trim any extra spaces
+  const titleCase = withSpaces.charAt(0).toUpperCase() + withSpaces.slice(1).trim();
+  
+  return titleCase;
+}

@@ -7,20 +7,23 @@ import type { SubtitleCue, SubtitleTranscription } from "@/types/subtitle";
 import { closestCenter, DndContext, type DragEndEvent, KeyboardSensor, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { useMediaState } from "@vidstack/react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { TranscriptionQuery, TranscriptionStyles } from "@/app/watch/[id]/[ep]/types";
 
 export default function SubtitleTranscriptions({ transcriptions, styles }: {
   transcriptions: TranscriptionQuery[];
   styles: TranscriptionStyles
 }) {
-  const player = usePlayerStore((state) => state.player);
+  // const player = usePlayerStore((state) => state.player);
   const activeTranscriptions = usePlayerStore((state) => state.activeTranscriptions);
   const delay = usePlayerStore((state) => state.delay);
   
-  const isFullscreen = useMediaState('fullscreen', player);
-  const controlsVisible = useMediaState('controlsVisible', player);
-  const currentTime = useMediaState('currentTime', player);
+  // const isFullscreen = useMediaState('fullscreen', player);
+  const isFullscreen = true;
+  // const controlsVisible = useMediaState('controlsVisible', player);
+  const controlsVisible = true;
+  // const currentTime = useMediaState('currentTime', player);
+  const currentTime = 1200;
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -128,7 +131,7 @@ export default function SubtitleTranscriptions({ transcriptions, styles }: {
                 {order.map(transcription => {
                     if (!activeSubtitleSets[transcription]?.length) return null;
 
-                    const tokenStyles = 
+                    const tokenStyles =
                       styles[transcription]?.tokenStyles
                       || styles['all'].tokenStyles
 

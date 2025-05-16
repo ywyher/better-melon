@@ -1,6 +1,6 @@
 import { initializeTokenizer, isTokenizerInitialized } from "@/lib/subtitle/parse";
 import { Tokenizer } from "kuromojin";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 export function useInitializeTokenizer() {
   const [isInitialized, setIsInitialized] = useState<boolean>(isTokenizerInitialized());

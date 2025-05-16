@@ -1,3 +1,23 @@
+use-prefetch hook uses the old add style 
+
+cuz styles hook set even if not exists so they doesnt use all 
+
+somehow the styles doesnt apply to the transcriptions
+
+when changing transcription order in the player it doesnt ask for sync player settings maybe you add that
+
+so currently in the watch page the database values aint getting set to the store for the styles probably from use-subtitle-store
+
+use cache for session which are being fetched from the server ??
+
+rename syncPlayerSettings to syncStrategy ig ??
+
+input validation/sanitization 
+
+check turoborepo
+
+check if memoizing subtitle cue solve the performance issue on vivaldi
+
 add to list have a bug
 
 what needs to be done now is that we should implement useMutation for enabled-transcriptions

@@ -1,4 +1,4 @@
-import { getMultipleTranscriptionsStyles } from "@/app/settings/subtitle/_subtitle-styles/actions";
+import { getMultipleTranscriptionsStyles } from "@/components/subtitle/styles/actions";
 import { SubtitleStylesStore } from "@/lib/stores/subtitle-styles-store";
 import { parseSubtitleToJson } from "@/lib/subtitle/parse";
 import { getSubtitleFormat, getSubtitleSource } from "@/lib/subtitle/utils";
@@ -69,10 +69,10 @@ export const subtitleQueries = createQueryKeys('subtitle', {
       };
     },
   }),
-  styles: ({ transcriptionsToFetch, checkedTranscriptions, addSubtitleStylesInStore, getStylesFromStore, setLoadingDuration }: {
+  styles: ({ transcriptionsToFetch, checkedTranscriptions, handleSubtitleStylesInStore, getStylesFromStore, setLoadingDuration }: {
     transcriptionsToFetch: SubtitleTranscription[];
     checkedTranscriptions: RefObject<Set<SubtitleTranscription>>;
-    addSubtitleStylesInStore: SubtitleStylesStore['addStyles']
+    handleSubtitleStylesInStore: SubtitleStylesStore['handleStyles']
     getStylesFromStore: SubtitleStylesStore['getStyles'];
     setLoadingDuration?: Dispatch<SetStateAction<number>>
   }) => ({
@@ -86,12 +86,7 @@ export const subtitleQueries = createQueryKeys('subtitle', {
       // Store fetched styles in the Zustand store, but only for transcriptions
       // that actually have styles in the database
       Object.entries(stylesMap).forEach(([transcription, styles]) => {
-        if (transcription !== 'all') {
-          addSubtitleStylesInStore(transcription as SubtitleTranscription, styles);
-        } else if (!getStylesFromStore('all')) {
-          // Always store the 'all' style if we received it and don't have it yet
-          addSubtitleStylesInStore('all', styles);
-        }
+        handleSubtitleStylesInStore(transcription as SubtitleTranscription, styles);
       });
       
       // Mark all checked transcriptions, even those without styles

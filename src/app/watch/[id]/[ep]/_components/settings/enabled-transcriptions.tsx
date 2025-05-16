@@ -7,6 +7,7 @@ import { subtitleTranscriptions } from "@/lib/constants/subtitle";
 import { GeneralSettings, PlayerSettings } from "@/lib/db/schema"
 import { settingsQueries } from "@/lib/queries/settings"
 import { usePlayerStore } from "@/lib/stores/player-store"
+import { SyncStrategy } from "@/types"
 import { SubtitleTranscription } from "@/types/subtitle"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useEffect, useState, useRef } from "react"
@@ -40,9 +41,9 @@ export default function EnabledTranscriptions({ playerSettings, syncPlayerSettin
   const { mutate, isPending } = useMutation({
     mutationKey: ['enabled-transcriptions'],
     mutationFn: async (newTranscriptions: SubtitleTranscription[]) => {
-      let syncStrategy = syncPlayerSettings;
+      let resolvedSyncStrategy = syncPlayerSettings as SyncStrategy;
       
-      if (syncStrategy === 'ask') {
+      if (resolvedSyncStrategy === 'ask') {
         const { strategy, error } = await showSyncSettingsToast();
         if (error) {
           toast.error(error);
@@ -53,10 +54,10 @@ export default function EnabledTranscriptions({ playerSettings, syncPlayerSettin
           setActiveTranscriptions(newTranscriptions);
           return;
         }
-        syncStrategy = strategy;
+        resolvedSyncStrategy = strategy;
       }
 
-      if (syncStrategy === 'always' || syncStrategy === 'ask') {
+      if (resolvedSyncStrategy === 'always' || resolvedSyncStrategy === 'once') {
         try {
           const { error, message } = await handleEnabledTranscriptions({
             transcriptions: newTranscriptions,
@@ -72,7 +73,7 @@ export default function EnabledTranscriptions({ playerSettings, syncPlayerSettin
           setActiveTranscriptions(newTranscriptions);
           queryClient.invalidateQueries({ queryKey: settingsQueries.general._def });
         } catch (error) {
-          toast.error("Failed to update transcriptions");
+          toast.error(error instanceof Error ? error.message : "Failed to update transcriptions");
           setSelectedTranscriptions(activeTranscriptions);
         }
       } else {

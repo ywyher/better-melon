@@ -3,4 +3,4 @@ export type Option = {
     label: string;
 };
 
-export type SyncStrategy = 'always' | 'ask' | 'never'
+export type SyncStrategy = 'always' | 'ask' | 'never' | 'once'

@@ -7,8 +7,9 @@ interface SliderInputProps {
   max?: number;
   step?: number;
   className?: string;
-  value?: number; 
+  value?: number;
   onChange?: (value: number) => void;
+  onBlur?: (value: number) => void;
   disabled?: boolean;
   showValue?: boolean;
   unit?: 'px' | 'percentage';
@@ -19,26 +20,25 @@ export function SliderInput({
   max = 100,
   step = 1,
   className = "",
-  value = 0,
+  value: propValue = 0,
   onChange,
+  onBlur,
   disabled = false,
   showValue = false,
   unit,
   ...props
 }: SliderInputProps) {
-  const [displayValue, setDisplayValue] = useState(value);
+  const [internalValue, setInternalValue] = useState(propValue);
   
-  // Update display value when the prop changes
   useEffect(() => {
-    setDisplayValue(value);
-  }, [value]);
+    setInternalValue(propValue);
+  }, [propValue]);
 
-  // Format the value based on unit
   const formattedValue = () => {
     if (unit === 'percentage') {
-      return `${Math.round(displayValue * 100)}%`;
+      return `${Math.round(internalValue * 100)}%`;
     }
-    return `${displayValue}${unit || ''}`;
+    return `${internalValue}${unit || ''}`;
   };
 
   return (
@@ -54,10 +54,14 @@ export function SliderInput({
         min={min}
         max={max}
         step={step}
-        value={[value]}
+        onBlur={() => {
+          onBlur && onBlur(internalValue);
+        }}
+        value={[internalValue]}
         onValueChange={(values) => {
-          setDisplayValue(values[0]);
-          onChange && onChange(values[0]);
+          const newValue = values[0];
+          setInternalValue(newValue);
+          onChange && onChange(newValue);
         }}
         className={`w-full ${className}`}
         disabled={disabled}

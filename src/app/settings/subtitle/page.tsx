@@ -1,7 +1,7 @@
 import TranscriptionOrder from "@/app/settings/subtitle/_transcription-order/transcription-order";
 import SubtitleSettings from "@/app/settings/subtitle/_subtitle-settings/subtitle-settings";
-import SubtitleStyles from "@/app/settings/subtitle/_subtitle-styles/subtitle-styles";
 import { Separator } from "@/components/ui/separator";
+import SubtitleStyles from "@/components/subtitle/styles/subtitle-styles";
 
 export default function SubtitleSettingsPage() {
   return (
@@ -10,7 +10,7 @@ export default function SubtitleSettingsPage() {
       <Separator />
       <TranscriptionOrder />
       <Separator />
-      <SubtitleStyles />
+      <SubtitleStyles source='database' />
     </div>
   )
 }

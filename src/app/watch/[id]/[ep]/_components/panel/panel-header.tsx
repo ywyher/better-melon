@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { CardHeader, CardTitle } from "@/components/ui/card";
 import { TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { subtitleTranscriptions } from "@/lib/constants/subtitle";
-import { ActiveSubtitleFile, SubtitleCue, SubtitleFile, SubtitleTranscription } from "@/types/subtitle";
+import { ActiveSubtitleFile, SubtitleFile, SubtitleTranscription } from "@/types/subtitle";
 import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction, useCallback, useTransition } from "react";
 

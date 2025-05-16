@@ -1,3 +1,5 @@
+import { GeneralSettings, SubtitleStyles } from "@/lib/db/schema";
+
 export type SubtitleEntry = {
     id: number;
     name: string;
@@ -59,4 +61,11 @@ export type SubtitleTranscription = "japanese" | "hiragana" | "katakana" | "roma
 export type SubtitleDelay = {
   japanese: number,
   english: number
+}
+
+export type FieldControllerProps = { 
+  value: string | number
+  transcription: SubtitleStyles['transcription'] 
+  source: 'store' | 'database'
+  syncPlayerSettings: GeneralSettings['syncPlayerSettings']
 }

@@ -22,7 +22,7 @@ export async function getSubtitleSettings() {
     return settings || defaultSubtitleSettings
 } 
 
-export async function handleSubtitleSettings() {
+export async function ensureSubtitleSettingsExists() {
     const { userId, error } = await ensureAuthenticated()
 
     if(!userId || error) return {
@@ -128,7 +128,7 @@ export async function handleDeleteMatchPattern({ settingsId }: { settingsId: Sub
 
 export async function handlePreferredFormat({ format }: { format: SubtitleSettings['preferredFormat'] }) {
     try {
-        const {error ,settingsId } = await handleSubtitleSettings()
+        const {error ,settingsId } = await ensureSubtitleSettingsExists()
     
         if(!settingsId || error) return {
             message: null,

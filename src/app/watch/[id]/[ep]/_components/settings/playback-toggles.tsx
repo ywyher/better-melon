@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { showSyncSettingsToast } from "@/components/sync-settings-toast";
 import { handlePlaybackSetting } from "@/app/settings/player/actions";
 import { settingsQueries } from "@/lib/queries/settings";
+import { SyncStrategy } from "@/types";
 
 type TogglesProps = { 
     playerSettings: PlayerSettings
@@ -46,9 +47,9 @@ export default function PlaybackToggles({ playerSettings, syncPlayerSettings }: 
     const handleValueChange = async (setting: PlaybackSetting, value: boolean) => {
         updateSettingState(setting, value);
         
-        let syncStrategy = syncPlayerSettings;
+        let resolvedSyncStrategy = syncPlayerSettings as SyncStrategy;
         
-        if (syncStrategy === 'ask') {
+        if (resolvedSyncStrategy === 'ask') {
           const { strategy, error } = await showSyncSettingsToast();
           
           if (error) {
@@ -59,10 +60,10 @@ export default function PlaybackToggles({ playerSettings, syncPlayerSettings }: 
           
           if (!strategy) return;
           
-          syncStrategy = strategy;
+          resolvedSyncStrategy = strategy;
         }
         
-        if (syncStrategy === 'always' || syncStrategy === 'ask') {
+        if (resolvedSyncStrategy === 'always' || resolvedSyncStrategy === 'once') {
           try {
             setIsLoading(true);
             const { error, message } = await handlePlaybackSetting({

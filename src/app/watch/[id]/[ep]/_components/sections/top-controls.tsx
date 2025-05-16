@@ -4,6 +4,7 @@ import DialogWrapper from "@/components/dialog-wrapper";
 import { Button } from "@/components/ui/button";
 import { PlayerStore } from "@/lib/stores/player-store";
 import { AnimeEpisodeContext } from "@/types/anime";
+import { SubtitleCue } from "@/types/subtitle";
 import { Captions, Loader2, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 
 type TopControlsProps = {
@@ -13,6 +14,7 @@ type TopControlsProps = {
   isMedium: boolean;
   panelState: PlayerStore['panelState'];
   setPanelState: (state: PlayerStore['panelState']) => void;
+  japaneseTranscriptions?: SubtitleCue[]
 }
 
 export function TopControls({ 
@@ -22,6 +24,7 @@ export function TopControls({
   isMedium,
   panelState,
   setPanelState,
+  japaneseTranscriptions
 }: TopControlsProps) {
   return (
     <div className="flex flex-row gap-3 items-center">
@@ -30,7 +33,7 @@ export function TopControls({
           Loaded in {(loadingDuration / 1000).toFixed(2)}s
         </div>
       )}
-      {(isLoading || !episodeContext) ? (
+      {(isLoading || !episodeContext || !japaneseTranscriptions) ? (
         <div className="flex flex-row gap-2">
           <Button variant='outline'>
             <Loader2 className='animate-spin' />
@@ -61,7 +64,7 @@ export function TopControls({
             >
               <SubtitlePanel
                 subtitleFiles={episodeContext.data.subtitles}
-                japaneseTranscription={episodeContext.japaneseTranscription}
+                japaneseTranscription={japaneseTranscriptions}
               />
             </DialogWrapper>
           ) : (

@@ -6,7 +6,7 @@ import { Track } from "@vidstack/react";
 import '@vidstack/react/player/styles/default/theme.css';
 import '@vidstack/react/player/styles/default/layouts/video.css';
 
-import { useCallback, useEffect, useRef, useState, useMemo, memo, Dispatch, SetStateAction } from "react";
+import { useCallback, useEffect, useRef, useState, useMemo, memo } from "react";
 import { usePlayerStore } from "@/lib/stores/player-store";
 import type { AnimeEpisodeMetadata, AnimeStreamingLinks, SkipTime } from '@/types/anime';
 import SkipButton from '@/app/watch/[id]/[ep]/_components/player/skip-button';

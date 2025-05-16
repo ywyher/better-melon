@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { SubtitleTranscription } from '@/types/subtitle';
-import { defaultSubtitleStyles } from '@/app/settings/subtitle/_subtitle-styles/constants';
-import { getTokenStyles } from '@/hooks/use-subtitle-styles';
+import { defaultSubtitleStyles } from '@/components/subtitle/styles/constants';
+import { getTokenStyles } from '@/lib/hooks/use-subtitle-styles';
 
 type TranscriptionItemProps = {
   transcription: SubtitleTranscription;

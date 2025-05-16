@@ -13,7 +13,7 @@ import { useIsSmall } from "@/lib/hooks/use-media-query"
 import { passwordSchema } from "@/types/auth"
 import { FormField } from "@/components/form/form-field"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { KeyIcon, LockIcon, ShieldCheckIcon } from "lucide-react"
+import { ShieldCheckIcon } from "lucide-react"
 import { Skeleton } from "@/components/ui/skeleton"
 
 const formSchema = z

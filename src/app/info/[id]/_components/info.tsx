@@ -5,7 +5,7 @@ import { AnimeEpisodes } from "@/app/info/[id]/_components/episodes"
 import { AnimeCard } from "@/app/info/[id]/_components/card"
 import { AnimeLayout } from "@/app/info/[id]/_components/layout"
 import { useEffect, useState } from "react"
-import { gql, useQuery } from "@apollo/client"
+import { useQuery } from "@apollo/client"
 import { AnimeDataSkeleton } from "@/app/info/[id]/_components/skeleton"
 import { Indicator } from "@/components/indicator"
 import { Anime } from "@/types/anime"
@@ -13,30 +13,7 @@ import { useRouter, useSearchParams } from "next/navigation"
 import AddToList from "@/components/add-to-list/add-to-list"
 import { useQueryClient } from "@tanstack/react-query"
 import { initializeTokenizer } from "@/lib/subtitle/parse"
-
-const GET_ANIME = gql`
-  query($id: Int!) {
-    Media(id: $id) {
-      id
-      idMal
-      bannerImage
-      format
-      title {
-        romaji
-        english
-      }
-      episodes
-      coverImage {
-        large
-      }
-      description
-      genres
-      status
-      season
-      seasonYear
-    }
-  }
-`;
+import { GET_ANIME } from "@/lib/graphql/queries"
 
 type AnimeInfoProps = {
   animeId: Anime['id']
@@ -57,8 +34,8 @@ export default function AnimeData({
   }, [searchParams]);
 
   const { loading, error, data, refetch } = useQuery(GET_ANIME, { 
-      variables: { id: Number(animeId) },
-      fetchPolicy: 'cache-first',
+    variables: { id: Number(animeId) },
+    fetchPolicy: 'cache-first',
   });
 
   useEffect(() =>{ 
@@ -89,7 +66,7 @@ export default function AnimeData({
       // Use a timeout to delay prefetch and allow images to load first
       const timeoutId = setTimeout(() => {
         prefetch();
-      }, 2000); // 2 second delay after anime data loads
+      }, 2000);
       
       return () => clearTimeout(timeoutId);
     }

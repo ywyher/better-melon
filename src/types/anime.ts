@@ -1,5 +1,5 @@
 import { GeneralSettings, PlayerSettings, SubtitleSettings } from "@/lib/db/schema"
-import { SubtitleCue, SubtitleFile } from "@/types/subtitle"
+import { SubtitleFile } from "@/types/subtitle"
 
 export type AnimeStatus = "CANCELLED" | "FINISHED" | "HIATUS" | "NOT_YET_RELEASED" | "RELEASING"
 export type AnimeSeason = "SPRING" | "FALL" | "SUMMER" | "WINTER"
@@ -136,7 +136,7 @@ export type AnimeStreamingLinks = {
     file: string,
     label?: string,
     kind: 'captions' | 'thumbnails' | 'chapters',
-    default?: Boolean
+    default?: boolean
   }[],
   intro: {
     start: number,

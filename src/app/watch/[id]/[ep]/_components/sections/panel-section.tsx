@@ -1,8 +1,6 @@
 import SubtitlePanel from '../panel/panel';
 import PanelSkeleton from '../panel/panel-skeleton';
-import EpisodesListSkeleton from '../episodes/episodes-list-skeleton';
-import EpisodesList from '../episodes/episodes-list';
-import { Anime, AnimeEpisodeContext } from '@/types/anime';
+import { Anime } from '@/types/anime';
 import { SubtitleCue, SubtitleFile } from '@/types/subtitle';
 
 interface PanelSectionProps {

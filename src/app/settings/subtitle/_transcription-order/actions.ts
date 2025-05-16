@@ -1,13 +1,13 @@
 'use server'
 
-import { handleSubtitleSettings } from "@/app/settings/subtitle/_subtitle-settings/actions"
+import { ensureSubtitleSettingsExists } from "@/app/settings/subtitle/_subtitle-settings/actions"
 import db from "@/lib/db"
 import { SubtitleSettings, subtitleSettings } from "@/lib/db/schema"
 import { eq } from "drizzle-orm"
 
 export async function handleTranscriptionOrder({ transcriptions }: { transcriptions: SubtitleSettings['transcriptionOrder'] }) {
     try {
-        const {error, settingsId } = await handleSubtitleSettings()
+        const {error, settingsId } = await ensureSubtitleSettingsExists()
     
         if(!settingsId || error) return {
             message: null,

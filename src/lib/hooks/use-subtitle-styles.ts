@@ -1,6 +1,5 @@
-import { getAllSubtitleStyles, getMultipleTranscriptionsStyles } from "@/app/settings/subtitle/_subtitle-styles/actions";
-import { defaultSubtitleStyles } from "@/app/settings/subtitle/_subtitle-styles/constants";
-import { TranscriptionStyles, TranscriptionStyleSet } from "@/app/watch/[id]/[ep]/types";
+import { defaultSubtitleStyles } from "@/components/subtitle/styles/constants";
+import { TranscriptionStyles } from "@/app/watch/[id]/[ep]/types";
 import { SubtitleStyles } from "@/lib/db/schema";
 import { subtitleQueries } from "@/lib/queries/subtitle";
 import { usePlayerStore } from "@/lib/stores/player-store";
@@ -76,7 +75,7 @@ export const getContainerStyles = (styles: Partial<SubtitleStyles> | null): CSSP
 export const useSubtitleStyles = () => {
   const activeTranscriptions = usePlayerStore((state) => state.activeTranscriptions);
   const isFullscreen = useMediaState('fullscreen', usePlayerStore((state) => state.player));
-  const addSubtitleStylesInStore = useSubtitleStylesStore((state) => state.addStyles);
+  const handleSubtitleStylesInStore = useSubtitleStylesStore((state) => state.handleStyles);
   const getStylesFromStore = useSubtitleStylesStore((state) => state.getStyles);
   const storeStyles = useSubtitleStylesStore((state) => state.styles);
   
@@ -99,7 +98,7 @@ export const useSubtitleStyles = () => {
   // Fetch styles from database only for transcriptions we haven't checked yet
   const stylesQuery = useQuery({
     ...subtitleQueries.styles({
-      addSubtitleStylesInStore,
+      handleSubtitleStylesInStore,
       checkedTranscriptions,
       getStylesFromStore,
       setLoadingDuration,
@@ -110,13 +109,11 @@ export const useSubtitleStyles = () => {
     refetchOnWindowFocus: false
   });
 
-  // Process styles from the store
   const styles = useMemo(() => {
     const start = performance.now();
     const result = {} as TranscriptionStyles;
     const allStyles = getStylesFromStore('all') || defaultSubtitleStyles;
 
-    // Default return if no active transcriptions
     if (!activeTranscriptions || activeTranscriptions.length === 0) {
       return { 
         all: {
@@ -126,29 +123,32 @@ export const useSubtitleStyles = () => {
       };
     }
     
-    // Always include the 'all' styles
     result.all = {
       tokenStyles: getTokenStyles(isFullscreen, allStyles),
       containerStyle: getContainerStyles(allStyles)
     };
     
-    // Only include specific transcription styles if they exist in the store
     activeTranscriptions.forEach(transcription => {
       const styleData = getStylesFromStore(transcription);
-      if (styleData) {
+      if (
+        styleData
+        && JSON.stringify(styleData) !== JSON.stringify(defaultSubtitleStyles)
+      ) {
         result[transcription] = {
           tokenStyles: getTokenStyles(isFullscreen, styleData),
           containerStyle: getContainerStyles(styleData)
         };
       }
-      // If no styles exist for this transcription, we don't add an entry
-      // and the component will fall back to using 'all' styles
     });
     
     const end = performance.now();
     console.info(`~Subtitle styles processed in ${(end - start).toFixed(2)}ms`);
     return result;
   }, [activeTranscriptions, isFullscreen, storeStyles, getStylesFromStore]);
+
+  useEffect(() => {
+    console.log(`styles hook`, styles)
+  }, [styles])
 
   return {
     isLoading: stylesQuery.isLoading,

@@ -4,3 +4,34 @@ export const subtitleFormats = [
     'srt',
     'ass'
 ] as const
+
+export const textShadowTypes = [
+  "none",
+  "drop-shadow",
+  "raised",
+  "depressed",
+  "outline"
+] as const;
+
+export const fontFamilies = [
+  "Arial",
+  "Helvetica",
+  "Georgia",
+  "Times New Roman",
+  "Courier New",
+  "Verdana",
+  "Tahoma",
+  "Trebuchet MS",
+  "Lucida Console",
+  "Comic Sans MS",
+  "Fira Code",
+  "JetBrains Mono",
+  "Roboto",
+  "Open Sans",
+  "Inter",
+  "Source Sans Pro",
+  "Poppins",
+  "Lato",
+  "Nunito",
+  "Montserrat",
+];

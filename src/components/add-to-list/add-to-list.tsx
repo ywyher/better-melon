@@ -5,7 +5,6 @@ import { AddToAnilistSkeleton } from "@/components/add-to-list/lists/anilist/add
 import SelectConnectionProvider from "@/components/add-to-list/select-connection-provider";
 import DialogWrapper from "@/components/dialog-wrapper";
 import { Button } from "@/components/ui/button";
-import { authClient } from "@/lib/auth-client";
 import { animeListProviders } from "@/lib/constants/anime-list";
 import { userQueries } from "@/lib/queries/user";
 import { useAuthStore } from "@/lib/stores/auth-store";
@@ -13,7 +12,7 @@ import { Anime } from "@/types/anime";
 import { AnimeListProivder } from "@/types/anime-list";
 import { useQuery } from "@tanstack/react-query";
 import { FilePenLine } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 type AddToListProps = { 
   animeId: Anime['id']

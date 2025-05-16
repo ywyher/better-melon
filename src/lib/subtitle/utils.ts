@@ -4,7 +4,7 @@ import { fetchSubtitles, parseSrt, parseVtt } from "@/lib/subtitle/parse";
 import { getExtension } from "@/lib/utils";
 import { AnimeStreamingLinks, SkipTime } from "@/types/anime";
 import { ActiveSubtitleFile, SubtitleFile, SubtitleFormat } from "@/types/subtitle";
-import {franc, francAll} from 'franc-min'
+import {franc} from 'franc-min'
 
 export const getActiveSubtitleFile = (subtitleFiles: SubtitleFile[]) => {
   const selectedFile = selectSubtitleFile({

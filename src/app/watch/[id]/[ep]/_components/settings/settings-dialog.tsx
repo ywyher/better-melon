@@ -1,16 +1,15 @@
 "use client"
 
 import DelayController from "@/app/watch/[id]/[ep]/_components/settings/delay-controller"
-import SubtitleStyles from "@/app/watch/[id]/[ep]/_components/settings/subtitle-styles"
 import type { GeneralSettings } from "@/lib/db/schema"
 import DialogWrapper from "@/components/dialog-wrapper"
 import { Button } from "@/components/ui/button"
 import { Settings } from "lucide-react"
 import { useState } from "react"
 import { Separator } from "@/components/ui/separator"
+import SubtitleStyles from "@/components/subtitle/styles/subtitle-styles"
   
-export default function SettingsDialog({ generalSettings }: 
-  { 
+export default function SettingsDialog({ generalSettings }: { 
     generalSettings: GeneralSettings
   }) {
     const [open, setOpen] = useState<boolean>(false)
@@ -34,9 +33,7 @@ export default function SettingsDialog({ generalSettings }:
         ">
           <DelayController />
           <Separator />
-          <SubtitleStyles
-            syncPlayerSettings={generalSettings.syncPlayerSettings}
-          />
+          <SubtitleStyles syncPlayerSettings={generalSettings.syncPlayerSettings} source="store" />
         </div>
       </DialogWrapper>
     )
