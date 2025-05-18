@@ -58,3 +58,25 @@ export function arraysAreEqual(arr1: any[], arr2: any[]): boolean {
   if (arr1.length !== arr2.length) return false;
   return arr1.every((val, index) => val === arr2[index]);
 }
+
+export const convertFuzzyDateToDate = (fuzzyDateObj: { 
+  year: number | null, 
+  month: number | null, 
+  day: number | null 
+} | undefined) => {
+  if (!fuzzyDateObj) {
+    return null;
+  }
+  
+  const { day, month, year } = fuzzyDateObj;
+  
+  if (day === null && month === null && year === null) {
+    return null;
+  }
+  
+  const safeYear = year !== null ? year : new Date().getFullYear();
+  const safeMonth = month !== null ? month - 1 : 0; // JavaScript months are 0-indexed
+  const safeDay = day !== null ? day : 1;
+  
+  return new Date(safeYear, safeMonth, safeDay);
+}

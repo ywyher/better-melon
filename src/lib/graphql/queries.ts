@@ -36,6 +36,9 @@ export const GET_ANIME_FROM_LIST = gql`
       type: $type
     ) {
       media {
+        mediaListEntry {
+          id
+        }
         episodes
       }
       status

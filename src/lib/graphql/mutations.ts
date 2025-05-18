@@ -39,3 +39,11 @@ export const ADD_ANIME_TO_LIST = gql`
     }
   }
 `
+
+export const DELETE_ANIME_FROM_LIST = gql`
+  mutation DeleteMediaListEntry($id: Int) {
+    DeleteMediaListEntry(id: $id) {
+      deleted
+    }
+  }
+`

@@ -1,8 +1,11 @@
 import { z } from "zod";
 
-export type AnilistGetListQuery = {
+export type AnilistGetAnimeFromListQuery = {
   MediaList: {
     media: {
+      mediaListEntry: {
+        id: number
+      }
       episodes: number;
     };
     status: 

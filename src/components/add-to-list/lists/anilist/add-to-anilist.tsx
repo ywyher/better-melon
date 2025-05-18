@@ -1,7 +1,7 @@
 import AnimeListProviderCard from "@/app/settings/anime-lists/_components/anime-list-provider-card";
 import { animeListStatuses } from "@/components/add-to-list/constants";
 import { AddToAnilistSkeleton } from "@/components/add-to-list/lists/anilist/add-to-anilist-skeleton";
-import { AnilistGetListQuery, anilistOptionsSchema } from "@/components/add-to-list/types";
+import { AnilistGetAnimeFromListQuery, anilistOptionsSchema } from "@/components/add-to-list/types";
 import { CalendarInput } from "@/components/form/calendar-input";
 import { FormField } from "@/components/form/form-field";
 import { NumberInput } from "@/components/form/number-input";
@@ -20,57 +20,43 @@ import { FieldErrors, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { GET_ANIME_FROM_LIST } from "@/lib/graphql/queries";
-import { ADD_ANIME_TO_LIST } from "@/lib/graphql/mutations";
-
+import { ADD_ANIME_TO_LIST, DELETE_ANIME_FROM_LIST } from "@/lib/graphql/mutations";
+import { convertFuzzyDateToDate } from "@/lib/utils";
 
 type AnilistListOptionsProps = {
   provider: AnimeListProivder;
   animeId: Anime['id']
   accountId?: string
-  setOpen: Dispatch<SetStateAction<boolean>>
-}
-
-const convertFuzzyDateToDate = (fuzzyDateObj: { 
-  year: number | null, 
-  month: number | null, 
-  day: number | null 
-} | undefined) => {
-  if (!fuzzyDateObj) {
-    return null;
-  }
-  
-  const { day, month, year } = fuzzyDateObj;
-  
-  if (day === null && month === null && year === null) {
-    return null;
-  }
-  
-  const safeYear = year !== null ? year : new Date().getFullYear();
-  const safeMonth = month !== null ? month - 1 : 0; // JavaScript months are 0-indexed
-  const safeDay = day !== null ? day : 1;
-  
-  return new Date(safeYear, safeMonth, safeDay);
+  accessToken?: string;
+  setOpen: Dispatch<SetStateAction<boolean>>;
 }
 
 export default function AnilistListOptions({ 
   animeId,
   provider,
   accountId,
-  setOpen
+  accessToken,
+  setOpen,
 }: AnilistListOptionsProps) {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const isSmall = useIsSmall()
-  const { data, loading, refetch } = useQuery<AnilistGetListQuery, {mediaId: number, userId: number, type: "ANIME"}>(GET_ANIME_FROM_LIST, {
+  
+  const { data: animeFromList, loading: isAnimeFromListLoading } = useQuery<AnilistGetAnimeFromListQuery, {mediaId: number, userId: number, type: "ANIME"}>(GET_ANIME_FROM_LIST, {
+    context: {
+      headers: {
+        "Authorization": accessToken
+      }
+    },
     variables: {
       mediaId: Number(animeId),
       userId: Number(accountId),
       type: 'ANIME'
     },
+    fetchPolicy: "no-cache",
   })
+  
   const [addAnimeToList] = useMutation(ADD_ANIME_TO_LIST, {
     onCompleted: () => {
-      refetch();
-      
       setIsLoading(false);
       toast('Success', {
         description: `Successfully added anime to your ${provider.name} list!`,
@@ -83,6 +69,23 @@ export default function AnilistListOptions({
         description: error.message || ""
       })
     }
+  });
+  
+  const [deleteAnimeFromList] = useMutation(DELETE_ANIME_FROM_LIST, {
+    onCompleted: () => {
+      setIsLoading(false);
+      toast('Success', {
+        description: `Successfully deleted anime from your ${provider.name} list!`,
+      });
+      setOpen(false)
+    },
+    onError: (error) => {
+      setIsLoading(false)
+      toast.error("Failure", {
+        description: error.message || ""
+      })
+    },
+
   });
 
   const form = useForm<z.infer<typeof anilistOptionsSchema>>({
@@ -120,7 +123,6 @@ export default function AnilistListOptions({
     };
 
     try {
-
       if(!accountId) throw new Error("Account id is not")
 
       const accessToken = await getAccessToken({ accountId })
@@ -150,16 +152,35 @@ export default function AnilistListOptions({
       }
   }
 
+  const onDelete = async() => {
+    setIsLoading(true)
+    try {
+      await deleteAnimeFromList({ 
+        context: {
+          headers: {
+            "Authorization": accessToken
+          }
+        },
+        variables: {
+          id: animeFromList?.MediaList.media.mediaListEntry.id
+        }
+      });
+    } catch (err) {
+      setIsLoading(false)
+      console.error("Error submitting form:", err);
+    }
+  }
+
   useEffect(() => {
-    if(data?.MediaList) {
+    if(animeFromList?.MediaList) {
       const formValues = {
-        startedAt: convertFuzzyDateToDate(data?.MediaList?.startedAt),
-        finishedAt: convertFuzzyDateToDate(data?.MediaList?.completedAt),
-        score: data?.MediaList?.score || 0,
-        notes: data?.MediaList?.notes || null,
-        status: data?.MediaList?.status || null,
-        totalRewatches: data?.MediaList?.repeat || 0,
-        episodeProgress: data?.MediaList?.progress || 0
+        startedAt: convertFuzzyDateToDate(animeFromList?.MediaList?.startedAt),
+        finishedAt: convertFuzzyDateToDate(animeFromList?.MediaList?.completedAt),
+        score: animeFromList?.MediaList?.score || 0,
+        notes: animeFromList?.MediaList?.notes || null,
+        status: animeFromList?.MediaList?.status || null,
+        totalRewatches: animeFromList?.MediaList?.repeat || 0,
+        episodeProgress: animeFromList?.MediaList?.progress || 0
       };
       
       const timer = setTimeout(() => {
@@ -168,101 +189,101 @@ export default function AnilistListOptions({
       
       return () => clearTimeout(timer);
     }
-  }, [data, form]);
+  }, [animeFromList, form]);
 
-  useEffect(() => { 
-    console.log({
-      data, 
-      loading
-    })
-  }, [data, loading])
+  if(!accountId) return (
+    <AnimeListProviderCard
+      isConnected={false}
+      provider={provider}
+      isAuthenticated={true}
+      callbackURL={`/info/${animeId}?addToList=true`}
+    />
+  )
+
+  if(isAnimeFromListLoading) return <AddToAnilistSkeleton />
 
   return (
-    <>
-      {(accountId) ? (
-        <>
-          {(!loading) ? (
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit, onError)}
-                className="flex flex-col gap-3"
-              >
-                <div className="flex flex-col gap-5">
-                  <div className="flex flex-row justify-between gap-5">
-                    <FormField
-                      form={form}
-                      name="status"
-                      label="Status"
-                    >
-                      <SelectInput
-                        options={animeListStatuses}
-                      /> 
-                    </FormField>
-                    <FormField
-                      form={form}
-                      name="score"
-                      label="Score"
-                    >
-                      <NumberInput max={10} />
-                    </FormField>
-                    <FormField
-                      form={form}
-                      name="episodeProgress"
-                      label="Episode Progress"
-                    >
-                      <NumberInput 
-                        max={data?.MediaList.media.episodes}
-                      />
-                    </FormField>
-                  </div>
-                  <div className="flex flex-row justify-between gap-5">
-                    <FormField
-                      form={form}
-                      name="startedAt"
-                      label="Start Date"
-                    >
-                      <CalendarInput />
-                    </FormField>
-                    <FormField
-                      form={form}
-                      name="finishedAt"
-                      label="Finished At"
-                    >
-                      <CalendarInput />
-                    </FormField>
-                    <FormField
-                      form={form}
-                      name="totalRewatches"
-                      label="Total Rewatches"
-                    >
-                      <NumberInput />
-                    </FormField>
-                  </div>
-                  <FormField
-                    form={form}
-                    name="notes"
-                    label="Notes"
-                  >
-                    <TextareaInput />
-                  </FormField>
-                </div>
-                <LoadingButton isLoading={isLoading}>
-                  Add to {provider.name}
-                </LoadingButton>
-              </form>
-            </Form>
-          ): (
-            <AddToAnilistSkeleton />
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit, onError)}
+        className="flex flex-col gap-3"
+      >
+        <div className="flex flex-col gap-5">
+          <div className="flex flex-row justify-between gap-5">
+            <FormField
+              form={form}
+              name="status"
+              label="Status"
+            >
+              <SelectInput
+                options={animeListStatuses}
+              /> 
+            </FormField>
+            <FormField
+              form={form}
+              name="score"
+              label="Score"
+            >
+              <NumberInput max={10} />
+            </FormField>
+            <FormField
+              form={form}
+              name="episodeProgress"
+              label="Episode Progress"
+            >
+              <NumberInput 
+                max={animeFromList?.MediaList.media.episodes}
+              />
+            </FormField>
+          </div>
+          <div className="flex flex-row justify-between gap-5">
+            <FormField
+              form={form}
+              name="startedAt"
+              label="Start Date"
+            >
+              <CalendarInput />
+            </FormField>
+            <FormField
+              form={form}
+              name="finishedAt"
+              label="Finished At"
+            >
+              <CalendarInput />
+            </FormField>
+            <FormField
+              form={form}
+              name="totalRewatches"
+              label="Total Rewatches"
+            >
+              <NumberInput />
+            </FormField>
+          </div>
+          <FormField
+            form={form}
+            name="notes"
+            label="Notes"
+          >
+            <TextareaInput />
+          </FormField>
+        </div>
+        <div className="flex flex-row gap-2 justify-end">
+          {animeFromList?.MediaList && (
+            <LoadingButton 
+              type="button" 
+              variant="destructive" 
+              className="w-fit" 
+              isLoading={isLoading}
+              onClick={() => onDelete()}
+            >
+              Delete
+            </LoadingButton>
           )}
-        </>
-      ): (
-        <AnimeListProviderCard
-          isConnected={false}
-          provider={provider}
-          isAuthenticated={true}
-          callbackURL={`/info/${animeId}?addToList=true`}
-        />
-      )}
-    </>
+          <LoadingButton type="submit" className="w-fit" isLoading={isLoading}>
+            {animeFromList?.MediaList ? 'Update' : 'Add to'} {provider.name}
+          </LoadingButton>
+        </div>
+      </form>
+    </Form>
   )
 }

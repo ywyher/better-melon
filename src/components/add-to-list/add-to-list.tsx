@@ -12,7 +12,7 @@ import { Anime } from "@/types/anime";
 import { AnimeListProivder } from "@/types/anime-list";
 import { useQuery } from "@tanstack/react-query";
 import { FilePenLine } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type AddToListProps = { 
   animeId: Anime['id']
@@ -29,8 +29,8 @@ export default function AddToList({
 
   const { data: user, isLoading: isUserLoading } = useQuery({ ...userQueries.session() })
   const { data: accounts, isLoading: isAccountsLoading } = useQuery({ 
-    ...userQueries.listAccounts(),
-    enabled: !!user
+    ...userQueries.listAccountsFullData({ userId: user?.id || "" }),
+    enabled: !!user && user.id != null
   })
 
   return (
@@ -64,7 +64,8 @@ export default function AddToList({
                 <AnilistListOptions 
                   animeId={animeId}
                   provider={selectedProvider}
-                  accountId={accounts?.find(a => a.provider == selectedProvider.name)?.accountId}
+                  accountId={accounts?.find(a => a.providerId == selectedProvider.name)?.accountId}
+                  accessToken={accounts?.find(a => a.providerId == selectedProvider.name)?.accessToken || undefined}
                   setOpen={setOpen}
                 />
               )}
