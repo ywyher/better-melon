@@ -6,7 +6,7 @@ import SelectConnectionProvider from "@/components/add-to-list/select-connection
 import DialogWrapper from "@/components/dialog-wrapper";
 import { Button } from "@/components/ui/button";
 import { animeListProviders } from "@/lib/constants/anime-list";
-import { userQueries } from "@/lib/queries/user";
+import { userQueries, useSession } from "@/lib/queries/user";
 import { useAuthStore } from "@/lib/stores/auth-store";
 import { Anime } from "@/types/anime";
 import { AnimeListProivder } from "@/types/anime-list";
@@ -27,7 +27,7 @@ export default function AddToList({
   const [selectedProvider, setSelectedProvider] = useState<AnimeListProivder>(animeListProviders[0])
   const setIsAuthDialogOpen = useAuthStore((state) => state.setIsAuthDialogOpen)
 
-  const { data: user, isLoading: isUserLoading } = useQuery({ ...userQueries.session() })
+  const { data: user, isLoading: isUserLoading } = useSession()
   const { data: accounts, isLoading: isAccountsLoading } = useQuery({ 
     ...userQueries.listAccountsFullData({ userId: user?.id || "" }),
     enabled: !!user && user.id != null

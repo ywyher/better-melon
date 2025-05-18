@@ -4,6 +4,7 @@ import LoadingButton from "@/components/loading-button"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { deleteUser } from "@/lib/db/mutations"
 import { User } from "@/lib/db/schema"
+import { userQueries } from "@/lib/queries/user"
 import { useQueryClient } from "@tanstack/react-query"
 import { AlertCircle } from "lucide-react"
 import { useState } from "react"
@@ -23,7 +24,7 @@ export default function AnonymousLinkAccountAlert({ userId }: { userId: User['id
             return;
         }
 
-        queryClient.clear()
+        queryClient.invalidateQueries({ queryKey: userQueries.session._def })
         toast.message(message)
         setIsLoading(false)
     }

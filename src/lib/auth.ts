@@ -1,4 +1,4 @@
-import db from "@/lib/db";
+import db, { DBInstance } from "@/lib/db";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { anonymous, emailOTP, genericOAuth, organization } from "better-auth/plugins"
@@ -6,6 +6,7 @@ import * as schema from '@/lib/db/schema/index'
 import { nextCookies } from "better-auth/next-js";
 import { eq } from "drizzle-orm";
 import { env } from "@/lib/env/server";
+import { generateId } from "better-auth"
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -58,72 +59,93 @@ export const auth = betterAuth({
     organization(),
     anonymous({
       onLinkAccount: async ({ anonymousUser, newUser }) => {
-          const anonymousAnkiPresets = await db.select().from(schema.ankiPreset)
-            .where(eq(schema.ankiPreset.userId, anonymousUser.user.id));
-          const anonymousSubtitleSettings = await db.select().from(schema.subtitleSettings)
-          .where(eq(schema.subtitleSettings.userId, anonymousUser.user.id));
-          const anonymousSubtitleStyles = await db.select().from(schema.subtitleStyles)
-            .where(eq(schema.subtitleSettings.userId, anonymousUser.user.id));
-          
-          const userAnkiPresets = await db.select().from(schema.ankiPreset)
-            .where(eq(schema.ankiPreset.userId, newUser.user.id));
-          const userSubtitleSettings = await db.select().from(schema.subtitleSettings)
-            .where(eq(schema.subtitleSettings.userId, newUser.user.id));
-          const userSubtitleStyles = await db.select().from(schema.subtitleStyles)
-            .where(eq(schema.subtitleSettings.userId, newUser.user.id));
-          
-          if (anonymousAnkiPresets.length > 0) {
-            const userHasDefaultPreset = userAnkiPresets.some(preset => preset.isDefault);
+        // Define a generic migration function for tables with unique userId constraint
+        const migrateUniqueUserTable = async (
+          table: any,
+          tableName: string,
+          dbInstance: DBInstance
+        ) => {
+          // Get anonymous user's settings
+          const anonymousSettings = await dbInstance.select().from(table)
+            .where(eq(table.userId, anonymousUser.user.id));
+    
+          // Check if anonymous user has settings
+          if (anonymousSettings.length > 0) {
+            // Get new user's settings
+            const userSettings = await dbInstance.select().from(table)
+              .where(eq(table.userId, newUser.user.id));
+    
+            // If new user doesn't have settings yet, create them based on anonymous user's settings
+            if (userSettings.length === 0) {
+              // Create a new record without the id, userId, and timestamps
+              const newSettings = { ...anonymousSettings[0] };
+              
+              // Generate a new UUID for the ID
+              newSettings.id = generateId();
+              
+              // Update userId to the new user
+              newSettings.userId = newUser.user.id;
+              
+              // Update timestamps
+              newSettings.createdAt = new Date();
+              newSettings.updatedAt = new Date();
+              
+              // Insert new settings
+              await dbInstance.insert(table).values(newSettings);
+              
+              console.log(`Migrated ${tableName} from anonymous user ${anonymousUser.user.id} to new user ${newUser.user.id}`);
+            } else {
+              console.log(`New user ${newUser.user.id} already has ${tableName}, skipping migration`);
+            }
+          }
+        };
+    
+        // Define a generic migration function for tables with non-unique userId constraint
+        const migrateNonUniqueUserTable = async (
+          table: any,
+          tableName: string,
+          dbInstance: DBInstance
+        ) => {
+          // Get anonymous user's records
+          const anonymousRecords = await dbInstance.select().from(table)
+            .where(eq(table.userId, anonymousUser.user.id));
+    
+          // Migrate each record
+          for (const record of anonymousRecords) {
+            // Create a new record with a new ID and the new userId
+            const newRecord = { ...record };
+            newRecord.id = generateId();
+            newRecord.userId = newUser.user.id;
+            newRecord.createdAt = new Date();
+            newRecord.updatedAt = new Date();
             
-            for (const anonPreset of anonymousAnkiPresets) {
-              // Find if a preset with the same name exists
-              const duplicatePreset = userAnkiPresets.find(p => p.name === anonPreset.name);
-              
-              if (!duplicatePreset) {
-                // No duplicate, migrate this preset
-                // If this is a default preset and user already has one, unmark it as default
-                if (anonPreset.isDefault && userHasDefaultPreset) {
-                  await db.update(schema.ankiPreset)
-                    .set({ 
-                      userId: newUser.user.id,
-                      isDefault: false 
-                    })
-                    .where(eq(schema.ankiPreset.id, anonPreset.id));
-                } else {
-                  await db.update(schema.ankiPreset)
-                    .set({ userId: newUser.user.id })
-                    .where(eq(schema.ankiPreset.id, anonPreset.id));
-                }
-              }
-            }
+            // Insert the new record
+            await dbInstance.insert(table).values(newRecord);
           }
           
-          if (anonymousSubtitleSettings.length > 0) {
-            for (const anonSetting of anonymousSubtitleSettings) {
-              const duplicateSetting = userSubtitleSettings.length > 0;
-              
-              if (!duplicateSetting) {
-                // No conflict, migrate this setting
-                await db.update(schema.subtitleSettings)
-                  .set({ userId: newUser.user.id })
-                  .where(eq(schema.subtitleSettings.id, anonSetting.id));
-              }
-            }
+          if (anonymousRecords.length > 0) {
+            console.log(`Migrated ${anonymousRecords.length} ${tableName} from anonymous user ${anonymousUser.user.id} to new user ${newUser.user.id}`);
           }
-
-          if (anonymousSubtitleSettings.length > 0) {
-            for (const anonStyle of anonymousSubtitleStyles) {
-              const duplicateStyle = userSubtitleStyles.find(s => 
-                s.transcription === anonStyle.transcription
-              );
-              
-              if (!duplicateStyle) {
-                await db.update(schema.subtitleStyles)
-                  .set({ userId: newUser.user.id })
-                  .where(eq(schema.subtitleStyles.id, anonStyle.id));
-              }
-            }
-          }
+        };
+    
+        // Migrate all tables
+        try {
+          // Start a transaction to ensure all migrations succeed or fail together
+          await db.transaction(async (tx) => {
+            // Migrate tables with unique userId constraint
+            await migrateUniqueUserTable(schema.generalSettings, 'general settings', tx);
+            await migrateUniqueUserTable(schema.subtitleSettings, 'subtitle settings', tx);
+            await migrateUniqueUserTable(schema.playerSettings, 'player settings', tx);
+            
+            // Migrate tables with non-unique userId constraint
+            await migrateNonUniqueUserTable(schema.subtitleStyles, 'subtitle styles', tx);
+            await migrateNonUniqueUserTable(schema.ankiPreset, 'anki presets', tx);
+          });
+          
+          console.log(`Successfully migrated all settings from anonymous user ${anonymousUser.user.id} to new user ${newUser.user.id}`);
+        } catch (error) {
+          console.error(`Error migrating settings: ${error instanceof Error ? error.message : "Failed to migrate tables"}`);
+        }
       }
     }),
     emailOTP({ 

@@ -41,10 +41,11 @@ export default function Register({ setPort, email, setPassword }: RegisterProps)
         }
     })
 
+    // formData.email are mostly undfined so we use it as fallback only
     const onSubmit = async (formData: FormValues) => {
         setIsLoading(true)
         const result = await authClient.signUp.email({
-            email: formData.email,
+            email: email || formData.email,
             password: formData.password,
             name: formData.username,
         });
@@ -56,7 +57,7 @@ export default function Register({ setPort, email, setPassword }: RegisterProps)
         }
         
         const { error } = await authClient.emailOtp.sendVerificationOtp({
-            email: formData.email,
+            email: email || formData.email,
             type: "email-verification"
         })
         

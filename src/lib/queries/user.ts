@@ -8,8 +8,8 @@ export const userQueries = createQueryKeys('user', {
     session: () => ({
         queryKey: ['session'],
         queryFn: async () => {
-            const data = await getSession()
-            return data.data?.user as User || null
+          const data = await getSession()
+          return data.data?.user as User || null
         }
     }),
     listAccounts: () => ({
