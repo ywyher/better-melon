@@ -1,5 +1,3 @@
-better auth now support generate name for anon users dont forget to do taht
-
 so when we log as anon we should invalidate the session query a7a
 
 dialog z-index > toast z-index => bad UX 

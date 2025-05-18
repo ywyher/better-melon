@@ -3,8 +3,7 @@ import { pgTable, text, timestamp, boolean, jsonb, pgEnum, real } from "drizzle-
 			
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
-  // name: text('name').notNull().unique(),
-  name: text('name').notNull(),
+  name: text('name').notNull().unique(),
   email: text('email').notNull().unique(),
   emailVerified: boolean('email_verified').notNull(),
   image: text('image').default("pfp.png"),
