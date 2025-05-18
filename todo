@@ -2,8 +2,6 @@ better auth now support generate name for anon users dont forget to do taht
 
 so when we log as anon we should invalidate the session query a7a
 
-anonymous acount linking table have a bug
-
 dialog z-index > toast z-index => bad UX 
 i suppose it can be fixed using createPortal from react
 

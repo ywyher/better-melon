@@ -58,6 +58,10 @@ export const auth = betterAuth({
   plugins: [
     organization(),
     anonymous({
+      generateName: () => {
+        const randomSuffix = Math.random().toString(36).substring(2, 8); // generates random alphanumeric string
+        return `meloner-${randomSuffix}`;
+      },      
       onLinkAccount: async ({ anonymousUser, newUser }) => {
         // Define a generic migration function for tables with unique userId constraint
         const migrateUniqueUserTable = async (
@@ -245,6 +249,6 @@ export const auth = betterAuth({
         // }
       ]
     }),
-    nextCookies(),
+    nextCookies()
   ]
 })
