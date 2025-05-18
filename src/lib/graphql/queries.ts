@@ -23,3 +23,39 @@ export const GET_ANIME = gql`
     }
   }
 `;
+
+export const GET_ANIME_FROM_LIST = gql`
+  query GetAnimeList (
+    $mediaId: Int!,
+    $userId: Int!,
+    $type: MediaType
+  ){
+    MediaList(
+      mediaId: $mediaId,
+      userId: $userId,
+      type: $type
+    ) {
+      media {
+        episodes
+      }
+      status
+      progress
+      startedAt {
+        year
+        month
+        day
+      }
+      completedAt {
+        year
+        month
+        day
+      }
+      score
+      repeat
+      notes
+      user {
+        id
+      }
+    }
+  }
+`

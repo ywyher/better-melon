@@ -16,7 +16,6 @@ import { GeneralSettings } from "@/lib/db/schema";
 import { useMutation } from "@tanstack/react-query";
 import { SyncStrategy } from "@/types";
 import { showSyncSettingsToast } from "@/components/sync-settings-toast";
-import { arraysAreEqual } from "@/lib/utils";
 
 export default function SubtitleTranscriptions({ transcriptions, styles, syncPlayerSettings }: {
   transcriptions: TranscriptionQuery[];

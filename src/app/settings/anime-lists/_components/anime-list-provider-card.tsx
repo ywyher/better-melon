@@ -19,6 +19,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { userQueries } from "@/lib/queries/user";
 import { AnimeListProivder } from "@/types/anime-list";
+import { refreshAccessToken } from "@/lib/db/mutations";
+import { useRouter } from "next/navigation";
 
 type AnimeListProviderCardProps = {
   provider: AnimeListProivder;
@@ -37,6 +39,7 @@ export default function AnimeListProviderCard({
   const [isUnlinking, setIsUnlinking] = useState<boolean>(false);
   const [isAlertOpen, setIsAlertOpen] = useState<boolean>(false);
   const queryClient = useQueryClient();
+  const router = useRouter()
   
   const onLink = async () => {
     if (!isAuthenticated) {

@@ -19,82 +19,9 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { FieldErrors, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { GET_ANIME_FROM_LIST } from "@/lib/graphql/queries";
+import { ADD_ANIME_TO_LIST } from "@/lib/graphql/mutations";
 
-const ADD_ANIME_TO_LIST = gql`
-  mutation SaveMediaListEntry(
-      $mediaId: Int,
-      $status: MediaListStatus,
-      $progress: Int,
-      $startedAt: FuzzyDateInput,
-      $completedAt: FuzzyDateInput,
-      $score: Float,
-      $repeat: Int,
-      $notes: String
-  ) {
-  SaveMediaListEntry(
-      mediaId: $mediaId,
-      status: $status,
-      progress: $progress,
-      startedAt: $startedAt,
-      completedAt: $completedAt,
-      score: $score,
-      repeat: $repeat,
-      notes: $notes
-  ) {
-      status
-      progress
-      startedAt {
-        year
-        month
-        day
-      }
-      completedAt {
-        year
-        month
-        day
-      }
-      score
-      repeat
-      notes
-    }
-  }
-`
-
-const GET_ANIME_LIST = gql`
-  query GetAnimeList (
-    $mediaId: Int!,
-    $userId: Int!,
-    $type: MediaType
-  ){
-    MediaList(
-      mediaId: $mediaId,
-      userId: $userId,
-      type: $type
-    ) {
-      media {
-        episodes
-      }
-      status
-      progress
-      startedAt {
-        year
-        month
-        day
-      }
-      completedAt {
-        year
-        month
-        day
-      }
-      score
-      repeat
-      notes
-      user {
-        id
-      }
-    }
-  }
-`
 
 type AnilistListOptionsProps = {
   provider: AnimeListProivder;
@@ -133,7 +60,7 @@ export default function AnilistListOptions({
 }: AnilistListOptionsProps) {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const isSmall = useIsSmall()
-  const { data, loading, refetch } = useQuery<AnilistGetListQuery, {mediaId: number, userId: number, type: "ANIME"}>(GET_ANIME_LIST, {
+  const { data, loading, refetch } = useQuery<AnilistGetListQuery, {mediaId: number, userId: number, type: "ANIME"}>(GET_ANIME_FROM_LIST, {
     variables: {
       mediaId: Number(animeId),
       userId: Number(accountId),
@@ -243,11 +170,18 @@ export default function AnilistListOptions({
     }
   }, [data, form]);
 
+  useEffect(() => { 
+    console.log({
+      data, 
+      loading
+    })
+  }, [data, loading])
+
   return (
     <>
       {(accountId) ? (
         <>
-          {(data && !loading) ? (
+          {(!loading) ? (
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit, onError)}

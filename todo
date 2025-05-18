@@ -1,3 +1,10 @@
+anonymous acount linking table have a bug
+
+implement refresh token functionality for anilist !!
+
+dialog z-index > toast z-index => bad UX 
+i suppose it can be fixed using createPortal from react
+
 use cache for session which are being fetched from the server ??
 
 input validation/sanitization 

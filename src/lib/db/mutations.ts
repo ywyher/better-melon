@@ -3,8 +3,10 @@
 import { auth } from "@/lib/auth";
 import db from "@/lib/db";
 import { user, User } from "@/lib/db/schema";
+import { env } from "@/lib/env/server";
 import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
 export async function ensureAuthenticated() {
     const headersList = await headers();
@@ -37,6 +39,7 @@ export async function ensureAuthenticated() {
 
 export async function deleteUser({ userId }: { userId: User['id'] }) {
     const result = await db.delete(user).where(eq(user.id, userId))
+
 
     if(!result) return {
         error: "Couldn't delete account, try again later",
