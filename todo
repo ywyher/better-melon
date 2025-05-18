@@ -1,3 +1,9 @@
+auto add to list
+
+screenshot button
+
+maybe use-general-settings for cleaner code ??
+
 so when we log as anon we should invalidate the session query a7a
 
 dialog z-index > toast z-index => bad UX 
@@ -11,25 +17,14 @@ check turoborepo
 
 check if memoizing subtitle cue solve the performance issue on vivaldi
 
-add to list have a bug
-
-what needs to be done now is that we should implement useMutation for enabled-transcriptions
-afterwards we should check why the mapper is being called twice and check the cache and some stuff ig
-
 implement caching for the mapper
-
-active subtitle file doesnt change when episode change prob cause if the cache system ?
 
 episodes metadata for the episode selector
 
 for schedules dont use anilist its based on japanese tv
 
-a bug with the delay controller
-
-a bug with removing a transcription from the list
-
 copy cue when it comes
 
-preview subtitle for when the settings change
+preview subtitle for when the settings change (not important)
 
 stop at each cue setting
