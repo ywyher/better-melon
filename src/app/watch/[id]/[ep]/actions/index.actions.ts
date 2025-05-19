@@ -44,9 +44,9 @@ export async function getEpisodeContext(animeId: string, episodeNumber: number):
     return {
       data,
       metadata: {
-        number: 1,
-        title: 'HI',
-        image: "https://media.kitsu.app/episodes/thumbnails/229115/original.jpeg",
+        number: episodeNumber,
+        title: data.details.title.english,
+        image: data.details.coverImage.large,
       },
       subtitleSettings,
       generalSettings,

@@ -26,7 +26,7 @@ export default function DefinitionCard() {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const player = usePlayerStore((state) => state.player);
 
-  const { data: preset } = useQuery({ ...ankiQueries.defaultPreset() })
+  const { data: preset } = useQuery(ankiQueries.defaultPreset())
 
   const sensors = useSensors(
     useSensor(PointerSensor, {

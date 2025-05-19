@@ -90,25 +90,29 @@ export default function EnabledTranscriptions({ playerSettings, syncPlayerSettin
   }, [debouncedTranscriptions, playerSettings, mutate]);
 
   return (
-    <TooltipWrapper tooltip="Choose which scripts (like Romaji, Hiragana, etc.) are shown as subtitles">
-      <div className="w-full flex-1">
-        <MultipleSelector
-          placeholder="Select transcription to display"
-          disabled={isPending}
-          options={subtitleTranscriptions.map((transcription) => ({
-            value: transcription,
-            label: transcription,
-          }))}
-          value={selectedTranscriptions.map((transcription) => ({
-            value: transcription,
-            label: transcription,
-          }))}
-          onChange={(transcriptions) => {
-            setSelectedTranscriptions(transcriptions.map((transcription) => transcription.value) as SubtitleTranscription[]);
-          }}
-          className="w-full"
-        />
-      </div>
+    <TooltipWrapper
+      trigger={
+        <div className="w-full flex-1">
+          <MultipleSelector
+            placeholder="Select transcription to display"
+            disabled={isPending}
+            options={subtitleTranscriptions.map((transcription) => ({
+              value: transcription,
+              label: transcription,
+            }))}
+            value={selectedTranscriptions.map((transcription) => ({
+              value: transcription,
+              label: transcription,
+            }))}
+            onChange={(transcriptions) => {
+              setSelectedTranscriptions(transcriptions.map((transcription) => transcription.value) as SubtitleTranscription[]);
+            }}
+            className="w-full"
+          />
+        </div>
+      }
+    >
+      Choose which scripts (like Romaji, Hiragana, etc.) are shown as subtitles
     </TooltipWrapper>
   )
 }

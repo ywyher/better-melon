@@ -94,3 +94,131 @@ export async function handleSyncPlayerSettings({ strategy }: { strategy: General
         }
     }
 }
+
+export async function handleHideSpoilersSettings({ value }: { value: GeneralSettings['hideSpoilers'] }) {
+    const { error, generalSettingsId } = await ensureGeneralSettingsExists()
+    
+    if (!generalSettingsId || error) return {
+        message: null,
+        error: error,
+    }
+    
+    try {
+        const data = await db.update(generalSettings)
+            .set({
+                hideSpoilers: value
+            })
+            .where(eq(generalSettings.id, generalSettingsId)) 
+    
+        if(!data) return {
+            message: null,
+            error: `Failed to hide spoilers, try again later...`,
+        }
+    
+        return {
+            message: `Spoliers got hidden.`,
+            error: null
+        }
+    } catch (error: unknown) {
+        return {
+            message: null,
+            error: error instanceof Error ? error.message : `Failed to hide spoilers`,
+        }
+    }
+}
+
+export async function handleScreenshotNamingDialog({ value }: { value: GeneralSettings['screenshotNamingDialog'] }) {
+    const { error, generalSettingsId } = await ensureGeneralSettingsExists()
+    
+    if (!generalSettingsId || error) return {
+        message: null,
+        error: error,
+    }
+    
+    try {
+        const data = await db.update(generalSettings)
+            .set({
+                screenshotNamingDialog: value
+            })
+            .where(eq(generalSettings.id, generalSettingsId)) 
+    
+        if(!data) return {
+            message: null,
+            error: `Failed to enable naming dialog, try again later...`,
+        }
+    
+        return {
+            message: `Naming dialog is now ${value == true ? 'enabled' : 'disabled'}.`,
+            error: null
+        }
+    } catch (error: unknown) {
+        return {
+            message: null,
+            error: error instanceof Error ? error.message : `Failed to enable naming dialog, try again later...`,
+        }
+    }   
+}
+
+export async function handleScreenshotNamingPattern({ pattern }: { pattern: GeneralSettings['screenshotNamingPattern'] }) {
+    const { error, generalSettingsId } = await ensureGeneralSettingsExists()
+    
+    if (!generalSettingsId || error) return {
+        message: null,
+        error: error,
+    }
+    
+    try {
+        const data = await db.update(generalSettings)
+            .set({
+                screenshotNamingPattern: pattern
+            })
+            .where(eq(generalSettings.id, generalSettingsId)) 
+    
+        if(!data) return {
+            message: null,
+            error: `Failed to save naming pattern, try again later...`,
+        }
+    
+        return {
+            message: `Naming pattern is saved.`,
+            error: null
+        }
+    } catch (error: unknown) {
+        return {
+            message: null,
+            error: error instanceof Error ? error.message : `Failed to save naming pattern, try again later...`,
+        }
+    }   
+}
+
+export async function handleScreenshotFormat({ format }: { format: GeneralSettings['screenshotFormat'] }) {
+    const { error, generalSettingsId } = await ensureGeneralSettingsExists()
+    
+    if (!generalSettingsId || error) return {
+        message: null,
+        error: error,
+    }
+    
+    try {
+        const data = await db.update(generalSettings)
+            .set({
+                screenshotFormat: format
+            })
+            .where(eq(generalSettings.id, generalSettingsId)) 
+    
+        if(!data) return {
+            message: null,
+            error: `Failed to save format, try again later...`,
+        }
+    
+        return {
+            message: `Format saved.`,
+            error: null
+        }
+    } catch (error: unknown) {
+        return {
+            message: null,
+            error: error instanceof Error ? error.message : `Failed to save format, try again later...`,
+        }
+    }   
+}

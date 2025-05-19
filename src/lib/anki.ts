@@ -1,4 +1,5 @@
 'use client'
+import { defaultGeneralSettings } from "@/lib/constants/settings";
 import { env } from "@/lib/env/client";
 import { MediaPlayerInstance } from "@vidstack/react";
 
@@ -34,7 +35,7 @@ export const invokeAnkiConnect = async (action: string, version: number, params 
   }
 }
 
-export function takeSnapshot(player: MediaPlayerInstance) {
+export function takeSnapshot(player: MediaPlayerInstance, format: 'png' | 'jpeg' | 'webp' = defaultGeneralSettings.screenshotFormat, quality = 0.95) {
     const videoEl = player.el?.querySelector('video') as HTMLVideoElement;
     if (!videoEl) return;
     
@@ -46,8 +47,12 @@ export function takeSnapshot(player: MediaPlayerInstance) {
     if (!ctx) return;
     
     ctx.drawImage(videoEl, 0, 0, canvas.width, canvas.height);
-    const dataURL = canvas.toDataURL('image/png');
+    
+    const mimeType = `image/${format}`;
+    const dataURL = format === 'png' 
+      ? canvas.toDataURL(mimeType)
+      : canvas.toDataURL(mimeType, quality);
 
-    // Extract the base64 data (remove the "data:image/png;base64," part)
+
     return dataURL.split(',')[1];
 }

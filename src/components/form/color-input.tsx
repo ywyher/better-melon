@@ -30,13 +30,18 @@ export const ColorInput = ({ value = "#FFFFFF", onChange, className, ...props }:
     }
   }, [value]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputBlur = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     setLocalValue(newValue);
     
     if (/^#([0-9A-F]{3}){1,2}$/i.test(newValue)) {
       onChange?.(newValue);
     }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    setLocalValue(newValue);
   };
 
   const handleColorChange = (newColor: string) => {
@@ -59,6 +64,7 @@ export const ColorInput = ({ value = "#FFFFFF", onChange, className, ...props }:
       <Input
         type="text"
         value={localValue}
+        onBlur={handleInputBlur}
         onChange={handleInputChange}
         placeholder="#FFFFFF"
         className={cn("flex-1", className)}

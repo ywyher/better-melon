@@ -2,22 +2,26 @@
 
 import { ReactNode } from "react"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { Info } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export default function TooltipWrapper({
     children,
-    tooltip,
+    trigger = <Info size={16} color="orange" />,
+    className = "",
 }: {
     children: ReactNode;
-    tooltip: ReactNode;
+    trigger?: ReactNode;
+    className?: string;
 }) {
     return (
         <TooltipProvider>
             <Tooltip>
                 <TooltipTrigger asChild>
-                    {children}
+                    {trigger}
                 </TooltipTrigger>
-                <TooltipContent>
-                    {tooltip}
+                <TooltipContent className={cn(className)}>
+                    {children}
                 </TooltipContent>
             </Tooltip>
         </TooltipProvider>

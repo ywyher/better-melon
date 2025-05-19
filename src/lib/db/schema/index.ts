@@ -59,10 +59,16 @@ export const syncStrategyEnum = pgEnum("sync_strategy", [
   "ask"
 ]);
 
+export const screenshotFormatEnum = pgEnum('screenshot_format', ['png', 'jpeg', 'webp']);
+
 export const generalSettings = pgTable("general_settings", {
   id: text("id").primaryKey(),
 
   syncPlayerSettings: syncStrategyEnum('sync_player_settings').default('ask').notNull(),
+
+  screenshotNamingDialog: boolean('screenshotNamingDialog').notNull().default(true),
+  screenshotNamingPattern: text('screenshotNamingPattern').notNull().default('better_melon_{title}_{counter}_{random}'),
+  screenshotFormat: screenshotFormatEnum('screenshot_format').notNull().default('png'),
 
   userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }).unique(),
   createdAt: timestamp("created_at").notNull(),
@@ -161,7 +167,7 @@ export const playerSettings = pgTable("player_settings", {
   autoPlay: boolean('auto_play').notNull().default(false),
   autoNext: boolean('auto_next').notNull().default(false),
   autoSkip: boolean('auto_skip').notNull().default(false),
-
+  
   enabledTranscriptions: transcriptionEnum('enabled_transcriptions').array().notNull().default(["japanese", "english"]),
 
   userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }).unique(),

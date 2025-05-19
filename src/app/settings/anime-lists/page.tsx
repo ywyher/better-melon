@@ -36,9 +36,9 @@ export default function AnimeLists() {
                         <CardTitle className="text-2xl">Connect Your Anime Lists</CardTitle>
                         {!isAuthenticated && (
                             <TooltipWrapper
-                                tooltip="Authentication required"
+                                trigger={<AlertCircle className="w-5 h-5 text-amber-300 cursor-pointer mt-1" />}
                             >
-                                <AlertCircle className="w-5 h-5 text-amber-300 cursor-pointer mt-1" />
+                                <>Authentication required</>
                             </TooltipWrapper>
                         )}
                     </div>

@@ -1,7 +1,9 @@
+
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { S3Client } from "@aws-sdk/client-s3";
-import { Anime } from "@/types/anime";
+import { Anime, AnimeEpisodeMetadata } from "@/types/anime";
+import { GeneralSettings } from "@/lib/db/schema";
 
 export const s3 = new S3Client({
   region: "auto",
@@ -80,3 +82,69 @@ export const convertFuzzyDateToDate = (fuzzyDateObj: {
   
   return new Date(safeYear, safeMonth, safeDay);
 }
+
+export const downloadBase64Image = (base64Data: string, fileName: string, fileType = 'png') => {
+  // Check if data already has the data URL prefix
+  const dataUrl = base64Data.startsWith('data:') 
+    ? base64Data 
+    : `data:image/${fileType};base64,${base64Data}`;
+  
+  // Create default filename if not provided
+  const defaultFileName = `screenshot-${new Date().getTime()}.${fileType}`;
+  const finalFileName = fileName || defaultFileName;
+  
+  // Create a download link
+  const downloadLink = document.createElement('a');
+  downloadLink.href = dataUrl;
+  downloadLink.download = finalFileName;
+  
+  // Append to document, trigger click, and remove
+  document.body.appendChild(downloadLink);
+  downloadLink.click();
+  document.body.removeChild(downloadLink);
+};
+
+/**
+ * Maps screenshot naming pattern values by replacing placeholders with anime metadata
+ * 
+ * Supported placeholders:
+ * - {title} - Name of the anime
+ * - {counter} - Current episode number
+ * - {random} - Random value to make sure each screenshot name is unique
+ * - {timestamp} - Current timestamp
+ * 
+ * @param pattern - The naming pattern with placeholders
+ * @param animeMetadata - Object containing anime episode metadata
+ * @returns The pattern with placeholders replaced by actual values
+ */
+export const mapScreenshotNamingPatternValues = (pattern: string, animeMetadata: AnimeEpisodeMetadata): string => {
+  console.log(`pattern`, pattern);
+  console.log(`metadata`, animeMetadata);
+
+  const randomString = Math.random().toString(36).substring(2, 6);
+  const timestamp = Date.now();
+  
+  let result = pattern;
+  
+  // Replace {title} placeholder
+  if (result.includes('{title}')) {
+    result = result.replace(/{title}/g, animeMetadata.title || '');
+  }
+  
+  // Replace {counter} placeholder
+  if (result.includes('{counter}')) {
+    result = result.replace(/{counter}/g, animeMetadata.number?.toString() || '');
+  }
+  
+  // Replace {random} placeholder
+  if (result.includes('{random}')) {
+    result = result.replace(/{random}/g, randomString);
+  }
+  
+  // Replace {timestamp} placeholder
+  if (result.includes('{timestamp}')) {
+    result = result.replace(/{timestamp}/g, timestamp.toString());
+  }
+  
+  return result;
+};
