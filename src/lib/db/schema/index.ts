@@ -64,6 +64,7 @@ export const screenshotFormatEnum = pgEnum('screenshot_format', ['png', 'jpeg', 
 export const generalSettings = pgTable("general_settings", {
   id: text("id").primaryKey(),
 
+  hideSpoilers: boolean('hide_spoilers').notNull().default(false),
   syncPlayerSettings: syncStrategyEnum('sync_player_settings').default('ask').notNull(),
 
   screenshotNamingDialog: boolean('screenshotNamingDialog').notNull().default(true),

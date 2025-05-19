@@ -116,10 +116,10 @@ export default function WatchPage() {
         />
       </div>
       {/* Side panel (visible based on state) */}
-      {(!isMedium && panelState === 'visable' && episodeContext?.data.details && transcriptions && transcriptions.find(t => t?.transcription == 'japanese')) && (
+      {(!isMedium && panelState === 'visable' && episodeContext?.metadata && transcriptions && transcriptions.find(t => t?.transcription == 'japanese')) && (
         <PanelSection
           isLoading={isLoading}
-          animeData={episodeContext?.data.details}
+          animeMetadata={episodeContext?.metadata}
           subtitleFiles={episodeContext?.data.subtitles}
           japaneseTranscription={transcriptions.find(t => t?.transcription == 'japanese')!.cues}
         />

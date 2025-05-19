@@ -47,6 +47,7 @@ export async function getEpisodeContext(animeId: string, episodeNumber: number):
         number: episodeNumber,
         title: data.details.title.english,
         image: data.details.coverImage.large,
+        description: data.details.description,
       },
       subtitleSettings,
       generalSettings,

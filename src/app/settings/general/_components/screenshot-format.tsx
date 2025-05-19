@@ -1,38 +1,17 @@
 "use client"
 
-import TooltipWrapper from "@/components/tooltip-wrapper";
-import { Input } from "@/components/ui/input";
 import { GeneralSettings } from "@/lib/db/schema";
-import { settingsQueries } from "@/lib/queries/settings";
-import { useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
-import { toast } from "sonner";
 import { defaultGeneralSettings, screenshotFormats } from "@/lib/constants/settings";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
-import { handleScreenshotFormat } from "@/app/settings/general/actions";
 import { SelectInput } from "@/components/form/select-input";
+import { useGeneralSettings } from "@/lib/hooks/use-general-settings";
 
 export default function ScreenshotFormat({ value }: { value: GeneralSettings['screenshotFormat'] }) {
-    const [format, setFormat] = useState<GeneralSettings['screenshotFormat']>(value || defaultGeneralSettings.screenshotFormat)
-    const [isLoading, setIsLoading] = useState<boolean>(false)
-    const queryClient = useQueryClient()
-
-    const handleChange = async (format: GeneralSettings['screenshotFormat']) => {
-        setIsLoading(true);
-
-        const { error, message } = await handleScreenshotFormat({ format: format });
-
-        if(error) {
-            toast.error(error);
-            setIsLoading(false);
-            return;
-        }
-
-        toast.success(message);
-        setIsLoading(false);
-        queryClient.invalidateQueries({ queryKey: settingsQueries.general._def });
-    };
+    const { isLoading, displayValue, onSubmit } = useGeneralSettings({
+        initialValue: value,
+        field: "screenshotFormat",
+    });
     
     return (
         <div className="flex flex-col md:grid grid-cols-2 md:items-center justify-between gap-2 pb-4">
@@ -51,18 +30,16 @@ export default function ScreenshotFormat({ value }: { value: GeneralSettings['sc
                     })}
                     onChange={(v) =>{ 
                         const newFormat = v as GeneralSettings['screenshotFormat']
-                        setFormat(newFormat)
-                        handleChange(newFormat) // Pass the new value directly
+                        onSubmit(newFormat)
                     }}
                     disabled={isLoading}
-                    value={format}
+                    value={displayValue}
                 />
-                {format != defaultGeneralSettings.screenshotFormat && (
+                {displayValue != defaultGeneralSettings.screenshotFormat && (
                     <Button
                         variant='destructive'
                         onClick={() => {
-                            setFormat(defaultGeneralSettings.screenshotFormat)
-                            handleChange(defaultGeneralSettings.screenshotFormat)
+                            onSubmit(defaultGeneralSettings.screenshotFormat)
                         }}
                         className="w-fit"
                     >

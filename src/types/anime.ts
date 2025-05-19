@@ -109,9 +109,9 @@ export type AnimeEpisodeMetadata = {
   number: number;
   title: string;
   image: string;
+  description?: string;
   // imageHash: string;
   // createdAt: Date;
-  // description?: string;
   // url: string;
 }
 

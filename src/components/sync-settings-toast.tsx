@@ -1,5 +1,5 @@
 import { toast as sonnerToast } from "sonner";
-import { handleSyncPlayerSettings } from "@/app/settings/general/actions";
+import { handleGeneralSettings } from "@/app/settings/general/actions";
 import { SyncStrategy } from "@/types";
 
 export function showSyncSettingsToast(): Promise<{ strategy: SyncStrategy | null; error: string | null }> {
@@ -12,7 +12,7 @@ export function showSyncSettingsToast(): Promise<{ strategy: SyncStrategy | null
           <button
             onClick={async () => {
               try {
-                const { error } = await handleSyncPlayerSettings({ strategy: "always" });
+                const { error } = await handleGeneralSettings({ syncPlayerSettings: "always" });
                 if (error) {
                   sonnerToast.error(error);
                   resolve({ strategy: null, error });
@@ -42,7 +42,7 @@ export function showSyncSettingsToast(): Promise<{ strategy: SyncStrategy | null
           <button
             onClick={async () => {
               try {
-                const { error } = await handleSyncPlayerSettings({ strategy: "never" });
+                const { error } = await handleGeneralSettings({ syncPlayerSettings: "always" });
                 if (error) {
                   sonnerToast.error(error);
                   resolve({ strategy: null, error });

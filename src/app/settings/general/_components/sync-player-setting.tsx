@@ -1,37 +1,15 @@
 "use client"
 
-import { handleSyncPlayerSettings } from "@/app/settings/general/actions";
 import SegmentedToggle from "@/components/segmented-toggle";
 import { syncStrategies } from "@/lib/constants";
 import { GeneralSettings } from "@/lib/db/schema";
-import { settingsQueries } from "@/lib/queries/settings";
-import { useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
-import { toast } from "sonner";
+import { useGeneralSettings } from "@/lib/hooks/use-general-settings";
 
-export default function SyncPlayerSetting({ settings }: { settings: GeneralSettings }) {
-    const [selectedOption, setSelectedOption] = useState<GeneralSettings['syncPlayerSettings']>(settings.syncPlayerSettings || 'ask')
-    const [isLoading, setIsLoading] = useState<boolean>(false)
-
-    const queryClient = useQueryClient()
-
-    const handleValueChange = async (newValue: GeneralSettings['syncPlayerSettings']) => {
-        setSelectedOption(newValue);
-        setIsLoading(true);
-        
-        const { error, message } = await handleSyncPlayerSettings({ strategy: newValue });
-
-        if(error) {
-            toast.error(error);
-            setIsLoading(false);
-            setSelectedOption(settings.syncPlayerSettings);
-            return;
-        }
-
-        toast.success(message);
-        setIsLoading(false);
-        queryClient.invalidateQueries({ queryKey: settingsQueries.general._def });
-    };
+export default function SyncPlayerSetting({ value }: { value: GeneralSettings['syncPlayerSettings'] }) {
+    const { isLoading, displayValue, onSubmit } = useGeneralSettings({
+        initialValue: value,
+        field: "syncPlayerSettings",
+    });
         
     return (
         <div className="flex flex-col md:grid grid-cols-2 md:items-center justify-between gap-2 pb-4">
@@ -44,8 +22,8 @@ export default function SyncPlayerSetting({ settings }: { settings: GeneralSetti
             <div className="col-span-1 flex justify-end">
                 <SegmentedToggle
                     options={syncStrategies} 
-                    value={selectedOption}
-                    onValueChange={handleValueChange}
+                    value={displayValue}
+                    onValueChange={onSubmit}
                     disabled={isLoading}
                 />
             </div>

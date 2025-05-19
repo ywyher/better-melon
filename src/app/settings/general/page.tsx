@@ -18,7 +18,7 @@ export default function GeneralSettingsPage() {
     return (
       <div className="flex flex-col gap-5 pt-4 px-4 sm:px-0">
         <div className="text-xl font-semibold">General Settings</div>
-        <SyncPlayerSetting settings={generalSettings} />
+        <SyncPlayerSetting value={generalSettings.syncPlayerSettings} />
         <Separator />
         <HideSpoilers value={generalSettings.hideSpoilers} />
         <Separator />

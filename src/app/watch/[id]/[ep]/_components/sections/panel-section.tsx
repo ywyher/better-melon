@@ -1,18 +1,20 @@
+import EpisodesListSkeleton from '@/app/watch/[id]/[ep]/_components/episodes/episodes-list-skeleton';
 import SubtitlePanel from '../panel/panel';
 import PanelSkeleton from '../panel/panel-skeleton';
-import { Anime } from '@/types/anime';
+import { AnimeEpisodeMetadata } from '@/types/anime';
 import { SubtitleCue, SubtitleFile } from '@/types/subtitle';
+import EpisodesList from '@/app/watch/[id]/[ep]/_components/episodes/episodes-list';
 
 interface PanelSectionProps {
   isLoading: boolean;
-  animeData: Anime;
+  animeMetadata: AnimeEpisodeMetadata;
   subtitleFiles?: SubtitleFile[];
   japaneseTranscription?: SubtitleCue[];
 }
 
 export default function PanelSection({
   isLoading,
-  animeData,
+  animeMetadata,
   subtitleFiles,
   japaneseTranscription,
 }: PanelSectionProps) {
@@ -31,14 +33,12 @@ export default function PanelSection({
           )}
         </>
       )}
-      
-      {/*  */}
-      {/* {(isLoadingAnime || !episodeContext?.metadata) ? (
+{/*       
+      {(isLoading || !animeMetadata) ? (
         <EpisodesListSkeleton />
       ) : (
         <EpisodesList
-          animeData={animeData} 
-          episodesMetadata={episodeContext.metadata} 
+          episodesMetadata={animeMetadata} 
         />
       )} */}
     </div>

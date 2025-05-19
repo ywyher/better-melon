@@ -15,11 +15,9 @@ import { useState, useMemo, useCallback, useRef } from "react";
 import { useVirtualizer } from "@tanstack/react-virtual";
 
 export default function EpisodesList({ 
-    episodesMetadata,
-    animeData
+    episodesMetadata
   }: { 
-    episodesMetadata: AnimeEpisodeMetadata[] 
-    animeData: Anime
+    episodesMetadata: AnimeEpisodeMetadata[]
   }) {
   const params = useParams<{ id: string, ep: string }>();
   const episodesListViewMode = usePlayerStore((state) => state.episodesListViewMode);

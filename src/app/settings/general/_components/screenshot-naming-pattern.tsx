@@ -1,46 +1,19 @@
 "use client"
 
-import { handleScreenshotNamingPattern } from "@/app/settings/general/actions";
 import TooltipWrapper from "@/components/tooltip-wrapper";
 import { Input } from "@/components/ui/input";
 import { GeneralSettings } from "@/lib/db/schema";
-import { settingsQueries } from "@/lib/queries/settings";
-import { useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
 import ScreenshotNamingPatternInstructions from "@/app/settings/general/_components/screenshot-naming-pattern-instructions";
 import { defaultGeneralSettings } from "@/lib/constants/settings";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
+import { useGeneralSettings } from "@/lib/hooks/use-general-settings";
 
 export default function ScreenshotNamingPattern({ value }: { value: GeneralSettings['screenshotNamingPattern'] }) {
-    const [pattern, setPattern] = useState<string>(value || defaultGeneralSettings.screenshotNamingPattern)
-    const [isLoading, setIsLoading] = useState<boolean>(false)
-    const queryClient = useQueryClient()
-
-    const handleChange = async (pattern: GeneralSettings['screenshotNamingPattern']) => {
-        if(pattern == value) return;
-
-        if(!pattern) {
-            setPattern(defaultGeneralSettings.screenshotNamingPattern)
-        }
-
-        setIsLoading(true);
-
-        const { error, message } = await handleScreenshotNamingPattern({ 
-            pattern: pattern ? pattern : defaultGeneralSettings.screenshotNamingPattern 
-        });
-
-        if(error) {
-            toast.error(error);
-            setIsLoading(false);
-            return;
-        }
-
-        toast.success(message);
-        setIsLoading(false);
-        queryClient.invalidateQueries({ queryKey: settingsQueries.general._def });
-    };
+    const { isLoading, displayValue, onSubmit, onChange } = useGeneralSettings({
+        initialValue: value,
+        field: "screenshotNamingPattern",
+    });
     
     return (
         <div className="flex flex-col md:grid grid-cols-2 md:items-center justify-between gap-2 pb-4">
@@ -60,17 +33,17 @@ export default function ScreenshotNamingPattern({ value }: { value: GeneralSetti
                 <ScreenshotNamingPatternInstructions />
                 <Input 
                     className="w-full"
-                    value={pattern}
-                    onBlur={(e) => handleChange(e.target.value)}
-                    onChange={(e) => setPattern(e.target.value)}
+                    value={displayValue}
+                    onBlur={(e) => onSubmit(e.target.value)}
+                    onChange={(e) => onChange(e.target.value)}
                     disabled={isLoading}
                 />
-                {pattern != defaultGeneralSettings.screenshotNamingPattern && (
+                {displayValue != defaultGeneralSettings.screenshotNamingPattern && (
                     <Button
                         variant='destructive'
                         onClick={() => {
-                            setPattern(defaultGeneralSettings.screenshotNamingPattern)
-                            handleChange(defaultGeneralSettings.screenshotNamingPattern)
+                            onChange(defaultGeneralSettings.screenshotNamingPattern)
+                            onSubmit(defaultGeneralSettings.screenshotNamingPattern)
                         }}
                         className="w-fit"
                     >

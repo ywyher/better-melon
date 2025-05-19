@@ -6,7 +6,7 @@ import db from "@/lib/db"
 import { ensureAuthenticated } from "@/lib/db/mutations"
 import { GeneralSettings, generalSettings } from "@/lib/db/schema"
 import { generateId } from "better-auth"
-import { eq } from "drizzle-orm"
+import { and, eq } from "drizzle-orm"
 import { headers } from "next/headers"
 
 export async function getGeneralSettings() {
@@ -28,7 +28,8 @@ export async function ensureGeneralSettingsExists() {
     if(!userId || error) return {
         message: null,
         error: error,
-        generalSettingsId: null
+        generalSettingsId: null,
+        userId: null
     }
 
     try {
@@ -52,173 +53,53 @@ export async function ensureGeneralSettingsExists() {
         return {
             message: "Subtitle settings created successfully",
             error: null,
+            userId: userId,
             generalSettingsId: newSettingsId,
         }; 
     } catch (error: unknown) {
         return {
             message: null,
             error: error instanceof Error ? error.message : "Failed to update subtitle styles",
-            generalSettingsId: null
+            generalSettingsId: null,
+            userId: null
         }
     }
 }
 
-export async function handleSyncPlayerSettings({ strategy }: { strategy: GeneralSettings['syncPlayerSettings'] }) {
-    const { error, generalSettingsId } = await ensureGeneralSettingsExists()
+export async function handleGeneralSettings<T extends Partial<Omit<GeneralSettings, 'id' | 'userId' | 'createdAt' | 'updatedAt'>>>(
+  data: T
+) {
+  const { error, generalSettingsId, userId } = await ensureGeneralSettingsExists();
+  
+  if (!generalSettingsId || error || !userId) return {
+    message: null,
+    error: error,
+  };
+  
+  try {
+    const result = await db.update(generalSettings)
+      .set({
+        ...data,
+        updatedAt: new Date()
+      })
+      .where(and(
+        eq(generalSettings.id, generalSettingsId),
+        eq(generalSettings.userId, userId)
+      ));
     
-    if (!generalSettingsId || error) return {
-        message: null,
-        error: error,
-    }
+    if (!result) return {
+      message: null,
+      error: `Failed to update general settings, try again later...`,
+    };
     
-    try {
-        const data = await db.update(generalSettings)
-            .set({
-                syncPlayerSettings: strategy
-            })
-            .where(eq(generalSettings.id, generalSettingsId)) 
-    
-        if(!data) return {
-            message: null,
-            error: `Failed to update Sync strategy, try again later...`,
-        }
-    
-        return {
-            message: `Sync strategy setting saved.`,
-            error: null
-        }
-    } catch (error: unknown) {
-        return {
-            message: null,
-            error: error instanceof Error ? error.message : `Failed to update sync strategy`,
-        }
-    }
-}
-
-export async function handleHideSpoilersSettings({ value }: { value: GeneralSettings['hideSpoilers'] }) {
-    const { error, generalSettingsId } = await ensureGeneralSettingsExists()
-    
-    if (!generalSettingsId || error) return {
-        message: null,
-        error: error,
-    }
-    
-    try {
-        const data = await db.update(generalSettings)
-            .set({
-                hideSpoilers: value
-            })
-            .where(eq(generalSettings.id, generalSettingsId)) 
-    
-        if(!data) return {
-            message: null,
-            error: `Failed to hide spoilers, try again later...`,
-        }
-    
-        return {
-            message: `Spoliers got hidden.`,
-            error: null
-        }
-    } catch (error: unknown) {
-        return {
-            message: null,
-            error: error instanceof Error ? error.message : `Failed to hide spoilers`,
-        }
-    }
-}
-
-export async function handleScreenshotNamingDialog({ value }: { value: GeneralSettings['screenshotNamingDialog'] }) {
-    const { error, generalSettingsId } = await ensureGeneralSettingsExists()
-    
-    if (!generalSettingsId || error) return {
-        message: null,
-        error: error,
-    }
-    
-    try {
-        const data = await db.update(generalSettings)
-            .set({
-                screenshotNamingDialog: value
-            })
-            .where(eq(generalSettings.id, generalSettingsId)) 
-    
-        if(!data) return {
-            message: null,
-            error: `Failed to enable naming dialog, try again later...`,
-        }
-    
-        return {
-            message: `Naming dialog is now ${value == true ? 'enabled' : 'disabled'}.`,
-            error: null
-        }
-    } catch (error: unknown) {
-        return {
-            message: null,
-            error: error instanceof Error ? error.message : `Failed to enable naming dialog, try again later...`,
-        }
-    }   
-}
-
-export async function handleScreenshotNamingPattern({ pattern }: { pattern: GeneralSettings['screenshotNamingPattern'] }) {
-    const { error, generalSettingsId } = await ensureGeneralSettingsExists()
-    
-    if (!generalSettingsId || error) return {
-        message: null,
-        error: error,
-    }
-    
-    try {
-        const data = await db.update(generalSettings)
-            .set({
-                screenshotNamingPattern: pattern
-            })
-            .where(eq(generalSettings.id, generalSettingsId)) 
-    
-        if(!data) return {
-            message: null,
-            error: `Failed to save naming pattern, try again later...`,
-        }
-    
-        return {
-            message: `Naming pattern is saved.`,
-            error: null
-        }
-    } catch (error: unknown) {
-        return {
-            message: null,
-            error: error instanceof Error ? error.message : `Failed to save naming pattern, try again later...`,
-        }
-    }   
-}
-
-export async function handleScreenshotFormat({ format }: { format: GeneralSettings['screenshotFormat'] }) {
-    const { error, generalSettingsId } = await ensureGeneralSettingsExists()
-    
-    if (!generalSettingsId || error) return {
-        message: null,
-        error: error,
-    }
-    
-    try {
-        const data = await db.update(generalSettings)
-            .set({
-                screenshotFormat: format
-            })
-            .where(eq(generalSettings.id, generalSettingsId)) 
-    
-        if(!data) return {
-            message: null,
-            error: `Failed to save format, try again later...`,
-        }
-    
-        return {
-            message: `Format saved.`,
-            error: null
-        }
-    } catch (error: unknown) {
-        return {
-            message: null,
-            error: error instanceof Error ? error.message : `Failed to save format, try again later...`,
-        }
-    }   
+    return {
+      message: `General settings updated successfully.`,
+      error: null
+    };
+  } catch (error: unknown) {
+    return {
+      message: null,
+      error: error instanceof Error ? error.message : `Failed to update general settings`,
+    };
+  }
 }
