@@ -1,17 +1,17 @@
+update the skeletons for general settings and subtitle styles since you chagned the content
+
 hooks for other settings too
 
 hide spoilers
 
 tooltip for naming dialog telling about the settings 
 
-allow changing format for the naming dialog
-
 maybe segmented options instead of a switch
-
-hide spoilers settings in the database
 
 watch or info page
 > Choose whether to go to the info page or watch page when selecting an anime.
+
+maybe on the info page if its an anime of 1episodes just fetch it right away
 
 auto add to list
 

@@ -45,6 +45,7 @@ Animelon doesn’t provide all animes, and its entries are rarely updated, makin
 - Connection/account management
 - Anki integration settings
 - Add to list
+- Screenshot
 
 ## Planned Features
 - Audio support for anki
