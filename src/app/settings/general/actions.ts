@@ -39,6 +39,7 @@ export async function ensureGeneralSettingsExists() {
             message: "Already exists, skipping...",
             error: null,
             generalSettingsId: exists.id,
+            userId
         }
 
         const newSettingsId = generateId();
@@ -71,11 +72,11 @@ export async function handleGeneralSettings<T extends Partial<Omit<GeneralSettin
 ) {
   const { error, generalSettingsId, userId } = await ensureGeneralSettingsExists();
   
-  if (!generalSettingsId || error || !userId) return {
+  if (!generalSettingsId || error) return {
     message: null,
     error: error,
   };
-  
+
   try {
     const result = await db.update(generalSettings)
       .set({
@@ -86,7 +87,7 @@ export async function handleGeneralSettings<T extends Partial<Omit<GeneralSettin
         eq(generalSettings.id, generalSettingsId),
         eq(generalSettings.userId, userId)
       ));
-    
+
     if (!result) return {
       message: null,
       error: `Failed to update general settings, try again later...`,

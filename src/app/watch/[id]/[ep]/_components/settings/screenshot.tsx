@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { defaultGeneralSettings, screenshotFormats } from "@/lib/constants/settings";
 import { SelectInput } from "@/components/form/select-input";
+import TooltipWrapper from "@/components/tooltip-wrapper";
 
 type ScreenshotProps = {
   namingPattern: GeneralSettings['screenshotNamingPattern']

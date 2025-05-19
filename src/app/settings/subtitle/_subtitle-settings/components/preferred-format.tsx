@@ -1,6 +1,5 @@
 'use client'
 
-import { handleDeletePreferredFormat, handlePreferredFormat } from "@/app/settings/subtitle/_subtitle-settings/actions"
 import LoadingButton from "@/components/loading-button"
 import {
     Select,
@@ -11,48 +10,16 @@ import {
 } from "@/components/ui/select"
 import { subtitleFormats } from "@/lib/constants/subtitle"
 import { SubtitleSettings } from "@/lib/db/schema"
-import { settingsQueries } from "@/lib/queries/settings"
-import { useQueryClient } from "@tanstack/react-query"
+import { useSubtitleSettings } from "@/lib/hooks/use-subtitle-settings"
 import { X } from "lucide-react"
-import { useState } from "react"
-import { toast } from "sonner"
   
-export default function SubtitleSettingsPreferredFormat({ settingsId, preferredFormat }: { 
-    settingsId: SubtitleSettings['id']
-    preferredFormat: SubtitleSettings['preferredFormat']
+export default function SubtitleSettingsPreferredFormat({ value }: { 
+    value: SubtitleSettings['preferredFormat']
  }) {
-    const [isFormatLoading, setIsFormatLoading] = useState<boolean>(false)
-    const queryClient = useQueryClient()
-
-    const onPreferredFormat = async (format: SubtitleSettings['preferredFormat']) => {
-        setIsFormatLoading(true)
-        const { message, error } = await handlePreferredFormat({ format })
-
-        if(error) {
-            toast.error(error)
-            setIsFormatLoading(false)
-            return;
-        }
-        
-        queryClient.invalidateQueries({ queryKey: settingsQueries.subtitle._def })
-        toast.success(message)
-        setIsFormatLoading(false)
-    }
-
-    const onDeletePreferredFormat = async (settingsId: SubtitleSettings['id']) => {
-        setIsFormatLoading(true)
-        const { message, error } = await handleDeletePreferredFormat({ settingsId })
-
-        if(error) {
-            toast.error(error)
-            setIsFormatLoading(false)
-            return;
-        }
-        
-        queryClient.invalidateQueries({ queryKey: settingsQueries.subtitle._def })
-        toast.success(message)
-        setIsFormatLoading(false)
-    }
+    const { displayValue, isLoading, onSubmit } = useSubtitleSettings({
+        field: 'preferredFormat',
+        initialValue: value,
+    })
 
     return (
         <div className="flex flex-col gap-3">
@@ -60,9 +27,9 @@ export default function SubtitleSettingsPreferredFormat({ settingsId, preferredF
             <div className="w-full md:col-span-4 text-sm font-medium">Preferred format</div>
             <div className="w-full md:col-span-4 flex flex-row gap-3">
             <Select
-                value={preferredFormat || ""}
-                onValueChange={v => onPreferredFormat(v as SubtitleSettings['preferredFormat'])}
-                disabled={isFormatLoading}
+                value={displayValue || ""}
+                onValueChange={v => onSubmit(v as SubtitleSettings['preferredFormat'])}
+                disabled={isLoading}
             >
                 <SelectTrigger className="w-full cursor-pointer">
                 <SelectValue placeholder="Format" />
@@ -73,12 +40,12 @@ export default function SubtitleSettingsPreferredFormat({ settingsId, preferredF
                 ))}
                 </SelectContent>
             </Select>
-            {preferredFormat && (
+            {value && (
                 <LoadingButton
-                isLoading={isFormatLoading}
-                variant="destructive"
-                className="w-fit"
-                onClick={() => onDeletePreferredFormat(settingsId)}
+                    isLoading={isLoading}
+                    variant="destructive"
+                    className="w-fit"
+                    onClick={() => onSubmit(null)}
                 >
                 <X />
                 </LoadingButton>

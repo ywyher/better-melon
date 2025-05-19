@@ -1,67 +1,19 @@
 'use client'
 
-import { handleDeleteMatchPattern, handleMatchPattern } from "@/app/settings/subtitle/_subtitle-settings/actions"
 import LoadingButton from "@/components/loading-button"
-import TooltipWrapper from "@/components/tooltip-wrapper"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { SubtitleSettings } from "@/lib/db/schema"
-import { settingsQueries } from "@/lib/queries/settings"
-import { useQueryClient } from "@tanstack/react-query"
-import { AlertCircle, X } from "lucide-react"
-import { useCallback, useEffect, useState } from "react"
-import { toast } from "sonner"
-import { useDebounce } from "use-debounce"
+import { useSubtitleSettings } from "@/lib/hooks/use-subtitle-settings"
+import { X } from "lucide-react"
   
-export default function SubtitleSettingsMatchPattern({ settingsId, matchPattern }: { 
-    settingsId: SubtitleSettings['id']
-    matchPattern: SubtitleSettings['matchPattern']
+export default function SubtitleSettingsMatchPattern({ value }: { 
+    value: SubtitleSettings['matchPattern']
 }) {
-    const [inputValue, setInputValue] = useState<string>(matchPattern ?? "")
-    const [debouncedValue] = useDebounce(inputValue, 1000)
-    const [isLoading, setIsLoading] = useState<boolean>(false)
-    const [isInitialRender, setIsInitialRender] = useState<boolean>(true)
-    const queryClient = useQueryClient()
-
-    const onMatchPattern = useCallback(async (matchPattern: SubtitleSettings['matchPattern']) => {
-      setIsLoading(true)
-      const { message, error } = await handleMatchPattern({ matchPattern })
-
-      if(error) {
-          toast.error(error)
-          setIsLoading(false)
-          return;
-      }
-      
-      queryClient.invalidateQueries({ queryKey: settingsQueries.subtitle._def })
-      toast.success(message)
-      setIsLoading(false)
-    }, [setIsLoading, queryClient,])
-
-    useEffect(() => {
-        if (isInitialRender) return;
-        
-        if(debouncedValue) {
-            onMatchPattern(debouncedValue)
-        }
-    }, [debouncedValue, isInitialRender, onMatchPattern])
-
-
-    const onDeleteMatchPattern = async (settingsId: SubtitleSettings['id']) => {
-        setIsLoading(true)
-        const { message, error } = await handleDeleteMatchPattern({ settingsId })
-
-        if(error) {
-            toast.error(error)
-            setIsLoading(false)
-            return;
-        }
-        
-        queryClient.invalidateQueries({ queryKey: settingsQueries.subtitle._def })
-        toast.success(message)
-        setIsLoading(false)
-        setInputValue("")
-    }
+    const { displayValue, isLoading, onSubmit, onChange } = useSubtitleSettings({
+        field: 'matchPattern',
+        initialValue: value,
+    })
 
     return (
         <div className="flex flex-col gap-3">
@@ -74,32 +26,26 @@ export default function SubtitleSettingsMatchPattern({ settingsId, matchPattern 
                 <Badge variant='secondary'>regex</Badge>
                 <p>pattern.</p>
             </div>
-            {/* <TooltipWrapper
-                tooltip="Prioritize the preferred subtitle format but if not found fallback to other formats"
-            >
-                <AlertCircle className="w-4 h-4 text-amber-300 cursor-pointer mt-1" />
-            </TooltipWrapper> */}
             </div>
             <div className="w-full md:col-span-4 flex flex-row gap-3">
             <Input
                 placeholder="Keyword or Regex"
-                value={inputValue}
-                onChange={(e) => {
-                if(isInitialRender) {
-                    setIsInitialRender(false)
-                }
-                setInputValue(e.currentTarget.value)
-                }}
+                value={displayValue || ""}
+                onBlur={(e) => onSubmit(e.target.value)}
+                onChange={(e) => onChange(e.target.value)}
                 className="flex-1"
             />
-            {matchPattern && (
+            {value && (
                 <LoadingButton
-                isLoading={isLoading}
-                variant="destructive"
-                className="w-fit"
-                onClick={() => onDeleteMatchPattern(settingsId)}
+                    isLoading={isLoading}
+                    variant="destructive"
+                    className="w-fit"
+                    onClick={() => {
+                        onSubmit(null)
+                        onChange(null)
+                    }}
                 >
-                <X />
+                    <X />
                 </LoadingButton>
             )}
             </div>

@@ -38,7 +38,7 @@ export default function ScreenshotNamingPattern({ value }: { value: GeneralSetti
                     onChange={(e) => onChange(e.target.value)}
                     disabled={isLoading}
                 />
-                {displayValue != defaultGeneralSettings.screenshotNamingPattern && (
+                {value != defaultGeneralSettings.screenshotNamingPattern && (
                     <Button
                         variant='destructive'
                         onClick={() => {

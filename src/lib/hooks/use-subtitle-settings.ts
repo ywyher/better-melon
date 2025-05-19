@@ -2,37 +2,37 @@ import { useMemo, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { settingsQueries } from "@/lib/queries/settings";
-import { playerSettings } from "@/lib/db/schema";
-import { handleplayerSettings } from "@/app/settings/player/actions";
+import { SubtitleSettings } from "@/lib/db/schema";
+import { handleSubtitleSettings } from "@/app/settings/subtitle/_subtitle-settings/actions";
 
-interface UsePlayerSettingsProps<T extends keyof Omit<playerSettings, 'id' | 'userId' | 'createdAt' | 'updatedAt'>> {
-  initialValue: playerSettings[T];
+interface UseSubtitleSettingsProps<T extends keyof Omit<SubtitleSettings, 'id' | 'userId' | 'createdAt' | 'updatedAt'>> {
+  initialValue: SubtitleSettings[T];
   field: T;
   successMessage?: string;
   errorMessage?: string;
 }
 
-export function usePlayerSettings<T extends keyof Omit<playerSettings, 'id' | 'userId' | 'createdAt' | 'updatedAt'>>({
+export function useSubtitleSettings<T extends keyof Omit<SubtitleSettings, 'id' | 'userId' | 'createdAt' | 'updatedAt'>>({
   initialValue,
   field,
   successMessage,
   errorMessage
-}: UsePlayerSettingsProps<T>) {
+}: UseSubtitleSettingsProps<T>) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [localValue, setLocalValue] = useState<playerSettings[T] | null>(null);
+  const [localValue, setLocalValue] = useState<SubtitleSettings[T] | null>(null);
   const queryClient = useQueryClient();
 
   const displayValue = useMemo(() => {
     return localValue !== null ? localValue : initialValue
   }, [localValue, initialValue]);
 
-  const onSubmit = async (value: playerSettings[T]) => {
+  const onSubmit = async (value: SubtitleSettings[T]) => {
     setLocalValue(value);
     setIsLoading(true);
     try {
-        const { message, error } = await handleplayerSettings({ [field]: value });
+        const { message, error } = await handleSubtitleSettings({ [field]: value });
         if (error) throw new Error(error);
-        queryClient.invalidateQueries({ queryKey: settingsQueries.general._def });
+        queryClient.invalidateQueries({ queryKey: settingsQueries.subtitle._def });
         toast.success(message || successMessage || `${field} updated successfully`);
     } catch (err) {
       setLocalValue(null);
@@ -43,7 +43,7 @@ export function usePlayerSettings<T extends keyof Omit<playerSettings, 'id' | 'u
     }
   };
 
-  const onChange = (v: playerSettings[T]) => {
+  const onChange = (v: SubtitleSettings[T]) => {
     setLocalValue(v)
   }
 

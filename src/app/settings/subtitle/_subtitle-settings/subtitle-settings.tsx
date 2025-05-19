@@ -9,18 +9,16 @@ import { useQuery } from "@tanstack/react-query"
 export default function SubtitleSettings() {
     const { data: settings, isLoading: isSettingsLoading } = useQuery({ ...settingsQueries.subtitle() })
 
-    if(isSettingsLoading) return <SubtitleSettingsSkeleton />
+    if(isSettingsLoading || !settings) return <SubtitleSettingsSkeleton />
 
     return (
         <div className="flex flex-col gap-5 px-4 sm:px-0">
             <div className="text-xl font-semibold">Subtitle Settings</div>
             <SubtitleSettingsPreferredFormat
-                settingsId={settings?.id ?? ""}
-                preferredFormat={settings?.preferredFormat ?? null}
+                value={settings.preferredFormat}
             />
             <SubtitleSettingsMatchPattern
-                settingsId={settings?.id ?? ""}
-                matchPattern={settings?.matchPattern ?? ""}
+                value={settings.matchPattern}
             />
         </div>
     )
