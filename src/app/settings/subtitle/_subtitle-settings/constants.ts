@@ -5,6 +5,8 @@ export const defaultSubtitleSettings: SubtitleSettings = {
     matchPattern: '',
     preferredFormat: 'srt',
     transcriptionOrder: ["hiragana","katakana","romaji","japanese","english"],
+    autoCopyCue: false,
+    pauseOnCue: false,
     userId: "",
     createdAt: new Date(),
     updatedAt: new Date(),

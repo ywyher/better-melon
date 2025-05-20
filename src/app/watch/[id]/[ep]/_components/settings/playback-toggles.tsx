@@ -100,7 +100,6 @@ export default function PlaybackToggles({ playerSettings, syncPlayerSettings }: 
                     </div>
                 }
             />
-    
             <ToggleButton
                 name="Auto Next"
                 checked={autoNext}
@@ -109,7 +108,6 @@ export default function PlaybackToggles({ playerSettings, syncPlayerSettings }: 
                 disabled={isLoading}
                 tooltip="Automatically go to the next episode after finishing"
             />
-    
             <ToggleButton
                 name="Auto Skip"
                 checked={autoSkip}

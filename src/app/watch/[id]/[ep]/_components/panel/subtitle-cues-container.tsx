@@ -6,6 +6,7 @@ import { usePlayerStore } from "@/lib/stores/player-store";
 import { useDefinitionStore } from "@/lib/stores/definition-store";
 import { getExtension } from "@/lib/utils";
 import { timestampToSeconds } from "@/lib/subtitle/utils";
+import { toast } from "sonner";
 
 export default function SubtitleCuesContainer({
   items,
@@ -38,6 +39,16 @@ export default function SubtitleCuesContainer({
       setToken(token)
   }, [setSentance, setToken]);
 
+  const handleCopy = useCallback(async (sentance: string) => {
+      if(!sentance) return;
+      try {
+        await navigator.clipboard.writeText(sentance)
+        toast.success("Cue copied to clipboard")
+      } catch (error) {
+        toast.error(error instanceof Error ? error.message : `Failed to copy cue`)
+      }
+  }, []);
+
   return (
     <>
       {items.getVirtualItems().map((row) => {
@@ -54,6 +65,7 @@ export default function SubtitleCuesContainer({
                   start={row.start}
                   activeToken={activeToken}
                   handleSeek={handleSeek}
+                  handleCopy={handleCopy}
                   handleClick={handleClick}
               />
           );

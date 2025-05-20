@@ -12,22 +12,29 @@ import { TranscriptionQuery, TranscriptionStyles } from "@/app/watch/[id]/[ep]/t
 import { useDebounce } from "@/components/multiple-selector";
 import { handleTranscriptionOrder } from "@/app/settings/subtitle/_transcription-order/actions";
 import { toast } from "sonner";
-import { GeneralSettings } from "@/lib/db/schema";
+import { GeneralSettings, SubtitleSettings } from "@/lib/db/schema";
 import { useMutation } from "@tanstack/react-query";
 import { SyncStrategy } from "@/types";
 import { showSyncSettingsToast } from "@/components/sync-settings-toast";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
-export default function SubtitleTranscriptions({ transcriptions, styles, syncPlayerSettings }: {
+export default function SubtitleTranscriptions({ transcriptions, styles, syncPlayerSettings, pauseOnCue }: {
   transcriptions: TranscriptionQuery[];
   styles: TranscriptionStyles;
   syncPlayerSettings: GeneralSettings['syncPlayerSettings']
+  pauseOnCue: SubtitleSettings['pauseOnCue']
 }) {
   const player = usePlayerStore((state) => state.player);
   const activeTranscriptions = usePlayerStore((state) => state.activeTranscriptions);
   const delay = usePlayerStore((state) => state.delay);
   const [order, setOrder] = useState<SubtitleTranscription[]>(() => [...activeTranscriptions]);
   const debouncedOrder = useDebounce<SubtitleTranscription[]>(order, 1500);
-  const hasUserInteracted = useRef(false);
+  const hasUserDragged = useRef(false);
+
+  const copyButtonRef = useRef<HTMLButtonElement | null>(null);
+  const copyHandledIdsRef = useRef('');
+  const [currentCueText, setCurrentCueText] = useState('');
     
   const isFullscreen = useMediaState('fullscreen', player);
   const controlsVisible = useMediaState('controlsVisible', player);
@@ -95,36 +102,9 @@ export default function SubtitleTranscriptions({ transcriptions, styles, syncPla
       return result;
   }, [transcriptions,  currentTime, delay]);
 
-  const activeSubtitleSets = useMemo(() => getActiveSubtitleSets(), [getActiveSubtitleSets]);
-  
-  const getBottomPosition = useCallback(() => {
-      if (isFullscreen) {
-          return controlsVisible ? '5' : '2';
-      }
-      return controlsVisible ? '4' : '1';
-  }, [isFullscreen, controlsVisible]);
+  const activeSubtitleSets = useMemo(() => getActiveSubtitleSets(), [getActiveSubtitleSets, transcriptions]);
 
-  const wrapperStyles = useMemo(() => ({
-      transition: 'bottom 0.3s ease',
-      height: 'fit-content',
-      bottom: `${getBottomPosition()}rem`
-  }), [getBottomPosition]);
-
-  const handleDragEnd = useCallback((event: DragEndEvent) => {
-      const {active, over} = event;
-      
-      if(!active || !over || active.id === over.id) return;
-      
-      hasUserInteracted.current = true;
-              
-      setOrder(currentOrder => {
-        const oldIndex = currentOrder.indexOf(active.id.toString() as SubtitleTranscription);
-        const newIndex = currentOrder.indexOf(over.id.toString() as SubtitleTranscription);
-        
-        return arrayMove(currentOrder, oldIndex, newIndex);
-      });
-  }, []);
-
+  // Drag transcriptions functioanlity
   const { mutate } = useMutation({
     mutationFn: async () => {
       let resolvedStrategy = syncPlayerSettings as SyncStrategy;
@@ -153,56 +133,131 @@ export default function SubtitleTranscriptions({ transcriptions, styles, syncPla
       }
     }
   })
+  
+  const handleDragEnd = useCallback((event: DragEndEvent) => {
+      const {active, over} = event;
+      
+      if(!active || !over || active.id === over.id) return;
+      
+      hasUserDragged.current = true;
+              
+      setOrder(currentOrder => {
+        const oldIndex = currentOrder.indexOf(active.id.toString() as SubtitleTranscription);
+        const newIndex = currentOrder.indexOf(over.id.toString() as SubtitleTranscription);
+        
+        return arrayMove(currentOrder, oldIndex, newIndex);
+      });
+  }, []);
 
   useEffect(() => {
     const shouldTriggerUpdate = 
       debouncedOrder.length > 0 && 
-      hasUserInteracted.current
+      hasUserDragged.current
     
     if (shouldTriggerUpdate) {
       mutate();
     }
-  }, [debouncedOrder, mutate, hasUserInteracted]);
+  }, [debouncedOrder, mutate, hasUserDragged]);
+
+  // Copy text functionality
+  useEffect(() => {
+    const handleCueFeatures = () => {
+      if (!player.current) return;
+
+      const allActiveCues = Object.entries(activeSubtitleSets)
+        .filter(([transcription]) => transcription !== 'english')
+        .flatMap(([_, cues]) => cues);
+      
+      const currentAllCueIds = allActiveCues.map(cue => cue.id).sort().join(',');
+
+      if (allActiveCues.length > 0 && currentAllCueIds !== copyHandledIdsRef.current) {
+        const cueText = allActiveCues.filter(c => c.transcription == 'japanese')[0].content || '';
+        setCurrentCueText(cueText);        
+        copyHandledIdsRef.current = currentAllCueIds;
+      }
+    };
+    
+    handleCueFeatures();
+  }, [activeSubtitleSets, player]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'c') {
+        if (currentCueText && copyButtonRef.current) {
+          copyButtonRef.current.click();
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [currentCueText]);
+
+  const getBottomPosition = useCallback(() => {
+    if (isFullscreen) {
+        return controlsVisible ? '5' : '2';
+    }
+    return controlsVisible ? '4' : '1';
+  }, [isFullscreen, controlsVisible]);
+
+  const wrapperStyles = useMemo(() => ({
+    transition: 'bottom 0.3s ease',
+    height: 'fit-content',
+    bottom: `${getBottomPosition()}rem`
+  }), [getBottomPosition]);
 
   return (
     <div
-        className="absolute left-1/2 transform -translate-x-1/2 flex flex-col items-center w-[100%]"
-        style={wrapperStyles}
+      className="absolute left-1/2 transform -translate-x-1/2 flex flex-col items-center w-[100%]"
+      style={wrapperStyles}
     >
-        <DndContext 
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragEnd={handleDragEnd}
-        >
-            <SortableContext 
-                items={order}
-                strategy={verticalListSortingStrategy}
-            >
-                {order.map(transcription => {
-                    if (!activeSubtitleSets[transcription]?.length) return null;
+      <Button
+        ref={copyButtonRef}
+        onClick={async () => {
+          try {
+            await navigator.clipboard.writeText(currentCueText);
+            toast.success("Subtitle copied to clipboard");
+          } catch (error) {
+            toast.error(error instanceof Error ? error.message : `Failed to copy text`);
+          }
+        }}
+        className="hidden"
+      >
+      </Button>
+      <DndContext 
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
+      >
+          <SortableContext 
+              items={order}
+              strategy={verticalListSortingStrategy}
+          >
+              {order.map(transcription => {
+                  if (!activeSubtitleSets[transcription]?.length) return null;
 
-                    const tokenStyles =
-                      styles[transcription]?.tokenStyles
-                      || styles['all'].tokenStyles
+                  const tokenStyles =
+                    styles[transcription]?.tokenStyles
+                    || styles['all'].tokenStyles
 
-                    const containerStyle = 
-                      styles[transcription]?.containerStyle
-                      || styles["all"].containerStyle
+                  const containerStyle = 
+                    styles[transcription]?.containerStyle
+                    || styles["all"].containerStyle
 
-                    return (
-                        <TranscriptionItem
-                            key={transcription}
-                            transcription={transcription}
-                            activeSubtitleSets={activeSubtitleSets}
-                            styles={{
-                              tokenStyles: tokenStyles,
-                              containerStyle: containerStyle
-                            }}
-                        />
-                    );
-                })}
-            </SortableContext>
-        </DndContext>
+                  return (
+                      <TranscriptionItem
+                          key={transcription}
+                          transcription={transcription}
+                          activeSubtitleSets={activeSubtitleSets}
+                          styles={{
+                            tokenStyles: tokenStyles,
+                            containerStyle: containerStyle
+                          }}
+                      />
+                  );
+              })}
+          </SortableContext>
+      </DndContext>
     </div>
   );
 }

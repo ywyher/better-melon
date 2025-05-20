@@ -90,6 +90,9 @@ export default function Screenshot({
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
               <DialogTitle>Save Screenshot</DialogTitle>
+              <TooltipWrapper>
+                You can disable the dialog and instantly download the file without renaming it by chaning the settings in the settings page
+              </TooltipWrapper>
             </DialogHeader>
             <div className="flex flex-col gap-2">
               <Label htmlFor="screenshot-name" className="text-md font-medium">

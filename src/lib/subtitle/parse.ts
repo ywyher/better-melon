@@ -169,13 +169,13 @@ export async function parseSubtitleToJson({
     switch (format) {
       case 'srt':
         const parseSrtStart = performance.now();
-        subtitles = parseSrt(content);
+        subtitles = parseSrt(content, transcription);
         const parseSrtEnd = performance.now();
         console.info(`~${transcription}-parse-srt took --> ${parseSrtEnd - parseSrtStart}ms`);
         break;
       case 'vtt':
         const parseVttStart = performance.now();
-        subtitles = parseVtt(content);
+        subtitles = parseVtt(content, transcription);
         const parseVttEnd = performance.now();
         console.info(`~${transcription}-parse-vtt took --> ${parseVttEnd - parseVttStart}ms`);
         break;
@@ -401,7 +401,7 @@ function cleanContent(content: string) {
   return cleanedContent;
 }
 
-export function parseSrt(content: string) {
+export function parseSrt(content: string, transcription: SubtitleTranscription) {
   const lines = content.split('\n');
   const result = [];
   
@@ -419,6 +419,8 @@ export function parseSrt(content: string) {
       }
       continue;
     }
+
+    currentEntry.transcription = transcription;
     
     if (isReadingContent) {
       const initialContent = (currentEntry.content || '') + 
@@ -446,11 +448,11 @@ export function parseSrt(content: string) {
   if (Object.keys(currentEntry).length > 0) {
     result.push(currentEntry);
   }
-  
+
   return result as SubtitleCue[];
 }
 
-export function parseVtt(content: string) {
+export function parseVtt(content: string, transcription: SubtitleTranscription) {
   const lines = content.split('\n');
   const result = [];
   let currentEntry: Partial<SubtitleCue> = {};
@@ -476,6 +478,8 @@ export function parseVtt(content: string) {
       }
       continue;
     }
+
+    currentEntry.transcription == transcription
     
     if (isReadingContent) {
       const initialContent = (currentEntry.content || '') +

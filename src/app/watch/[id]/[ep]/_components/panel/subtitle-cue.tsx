@@ -2,7 +2,7 @@ import { memo } from 'react';
 import { cn } from "@/lib/utils";
 import type { SubtitleCue as TSubtitleCue, SubtitleToken } from "@/types/subtitle";
 import { Button } from "@/components/ui/button";
-import { Play } from "lucide-react";
+import { Clipboard, Play } from "lucide-react";
 
 type SubtitleCueProps = { 
     index: number;
@@ -14,6 +14,7 @@ type SubtitleCueProps = {
     activeToken: SubtitleToken | null;
     handleSeek: (from: TSubtitleCue["from"]) => void
     handleClick: (sentance: string, token: SubtitleToken) => void
+    handleCopy: (sentance: string) => void
 }
 
 function SubtitleCueBase({ 
@@ -25,6 +26,7 @@ function SubtitleCueBase({
   activeToken,
   handleSeek,
   handleClick,
+  handleCopy
 }: SubtitleCueProps) {
     return (
         <div
@@ -37,19 +39,26 @@ function SubtitleCueBase({
               transform: `translateY(${start}px)`,
             }}
             className={cn(
-                "absolute top-0 left-0 w-full p-2 border-b",
+                "absolute top-0 left-0 w-full py-2 pe-1 border-b",
                 "flex items-center",
                 isActive && "text-orange-400",
                 className
             )}
         >
-            <Button
-                onClick={() => handleSeek(cue.from)}
-                className="me-2"
-                variant='ghost'
-            >
-                <Play className="hover:fill-[#fb923c]" />
-            </Button>
+            <div className="flex flex-row gap-0">
+                <Button
+                    onClick={() => handleSeek(cue.from)}
+                    variant='ghost'
+                >
+                    <Play className="hover:fill-[#fb923c]" />
+                </Button>
+                <Button
+                    onClick={() => handleCopy(cue.content)}
+                    variant='ghost'
+                >
+                    <Clipboard className="hover:fill-[#fb923c]" />
+                </Button>
+            </div>
             <div className="flex flex-row gap-2">
                 <div className="flex items-center flex-wrap">
                     {cue.tokens?.length ? cue.tokens.map((token, idx) => (

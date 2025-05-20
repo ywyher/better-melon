@@ -1,12 +1,29 @@
+later add a protips page or something to show tips like the ctrl + c copy the current cue text !!
+or basically a hotkeys instructions when we add the rest (if there is)
+
+begin where you left off > save where the user ended last time they watched a certain episode
+prob not that important tho 
+-> maybe the best way to implement this is to save watched episode an a history table and each video with its own how much the user have seen of it
+
+subtitles sometime take quite a bit of time before being addded to jimaku
+so in that case give a warning to the user and stop the hook before the give an error
+
+tansalte words on hover instead of onClick
+
+add the ability to disable auto scroll to the current cue and the ability to customize the countdown when the user is scrolling before it returns to the current cue
+
+maybe slowdown video speed when a dialogue is being spoken ??
+
+stop at each cue setting with the ability to set a count down before unpausing it
+
+copy cue when it comes
+ctrl + c to copy cue since it cant be automitaed
+
 update the skeletons for general settings and subtitle styles since you chagned the content
 
 hooks for other settings too
 
 hide spoilers
-
-tooltip for naming dialog telling about the settings 
-
-maybe segmented options instead of a switch
 
 watch or info page
 > Choose whether to go to the info page or watch page when selecting an anime.
@@ -14,10 +31,6 @@ watch or info page
 maybe on the info page if its an anime of 1episodes just fetch it right away
 
 auto add to list
-
-screenshot button
-
-maybe use-general-settings for cleaner code ??
 
 so when we log as anon we should invalidate the session query a7a
 
@@ -38,8 +51,4 @@ episodes metadata for the episode selector
 
 for schedules dont use anilist its based on japanese tv
 
-copy cue when it comes
-
 preview subtitle for when the settings change (not important)
-
-stop at each cue setting

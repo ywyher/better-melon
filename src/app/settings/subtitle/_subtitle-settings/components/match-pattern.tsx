@@ -7,7 +7,7 @@ import { SubtitleSettings } from "@/lib/db/schema"
 import { useSubtitleSettings } from "@/lib/hooks/use-subtitle-settings"
 import { X } from "lucide-react"
   
-export default function SubtitleSettingsMatchPattern({ value }: { 
+export default function MatchPattern({ value }: { 
     value: SubtitleSettings['matchPattern']
 }) {
     const { displayValue, isLoading, onSubmit, onChange } = useSubtitleSettings({

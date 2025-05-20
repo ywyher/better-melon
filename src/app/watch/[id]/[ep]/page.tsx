@@ -40,6 +40,10 @@ export default function WatchPage() {
     loadingDuration: transcriptionsLoadingDuration,
   } = useSubtitleTranscriptions();
   
+  useEffect(() => {
+    console.log(`transcriptions`, transcriptions)
+  }, [transcriptions])
+
   const { 
     styles, 
     isLoading: isStylesLoading, 
