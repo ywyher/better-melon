@@ -12,18 +12,17 @@ import { TranscriptionQuery, TranscriptionStyles } from "@/app/watch/[id]/[ep]/t
 import { useDebounce } from "@/components/multiple-selector";
 import { handleTranscriptionOrder } from "@/app/settings/subtitle/_transcription-order/actions";
 import { toast } from "sonner";
-import { GeneralSettings, SubtitleSettings } from "@/lib/db/schema";
+import { GeneralSettings, PlayerSettings, SubtitleSettings } from "@/lib/db/schema";
 import { useMutation } from "@tanstack/react-query";
 import { SyncStrategy } from "@/types";
 import { showSyncSettingsToast } from "@/components/sync-settings-toast";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 export default function SubtitleTranscriptions({ transcriptions, styles, syncPlayerSettings, pauseOnCue }: {
   transcriptions: TranscriptionQuery[];
   styles: TranscriptionStyles;
   syncPlayerSettings: GeneralSettings['syncPlayerSettings']
-  pauseOnCue: SubtitleSettings['pauseOnCue']
+  pauseOnCue: PlayerSettings['pauseOnCue']
 }) {
   const player = usePlayerStore((state) => state.player);
   const activeTranscriptions = usePlayerStore((state) => state.activeTranscriptions);
@@ -32,9 +31,10 @@ export default function SubtitleTranscriptions({ transcriptions, styles, syncPla
   const debouncedOrder = useDebounce<SubtitleTranscription[]>(order, 1500);
   const hasUserDragged = useRef(false);
 
+  const [pauseAt, setPauseAt] = useState<number | null>(null)
   const copyButtonRef = useRef<HTMLButtonElement | null>(null);
-  const copyHandledIdsRef = useRef('');
   const [currentCueText, setCurrentCueText] = useState('');
+  const handleActiveCuesIdsRef = useRef('');
     
   const isFullscreen = useMediaState('fullscreen', player);
   const controlsVisible = useMediaState('controlsVisible', player);
@@ -159,7 +159,6 @@ export default function SubtitleTranscriptions({ transcriptions, styles, syncPla
     }
   }, [debouncedOrder, mutate, hasUserDragged]);
 
-  // Copy text functionality
   useEffect(() => {
     const handleCueFeatures = () => {
       if (!player.current) return;
@@ -170,16 +169,36 @@ export default function SubtitleTranscriptions({ transcriptions, styles, syncPla
       
       const currentAllCueIds = allActiveCues.map(cue => cue.id).sort().join(',');
 
-      if (allActiveCues.length > 0 && currentAllCueIds !== copyHandledIdsRef.current) {
-        const cueText = allActiveCues.filter(c => c.transcription == 'japanese')[0].content || '';
-        setCurrentCueText(cueText);        
-        copyHandledIdsRef.current = currentAllCueIds;
+      if (allActiveCues.length > 0 && currentAllCueIds !== handleActiveCuesIdsRef.current) {
+        const cue = allActiveCues.filter(c => c.transcription == 'japanese')[0];
+        setCurrentCueText(cue.content);
+
+        if(pauseOnCue) {
+          const pauseAt = timestampToSeconds({
+            format: 'srt',
+            timestamp: cue.to,
+            delay: delay.japanese
+          })
+
+          setPauseAt(pauseAt)
+        }
+        
+        handleActiveCuesIdsRef.current = currentAllCueIds;
       }
     };
     
     handleCueFeatures();
-  }, [activeSubtitleSets, player]);
+  }, [activeSubtitleSets, player, delay.japanese]);
 
+  useEffect(() => {
+    if(player.current && pauseOnCue && pauseAt) {
+      const adjustedCurrentTime = currentTime + delay.japanese;
+      if(adjustedCurrentTime >= pauseAt && adjustedCurrentTime < pauseAt + 0.1) {
+        player.current.pause()
+      }
+    }
+  }, [pauseAt, currentTime, delay.japanese])
+  
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key === 'c') {

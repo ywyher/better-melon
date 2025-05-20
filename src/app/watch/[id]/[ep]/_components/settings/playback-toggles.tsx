@@ -7,16 +7,16 @@ import { GeneralSettings, PlayerSettings } from "@/lib/db/schema";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { showSyncSettingsToast } from "@/components/sync-settings-toast";
-import { handlePlaybackSetting } from "@/app/settings/player/actions";
 import { settingsQueries } from "@/lib/queries/settings";
 import { SyncStrategy } from "@/types";
+import { handlePlayerSettings } from "@/app/settings/player/actions";
 
 type TogglesProps = { 
     playerSettings: PlayerSettings
     syncPlayerSettings: GeneralSettings['syncPlayerSettings']
 }
 
-type PlaybackSetting = 'autoPlay' | 'autoNext' | 'autoSkip';
+type PlaybackSetting = 'autoPlay' | 'autoNext' | 'autoSkip' | 'pauseOnCue';
 
 export default function PlaybackToggles({ playerSettings, syncPlayerSettings }: TogglesProps) {
     const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -27,14 +27,18 @@ export default function PlaybackToggles({ playerSettings, syncPlayerSettings }: 
     const setAutoNext = usePlayerStore((state) => state.setAutoNext)
     const autoSkip = usePlayerStore((state) => state.autoSkip)
     const setAutoSkip = usePlayerStore((state) => state.setAutoSkip)
+    const pauseOnCue = usePlayerStore((state) => state.pauseOnCue)
+    const setPauseOnCue = usePlayerStore((state) => state.setPauseOnCue)
 
     useEffect(() => {
         if (playerSettings) {
+            console.debug(`playerSettings`, playerSettings)
             setAutoPlay(playerSettings.autoPlay);
             setAutoNext(playerSettings.autoNext);
             setAutoSkip(playerSettings.autoSkip);
+            setPauseOnCue(playerSettings.pauseOnCue);
         }
-    }, [playerSettings, setAutoPlay, setAutoNext, setAutoSkip]);
+    }, [playerSettings, setAutoPlay, setAutoNext, setAutoSkip, setPauseOnCue]);
 
     const queryClient = useQueryClient()
     
@@ -42,6 +46,7 @@ export default function PlaybackToggles({ playerSettings, syncPlayerSettings }: 
         if(setting === 'autoNext') setAutoNext(value)
         if(setting === 'autoPlay') setAutoPlay(value)
         if(setting === 'autoSkip') setAutoSkip(value)
+        if(setting === 'pauseOnCue') setPauseOnCue(value)
     };
 
     const handleValueChange = async (setting: PlaybackSetting, value: boolean) => {
@@ -66,10 +71,7 @@ export default function PlaybackToggles({ playerSettings, syncPlayerSettings }: 
         if (resolvedSyncStrategy === 'always' || resolvedSyncStrategy === 'once') {
           try {
             setIsLoading(true);
-            const { error, message } = await handlePlaybackSetting({
-                settingName: setting,
-                checked: value
-            });
+            const { error, message } = await handlePlayerSettings({ [setting]: value });
             
             if (error) {
               toast.error(error);
@@ -78,7 +80,7 @@ export default function PlaybackToggles({ playerSettings, syncPlayerSettings }: 
             }
             
             toast.success(message);
-            queryClient.invalidateQueries({ queryKey: settingsQueries.general._def })          
+            queryClient.invalidateQueries({ queryKey: settingsQueries.player._def })          
           } finally {
             setIsLoading(false);
           }
@@ -115,6 +117,14 @@ export default function PlaybackToggles({ playerSettings, syncPlayerSettings }: 
                 className="w-fit"
                 disabled={isLoading}
                 tooltip="Automatically skip intros and outros"
+            />
+            <ToggleButton
+                name="Pause on cue"
+                checked={pauseOnCue}
+                onClick={() => handleValueChange('pauseOnCue', !pauseOnCue)}
+                className="w-fit"
+                disabled={isLoading}
+                tooltip="Automatically pause after each cue is spoken"
             />
         </div>
     );

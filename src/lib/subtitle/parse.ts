@@ -315,6 +315,7 @@ function processEnglishSubtitles(subs: SubtitleCue[]): SubtitleCue[] {
     
     return {
       ...sub,
+      transcription: 'english',
       tokens
     };
   });
@@ -386,6 +387,7 @@ async function convertSubtitlesForNonJapaneseTranscription(subs: SubtitleCue[], 
   
       return {
         ...sub,
+        transcription: transcription,
         original_content: sub.content,
         content: convertedContent,
         tokens: convertedTokens

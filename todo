@@ -1,3 +1,28 @@
+currently the pauseOnCue when the user unpause some time it repause prob cuz of the ratio between the tolerance and the currentTime update speed ??
+
+for pauseOnCue it need to be optomized maybe like this, but this doesnt work very well for now ?
+useEffect(() => {
+  if(player.current && pauseOnCue && pauseAt) {
+    return player.current.subscribe(({ currentTime }) => {
+      const now = Date.now();
+      if (now - lastUpdateTimeRef.current > 100) {
+        lastUpdateTimeRef.current = now;
+        const adjustedCurrentTime = currentTime + delay.japanese;
+        console.log({
+          currentTime: adjustedCurrentTime,
+          pauseAt
+        })
+
+          if(adjustedCurrentTime >= pauseAt && adjustedCurrentTime < pauseAt + 0.2) {
+            player.current?.pause()
+          }
+        }
+    });
+  }
+}, [pauseAt, currentTime, delay.japanese])
+
+ability to set a count down before unpausing the video after we paused it cuz of pauseOnCue
+
 later add a protips page or something to show tips like the ctrl + c copy the current cue text !!
 or basically a hotkeys instructions when we add the rest (if there is)
 
@@ -8,16 +33,11 @@ prob not that important tho
 subtitles sometime take quite a bit of time before being addded to jimaku
 so in that case give a warning to the user and stop the hook before the give an error
 
-tansalte words on hover instead of onClick
+tansalte words on hover instead of onClick setting
 
 add the ability to disable auto scroll to the current cue and the ability to customize the countdown when the user is scrolling before it returns to the current cue
 
 maybe slowdown video speed when a dialogue is being spoken ??
-
-stop at each cue setting with the ability to set a count down before unpausing it
-
-copy cue when it comes
-ctrl + c to copy cue since it cant be automitaed
 
 update the skeletons for general settings and subtitle styles since you chagned the content
 

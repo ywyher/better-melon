@@ -39,8 +39,8 @@ export type PlayerStore = {
   autoNext: boolean;
   setAutoNext: (sub: PlayerStore['autoNext']) => void;
 
-  autoCopy: boolean;
-  setAutoCopy: (sub: PlayerStore['autoCopy']) => void;
+  pauseOnCue: boolean;
+  setPauseOnCue: (sub: PlayerStore['pauseOnCue']) => void;
 
   episodesListViewMode: EpisodesListViewMode;
   setEpisodesListViewMode: (sub: PlayerStore['episodesListViewMode']) => void;
@@ -93,8 +93,8 @@ export const usePlayerStore = create<PlayerStore>()(
       autoNext: false,
       setAutoNext: (autoNext: PlayerStore['autoNext']) => set({ autoNext }),
       
-      autoCopy: false,
-      setAutoCopy: (autoCopy: PlayerStore['autoCopy']) => set({ autoCopy }),
+      pauseOnCue: false,
+      setPauseOnCue: (pauseOnCue: PlayerStore['pauseOnCue']) => set({ pauseOnCue }),
       
       episodesListViewMode: 'image',
       setEpisodesListViewMode: (episodesListViewMode: PlayerStore['episodesListViewMode']) => set({ episodesListViewMode }),

@@ -6,6 +6,7 @@ export const defaultPlayerSettings: PlayerSettings =  {
     autoNext: false,
     autoSkip: false,
     enabledTranscriptions: ['japanese', 'english'],
+    pauseOnCue: false,
     userId: "",
     createdAt: new Date(),
     updatedAt: new Date(),

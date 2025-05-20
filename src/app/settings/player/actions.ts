@@ -4,7 +4,7 @@ import { defaultPlayerSettings } from "@/app/settings/player/constants"
 import { auth } from "@/lib/auth"
 import db from "@/lib/db"
 import { ensureAuthenticated } from "@/lib/db/mutations"
-import { playerSettings } from "@/lib/db/schema"
+import { PlayerSettings, playerSettings } from "@/lib/db/schema"
 import { SubtitleTranscription } from "@/types/subtitle"
 import { generateId } from "better-auth"
 import { and, eq } from "drizzle-orm"
@@ -68,6 +68,44 @@ export async function ensurePlayerSettingsExists() {
     }
 }
 
+export async function handlePlayerSettings<T extends Partial<Omit<PlayerSettings, 'id' | 'userId' | 'createdAt' | 'updatedAt'>>>(
+  data: T
+) {
+    try {
+        const {error, playerSettingsId, userId } = await ensurePlayerSettingsExists()
+    
+        if(!playerSettingsId || error || !userId) return {
+            message: null,
+            error: error,
+        }
+        
+        const result = await db.update(playerSettings)
+        .set({
+            ...data,
+            updatedAt: new Date()
+        })
+        .where(and(
+            eq(playerSettings.id, playerSettingsId),
+            eq(playerSettings.userId, userId)
+        )) 
+    
+        if(!result) return {
+            message: null,
+            error: 'Failed to update player settings, try again later...',
+        }
+    
+        return {
+            message: "Player settings updated successfully.",
+            error: null
+        }
+    } catch (error: unknown) {
+        return {
+            message: null,
+            error: error instanceof Error ? error.message : "Failed to update player settings",
+        }
+    }
+}
+
 export async function handleEnabledTranscriptions({ transcriptions }: {
     transcriptions: SubtitleTranscription[],
 }) {
@@ -101,42 +139,6 @@ export async function handleEnabledTranscriptions({ transcriptions }: {
         return {
             message: null,
             error: error instanceof Error ? error.message : `Failed to update transcriptions`,
-        }
-    }
-}
-
-export async function handlePlaybackSetting({ checked, settingName }: {
-    settingName: 'autoPlay' | 'autoNext' | 'autoSkip', 
-    checked: boolean
-}) {
-    const { error, playerSettingsId } = await ensurePlayerSettingsExists()
-
-    if (!playerSettingsId || error) return {
-        message: null,
-        error: error,
-    }
-
-    try {
-        // Create dynamic update object with the specific setting
-        const updateData = { [settingName]: checked };
-        
-        const data = await db.update(playerSettings)
-            .set(updateData)
-            .where(eq(playerSettings.id, playerSettingsId)) 
-
-        if(!data) return {
-            message: null,
-            error: `Failed to update ${settingName}, try again later...`,
-        }
-
-        return {
-            message: `${settingName} setting saved.`,
-            error: null
-        }
-    } catch (error: unknown) {
-        return {
-            message: null,
-            error: error instanceof Error ? error.message : `Failed to update ${settingName}`,
         }
     }
 }

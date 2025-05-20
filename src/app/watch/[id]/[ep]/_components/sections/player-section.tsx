@@ -62,7 +62,7 @@ export default function PlayerSection({
                   streamingLinks={episodeContext.data.streamingLinks}
                   episodesLength={episodeContext.data.details.episodes} 
                   syncPlayerSettings={episodeContext.generalSettings.syncPlayerSettings}
-                  pauseOnCue={episodeContext.subtitleSettings.pauseOnCue}
+                  pauseOnCue={episodeContext.playerSettings.pauseOnCue}
                   transcriptions={transcriptions}
                   transcriptionsStyles={transcriptionsStyles}
                 />

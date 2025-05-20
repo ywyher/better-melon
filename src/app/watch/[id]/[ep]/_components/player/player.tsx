@@ -19,7 +19,7 @@ import { generateWebVTTFromSkipTimes } from '@/lib/subtitle/utils';
 import SubtitleTranscriptionsContainer from '@/app/watch/[id]/[ep]/_components/transcriptions/transcriptions-container';
 import { env } from '@/lib/env/client';
 import { TranscriptionQuery, TranscriptionStyles } from '@/app/watch/[id]/[ep]/types';
-import { GeneralSettings, SubtitleSettings } from '@/lib/db/schema';
+import { GeneralSettings, PlayerSettings } from '@/lib/db/schema';
 
 type PlayerProps = {
   animeId: string;
@@ -30,7 +30,7 @@ type PlayerProps = {
   transcriptions: TranscriptionQuery[]
   transcriptionsStyles: TranscriptionStyles
   syncPlayerSettings: GeneralSettings['syncPlayerSettings']
-  pauseOnCue: SubtitleSettings['pauseOnCue']
+  pauseOnCue: PlayerSettings['pauseOnCue']
 }
 
 const MemoizedPlayerSkeleton = memo(PlayerSkeleton);

@@ -168,7 +168,8 @@ export const playerSettings = pgTable("player_settings", {
   autoPlay: boolean('auto_play').notNull().default(false),
   autoNext: boolean('auto_next').notNull().default(false),
   autoSkip: boolean('auto_skip').notNull().default(false),
-  
+
+  pauseOnCue: boolean('pause_on_cue').notNull().default(false),
   enabledTranscriptions: transcriptionEnum('enabled_transcriptions').array().notNull().default(["japanese", "english"]),
 
   userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }).unique(),
