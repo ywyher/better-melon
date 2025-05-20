@@ -46,6 +46,8 @@ Animelon doesn’t provide all animes, and its entries are rarely updated, makin
 - Anki integration settings
 - Add to list
 - Screenshot
+- Copy subtitle text
+- Pause at each subtitle
 
 ## Planned Features
 - Audio support for anki
