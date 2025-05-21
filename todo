@@ -1,9 +1,8 @@
-sometimes the proxy fails
+so myabe when changing settings for the sync toast dont dismiss the other but instead show what each one change ???
 
-if the episode is already loaded and the user change a settin in the settings page and come back it doesn't apply without refreshing
-> maybe seperate the query for fetching episode streaming link and the settings to be able to refetch the settings without disturbing the video ??
+another bug so for when chaning the settings through the playback toggle and such it doesnt refetch the settings !
 
-
+sometimes the proxy fails -> maybe add a refetch or something in that case
 
 for the cues list add the ability to show the definition card but without add to akni
 add to anki only from the player transcriptions container

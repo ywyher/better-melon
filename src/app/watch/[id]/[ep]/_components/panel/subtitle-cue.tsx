@@ -68,7 +68,7 @@ function SubtitleCueBase({
                                 "hover:text-orange-400",
                                 activeToken?.id === token.id && "text-orange-400"
                             )}
-                            // onClick={() => handleClick(cue.content, token)}
+                            onClick={() => handleClick(cue.content, token)}
                         >
                             {token.surface_form}
                         </span>

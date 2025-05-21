@@ -18,15 +18,16 @@ import { SyncStrategy } from "@/types";
 import { showSyncSettingsToast } from "@/components/sync-settings-toast";
 import { Button } from "@/components/ui/button";
 
-export default function SubtitleTranscriptions({ transcriptions, styles, syncPlayerSettings, pauseOnCue }: {
+export default function SubtitleTranscriptions({ transcriptions, styles, syncPlayerSettings }: {
   transcriptions: TranscriptionQuery[];
   styles: TranscriptionStyles;
   syncPlayerSettings: GeneralSettings['syncPlayerSettings']
-  pauseOnCue: PlayerSettings['pauseOnCue']
 }) {
   const player = usePlayerStore((state) => state.player);
   const activeTranscriptions = usePlayerStore((state) => state.activeTranscriptions);
   const delay = usePlayerStore((state) => state.delay);
+  const pauseOnCue = usePlayerStore((state) => state.pauseOnCue);
+
   const [order, setOrder] = useState<SubtitleTranscription[]>(() => [...activeTranscriptions]);
   const debouncedOrder = useDebounce<SubtitleTranscription[]>(order, 1500);
   const hasUserDragged = useRef(false);

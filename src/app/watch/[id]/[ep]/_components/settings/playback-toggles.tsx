@@ -32,7 +32,6 @@ export default function PlaybackToggles({ playerSettings, syncPlayerSettings }: 
 
     useEffect(() => {
         if (playerSettings) {
-            console.debug(`playerSettings`, playerSettings)
             setAutoPlay(playerSettings.autoPlay);
             setAutoNext(playerSettings.autoNext);
             setAutoSkip(playerSettings.autoSkip);
@@ -81,6 +80,7 @@ export default function PlaybackToggles({ playerSettings, syncPlayerSettings }: 
             
             toast.success(message);
             queryClient.invalidateQueries({ queryKey: settingsQueries.player._def })          
+            queryClient.invalidateQueries({ queryKey: settingsQueries.forEpisode._def });
           } finally {
             setIsLoading(false);
           }

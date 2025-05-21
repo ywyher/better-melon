@@ -8,21 +8,18 @@ type SubtitleTranscriptionsContainerProps = {
   transcriptions: TranscriptionQuery[],
   styles: TranscriptionStyles;
   syncPlayerSettings: GeneralSettings['syncPlayerSettings']
-  pauseOnCue: PlayerSettings['pauseOnCue']
 }
 
 export default function SubtitleTranscriptionsContainer({
   transcriptions,
   styles,
-  syncPlayerSettings,
-  pauseOnCue
+  syncPlayerSettings
 }: SubtitleTranscriptionsContainerProps) {
   return (
     <SubtitleTranscriptions 
       transcriptions={transcriptions}
       styles={styles}
       syncPlayerSettings={syncPlayerSettings}
-      pauseOnCue={pauseOnCue}
     />
   )
 }
