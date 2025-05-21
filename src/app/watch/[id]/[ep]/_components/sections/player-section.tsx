@@ -68,6 +68,7 @@ export default function PlayerSection({
                   syncPlayerSettings={settings.generalSettings.syncPlayerSettings}
                   transcriptions={transcriptions}
                   transcriptionsStyles={transcriptionsStyles}
+                  cuePauseDuration={settings.playerSettings.cuePauseDuration}
                 />
               </>
             )}

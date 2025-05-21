@@ -30,6 +30,7 @@ type PlayerProps = {
   transcriptions: TranscriptionQuery[]
   transcriptionsStyles: TranscriptionStyles
   syncPlayerSettings: GeneralSettings['syncPlayerSettings']
+  cuePauseDuration: PlayerSettings['cuePauseDuration']
 }
 
 const MemoizedPlayerSkeleton = memo(PlayerSkeleton);
@@ -45,6 +46,7 @@ export default function Player({
   transcriptions,
   transcriptionsStyles,
   syncPlayerSettings,
+  cuePauseDuration
 }: PlayerProps) {
     const router = useRouter()
     
@@ -246,6 +248,7 @@ export default function Player({
                       transcriptions={transcriptions}
                       styles={transcriptionsStyles}
                       syncPlayerSettings={syncPlayerSettings}
+                      cuePauseDuration={cuePauseDuration}
                     />
                     <MemoizedDefinitionCard />
                 </MediaPlayer>

@@ -18,10 +18,11 @@ import { SyncStrategy } from "@/types";
 import { showSyncSettingsToast } from "@/components/sync-settings-toast";
 import { Button } from "@/components/ui/button";
 
-export default function SubtitleTranscriptions({ transcriptions, styles, syncPlayerSettings }: {
+export default function SubtitleTranscriptions({ transcriptions, styles, syncPlayerSettings, cuePauseDuration }: {
   transcriptions: TranscriptionQuery[];
   styles: TranscriptionStyles;
   syncPlayerSettings: GeneralSettings['syncPlayerSettings']
+  cuePauseDuration: PlayerSettings['cuePauseDuration']
 }) {
   const player = usePlayerStore((state) => state.player);
   const activeTranscriptions = usePlayerStore((state) => state.activeTranscriptions);
@@ -194,20 +195,48 @@ export default function SubtitleTranscriptions({ transcriptions, styles, syncPla
     handleCueFeatures();
   }, [activeSubtitleSets, player, delay.japanese]);
 
+  // Replace the existing useEffect for pausing/unpausing with this one
   useEffect(() => {
+    let unPauseTimeout: NodeJS.Timeout | null = null;
     
     if(player.current && pauseOnCue && pauseAt) {
       const adjustedCurrentTime = currentTime + delay.japanese;
       const currentTimeMs = Date.now();
       
+      // Check if we're in the pause window and haven't paused recently
       if(adjustedCurrentTime >= pauseAt && 
         adjustedCurrentTime < pauseAt + 0.1 && 
         currentTimeMs - lastPauseTime.current > 1000) {
+        
         player.current.pause();
         lastPauseTime.current = currentTimeMs;
+        
+        // Store the current pauseAt value we're handling
+        const currentPausePoint = pauseAt;
+        
+        if (cuePauseDuration !== null && cuePauseDuration > 0) {
+          unPauseTimeout = setTimeout(() => {
+            if (player.current && player.current.paused) {
+              player.current.play();
+              // Only clear pauseAt after auto-unpausing and if it hasn't changed
+              if (pauseAt === currentPausePoint) {
+                setPauseAt(null);
+              }
+            }
+          }, cuePauseDuration * 1000);
+        } else {
+          // If there's no auto-unpause, clear pauseAt immediately
+          setPauseAt(null);
+        }
       }
     }
-  }, [pauseAt, currentTime, delay.japanese, pauseOnCue, player])
+    
+    return () => {
+      if (unPauseTimeout) {
+        clearTimeout(unPauseTimeout);
+      }
+    };
+  }, [pauseAt, currentTime, delay.japanese, pauseOnCue, player, cuePauseDuration]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {

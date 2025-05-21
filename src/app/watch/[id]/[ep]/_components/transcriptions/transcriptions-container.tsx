@@ -7,19 +7,22 @@ import { GeneralSettings, PlayerSettings } from "@/lib/db/schema";
 type SubtitleTranscriptionsContainerProps = {
   transcriptions: TranscriptionQuery[],
   styles: TranscriptionStyles;
-  syncPlayerSettings: GeneralSettings['syncPlayerSettings']
+  syncPlayerSettings: GeneralSettings['syncPlayerSettings'];
+  cuePauseDuration: PlayerSettings['cuePauseDuration']
 }
 
 export default function SubtitleTranscriptionsContainer({
   transcriptions,
   styles,
-  syncPlayerSettings
+  syncPlayerSettings,
+  cuePauseDuration
 }: SubtitleTranscriptionsContainerProps) {
   return (
     <SubtitleTranscriptions 
       transcriptions={transcriptions}
       styles={styles}
       syncPlayerSettings={syncPlayerSettings}
+      cuePauseDuration={cuePauseDuration}
     />
   )
 }
