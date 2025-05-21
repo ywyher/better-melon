@@ -89,6 +89,11 @@ export const subtitleFormatEnum = pgEnum("subtitle_format", [
   "ass"
 ]);
 
+export const definitionTriggerEnum = pgEnum("definition_trigger", [
+  'click',
+  'hover'
+])
+
 export const subtitleSettings = pgTable("subtitle_settings", {
   id: text("id").primaryKey(),
   
@@ -96,6 +101,8 @@ export const subtitleSettings = pgTable("subtitle_settings", {
   matchPattern: text("match_pattern"), // fileNameMatchPattern
   transcriptionOrder: text('transcription_order').array(),
   // .default(["hiragana","katakana","romaji","japanese","english"])
+
+  definitionTrigger: definitionTriggerEnum('definition_trigger').notNull().default('click'),
 
   userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }).unique(),
   createdAt: timestamp("created_at").notNull(),

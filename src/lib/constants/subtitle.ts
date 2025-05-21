@@ -5,6 +5,8 @@ export const subtitleFormats = [
     'ass'
 ] as const
 
+export const definitionTrigger = ['click', 'hover']
+
 export const textShadowTypes = [
   "none",
   "drop-shadow",

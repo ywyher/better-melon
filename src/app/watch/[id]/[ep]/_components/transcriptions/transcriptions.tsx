@@ -18,11 +18,12 @@ import { SyncStrategy } from "@/types";
 import { showSyncSettingsToast } from "@/components/sync-settings-toast";
 import { Button } from "@/components/ui/button";
 
-export default function SubtitleTranscriptions({ transcriptions, styles, syncPlayerSettings, cuePauseDuration }: {
+export default function SubtitleTranscriptions({ transcriptions, styles, syncPlayerSettings, cuePauseDuration, definitionTrigger }: {
   transcriptions: TranscriptionQuery[];
   styles: TranscriptionStyles;
   syncPlayerSettings: GeneralSettings['syncPlayerSettings']
   cuePauseDuration: PlayerSettings['cuePauseDuration']
+  definitionTrigger: SubtitleSettings['definitionTrigger']
 }) {
   const player = usePlayerStore((state) => state.player);
   const activeTranscriptions = usePlayerStore((state) => state.activeTranscriptions);
@@ -311,6 +312,7 @@ export default function SubtitleTranscriptions({ transcriptions, styles, syncPla
                             tokenStyles: tokenStyles,
                             containerStyle: containerStyle
                           }}
+                          definitionTrigger={definitionTrigger}
                       />
                   );
               })}

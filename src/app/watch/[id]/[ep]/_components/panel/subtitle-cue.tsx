@@ -13,8 +13,8 @@ type SubtitleCueProps = {
     start: number;
     activeToken: SubtitleToken | null;
     handleSeek: (from: TSubtitleCue["from"]) => void
-    handleClick: (sentance: string, token: SubtitleToken) => void
-    handleCopy: (sentance: string) => void
+    handleClick: (sentence: string, token: SubtitleToken) => void
+    handleCopy: (sentence: string) => void
 }
 
 function SubtitleCueBase({ 

@@ -1,6 +1,6 @@
 export const ankiFieldsValues = [
     "expression",
-    "sentance",
+    "sentence",
     "image",
     "definition"
 ]

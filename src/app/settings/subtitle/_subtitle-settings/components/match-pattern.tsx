@@ -31,11 +31,11 @@ export default function MatchPattern({ value }: {
             <Input
                 placeholder="Keyword or Regex"
                 value={displayValue || ""}
-                onBlur={(e) => onSubmit(e.target.value)}
+                onBlur={(e) => onSubmit(e.target.value ? e.target.value : null)}
                 onChange={(e) => onChange(e.target.value)}
                 className="flex-1"
             />
-            {value && (
+            {displayValue && (
                 <LoadingButton
                     isLoading={isLoading}
                     variant="destructive"

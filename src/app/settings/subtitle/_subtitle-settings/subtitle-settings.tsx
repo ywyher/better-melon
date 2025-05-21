@@ -1,6 +1,7 @@
 'use client'
 
 import SubtitleSettingsSkeleton from "@/app/settings/subtitle/_components/subtitle-settings-skeleton"
+import DefinitionTrigger from "@/app/settings/subtitle/_subtitle-settings/components/definition-trigger"
 import MatchPattern from "@/app/settings/subtitle/_subtitle-settings/components/match-pattern"
 import PreferredFormat from "@/app/settings/subtitle/_subtitle-settings/components/preferred-format"
 import { Separator } from "@/components/ui/separator"
@@ -17,6 +18,7 @@ export default function SubtitleSettings() {
             <div className="text-xl font-semibold">Subtitle Settings</div>
             <PreferredFormat value={settings.preferredFormat} />
             <MatchPattern value={settings.matchPattern} />
+            <DefinitionTrigger value={settings.definitionTrigger} />
         </div>
     )
 }

@@ -29,16 +29,18 @@ export default function SegmentedToggle<T extends string>({
   options,
   value,
   onValueChange,
-  disabled = false
+  disabled = false,
+  className = ""
 }: {
   options: T[];
   value: T;
   onValueChange: (value: T) => void;
   disabled?: boolean;
+  className?: string
 }) {
   return (
     <div className={`
-      flex flex-row border border-secondary rounded-md overflow-hidden shadow-sm w-full max-w-xl
+      flex flex-row border border-secondary rounded-md overflow-hidden shadow-sm w-full
       ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
     `}>
       {options.map((option) => (

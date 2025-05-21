@@ -16,7 +16,7 @@ export default function HeaderLinks() {
                     Anime
                 </Button>
             </Link>
-            <Link href={'/settings/player'}>
+            <Link href={'/settings'}>
                 <Button
                     variant="ghost"
                     className="flex flex-row gap-2 text-md"

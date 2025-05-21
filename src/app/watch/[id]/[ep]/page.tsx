@@ -13,6 +13,7 @@ import { useEpisodeData } from '@/lib/hooks/use-episode-data';
 import PlayerSection from '@/app/watch/[id]/[ep]/_components/sections/player-section';
 import ControlsSection from '@/app/watch/[id]/[ep]/_components/sections/controls-section';
 import PanelSection from '@/app/watch/[id]/[ep]/_components/sections/panel-section';
+import { useDefinitionStore } from '@/lib/stores/definition-store';
 
 export default function WatchPage() {
   const params = useParams();
@@ -23,6 +24,9 @@ export default function WatchPage() {
   const panelState = usePlayerStore((state) => state.panelState);
   const isVideoReady = usePlayerStore((state) => state.isVideoReady);
   const setIsVideoReady = usePlayerStore((state) => state.setIsVideoReady);
+
+  const setSentence = useDefinitionStore((state) => state.setSentence);
+  const setToken = useDefinitionStore((state) => state.setToken);
 
   const loadStartTimeRef = useRef<number>(performance.now());
   const [totalDuration, setTotalDuration] = useState<number>(0);
@@ -96,6 +100,8 @@ export default function WatchPage() {
     loadStartTimeRef.current = performance.now();
     setTotalDuration(0);
     setIsVideoReady(false);
+    setToken(null)
+    setSentence(null)
   }, [animeId, episodeNumber, setIsVideoReady]);
 
   usePrefetchEpisode(animeId, episodeNumber+1, episodesLength, isVideoReady);

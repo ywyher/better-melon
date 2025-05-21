@@ -69,6 +69,7 @@ export default function PlayerSection({
                   transcriptions={transcriptions}
                   transcriptionsStyles={transcriptionsStyles}
                   cuePauseDuration={settings.playerSettings.cuePauseDuration}
+                  definitionTrigger={settings.subtitleSettings.definitionTrigger}
                 />
               </>
             )}

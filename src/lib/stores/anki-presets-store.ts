@@ -3,7 +3,7 @@ import { persist } from 'zustand/middleware'
 
 export type AnkiField = {
   name: string;
-  value: "expression" | "sentance" | "image" | "definition"
+  value: "expression" | "sentence" | "image" | "definition"
 }
 
 export type AnkiPreset = {

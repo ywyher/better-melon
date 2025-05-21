@@ -48,6 +48,8 @@ Animelon doesn’t provide all animes, and its entries are rarely updated, makin
 - Screenshot
 - Copy subtitle text
 - Pause at each subtitle
+  1. Unpause duration -> duration before the player unpauses it self
+- Definition on select or hover setting
 
 ## Planned Features
 - Audio support for anki

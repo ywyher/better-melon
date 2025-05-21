@@ -1,13 +1,12 @@
+how did we forget about subtitle styles for active subtitles !!
+
+puase player on definition trigger or hover or click or none !!!!
+
 if the user manually unpause dont unpause !!
 
 so myabe when changing settings for the sync toast dont dismiss the other but instead show what each one change ???
 
 sometimes the proxy fails -> maybe add a refetch or something in that case
-
-for the cues list add the ability to show the definition card but without add to akni
-add to anki only from the player transcriptions container
-
-ability to set a count down before unpausing the video after we paused it cuz of pauseOnCue
 
 later add a protips page or something to show tips like the ctrl + c copy the current cue text !!
 or basically a hotkeys instructions when we add the rest (if there is)

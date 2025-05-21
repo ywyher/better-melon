@@ -7,17 +7,20 @@ import { useDefinitionStore } from '@/lib/stores/definition-store';
 import { SubtitleCue, SubtitleToken, SubtitleTranscription } from '@/types/subtitle';
 import { cn } from '@/lib/utils';
 import { TranscriptionStyleSet } from '@/app/watch/[id]/[ep]/types';
+import { SubtitleSettings } from '@/lib/db/schema';
 
 type TranscriptionItemProps = {
   transcription: SubtitleTranscription;
   activeSubtitleSets: Record<SubtitleTranscription, SubtitleCue[]>;
   styles: TranscriptionStyleSet;
+  definitionTrigger: SubtitleSettings['definitionTrigger']
 }
 
 export const TranscriptionItem = React.memo(function TranscriptionItem({ 
     transcription,
     activeSubtitleSets,
-    styles
+    styles,
+    definitionTrigger
 }: TranscriptionItemProps) {
     const {
         attributes,
@@ -33,10 +36,10 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
     }), [transform, transition]);
 
     const activeToken = useDefinitionStore((state) => state.token);
-    const setSentance = useDefinitionStore((state) => state.setSentance);
+    const setSentence = useDefinitionStore((state) => state.setSentence);
     const setToken = useDefinitionStore((state) => state.setToken);
     const storeToken = useDefinitionStore((state) => state.token)
-    const storeSentance = useDefinitionStore((state) => state.sentance)
+    const storeSentence = useDefinitionStore((state) => state.sentence)
     
     const [hoveredTokenId, setHoveredTokenId] = useState<string | number | null>(null);
     const [hoveredCueId, setHoveredCueId] = useState<number | null>(null);
@@ -51,23 +54,19 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
         setHoveredTokenId(null);
     }, []);
 
-    const handleClick = useCallback((sentence: string, token: SubtitleToken) => {
-      if (!sentence || !token) return;
-      
-      // Toggle token - if current stored token matches clicked token, clear it; otherwise set the new token
-      if (storeToken && storeToken.id === token.id) {
-        setToken(null);
-      } else {
-        setToken(token);
-      }
-      
-      // Toggle sentence - if current stored sentence matches clicked sentence, clear it; otherwise set the new sentence
-      if (storeSentance && storeSentance === sentence) {
-        setSentance(null);
-      } else {
-        setSentance(sentence);
-      }
-    }, [storeToken, storeSentance, setToken, setSentance]);
+    const handleActivate = useCallback((sentence: string, token: SubtitleToken, trigger: SubtitleSettings['definitionTrigger']) => {
+        if (!sentence || !token || transcription == 'english' || definitionTrigger != trigger) return;
+        
+        if (storeToken && storeToken.id === token.id) {
+            // If clicking on the same token, clear it
+            setToken(null);
+            setSentence(null);
+        } else {
+            // Otherwise set the new token and sentence
+            setToken(token);
+            setSentence(sentence);
+        }
+    }, [storeToken, storeSentence, setToken, setSentence]);
   
 
     const renderTokens = useCallback((cue: SubtitleCue) => {
@@ -87,12 +86,15 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
                     key={`${token.id || tokenIdx}-${tokenIdx}`} // More stable keys
                     style={tokenStyle}
                     onClick={() => {
-                        if(transcription !== 'english') {
-                            handleClick(cue.content, token);
-                        }
+                        handleActivate(cue.content, token, 'click');
                     }}
-                    onMouseEnter={() => handleTokenMouseEnter(cue.id, token.id)}
-                    onMouseLeave={handleTokenMouseLeave}
+                    onMouseEnter={() => {
+                        handleTokenMouseEnter(cue.id, token.id)
+                        handleActivate(cue.content, token, 'hover');
+                    }}
+                    onMouseLeave={() => { 
+                        handleTokenMouseLeave()
+                    }}
                     onMouseOver={(e) => {
                         if (!isActive) {
                             Object.assign(e.currentTarget.style, styles.tokenStyles.active);
@@ -114,7 +116,7 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
         hoveredTokenId, 
         transcription, 
         activeToken, 
-        handleClick, 
+        handleActivate, 
         handleTokenMouseLeave, 
         handleTokenMouseEnter
     ]);

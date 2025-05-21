@@ -1,5 +1,6 @@
 'use client'
 
+import { SelectInput } from "@/components/form/select-input"
 import LoadingButton from "@/components/loading-button"
 import {
     Select,
@@ -28,20 +29,17 @@ export default function PreferredFormat({ value }: {
                     Preferred format
                 </div>
                 <div className="w-full md:col-span-4 flex flex-row gap-3">
-                    <Select
+                    <SelectInput 
                         value={displayValue || ""}
-                        onValueChange={v => onSubmit(v as SubtitleSettings['preferredFormat'])}
+                        onChange={v => onSubmit(v as SubtitleSettings['preferredFormat'])}
                         disabled={isLoading}
-                    >
-                        <SelectTrigger className="w-full cursor-pointer">
-                        <SelectValue placeholder="Format" />
-                        </SelectTrigger>
-                        <SelectContent>
-                        {subtitleFormats.map((format, idx) => (
-                            <SelectItem key={idx} value={format}>{format}</SelectItem>
-                        ))}
-                        </SelectContent>
-                    </Select>
+                        options={subtitleFormats.map((f) => {
+                            return {
+                                value: f,
+                                label: f
+                            }
+                        })}
+                    />
                     {value && (
                         <LoadingButton
                             isLoading={isLoading}

@@ -21,7 +21,7 @@ import { useQuery } from '@tanstack/react-query';
 import { ankiQueries } from '@/lib/queries/anki';
 
 export default function DefinitionCard() {
-  const { sentance, setSentance, setToken, token, addToAnki } = useDefinitionStore()
+  const { sentence, setSentence, setToken, token, addToAnki } = useDefinitionStore()
   const setActiveTokenId = usePlayerStore((state) => state.setActiveTokenId)
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const player = usePlayerStore((state) => state.player);
@@ -45,7 +45,7 @@ export default function DefinitionCard() {
   };
 
   const handleAddNote = async () => {
-    if(!preset || !token || !sentance) {
+    if(!preset || !token || !sentence) {
       toast.warning("Setup anki configurations thorugh /profile/settings")
       return;
     }
@@ -56,8 +56,8 @@ export default function DefinitionCard() {
       return {
         [key]: value === "expression"
           ? token.surface_form
-          : value === "sentance"
-          ? sentance
+          : value === "sentence"
+          ? sentence
           : ""
       };
     });
@@ -101,7 +101,7 @@ export default function DefinitionCard() {
   }
 
   const handleClose = () => {
-    setSentance(null)
+    setSentence(null)
     setToken(null)
     setActiveTokenId(null)
   }
@@ -158,7 +158,7 @@ export default function DefinitionCard() {
     )
   }
 
-  if(!sentance || !token) return null;
+  if(!sentence || !token) return null;
 
   return (
     <DndContext sensors={sensors} onDragEnd={handleDragEnd}>

@@ -22,7 +22,7 @@ export default function SubtitleCuesContainer({
   const activeSubtitleFile = usePlayerStore((state) => state.activeSubtitleFile)
   
   const activeToken = useDefinitionStore((state) => state.token)
-  const setSentance = useDefinitionStore((state) => state.setSentance)
+  const setSentence = useDefinitionStore((state) => state.setSentence)
   const setToken = useDefinitionStore((state) => state.setToken)
   const setAddToAnki = useDefinitionStore((state) => state.setAddToAnki)
     
@@ -34,17 +34,26 @@ export default function SubtitleCuesContainer({
       }))
   }, [player, activeSubtitleFile, delay.japanese]);
 
-  const handleClick = useCallback((sentance: string, token: SubtitleToken) => {
-      if(!sentance || !token) return;
-      setSentance(sentance)
-      setToken(token)
-      setAddToAnki(false)
-  }, [setSentance, setToken]);
+  const handleClick = useCallback((sentence: string, token: SubtitleToken) => {
+    if (!sentence || !token) return;
+    
+    if (activeToken && activeToken.id === token.id) {
+      // If clicking on the same token, clear it and the sentence
+      setToken(null);
+      setSentence(null);
+    } else {
+      // Otherwise set the new token and sentence
+      setToken(token);
+      setSentence(sentence);
+    }
+    
+    setAddToAnki(false);
+  }, [activeToken, setToken, setSentence, setAddToAnki]);
 
-  const handleCopy = useCallback(async (sentance: string) => {
-      if(!sentance) return;
+  const handleCopy = useCallback(async (sentence: string) => {
+      if(!sentence) return;
       try {
-        await navigator.clipboard.writeText(sentance)
+        await navigator.clipboard.writeText(sentence)
         toast.success("Cue copied to clipboard")
       } catch (error) {
         toast.error(error instanceof Error ? error.message : `Failed to copy cue`)

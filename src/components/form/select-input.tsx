@@ -14,7 +14,6 @@ interface SelectInputProps {
   className?: string;
   value?: string;
   onChange?: (value: string) => void;
-  onBlur?: (value: string) => void;
   name?: string;
   disabled?: boolean;
 }
@@ -25,7 +24,6 @@ export function SelectInput({
   className = "",
   value,
   onChange,
-  onBlur,
   disabled = false,
   ...props
 }: SelectInputProps) {
