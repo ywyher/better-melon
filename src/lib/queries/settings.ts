@@ -2,6 +2,7 @@ import { getGeneralSettings } from "@/app/settings/general/actions";
 import { getPlayerSettings } from "@/app/settings/player/actions";
 import { getSubtitleSettings } from "@/app/settings/subtitle/_subtitle-settings/actions";
 import { getSubtitleStyles } from "@/components/subtitle/styles/actions";
+import { getSettingsForEpisode } from "@/lib/db/queries";
 import { SubtitleStyles } from "@/lib/db/schema";
 import { createQueryKeys } from "@lukemorales/query-key-factory";
 
@@ -23,5 +24,11 @@ export const settingsQueries = createQueryKeys('settings', {
       queryFn: async () => {
         return await getSubtitleStyles({ transcription: selectedTranscription });
       },
+    }),
+    forEpisode: () => ({
+      queryKey: ['for-episode'],
+      queryFn: async () => {
+        return await getSettingsForEpisode()
+      }
     })
 })

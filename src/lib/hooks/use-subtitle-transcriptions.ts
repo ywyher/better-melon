@@ -80,7 +80,7 @@ export const useSubtitleTranscriptions = () => {
   const japanese = transcriptions.find(t => t?.transcription === 'japanese');
 
   const isLoading = isTokenizerLoading || queries.some(q => q.isLoading);
-  const error = tokenizerError || queries.find(q => q.error)?.error || !japanese;
+  const error = queries.find(q => q.error)?.error;
 
   
   return {

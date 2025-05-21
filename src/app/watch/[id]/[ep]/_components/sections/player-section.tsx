@@ -3,20 +3,22 @@ import Player from "../player/player";
 import PlayerSkeleton from "../player/player-skeleton";
 import { usePlayerStore } from '@/lib/stores/player-store';
 import { TopControls } from '@/app/watch/[id]/[ep]/_components/sections/top-controls';
-import { AnimeEpisodeContext } from '@/types/anime';
+import { AnimeEpisodeData } from '@/types/anime';
 import { TranscriptionQuery, TranscriptionStyles } from '@/app/watch/[id]/[ep]/types';
 import { SubtitleCue } from '@/types/subtitle';
+import { SettingsForEpisode } from '@/types/settings';
 
 interface PlayerSectionProps {
   animeId: string;
   episodeNumber: number;
   isLoading: boolean;
   loadingDuration: number;
-  episodeContext?: AnimeEpisodeContext;
+  episodeData?: AnimeEpisodeData;
   episodesLength: number;
   isMedium: boolean;
-  transcriptions: TranscriptionQuery[]
-  transcriptionsStyles: TranscriptionStyles
+  transcriptions: TranscriptionQuery[];
+  transcriptionsStyles: TranscriptionStyles;
+  settings: SettingsForEpisode
 }
 
 export default function PlayerSection({
@@ -24,11 +26,12 @@ export default function PlayerSection({
   episodeNumber,
   isLoading,
   loadingDuration,
-  episodeContext,
+  episodeData,
   episodesLength,
   isMedium,
   transcriptions,
   transcriptionsStyles,
+  settings
 }: PlayerSectionProps) {
   const panelState = usePlayerStore((state) => state.panelState);
   const setPanelState = usePlayerStore((state) => state.setPanelState);
@@ -40,11 +43,12 @@ export default function PlayerSection({
         <TopControls 
           isLoading={isLoading}
           loadingDuration={loadingDuration}
-          episodeContext={episodeContext}
+          episodeData={episodeData}
           isMedium={isMedium}
           panelState={panelState}
           setPanelState={setPanelState}
           japaneseTranscriptions={transcriptions.find(t => t?.transcription == 'japanese')?.cues}
+          settings={settings}
         />
       </div>
       
@@ -53,16 +57,16 @@ export default function PlayerSection({
           <PlayerSkeleton isLoading={true} />
         ) : (
           <>
-            {episodeContext && (
+            {episodeData && (
               <>
                 <Player
                   animeId={animeId}
                   episodeNumber={episodeNumber}
-                  metadata={episodeContext.metadata}
-                  streamingLinks={episodeContext.data.streamingLinks}
-                  episodesLength={episodeContext.data.details.episodes} 
-                  syncPlayerSettings={episodeContext.generalSettings.syncPlayerSettings}
-                  pauseOnCue={episodeContext.playerSettings.pauseOnCue}
+                  metadata={episodeData.metadata}
+                  streamingLinks={episodeData.streamingLinks}
+                  episodesLength={episodeData.details.episodes} 
+                  syncPlayerSettings={settings.generalSettings.syncPlayerSettings}
+                  pauseOnCue={settings.playerSettings.pauseOnCue}
                   transcriptions={transcriptions}
                   transcriptionsStyles={transcriptionsStyles}
                 />

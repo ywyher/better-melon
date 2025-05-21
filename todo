@@ -1,3 +1,13 @@
+sometimes the proxy fails
+
+if the episode is already loaded and the user change a settin in the settings page and come back it doesn't apply without refreshing
+> maybe seperate the query for fetching episode streaming link and the settings to be able to refetch the settings without disturbing the video ??
+
+
+
+for the cues list add the ability to show the definition card but without add to akni
+add to anki only from the player transcriptions container
+
 currently the pauseOnCue when the user unpause some time it repause prob cuz of the ratio between the tolerance and the currentTime update speed ??
 
 for pauseOnCue it need to be optomized maybe like this, but this doesnt work very well for now ?

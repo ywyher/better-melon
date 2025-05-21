@@ -19,11 +19,7 @@ export default function ScreenshotNamingPattern({ value }: { value: GeneralSetti
         <div className="flex flex-col md:grid grid-cols-2 md:items-center justify-between gap-2 pb-4">
             <div className="col-span-1 space-y-1">
                 <div className="flex flex-row gap-2">
-                    <h3 className="font-medium">Screenshot naming dialog</h3>
-                    <TooltipWrapper className="flex flex-col">
-                        <p>if naming dialog is enabled this will be the default value for it</p>
-                        <p>if its disabled the image will instantly get saved with name tha foolows in this pattern</p>
-                    </TooltipWrapper>
+                    <h3 className="font-medium">Screenshot naming pattern</h3>
                 </div>
                 <p className="text-sm text-muted-foreground">
                     When screenshot is saved its name will be saved in this pattern

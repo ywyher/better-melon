@@ -73,7 +73,7 @@ export function usePrefetchEpisode(
   }, [isVideoReady, isLastEpisode, networkCondition]);
   
   const { 
-    data: episodeContext, 
+    data: episodeData, 
     isSuccess: episodeDataFetched,
     isFetching: isEpisodeDataFetching
   } = useQuery({
@@ -99,11 +99,11 @@ export function usePrefetchEpisode(
   const queries = useQueries({
     queries: activeTranscriptions.map((transcription) => {
       const isEnglish = transcription === 'english';
-      const activeSubtitleFile = episodeContext ? 
-        getActiveSubtitleFile(episodeContext.data.subtitles ?? []) : 
+      const activeSubtitleFile = episodeData ? 
+        getActiveSubtitleFile(episodeData.subtitles ?? []) : 
         undefined;
-      const englishSubtitleUrl = episodeContext ? 
-        getEnglishSubtitleUrl(episodeContext.data.streamingLinks?.tracks ?? []) : 
+      const englishSubtitleUrl = episodeData ? 
+        getEnglishSubtitleUrl(episodeData.streamingLinks?.tracks ?? []) : 
         '';
       
       return {

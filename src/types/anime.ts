@@ -104,17 +104,6 @@ export interface Anime {
   format: string;
 }
 
-export type AnimeEpisodeMetadata = {
-  // id: string;
-  number: number;
-  title: string;
-  image: string;
-  description?: string;
-  // imageHash: string;
-  // createdAt: Date;
-  // url: string;
-}
-
 export type SkipTime = {
     interval: {
       startTime: number;
@@ -131,40 +120,44 @@ export type AnimeProvider = 'hianime'
 export type AnimeStreamingLinks = {
   headers: {
     Referer: string
-  },
+  };
   tracks: {
-    file: string,
-    label?: string,
-    kind: 'captions' | 'thumbnails' | 'chapters',
+    file: string;
+    label?: string;
+    kind: 'captions' | 'thumbnails' | 'chapters';
     default?: boolean
-  }[],
+  }[];
   intro: {
-    start: number,
+    start: number;
     end: number
-  },
+  };
   outro: {
-    start: number,
+    start: number;
     end: number
-  },
+  };
   sources: {
-    url: string,
+    url: string;
     type: string
-  }[],
-  anilistId?: number,
+  }[];
+  anilistId?: number;
   malId?: number
 }
 
-export type AnimeEpisodeData = {
-  provider: AnimeProvider,
-  details: Anime,
-  streamingLinks: AnimeStreamingLinks,
-  subtitles: SubtitleFile[]
+export type AnimeEpisodeMetadata = {
+  // id: string;
+  number: number;
+  title: string;
+  image: string;
+  description?: string;
+  // imageHash: string;
+  // createdAt: Date;
+  // url: string;
 }
 
-export type AnimeEpisodeContext = {
-  data: AnimeEpisodeData;
-  metadata: AnimeEpisodeMetadata
-  subtitleSettings: SubtitleSettings;
-  generalSettings: GeneralSettings;
-  playerSettings: PlayerSettings;
+export type AnimeEpisodeData = {
+  provider: AnimeProvider;
+  details: Anime;
+  metadata: AnimeEpisodeMetadata;
+  streamingLinks: AnimeStreamingLinks;
+  subtitles: SubtitleFile[]
 }

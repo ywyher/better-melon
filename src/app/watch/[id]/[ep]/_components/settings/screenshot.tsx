@@ -56,7 +56,7 @@ export default function Screenshot({
 
   const openScreenshotDialog = () => {
     setCustomName(mapScreenshotNamingPatternValues(
-      defaultGeneralSettings.screenshotNamingPattern, 
+      namingPattern || defaultGeneralSettings.screenshotNamingPattern, 
       animeMetadata
     ));
     setSelectedFormat(format);
@@ -88,7 +88,7 @@ export default function Screenshot({
       {namingDialog && (
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogContent className="sm:max-w-md">
-            <DialogHeader>
+            <DialogHeader className="flex flex-row gap-2">
               <DialogTitle>Save Screenshot</DialogTitle>
               <TooltipWrapper>
                 You can disable the dialog and instantly download the file without renaming it by chaning the settings in the settings page

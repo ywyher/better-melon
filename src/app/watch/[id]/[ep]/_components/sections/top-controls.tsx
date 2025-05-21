@@ -3,28 +3,31 @@ import SettingsDialog from "@/app/watch/[id]/[ep]/_components/settings/settings-
 import DialogWrapper from "@/components/dialog-wrapper";
 import { Button } from "@/components/ui/button";
 import { PlayerStore } from "@/lib/stores/player-store";
-import { AnimeEpisodeContext } from "@/types/anime";
+import { AnimeEpisodeData } from "@/types/anime";
+import { SettingsForEpisode } from "@/types/settings";
 import { SubtitleCue } from "@/types/subtitle";
 import { Captions, Loader2, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 
 type TopControlsProps = {
   isLoading: boolean;
   loadingDuration: number;
-  episodeContext?: AnimeEpisodeContext;
+  episodeData?: AnimeEpisodeData;
   isMedium: boolean;
   panelState: PlayerStore['panelState'];
   setPanelState: (state: PlayerStore['panelState']) => void;
-  japaneseTranscriptions?: SubtitleCue[]
+  japaneseTranscriptions?: SubtitleCue[];
+  settings: SettingsForEpisode
 }
 
 export function TopControls({ 
   isLoading,
   loadingDuration,
-  episodeContext,
+  episodeData,
   isMedium,
   panelState,
   setPanelState,
-  japaneseTranscriptions
+  japaneseTranscriptions,
+  settings
 }: TopControlsProps) {
   return (
     <div className="flex flex-row gap-3 items-center">
@@ -33,7 +36,7 @@ export function TopControls({
           Loaded in {(loadingDuration / 1000).toFixed(2)}s
         </div>
       )}
-      {(isLoading || !episodeContext || !japaneseTranscriptions) ? (
+      {(isLoading || !episodeData || !japaneseTranscriptions) ? (
         <div className="flex flex-row gap-2">
           <Button variant='outline'>
             <Loader2 className='animate-spin' />
@@ -52,7 +55,7 @@ export function TopControls({
       ) : (
         <div className='flex flex-row gap-2'>
           <SettingsDialog 
-            generalSettings={episodeContext.generalSettings}
+            generalSettings={settings.generalSettings}
           />
           {isMedium ? (
             <DialogWrapper
@@ -63,7 +66,7 @@ export function TopControls({
               breakpoint='medium'
             >
               <SubtitlePanel
-                subtitleFiles={episodeContext.data.subtitles}
+                subtitleFiles={episodeData.subtitles}
                 japaneseTranscription={japaneseTranscriptions}
               />
             </DialogWrapper>

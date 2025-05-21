@@ -3,18 +3,22 @@ import EpisodeNavigations from "@/app/watch/[id]/[ep]/_components/settings/episo
 import PlayerSettings from "@/app/watch/[id]/[ep]/_components/settings/player-settings";
 import SettingsSkeleton from "@/app/watch/[id]/[ep]/_components/settings/settings-skeleton";
 import { Separator } from "@/components/ui/separator";
-import { AnimeEpisodeContext } from "@/types/anime";
+import type { GeneralSettings, PlayerSettings as TPlayerSettings } from "@/lib/db/schema";
+import { AnimeEpisodeData } from "@/types/anime";
+import { SettingsForEpisode } from "@/types/settings";
 
 interface ControlsSectionProps {
   isLoading: boolean;
-  episodeContext?: AnimeEpisodeContext;
+  episodeData?: AnimeEpisodeData;
   episodesLength: number;
+  settings: SettingsForEpisode;
 }
 
 export default function ControlsSection({
   isLoading,
-  episodeContext,
-  episodesLength
+  episodeData,
+  episodesLength,
+  settings
 }: ControlsSectionProps) {
   if (isLoading) {
     return (
@@ -24,17 +28,15 @@ export default function ControlsSection({
     );
   }
 
-  console.log(`episodeContext`, episodeContext)
-
-  if(!episodeContext) return;
+  if(!episodeData) return;
 
   return (
       <div className="flex flex-col gap-10">
           <div className="flex flex-col gap-5">
               <PlayerSettings 
-                playerSettings={episodeContext.playerSettings} 
-                generalSettings={episodeContext.generalSettings}
-                animeMetadata={episodeContext.metadata}
+                playerSettings={settings.playerSettings} 
+                generalSettings={settings.generalSettings}
+                animeMetadata={episodeData.metadata}
               />
               <Separator />
               <div className="flex flex-row gap-2 w-full justify-between items-center">

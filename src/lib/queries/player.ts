@@ -1,22 +1,22 @@
-import { getEpisodeContext } from "@/app/watch/[id]/[ep]/actions/index.actions";
+import { getEpisodeData } from "@/app/watch/[id]/[ep]/actions/index.actions";
 import { selectSubtitleFile } from "@/lib/subtitle/utils";
-import { AnimeEpisodeContext } from "@/types/anime";
+import { AnimeEpisodeData } from "@/types/anime";
 import { createQueryKeys } from "@lukemorales/query-key-factory";
 
 export const playerQueries = createQueryKeys('player', {
     episodeData: (animeId: string, episodeNumber: number) => ({
         queryKey: ['episodesData', animeId, episodeNumber],
-        queryFn: async (): Promise<AnimeEpisodeContext> => {
-          const episodeContext = await getEpisodeContext(animeId, episodeNumber)
+        queryFn: async (): Promise<AnimeEpisodeData> => {
+          const episodeData = await getEpisodeData(animeId, episodeNumber, 'hianime')
 
           const selectedFile = selectSubtitleFile({
-            files: episodeContext.data.subtitles,
+            files: episodeData.subtitles,
             preferredFormat: 'srt'
           })
       
           if(!selectedFile) throw new Error("Failed to select file")
       
-          return episodeContext as AnimeEpisodeContext
+          return episodeData as AnimeEpisodeData
         },
     }),
 })

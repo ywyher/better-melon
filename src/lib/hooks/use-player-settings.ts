@@ -32,7 +32,7 @@ export function usePlayerSettings<T extends keyof Omit<PlayerSettings, 'id' | 'u
     try {
         const { message, error } = await handlePlayerSettings({ [field]: value });
         if (error) throw new Error(error);
-        queryClient.invalidateQueries({ queryKey: settingsQueries.subtitle._def });
+        queryClient.invalidateQueries({ queryKey: settingsQueries.player._def });
         toast.success(message || successMessage || `${field} updated successfully`);
     } catch (err) {
       setLocalValue(null);

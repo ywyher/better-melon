@@ -12,7 +12,7 @@ export function useEpisodeData(animeId: string, episodeNumber: number) {
   const { setEnglishSubtitleUrl, setActiveSubtitleFile } = usePlayerStore();
 
   const {
-    data: episodeContext,
+    data: episodeData,
     isLoading,
     error,
   } = useQuery({
@@ -22,36 +22,36 @@ export function useEpisodeData(animeId: string, episodeNumber: number) {
   });
   
   useEffect(() => {
-    if(!episodeContext) return;
-    setEpisodesLength(episodeContext.data.details.episodes);
-  }, [episodeContext])
+    if(!episodeData) return;
+    setEpisodesLength(episodeData.details.episodes);
+  }, [episodeData])
 
   useEffect(() => {
     if (isLoading) {
       loadingStartTime.current = Date.now();
-    } else if (episodeContext && loadingStartTime.current > 0 && loadingDuration === 0) {
+    } else if (episodeData && loadingStartTime.current > 0 && loadingDuration === 0) {
       const duration = Date.now() - loadingStartTime.current;
       setLoadingDuration(duration);
     }
-  }, [isLoading, episodeContext, loadingDuration]);
+  }, [isLoading, episodeData, loadingDuration]);
 
   useEffect(() => {
-    if (!episodeContext || !episodeContext.data.streamingLinks) return;
+    if (!episodeData || !episodeData.streamingLinks) return;
     
     setActiveSubtitleFile(null);
     setEnglishSubtitleUrl(null);
 
     console.log(selectSubtitleFile({ 
-      files: episodeContext.data.subtitles,
+      files: episodeData.subtitles,
       preferredFormat: 'srt'
     }))
-    console.log(episodeContext.data.streamingLinks.tracks.find(
+    console.log(episodeData.streamingLinks.tracks.find(
       (s: AnimeStreamingLinks['tracks'][0]) => s.label === 'English'
     )?.file)
     
-    if (episodeContext.data.subtitles?.length > 0) {
+    if (episodeData.subtitles?.length > 0) {
       const selected = selectSubtitleFile({ 
-        files: episodeContext.data.subtitles,
+        files: episodeData.subtitles,
         preferredFormat: 'srt'
       });
       
@@ -68,16 +68,16 @@ export function useEpisodeData(animeId: string, episodeNumber: number) {
       }
     }
     
-    if (episodeContext.data.streamingLinks.tracks) {
-      const englishSub = episodeContext.data.streamingLinks.tracks.find(
+    if (episodeData.streamingLinks.tracks) {
+      const englishSub = episodeData.streamingLinks.tracks.find(
         (s: AnimeStreamingLinks['tracks'][0]) => s.label === 'English'
       )?.file || "";
       setEnglishSubtitleUrl(englishSub);
     }
-  }, [episodeContext, setActiveSubtitleFile, setEnglishSubtitleUrl]);
+  }, [episodeData, setActiveSubtitleFile, setEnglishSubtitleUrl]);
 
   return {
-    episodeContext,
+    episodeData,
     isLoading,
     error,
     loadingDuration,

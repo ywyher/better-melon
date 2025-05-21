@@ -4,14 +4,15 @@ import { useParams } from 'next/navigation';
 import { Indicator } from '@/components/indicator';
 import { usePlayerStore } from '@/lib/stores/player-store';
 import { useIsMedium } from '@/lib/hooks/use-media-query';
-import { useEpisodeData } from '@/lib/hooks/use-episode-data';
-import PlayerSection from '@/app/watch/[id]/[ep]/_components/sections/player-section';
-import ControlsSection from '@/app/watch/[id]/[ep]/_components/sections/controls-section';
-import PanelSection from '@/app/watch/[id]/[ep]/_components/sections/panel-section';
+import { useSettingsForEpisode } from '@/lib/hooks/use-settings-for-episode';
 import { usePrefetchEpisode } from '@/lib/hooks/use-prefetch-episode';
 import { useSubtitleTranscriptions } from '@/lib/hooks/use-subtitle-transcriptions';
 import { useSubtitleStyles } from '@/lib/hooks/use-subtitle-styles';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEpisodeData } from '@/lib/hooks/use-episode-data';
+import PlayerSection from '@/app/watch/[id]/[ep]/_components/sections/player-section';
+import ControlsSection from '@/app/watch/[id]/[ep]/_components/sections/controls-section';
+import PanelSection from '@/app/watch/[id]/[ep]/_components/sections/panel-section';
 
 export default function WatchPage() {
   const params = useParams();
@@ -27,38 +28,44 @@ export default function WatchPage() {
   const [totalDuration, setTotalDuration] = useState<number>(0);
 
   const {
-    episodeContext,
-    isLoading: isEpisodeContextLoading,
-    error: dataError,
-    loadingDuration: episodeContextLoadingDuration,
+    episodeData,
+    isLoading: isEpisodeDataLoading,
+    error: episodeDataError,
+    loadingDuration: episodeDataLoadingDuration,
     episodesLength
   } = useEpisodeData(animeId, episodeNumber);
-  
+
+  const { 
+    settings,
+    isLoading: isSettingsLoading,
+    error: settingsError,
+    loadingDuration: settingsLoadingDuration
+  } = useSettingsForEpisode()
+
   const { 
     transcriptions, 
     isLoading: isTranscriptionsLoading, 
+    error: transcriptionsError,
     loadingDuration: transcriptionsLoadingDuration,
   } = useSubtitleTranscriptions();
-  
-  useEffect(() => {
-    console.log(`transcriptions`, transcriptions)
-  }, [transcriptions])
 
   const { 
     styles, 
     isLoading: isStylesLoading, 
+    error: stylesError,
     loadingDuration: stylesLoadingDuration 
   } = useSubtitleStyles();
 
   const isLoading = useMemo(() => {
-    return (isEpisodeContextLoading || isTranscriptionsLoading || isStylesLoading) && !isVideoReady;
-  }, [isEpisodeContextLoading, isTranscriptionsLoading, isStylesLoading, isVideoReady]);
+    return (isEpisodeDataLoading || isTranscriptionsLoading || isStylesLoading || isSettingsLoading) && !isVideoReady;
+  }, [isEpisodeDataLoading, isTranscriptionsLoading, isStylesLoading, isSettingsLoading, isVideoReady]);
 
   useEffect(() => {
     if (!isLoading && 
         isVideoReady && 
-        episodeContextLoadingDuration >= 0 && 
+        episodeDataLoadingDuration >= 0 && 
         transcriptionsLoadingDuration >= 0 && 
+        settingsLoadingDuration >= 0 &&
         stylesLoadingDuration >= 0) {
       
       const loadEndTime = performance.now();
@@ -76,8 +83,9 @@ export default function WatchPage() {
   }, [
     isLoading, 
     isVideoReady, 
-    episodeContextLoadingDuration, 
+    episodeDataLoadingDuration, 
     transcriptionsLoadingDuration, 
+    settingsLoadingDuration,
     stylesLoadingDuration, 
     episodeNumber // Include episodeNumber to track when it changes
   ]);
@@ -92,7 +100,7 @@ export default function WatchPage() {
 
   usePrefetchEpisode(animeId, episodeNumber+1, episodesLength, isVideoReady);
 
-  const errors = [dataError].filter(Boolean);
+  const errors = [episodeDataError, transcriptionsError, settingsError, stylesError].filter(Boolean);
   if (errors.length > 0) {
     return <Indicator type='error' message={errors[0]?.message || "An error occurred"} />;
   }
@@ -106,25 +114,27 @@ export default function WatchPage() {
           episodeNumber={episodeNumber}
           isLoading={isLoading}
           loadingDuration={totalDuration}
-          episodeContext={episodeContext}
+          episodeData={episodeData}
           episodesLength={episodesLength}
           isMedium={isMedium}
           transcriptions={transcriptions}
           transcriptionsStyles={styles}
+          settings={settings}
         />
         {/* Settings below player */}
         <ControlsSection
           isLoading={isLoading}
-          episodeContext={episodeContext}
+          episodeData={episodeData}
           episodesLength={episodesLength}
+          settings={settings}
         />
       </div>
       {/* Side panel (visible based on state) */}
-      {(!isMedium && panelState === 'visable' && episodeContext?.metadata && transcriptions && transcriptions.find(t => t?.transcription == 'japanese')) && (
+      {(!isMedium && panelState === 'visable' && episodeData?.metadata && transcriptions && transcriptions.find(t => t?.transcription == 'japanese')) && (
         <PanelSection
           isLoading={isLoading}
-          animeMetadata={episodeContext?.metadata}
-          subtitleFiles={episodeContext?.data.subtitles}
+          animeMetadata={episodeData?.metadata}
+          subtitleFiles={episodeData?.subtitles}
           japaneseTranscription={transcriptions.find(t => t?.transcription == 'japanese')!.cues}
         />
       )}
