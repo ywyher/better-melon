@@ -36,6 +36,9 @@ export default function SubtitleTranscriptions({ transcriptions, styles, syncPla
   const copyButtonRef = useRef<HTMLButtonElement | null>(null);
   const [currentCueText, setCurrentCueText] = useState('');
   const handleActiveCuesIdsRef = useRef('');
+
+  // This would stop the player from repausing it self if we are still in the small time window
+  const lastPauseTime = useRef<number>(0);
     
   const isFullscreen = useMediaState('fullscreen', player);
   const controlsVisible = useMediaState('controlsVisible', player);
@@ -181,7 +184,7 @@ export default function SubtitleTranscriptions({ transcriptions, styles, syncPla
             delay: delay.japanese
           })
 
-          setPauseAt(pauseAt)
+          setPauseAt(pauseAt - 0.3)
         }
         
         handleActiveCuesIdsRef.current = currentAllCueIds;
@@ -192,14 +195,20 @@ export default function SubtitleTranscriptions({ transcriptions, styles, syncPla
   }, [activeSubtitleSets, player, delay.japanese]);
 
   useEffect(() => {
+    
     if(player.current && pauseOnCue && pauseAt) {
       const adjustedCurrentTime = currentTime + delay.japanese;
-      if(adjustedCurrentTime >= pauseAt && adjustedCurrentTime < pauseAt + 0.1) {
-        player.current.pause()
+      const currentTimeMs = Date.now();
+      
+      if(adjustedCurrentTime >= pauseAt && 
+        adjustedCurrentTime < pauseAt + 0.1 && 
+        currentTimeMs - lastPauseTime.current > 1000) {
+        player.current.pause();
+        lastPauseTime.current = currentTimeMs;
       }
     }
-  }, [pauseAt, currentTime, delay.japanese])
-  
+  }, [pauseAt, currentTime, delay.japanese, pauseOnCue, player])
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key === 'c') {
