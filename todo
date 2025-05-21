@@ -1,7 +1,5 @@
 so myabe when changing settings for the sync toast dont dismiss the other but instead show what each one change ???
 
-another bug so for when chaning the settings through the playback toggle and such it doesnt refetch the settings !
-
 sometimes the proxy fails -> maybe add a refetch or something in that case
 
 for the cues list add the ability to show the definition card but without add to akni

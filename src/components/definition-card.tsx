@@ -21,7 +21,7 @@ import { useQuery } from '@tanstack/react-query';
 import { ankiQueries } from '@/lib/queries/anki';
 
 export default function DefinitionCard() {
-  const { sentance, setSentance, setToken, token } = useDefinitionStore()
+  const { sentance, setSentance, setToken, token, addToAnki } = useDefinitionStore()
   const setActiveTokenId = usePlayerStore((state) => state.setActiveTokenId)
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const player = usePlayerStore((state) => state.player);
@@ -144,14 +144,16 @@ export default function DefinitionCard() {
             <X />
           </Button>
         </CardHeader>
-        <CardContent className="p-0">
-          <Button
-            className="w-full"
-            onClick={() => handleAddNote()}
-          >
-          Add to anki
-          </Button>
-        </CardContent>
+        {addToAnki && (
+          <CardContent className="p-0">
+            <Button
+              className="w-full"
+              onClick={() => handleAddNote()}
+            >
+              Add to anki
+            </Button>
+          </CardContent>
+        )}
       </Card>
     )
   }

@@ -24,6 +24,7 @@ export default function SubtitleCuesContainer({
   const activeToken = useDefinitionStore((state) => state.token)
   const setSentance = useDefinitionStore((state) => state.setSentance)
   const setToken = useDefinitionStore((state) => state.setToken)
+  const setAddToAnki = useDefinitionStore((state) => state.setAddToAnki)
     
   const handleSeek = useCallback((from: TSubtitleCue['from']) => {
       player.current?.remoteControl.seek(timestampToSeconds({
@@ -37,6 +38,7 @@ export default function SubtitleCuesContainer({
       if(!sentance || !token) return;
       setSentance(sentance)
       setToken(token)
+      setAddToAnki(false)
   }, [setSentance, setToken]);
 
   const handleCopy = useCallback(async (sentance: string) => {
