@@ -2,10 +2,6 @@ how did we forget about subtitle styles for active subtitles !!
 
 puase player on definition trigger or hover or click or none !!!!
 
-if the user manually unpause dont unpause !!
-
-so myabe when changing settings for the sync toast dont dismiss the other but instead show what each one change ???
-
 sometimes the proxy fails -> maybe add a refetch or something in that case
 
 later add a protips page or something to show tips like the ctrl + c copy the current cue text !!
@@ -18,11 +14,7 @@ prob not that important tho
 subtitles sometime take quite a bit of time before being addded to jimaku
 so in that case give a warning to the user and stop the hook before the give an error
 
-tansalte words on hover instead of onClick setting
-
 add the ability to disable auto scroll to the current cue and the ability to customize the countdown when the user is scrolling before it returns to the current cue
-
-maybe slowdown video speed when a dialogue is being spoken ??
 
 update the skeletons for general settings and subtitle styles since you chagned the content
 

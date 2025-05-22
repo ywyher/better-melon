@@ -110,7 +110,6 @@ export default function SubtitleTranscriptions({ transcriptions, styles, syncPla
 
   const activeSubtitleSets = useMemo(() => getActiveSubtitleSets(), [getActiveSubtitleSets, transcriptions]);
 
-  // Drag transcriptions functioanlity
   const { mutate } = useMutation({
     mutationFn: async () => {
       let resolvedStrategy = syncPlayerSettings as SyncStrategy;

@@ -1,6 +1,6 @@
 "use client";
 
-import { MediaPlayer, type MediaPlayerInstance, MediaProvider } from '@vidstack/react';
+import { MediaPlayer, type MediaPlayerInstance, MediaProvider, Poster } from '@vidstack/react';
 import { DefaultAudioLayout, defaultLayoutIcons, DefaultVideoLayout } from '@vidstack/react/player/layouts/default';
 import { Track } from "@vidstack/react";
 import '@vidstack/react/player/styles/default/theme.css';
@@ -83,8 +83,6 @@ export default function Player({
       if(!streamingLinks) return;
 
       const url = `${env.NEXT_PUBLIC_PROXY_URL}?url=${streamingLinks.sources[0].url}`
-      // const url = '/video.mp4'
-      // console.debug(`url ${url}`)
       setVideoSrc(url)
       setIsInitialized(true);
       setLoadingDuration({ start: new Date(), end: undefined })
@@ -198,6 +196,10 @@ export default function Player({
         };
     }, [vttUrl]);
 
+    useEffect(() => {
+        console.log(metadata)
+    }, [metadata])
+
     return (
         <div className="relative w-full aspect-video">
             {(!isVideoReady || !isInitialized) && (
@@ -226,18 +228,18 @@ export default function Player({
                     aspectRatio="16/9"
                 >
                     <MediaProvider>
-                        {/* <Poster
+                        <Poster
                             className="vds-poster"
-                            src={episode.image}
-                            alt={episode.title}
-                        /> */}
+                            src={metadata.image}
+                            alt={metadata.title}
+                        />
                         {vttUrl && (
                             <Track kind='chapters' src={vttUrl} default label='Skip Times' />
                         )}
                     </MediaProvider>
                     <DefaultAudioLayout icons={defaultLayoutIcons} />
                     <DefaultVideoLayout
-                        // thumbnails={`https://files.vidstack.io/sprite-fight/thumbnails.vtt`}
+                        thumbnails={`${env.NEXT_PUBLIC_PROXY_URL}?url=${metadata.thumbnails?.file}`}
                         icons={defaultLayoutIcons} 
                     />
                     <MemoizedSkipButton

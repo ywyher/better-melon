@@ -114,19 +114,20 @@ export type SkipTime = {
 
 export type EpisodesListViewMode = "grid" | "list" | "image"
 
-
 export type AnimeProvider = 'hianime' 
+
+export type SubtitleTrack = {
+  file: string;
+  label?: string;
+  kind: 'captions' | 'thumbnails' | 'chapters';
+  default?: boolean
+};
 
 export type AnimeStreamingLinks = {
   headers: {
     Referer: string
   };
-  tracks: {
-    file: string;
-    label?: string;
-    kind: 'captions' | 'thumbnails' | 'chapters';
-    default?: boolean
-  }[];
+  tracks: SubtitleTrack[];
   intro: {
     start: number;
     end: number
@@ -144,14 +145,11 @@ export type AnimeStreamingLinks = {
 }
 
 export type AnimeEpisodeMetadata = {
-  // id: string;
   number: number;
   title: string;
   image: string;
   description?: string;
-  // imageHash: string;
-  // createdAt: Date;
-  // url: string;
+  thumbnails?: SubtitleTrack;
 }
 
 export type AnimeEpisodeData = {

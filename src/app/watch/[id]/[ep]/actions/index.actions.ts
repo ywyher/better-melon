@@ -1,7 +1,7 @@
 'use server'
 
 import { env } from "@/lib/env/server";
-import { AnimeEpisodeData, AnimeEpisodeMetadata, AnimeProvider } from "@/types/anime";
+import { AnimeEpisodeData, AnimeProvider } from "@/types/anime";
 
 export async function getEpisodeData(animeId: string, episodeNumber: number, provider: AnimeProvider): Promise<AnimeEpisodeData> {
   try {
@@ -14,7 +14,7 @@ export async function getEpisodeData(animeId: string, episodeNumber: number, pro
     }
     const { data, message, success } = await dataRaw.json() as {
       success: boolean,
-      data: AnimeEpisodeData,
+      data: Omit<AnimeEpisodeData, 'metadata'>,
       message: string,
     };
 
@@ -27,6 +27,8 @@ export async function getEpisodeData(animeId: string, episodeNumber: number, pro
       throw new Error('Invalid data structure returned from API');
     }
 
+    console.log(`data`, data.streamingLinks.tracks)
+
     return {
       ...data,
       metadata: {
@@ -34,6 +36,7 @@ export async function getEpisodeData(animeId: string, episodeNumber: number, pro
         title: data.details.title.english,
         image: data.details.coverImage.large,
         description: data.details.description,
+        thumbnails: data.streamingLinks.tracks.find(t => t.kind == 'thumbnails')
       }
     };
   } catch (error) {
