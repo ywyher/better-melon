@@ -6,21 +6,23 @@ import { AnimeStreamingLinks, SkipTime } from "@/types/anime";
 import { ActiveSubtitleFile, SubtitleFile, SubtitleFormat } from "@/types/subtitle";
 import {franc} from 'franc-min'
 
-export const getActiveSubtitleFile = (subtitleFiles: SubtitleFile[]) => {
+export const getActiveSubtitleFile = (subtitleFiles: SubtitleFile[], preferredFormat: SubtitleSettings['preferredFormat']) => {
   const selectedFile = selectSubtitleFile({
     files: subtitleFiles,
-    preferredFormat: 'srt'
+    preferredFormat: preferredFormat
   })
+
+  if(!selectedFile) throw new Error("Couldn't select a file")
 
   return {
     source: 'remote',
     file: {
-      name: selectedFile?.name,
-      url: selectedFile?.url,
-      last_modified: selectedFile?.last_modified,
-      size: selectedFile?.size
+      name: selectedFile.name,
+      url: selectedFile.url,
+      last_modified: selectedFile.last_modified,
+      size: selectedFile.size
     }
-  }
+  } as ActiveSubtitleFile
 }
 
 export const getEnglishSubtitleUrl = (tracks: AnimeStreamingLinks['tracks']) => {
@@ -29,47 +31,12 @@ export const getEnglishSubtitleUrl = (tracks: AnimeStreamingLinks['tracks']) => 
   )?.file || "";
 }
 
-// Helper function to normalize timestamps to HH:MM:SS.mmm format
-export function normalizeTimestamp(hoursPart: string | undefined, minuteSecondsPart: string): string {
-  if (hoursPart) {
-    return hoursPart + minuteSecondsPart;
-  } else {
-    return "00:" + minuteSecondsPart;
-  }
-}
-
 export function removeHtmlTags(text: string): string {
   return text.replace(/<[^>]*>/g, '');
 }
 
-export function timestampToSeconds({ format, timestamp, delay = 0 }: { format: SubtitleFormat, timestamp: string, delay?: number }): number {
-  switch (format) {
-      case 'srt':
-        // the + .10 somehow makes it feels more smooth idk why so why not
-        return srtTimestampToSeconds(timestamp) + delay + .10;
-      break;
-      case "vtt":
-        return vttTimestampToSeconds(timestamp) + delay + .10;
-      break;
-      default:
-        return 0;
-      break;
-  }
-}
-
-/**
-* Converts an SRT timestamp to seconds
-* Handles various SRT timestamp formats including:
-* - 00:00:00,000 (standard format)
-* - 00:00:00,-000 (negative milliseconds in some cases)
-* - 00:00:00.000 (period instead of comma, sometimes used)
-* 
-* @param timestamp - SRT timestamp in format "00:00:00,000" or similar variations
-* @returns The timestamp converted to seconds as a number
-*/
-export function srtTimestampToSeconds(timestamp: string): number {
+export function timestampToSeconds({ timestamp, delay }: { timestamp: string, delay: number }): number {
   if(!timestamp) return 0;
-
   const cleanTimestamp = timestamp.trim();
   
   // Extract hours, minutes, seconds, and milliseconds using regex
@@ -78,7 +45,7 @@ export function srtTimestampToSeconds(timestamp: string): number {
   const match = cleanTimestamp.match(regex);
   
   if (!match) {
-    throw new Error(`Invalid SRT timestamp format: ${timestamp}`);
+    throw new Error(`Invalid timestamp format: ${timestamp}`);
   }
   
   // Extract components
@@ -95,67 +62,7 @@ export function srtTimestampToSeconds(timestamp: string): number {
     milliseconds / 1000;
   
   // Return rounded to 3 decimal places for millisecond precision
-  return Math.round(totalSeconds * 1000) / 1000;
-}
-
-/**
-* Converts a WebVTT timestamp to seconds
-* Handles various VTT timestamp formats including:
-* - 00:00:00.000 (standard format with hours)
-* - 00:00.000 (short format without hours)
-* 
-* @param timestamp - VTT timestamp in format "00:00:00.000" or "00:00.000"
-* @returns The timestamp converted to seconds as a number
-*/
-export function vttTimestampToSeconds(timestamp: string): number {
-if(!timestamp) return 0;
-
-const cleanTimestamp = timestamp.trim();
-
-// Check if the timestamp includes hours (00:00:00.000) or is in short format (00:00.000)
-const hasHours = (cleanTimestamp.match(/:/g) || []).length > 1;
-
-let hours = 0;
-let minutes = 0;
-let seconds = 0;
-let milliseconds = 0;
-
-if (hasHours) {
-    // Format: 00:00:00.000 (with hours)
-    const regex = /(\d+):(\d{2}):(\d{2})\.(\d{3})/;
-    const match = cleanTimestamp.match(regex);
-    
-    if (!match) {
-        throw new Error(`Invalid VTT timestamp format: ${timestamp}`);
-    }
-    
-    hours = parseInt(match[1], 10);
-    minutes = parseInt(match[2], 10);
-    seconds = parseInt(match[3], 10);
-    milliseconds = parseInt(match[4], 10);
-} else {
-    // Format: 00:00.000 (without hours)
-    const regex = /(\d+):(\d{2})\.(\d{3})/;
-    const match = cleanTimestamp.match(regex);
-    
-    if (!match) {
-        throw new Error(`Invalid VTT timestamp format: ${timestamp}`);
-    }
-    
-    minutes = parseInt(match[1], 10);
-    seconds = parseInt(match[2], 10);
-    milliseconds = parseInt(match[3], 10);
-}
-
-// Convert to seconds
-const totalSeconds = 
-    hours * 3600 + 
-    minutes * 60 + 
-    seconds + 
-    milliseconds / 1000;
-
-// Return rounded to 3 decimal places for millisecond precision
-return Math.round(totalSeconds * 1000) / 1000;
+  return (Math.round(totalSeconds * 1000) / 1000) + delay + 0.10; // the + .10 somehow makes it feels more smooth idk why so why not
 }
 
 export const filterSubtitleFiles = (files: SubtitleFile[]) => {
@@ -310,9 +217,9 @@ export async function isFileJpn(file: File) {
 
   let parsed
   if(file.name.split('.').pop() == 'srt') {
-    parsed = parseSrt(content)
+    parsed = parseSrt(content, 'japanese')
   }else if(file.name.split('.').pop() == 'vtt') {
-    parsed = parseVtt(content)
+    parsed = parseVtt(content, 'japanese')
   }
 
   if(!parsed) return;

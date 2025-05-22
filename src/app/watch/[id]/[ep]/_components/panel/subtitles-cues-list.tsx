@@ -39,12 +39,10 @@ export default function SubtitleCuesList({
           index: cues.indexOf(cue),
           start: timestampToSeconds({
               timestamp: (cue.from) ,
-              format: getExtension(activeSubtitleFile?.file.name || "srt") as SubtitleFormat,
               delay: delay.japanese
           }),
           end: timestampToSeconds({
               timestamp: (cue.to) ,
-              format: getExtension(activeSubtitleFile?.file.name || "srt") as SubtitleFormat,
               delay: delay.japanese
           })
       }));

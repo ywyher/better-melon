@@ -50,13 +50,12 @@ Animelon doesn’t provide all animes, and its entries are rarely updated, makin
 - Pause at each subtitle
   1. Unpause duration -> duration before the player unpauses it self
 - Definition on select or hover setting
+- .ass subtitle support
 
 ## Planned Features
+- More providers
 - Audio support for anki
-- Video VTT thumbnails
-- Providers selector
 - Definition-on-select functionality
-- .ass subtitle support
 - User-friendly/modern UI redesign
 
 # Better Melon Self-Hosting Guide

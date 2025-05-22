@@ -14,6 +14,8 @@ import PlayerSection from '@/app/watch/[id]/[ep]/_components/sections/player-sec
 import ControlsSection from '@/app/watch/[id]/[ep]/_components/sections/controls-section';
 import PanelSection from '@/app/watch/[id]/[ep]/_components/sections/panel-section';
 import { useDefinitionStore } from '@/lib/stores/definition-store';
+import { getActiveSubtitleFile } from '@/lib/subtitle/utils';
+import { AnimeEpisodeData, AnimeStreamingLinks } from '@/types/anime';
 
 export default function WatchPage() {
   const params = useParams();
@@ -24,6 +26,9 @@ export default function WatchPage() {
   const panelState = usePlayerStore((state) => state.panelState);
   const isVideoReady = usePlayerStore((state) => state.isVideoReady);
   const setIsVideoReady = usePlayerStore((state) => state.setIsVideoReady);
+  const setActiveSubtitleFile = usePlayerStore((state) => state.setActiveSubtitleFile);
+  const setEnglishSubtitleUrl = usePlayerStore((state) => state.setEnglishSubtitleUrl);
+
 
   const setSentence = useDefinitionStore((state) => state.setSentence);
   const setToken = useDefinitionStore((state) => state.setToken);
@@ -94,6 +99,27 @@ export default function WatchPage() {
     episodeNumber // Include episodeNumber to track when it changes
   ]);
 
+  useEffect(() => {
+    if (!episodeData || !episodeData.streamingLinks || !settings || !settings.subtitleSettings) return;
+    
+    setActiveSubtitleFile(null);
+    setEnglishSubtitleUrl(null);
+    
+    if (episodeData.subtitles?.length > 0) {
+      const file = getActiveSubtitleFile(episodeData.subtitles, settings.subtitleSettings.preferredFormat)
+      if(file) {
+        setActiveSubtitleFile(file);
+      }
+    }
+    
+    if (episodeData.streamingLinks.tracks) {
+      const englishSub = episodeData.streamingLinks.tracks.find(
+        (s: AnimeStreamingLinks['tracks'][0]) => s.label === 'English'
+      )?.file || "";
+      setEnglishSubtitleUrl(englishSub);
+    }
+  }, [episodeData, setActiveSubtitleFile, setEnglishSubtitleUrl, settings]);
+
   // Reset timers and flags when episode or anime changes
   useEffect(() => {
     console.debug('Resetting load timer for episode:', episodeNumber);
@@ -104,7 +130,21 @@ export default function WatchPage() {
     setSentence(null)
   }, [animeId, episodeNumber, setIsVideoReady]);
 
-  usePrefetchEpisode(animeId, episodeNumber+1, episodesLength, isVideoReady);
+  usePrefetchEpisode(
+    animeId, 
+    episodeNumber + 1, 
+    episodesLength, 
+    settings?.subtitleSettings?.preferredFormat || 'srt', 
+    isVideoReady
+  );
+
+  const shouldShowPanel = useMemo(() => {
+    return !isMedium && 
+      panelState === 'visible' && 
+      episodeData?.metadata && 
+      transcriptions && 
+      transcriptions.find(t => t?.transcription === 'japanese')
+  }, [isMedium, panelState, episodeData?.metadata, transcriptions]);
 
   const errors = [episodeDataError, transcriptionsError, settingsError, stylesError].filter(Boolean);
   if (errors.length > 0) {
@@ -136,11 +176,11 @@ export default function WatchPage() {
         />
       </div>
       {/* Side panel (visible based on state) */}
-      {(!isMedium && panelState === 'visable' && episodeData?.metadata && transcriptions && transcriptions.find(t => t?.transcription == 'japanese')) && (
+      {shouldShowPanel && (
         <PanelSection
           isLoading={isLoading}
-          animeMetadata={episodeData?.metadata}
-          subtitleFiles={episodeData?.subtitles}
+          animeMetadata={episodeData?.metadata as AnimeEpisodeData['metadata']}
+          subtitleFiles={episodeData?.subtitles as AnimeEpisodeData['subtitles']}
           japaneseTranscription={transcriptions.find(t => t?.transcription == 'japanese')!.cues}
         />
       )}

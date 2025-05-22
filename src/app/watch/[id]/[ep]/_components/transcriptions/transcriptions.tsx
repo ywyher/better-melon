@@ -85,7 +85,7 @@ export default function SubtitleTranscriptions({ transcriptions, styles, syncPla
 
       transcriptions.forEach(t => {
           if (t.cues) {
-              const { transcription, cues, format } = t;
+              const { transcription, cues } = t;
               const subtitleTranscription = transcription as SubtitleTranscription;
               
               const transcriptionDelay = ['hiragana', 'katakana', 'romaji', 'japanese'].includes(subtitleTranscription) 
@@ -95,8 +95,8 @@ export default function SubtitleTranscriptions({ transcriptions, styles, syncPla
               const currentTimePlusBuffer = currentTime;
               
               const activeCues = cues.filter(cue => {
-                  const startTime = timestampToSeconds({ timestamp: cue.from, format, delay: transcriptionDelay });
-                  const endTime = timestampToSeconds({ timestamp: cue.to, format, delay: transcriptionDelay });
+                  const startTime = timestampToSeconds({ timestamp: cue.from, delay: transcriptionDelay });
+                  const endTime = timestampToSeconds({ timestamp: cue.to, delay: transcriptionDelay });
                   
                   return currentTimePlusBuffer >= startTime && currentTimePlusBuffer <= endTime;
               });
@@ -180,7 +180,6 @@ export default function SubtitleTranscriptions({ transcriptions, styles, syncPla
 
         if(pauseOnCue) {
           const pauseAt = timestampToSeconds({
-            format: 'srt',
             timestamp: cue.to,
             delay: delay.japanese
           })

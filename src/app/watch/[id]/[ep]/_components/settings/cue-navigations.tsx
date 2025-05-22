@@ -48,13 +48,11 @@ export default function CueNavigations({ direction }: CueNavigationProps) {
     return subtitleCues.find(cue => {
       const startTime = timestampToSeconds({
         timestamp: cue.from,
-        format,
         delay: delay.japanese
       });
       
       const endTime = timestampToSeconds({
         timestamp: cue.to,
-        format,
         delay: delay.japanese
       });
       
@@ -88,8 +86,7 @@ export default function CueNavigations({ direction }: CueNavigationProps) {
         targetCue = subtitleCues.find(cue => {
           const startTime = timestampToSeconds({
             timestamp: cue.from,
-            format,
-            delay: delay.japanese
+                delay: delay.japanese
           });
           return startTime > currentTime;
         });
@@ -101,8 +98,7 @@ export default function CueNavigations({ direction }: CueNavigationProps) {
         for (let i = subtitleCues.length - 1; i >= 0; i--) {
           const startTime = timestampToSeconds({
             timestamp: subtitleCues[i].from,
-            format,
-            delay: delay.japanese
+                delay: delay.japanese
           });
           if (startTime < currentTime) {
             targetCue = subtitleCues[i];
@@ -118,7 +114,6 @@ export default function CueNavigations({ direction }: CueNavigationProps) {
     if (targetCue && player.current) {
       const targetTime = timestampToSeconds({
         timestamp: targetCue.from,
-        format,
         delay: delay.japanese
       });
       

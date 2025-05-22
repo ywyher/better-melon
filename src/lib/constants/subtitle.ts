@@ -3,7 +3,7 @@ export const subtitleFormats = [
     "vtt",
     'srt',
     'ass'
-] as const
+]
 
 export const definitionTrigger = ['click', 'hover']
 

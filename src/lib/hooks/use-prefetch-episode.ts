@@ -8,11 +8,13 @@ import { ActiveSubtitleFile, SubtitleTranscription } from '@/types/subtitle';
 import { getActiveSubtitleFile, getEnglishSubtitleUrl } from '@/lib/subtitle/utils';
 import { subtitleQueries } from '@/lib/queries/subtitle';
 import { useSubtitleStylesStore } from '@/lib/stores/subtitle-styles-store';
+import { SubtitleSettings } from '@/lib/db/schema';
 
 export function usePrefetchEpisode(
   animeId: string,
   episodeNumber: number,
   episodesLength: number,
+  preferredFormat: SubtitleSettings["preferredFormat"],
   isVideoReady: boolean
 ) {
   const [networkCondition, setNetworkCondition] = useState<'good'|'poor'|'n'>('n');
@@ -20,7 +22,6 @@ export function usePrefetchEpisode(
   const isLastEpisode = episodesLength > 0 && episodeNumber >= episodesLength;
   const handleSubtitleStylesInStore = useSubtitleStylesStore((state) => state.handleStyles);
   const getStylesFromStore = useSubtitleStylesStore((state) => state.getStyles);
-
 
   useEffect(() => {
     const checkNetworkPerformance = async () => {
@@ -100,7 +101,7 @@ export function usePrefetchEpisode(
     queries: activeTranscriptions.map((transcription) => {
       const isEnglish = transcription === 'english';
       const activeSubtitleFile = episodeData ? 
-        getActiveSubtitleFile(episodeData.subtitles ?? []) : 
+        getActiveSubtitleFile(episodeData.subtitles ?? [], preferredFormat) : 
         undefined;
       const englishSubtitleUrl = episodeData ? 
         getEnglishSubtitleUrl(episodeData.streamingLinks?.tracks ?? []) : 

@@ -48,7 +48,7 @@ export type PlayerStore = {
   episodesListSpoilerMode: boolean;
   setEpisodesListSpoilerMode: (sub: PlayerStore['episodesListSpoilerMode']) => void;
 
-  panelState: 'visable' | 'hidden';
+  panelState: 'visible' | 'hidden';
   setPanelState: (state: PlayerStore['panelState']) => void;
   
   reset: () => void;
@@ -102,7 +102,7 @@ export const usePlayerStore = create<PlayerStore>()(
       episodesListSpoilerMode: false,
       setEpisodesListSpoilerMode: (episodesListSpoilerMode: PlayerStore['episodesListSpoilerMode']) => set({ episodesListSpoilerMode }),
 
-      panelState: 'visable',
+      panelState: 'visible',
       setPanelState: (panelState: PlayerStore['panelState']) => set({ panelState }),
 
       reset: () => {
@@ -119,7 +119,7 @@ export const usePlayerStore = create<PlayerStore>()(
           autoPlay: false, 
           autoSkip: false,
           autoNext: false,
-          panelState: 'visable'
+          panelState: 'visible'
         });
       },
     }),

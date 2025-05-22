@@ -46,7 +46,7 @@ export function TopControls({
               <Loader2 className='animate-spin' />
             </Button>
           )}
-          {panelState == 'visable' && (
+          {panelState == 'visible' && (
             <Button variant='outline'>
               <Loader2 className='animate-spin' />
             </Button>
@@ -73,9 +73,9 @@ export function TopControls({
           ) : (
             <Button 
               variant='outline'
-              onClick={() => setPanelState(panelState == 'hidden' ? 'visable' : 'hidden')}
+              onClick={() => setPanelState(panelState == 'hidden' ? 'visible' : 'hidden')}
             >
-              {panelState == 'visable' ? (
+              {panelState == 'visible' ? (
                 <PanelLeftOpen />
               ) : (
                 <PanelLeftClose />

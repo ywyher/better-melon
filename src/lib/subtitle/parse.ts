@@ -2,7 +2,7 @@ import Kuroshiro from "@sglkc/kuroshiro";
 import type { SubtitleCue, SubtitleTranscription, SubtitleFormat, SubtitleToken } from "@/types/subtitle";
 import {getTokenizer as getTokenizerKuromojin, type Tokenizer} from "kuromojin";
 import CustomKuromojiAnalyzer from "./custom-kuromoji-analyzer";
-import { normalizeTimestamp, removeHtmlTags } from "@/lib/subtitle/utils";
+import { removeHtmlTags } from "@/lib/subtitle/utils";
 import nlp from 'compromise';
 
 type CacheKey = string; // URL or file name
@@ -179,6 +179,12 @@ export async function parseSubtitleToJson({
         const parseVttEnd = performance.now();
         console.info(`~${transcription}-parse-vtt took --> ${parseVttEnd - parseVttStart}ms`);
         break;
+        case 'ass':
+        const parseAssStart = performance.now();
+        subtitles = parseAss(content, transcription);
+        const parseAssEnd = performance.now();
+        console.info(`~${transcription}-parse-ass took --> ${parseAssEnd - parseAssStart}ms`);
+      break;
       default:
         throw new Error(`Unsupported subtitle format: ${format}`);
     }
@@ -404,109 +410,200 @@ function cleanContent(content: string) {
 }
 
 export function parseSrt(content: string, transcription: SubtitleTranscription) {
+  console.log('Parsing SRT content...');
   const lines = content.split('\n');
   const result = [];
-  
-  let currentEntry: Partial<SubtitleCue> = {}
+
+  let currentEntry: Partial<SubtitleCue> = {};
   let isReadingContent = false;
-  
+
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i].trim();
-    
+    console.log(`Line ${i}: "${line}"`);
+
     if (line === '') {
       if (Object.keys(currentEntry).length > 0) {
+        console.log('Pushing entry:', currentEntry);
         result.push(currentEntry);
         currentEntry = {};
         isReadingContent = false;
+      } else {
+        console.log('Skipping empty line');
       }
       continue;
     }
 
     currentEntry.transcription = transcription;
-    
+
     if (isReadingContent) {
       const initialContent = (currentEntry.content || '') + 
         (currentEntry.content ? ' ' : '') + line;
 
       currentEntry.content = cleanContent(initialContent);
+      console.log(`Appending content: "${currentEntry.content}"`);
       continue;
     }
-    
+
     if (/^\d+$/.test(line) && !currentEntry.id) {
       currentEntry.id = parseInt(line);
+      console.log(`Parsed ID: ${currentEntry.id}`);
       continue;
     }
-    
+
+    // REGEX to handle both "HH:MM:SS.mmm"
     const timestampMatch = line.match(/(\d{2}:\d{2}:\d{2},\d{3}) --> (\d{2}:\d{2}:\d{2},\d{3})/);
 
     if (timestampMatch) {
       currentEntry.from = timestampMatch[1];
       currentEntry.to = timestampMatch[2];
       isReadingContent = true;
+      console.log(`Parsed timestamps: from=${currentEntry.from}, to=${currentEntry.to}`);
       continue;
     }
+
+    console.warn(`Unrecognized line format: "${line}"`);
   }
-  
+
   if (Object.keys(currentEntry).length > 0) {
+    console.log('Pushing final entry:', currentEntry);
     result.push(currentEntry);
   }
 
+  console.log('Finished parsing. Total entries:', result);
   return result as SubtitleCue[];
 }
 
 export function parseVtt(content: string, transcription: SubtitleTranscription) {
+  console.log('Parsing VTT content...');
   const lines = content.split('\n');
   const result = [];
+
   let currentEntry: Partial<SubtitleCue> = {};
   let isReadingContent = false;
   let idCounter = 1;
-  
-  // Skip the WEBVTT header line
+
   let startIndex = 0;
   if (lines[0].includes('WEBVTT')) {
+    console.log('Skipping WEBVTT header');
     startIndex = 1;
   }
-  
+
   for (let i = startIndex; i < lines.length; i++) {
     const line = lines[i].trim();
+    console.log(`Line ${i}: "${line}"`);
+
     if (line === '') {
       if (Object.keys(currentEntry).length > 0 && currentEntry.from && currentEntry.to) {
         if (!currentEntry.id) {
           currentEntry.id = idCounter++;
+          console.log(`Assigned ID: ${currentEntry.id}`);
         }
+        console.log('Pushing entry:', currentEntry);
         result.push(currentEntry);
         currentEntry = {};
         isReadingContent = false;
+      } else {
+        console.log('Skipping empty line');
       }
       continue;
     }
 
-    currentEntry.transcription == transcription
-    
+    currentEntry.transcription = transcription;
+
     if (isReadingContent) {
       const initialContent = (currentEntry.content || '') +
         (currentEntry.content ? ' ' : '') + line;
       currentEntry.content = removeHtmlTags(initialContent);
+      console.log(`Appending content: "${currentEntry.content}"`);
       continue;
     }
-    
-    // Modified regex to handle both "HH:MM:SS.mmm" and "MM:SS.mmm" formats
-    const timestampMatch = line.match(/(\d+:)?(\d{2}:\d{2}\.\d{3}) --> (\d+:)?(\d{2}:\d{2}\.\d{3})/);
+
+    const timestampMatch = line.match(/(\d{2}:\d{2}:\d{2}\.\d{3}) --> (\d{2}:\d{2}:\d{2}\.\d{3})/);
+
     if (timestampMatch) {
-      // Handle both formats and normalize to HH:MM:SS.mmm
-      currentEntry.from = normalizeTimestamp(timestampMatch[1], timestampMatch[2]);
-      currentEntry.to = normalizeTimestamp(timestampMatch[3], timestampMatch[4]);
+      currentEntry.from = timestampMatch[1];
+      currentEntry.to = timestampMatch[2];
       isReadingContent = true;
+      console.log(`Parsed timestamps: from=${currentEntry.from}, to=${currentEntry.to}`);
       continue;
     }
+
+    console.warn(`Unrecognized line format: "${line}"`);
   }
-  
+
   if (Object.keys(currentEntry).length > 0 && currentEntry.from && currentEntry.to) {
     if (!currentEntry.id) {
       currentEntry.id = idCounter++;
+      console.log(`Assigned final ID: ${currentEntry.id}`);
     }
+    console.log('Pushing final entry:', currentEntry);
     result.push(currentEntry);
   }
-  
+
+  console.log('Finished parsing. Total entries:', result);
+  return result as SubtitleCue[];
+}
+
+export function parseAss(content: string, transcription: SubtitleTranscription) {
+  console.log('Parsing ASS content...');
+  const lines = content.split('\n');
+  const result = [];
+  let idCounter = 1;
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+    console.log(`Line ${i}: "${line}"`);
+
+    if (line === '') {
+      console.log('Skipping empty line');
+      continue;
+    }
+
+    if (line.startsWith("Dialogue:")) {
+      console.log('Found dialogue line');
+
+      const parts = line.split(',');
+
+      if (parts.length >= 10) {
+        const startTime = parts[1]; // e.g., "0:00:07.27"
+        const endTime = parts[2];   // e.g., "0:00:11.64"
+        const textParts = parts.slice(9);
+        const content = textParts.join(','); // Handles commas in text
+
+        if (!content) {
+          console.log('Skipping entry with empty content');
+          continue;
+        }
+
+        const formatTimestamp = (timestamp: string) => {
+          const trimmed = timestamp.trim();
+          let formatted = trimmed;
+          if (trimmed.startsWith('0:')) {
+            formatted = '0' + trimmed; // Normalize to "00:00:..."
+          }
+          // Optional: Replace dot with comma if needed to match SRT style
+          // formatted = formatted.replace('.', ',');
+          return formatted;
+        };
+
+        const entry: Partial<SubtitleCue> = {
+          transcription: transcription,
+          id: idCounter++,
+          from: formatTimestamp(startTime),
+          to: formatTimestamp(endTime),
+          content: content.trim(),
+        };
+
+        console.log('Parsed entry:', entry);
+        result.push(entry);
+      } else {
+        console.warn(`Malformed Dialogue line at index ${i}:`, line);
+      }
+    } else {
+      console.log('Non-dialogue line, skipping');
+    }
+  }
+
+  console.log('Finished parsing. Total entries:', result);
   return result as SubtitleCue[];
 }

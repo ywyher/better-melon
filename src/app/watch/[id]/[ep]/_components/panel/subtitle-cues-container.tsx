@@ -29,7 +29,6 @@ export default function SubtitleCuesContainer({
   const handleSeek = useCallback((from: TSubtitleCue['from']) => {
       player.current?.remoteControl.seek(timestampToSeconds({
           timestamp: (from),
-          format: getExtension(activeSubtitleFile?.file.name || "srt") as SubtitleFormat,
           delay: delay.japanese
       }))
   }, [player, activeSubtitleFile, delay.japanese]);

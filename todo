@@ -1,3 +1,7 @@
+while parsing instead of saving timestamps as from and to
+we should prob convert them right away to seconds to avoid converting them while the player is playing
+this might optimize the performance try it
+
 how did we forget about subtitle styles for active subtitles !!
 
 puase player on definition trigger or hover or click or none !!!!

@@ -1,6 +1,6 @@
 "use client";
 
-import { MediaPlayer, type MediaPlayerInstance, MediaProvider, Poster } from '@vidstack/react';
+import { MediaPlayer, type MediaPlayerInstance, MediaProvider, Poster, useMediaState } from '@vidstack/react';
 import { DefaultAudioLayout, defaultLayoutIcons, DefaultVideoLayout } from '@vidstack/react/player/layouts/default';
 import { Track } from "@vidstack/react";
 import '@vidstack/react/player/styles/default/theme.css';
@@ -195,10 +195,6 @@ export default function Player({
             if (vttUrl) URL.revokeObjectURL(vttUrl);
         };
     }, [vttUrl]);
-
-    useEffect(() => {
-        console.log(metadata)
-    }, [metadata])
 
     return (
         <div className="relative w-full aspect-video">
