@@ -4,7 +4,6 @@ import { SubtitleCue as TSubtitleCue, SubtitleTranscription, SubtitleFormat } fr
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { usePlayerStore } from "@/lib/stores/player-store";
 import { timestampToSeconds } from "@/lib/subtitle/utils";
-import { getExtension } from "@/lib/utils";
 import SubtitleCuesContainer from "@/app/watch/[id]/[ep]/_components/panel/subtitle-cues-container";
 
 type SubtitleCuesListProps = {

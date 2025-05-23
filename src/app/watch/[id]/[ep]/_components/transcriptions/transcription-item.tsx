@@ -8,6 +8,7 @@ import { SubtitleCue, SubtitleToken, SubtitleTranscription } from '@/types/subti
 import { cn } from '@/lib/utils';
 import { TranscriptionStyleSet } from '@/app/watch/[id]/[ep]/types';
 import { SubtitleSettings } from '@/lib/db/schema';
+import { isTokenExcluded } from '@/lib/subtitle/utils';
 
 type TranscriptionItemProps = {
   transcription: SubtitleTranscription;
@@ -55,8 +56,14 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
     }, []);
 
     const handleActivate = useCallback((sentence: string, token: SubtitleToken, trigger: SubtitleSettings['definitionTrigger']) => {
-        if (!sentence || !token || transcription == 'english' || definitionTrigger != trigger) return;
-        
+        if (
+            !sentence 
+            || !token 
+            || transcription == 'english' 
+            || definitionTrigger != trigger
+            || isTokenExcluded(token)
+        ) return;
+
         if (storeToken && storeToken.id === token.id) {
             // If clicking on the same token, clear it
             setToken(null);

@@ -1,11 +1,10 @@
 import { Virtualizer } from "@tanstack/react-virtual";
-import { SubtitleFormat, SubtitleToken, SubtitleCue as TSubtitleCue } from "@/types/subtitle";
+import { SubtitleToken, SubtitleCue as TSubtitleCue } from "@/types/subtitle";
 import SubtitleCue from "@/app/watch/[id]/[ep]/_components/panel/subtitle-cue";
 import { RefObject, useCallback } from "react";
 import { usePlayerStore } from "@/lib/stores/player-store";
 import { useDefinitionStore } from "@/lib/stores/definition-store";
-import { getExtension } from "@/lib/utils";
-import { timestampToSeconds } from "@/lib/subtitle/utils";
+import { isTokenExcluded, timestampToSeconds } from "@/lib/subtitle/utils";
 import { toast } from "sonner";
 
 export default function SubtitleCuesContainer({
@@ -34,7 +33,11 @@ export default function SubtitleCuesContainer({
   }, [player, activeSubtitleFile, delay.japanese]);
 
   const handleClick = useCallback((sentence: string, token: SubtitleToken) => {
-    if (!sentence || !token) return;
+    if (
+      !sentence 
+      || !token
+      || isTokenExcluded(token)
+    ) return;
     
     if (activeToken && activeToken.id === token.id) {
       // If clicking on the same token, clear it and the sentence

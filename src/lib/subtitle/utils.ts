@@ -1,9 +1,9 @@
-import { subtitleFormats } from "@/lib/constants/subtitle";
+import { excludedPos, subtitleFormats } from "@/lib/constants/subtitle";
 import { SubtitleSettings } from "@/lib/db/schema";
 import { fetchSubtitles, parseSrt, parseVtt } from "@/lib/subtitle/parse";
 import { getExtension } from "@/lib/utils";
 import { AnimeStreamingLinks, SkipTime } from "@/types/anime";
-import { ActiveSubtitleFile, SubtitleFile, SubtitleFormat } from "@/types/subtitle";
+import { ActiveSubtitleFile, SubtitleFile, SubtitleFormat, SubtitleToken } from "@/types/subtitle";
 import {franc} from 'franc-min'
 
 export const getActiveSubtitleFile = (subtitleFiles: SubtitleFile[], preferredFormat: SubtitleSettings['preferredFormat']) => {
@@ -280,4 +280,9 @@ export function getSubtitleFormat(
   }
 
   return ext as SubtitleFormat;
+}
+
+export function isTokenExcluded(token: SubtitleToken) {
+  return excludedPos.includes(token.pos)
+  || excludedPos.includes(token.pos_detail_1) // for numbers
 }
