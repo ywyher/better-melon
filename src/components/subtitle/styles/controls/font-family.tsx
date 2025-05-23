@@ -10,13 +10,15 @@ export default function FontFamilyController({
   transcription, 
   value,
   source,
-  syncPlayerSettings
+  syncPlayerSettings,
+  state
 }: FieldControllerProps) {
   const { isLoading, displayValue, onSubmit } = useStyleFieldController({
     transcription,
     initialValue: value,
     source,
     syncPlayerSettings,
+    state,
     field: 'fontFamily',
     successMessage: 'Font family updated successfully',
     errorMessage: 'Failed to update font family'

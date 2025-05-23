@@ -8,7 +8,8 @@ export default function FontSizeController({
   transcription,
   value,
   source,
-  syncPlayerSettings
+  syncPlayerSettings,
+  state
 }: FieldControllerProps) {
   const { isLoading, displayValue, onSubmit } = useStyleFieldController({
     transcription,
@@ -16,6 +17,7 @@ export default function FontSizeController({
     source,
     field: 'fontSize',
     syncPlayerSettings,
+    state,
     successMessage: 'Font size updated successfully',
     errorMessage: 'Failed to update font size'
   });

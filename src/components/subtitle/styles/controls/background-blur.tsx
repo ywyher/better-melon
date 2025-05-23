@@ -8,13 +8,15 @@ export default function BackgroundBlurController({
   transcription,
   value,
   source,
-  syncPlayerSettings
+  syncPlayerSettings,
+  state
 }: FieldControllerProps) {
   const { isLoading, displayValue, onSubmit } = useStyleFieldController({
     transcription,
     initialValue: value,
     source,
     syncPlayerSettings,
+    state,
     field: 'backgroundBlur',
     successMessage: 'Background Blur updated successfully',
     errorMessage: 'Failed to update background Blur'

@@ -13,11 +13,13 @@ import { Dispatch, SetStateAction } from "react"
 type SubtitleTranscriptionSelectorProps = {
     selectedTranscription: SubtitleStyles['transcription'] | null
     setSelectedTranscription: Dispatch<SetStateAction<SubtitleStyles['transcription']>>
+    setSelectedState: Dispatch<SetStateAction<SubtitleStyles['state']>>
 }
 
 export default function SubtitleTranscriptionSelector({ 
   selectedTranscription, 
-  setSelectedTranscription
+  setSelectedTranscription,
+  setSelectedState
 }: SubtitleTranscriptionSelectorProps) {
 
     const transcriptions = [
@@ -25,18 +27,20 @@ export default function SubtitleTranscriptionSelector({
         ...subtitleTranscriptions,
     ]
 
+    const onChange = (v: SubtitleStyles['transcription']) => {
+        setSelectedTranscription(v)
+        setSelectedState('default')
+    }
+
     return (
-        <Select value={selectedTranscription || "all"} onValueChange={(v: SubtitleStyles['transcription']) => setSelectedTranscription(v)}>
+        <Select 
+            value={selectedTranscription || "all"} 
+            onValueChange={(v: SubtitleStyles['transcription']) => onChange(v)}
+        >
             <SelectTrigger className="w-[200px] capitalize cursor-pointer">
                 <SelectValue placeholder="Select preset" />
             </SelectTrigger>
             <SelectContent>
-                <SelectItem value="new">
-                    <div className="flex items-center">
-                        <Plus className="mr-2 h-4 w-4" />
-                        New Preset
-                    </div>
-                </SelectItem>
                 {transcriptions.map((transcription, idx) => (
                     <SelectItem className="capitalize" key={idx} value={transcription}>
                         {transcription}

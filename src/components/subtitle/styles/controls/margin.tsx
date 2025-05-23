@@ -1,10 +1,10 @@
 'use client'
 
-import { ColorInput } from "@/components/form/color-input";
+import { SliderInput } from "@/components/form/slider-input";
 import { useStyleFieldController } from "@/lib/hooks/use-style-field-controller";
 import { FieldControllerProps } from "@/types/subtitle";
 
-export default function BackgroundColorController({
+export default function MarginController({
   transcription,
   value,
   source,
@@ -15,20 +15,26 @@ export default function BackgroundColorController({
     transcription,
     initialValue: value,
     source,
+    field: 'margin',
     syncPlayerSettings,
     state,
-    field: 'backgroundColor',
-    successMessage: 'Background color updated successfully',
-    errorMessage: 'Failed to update background color'
+    successMessage: 'Margin updated successfully',
+    errorMessage: 'Failed to update margin'
   });
 
   return (
     <div className="flex flex-col gap-1">
-      <p>Background Color</p>
-      <ColorInput
-        onChange={(v) => onSubmit(v)}
+      <p>Margin</p>
+      <SliderInput
+        min={0}
+        max={10}
+        step={0.1}
+        showValue={true}
+        unit='px'
+        className="w-full"
+        onBlur={(v) => onSubmit(v)}
         disabled={isLoading}
-        value={String(displayValue)}
+        value={Number(displayValue)}
       />
     </div>
   );

@@ -133,21 +133,34 @@ export const subtitleTranscriptionEnum = pgEnum("subtitle_transcription", [
   "english",
 ]);
 
+export const fontWeightEnum = pgEnum("font_weight_enum", [
+  'normal',
+  'bold',
+  'bolder',
+  'lighter'
+])
+
+export const subtitleStateEnum = pgEnum('subtitle_state', ['default', 'active']);
+
 export const subtitleStyles = pgTable("subtitle_styles", {
   id: text("id").primaryKey(),
   
   fontSize: real("font_size").notNull().default(35),
   fontFamily: text("font_family").notNull().default('Arial'),
+  fontWeight: fontWeightEnum('font_weight').notNull().default('bold'),
   
   textColor: text("text_color").notNull().default('#FFFFFF'),
   textOpacity: real("text_opacity").notNull().default(1),
   textShadow: textShadowEnum("text_shadow").notNull().default('outline'),
 
   backgroundColor: text("background_color").notNull().default('#000000'),
-  backgroundOpacity: real("background_opacity").notNull().default(1),
-  backgroundBlur: real("background_blur").notNull().default(0.2),
+  backgroundOpacity: real("background_opacity").notNull().default(0.5),
+  backgroundBlur: real("background_blur").notNull().default(0),
   backgroundRadius: real("background_radius").notNull().default(6),
+
+  margin: real('margin').notNull().default(0.5),
   
+  state: subtitleStateEnum('state').notNull().default('default'),
   userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }),
   transcription: subtitleTranscriptionEnum("transcription").notNull().default('all'),
   createdAt: timestamp("created_at").default(new Date()),

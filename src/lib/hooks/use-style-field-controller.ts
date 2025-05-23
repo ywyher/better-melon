@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { settingsQueries } from "@/lib/queries/settings";
@@ -14,6 +14,7 @@ interface UseStyleFieldControllerProps {
   source: 'database' | 'local' | string;
   field: keyof Omit<SubtitleStyles, 'id' | 'userId' | 'createdAt' | 'updatedAt'>
   syncPlayerSettings: GeneralSettings['syncPlayerSettings']
+  state: SubtitleStyles['state']
   successMessage?: string;
   errorMessage?: string;
 }
@@ -24,15 +25,25 @@ export function useStyleFieldController({
   source,
   field,
   syncPlayerSettings,
+  state,
   successMessage,
   errorMessage
 }: UseStyleFieldControllerProps) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [localValue, setLocalValue] = useState<any>(null);
+  const [displayValue, setDisplayValue] = useState<string>('')
   const queryClient = useQueryClient();
   const handleStyles = useSubtitleStylesStore((state) => state.handleStyles);
 
-  const displayValue = localValue !== null ? localValue : initialValue;
+  useEffect(() => {
+    if(localValue) {
+      setDisplayValue(localValue)
+    }
+  }, [localValue])
+
+  useEffect(() => {
+    setDisplayValue(initialValue)
+  }, [initialValue])
 
   const onSubmit = async (value: any) => {
     setLocalValue(value);
@@ -43,7 +54,8 @@ export function useStyleFieldController({
         const { message, error } = await handleSubtitleStyles({
           field,
           value,
-          transcription
+          transcription,
+          state
         });
         if (error) throw new Error(error);
         queryClient.invalidateQueries({ queryKey: settingsQueries.subtitleStyles._def });
@@ -73,7 +85,8 @@ export function useStyleFieldController({
           const { message, error } = await handleSubtitleStyles({
             field,
             value,
-            transcription
+            transcription,
+            state
           });
           if (error) throw new Error(error);
           queryClient.invalidateQueries({ queryKey: settingsQueries.subtitleStyles._def });

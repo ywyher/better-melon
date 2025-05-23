@@ -8,13 +8,15 @@ export default function BackgroundOpacityController({
   transcription,
   value,
   source,
-  syncPlayerSettings
+  syncPlayerSettings,
+  state
 }: FieldControllerProps) {
   const { isLoading, displayValue, onSubmit } = useStyleFieldController({
     transcription,
     initialValue: value,
     source,
     syncPlayerSettings,
+    state,
     field: 'backgroundOpacity',
     successMessage: 'Background opacity updated successfully',
     errorMessage: 'Failed to update background opacity'

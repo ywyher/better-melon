@@ -4,17 +4,19 @@ import { ColorInput } from "@/components/form/color-input";
 import { useStyleFieldController } from "@/lib/hooks/use-style-field-controller";
 import { FieldControllerProps } from "@/types/subtitle";
 
-export default function TextShadowController({
+export default function TextColorController({
   transcription,
   value,
   source,
-  syncPlayerSettings
+  syncPlayerSettings,
+  state
 }: FieldControllerProps) {
   const { isLoading, displayValue, onSubmit } = useStyleFieldController({
     transcription,
     initialValue: value,
     source,
     syncPlayerSettings,
+    state,
     field: 'textColor',
     successMessage: 'Text color updated successfully',
     errorMessage: 'Failed to update text color'
@@ -24,7 +26,7 @@ export default function TextShadowController({
     <div className="flex flex-col gap-1">
       <p>Text Color</p>
       <ColorInput
-        onChange={(v) => onSubmit(v)}
+        onBlur={(v) => onSubmit(v.currentTarget.value)}
         disabled={isLoading}
         value={String(displayValue)}
       />

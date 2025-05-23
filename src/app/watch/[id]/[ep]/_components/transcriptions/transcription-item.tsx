@@ -141,7 +141,7 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
         <div
             ref={setNodeRef}
             style={{
-                ...styles.containerStyle,
+                ...styles.containerStyle.default,
                 ...style,
             }}
             className={containerClassName}
