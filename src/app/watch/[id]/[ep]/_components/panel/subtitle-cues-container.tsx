@@ -4,7 +4,7 @@ import SubtitleCue from "@/app/watch/[id]/[ep]/_components/panel/subtitle-cue";
 import { RefObject, useCallback } from "react";
 import { usePlayerStore } from "@/lib/stores/player-store";
 import { useDefinitionStore } from "@/lib/stores/definition-store";
-import { isTokenExcluded, timestampToSeconds } from "@/lib/subtitle/utils";
+import { isTokenExcluded } from "@/lib/subtitle/utils";
 import { toast } from "sonner";
 
 export default function SubtitleCuesContainer({
@@ -26,10 +26,7 @@ export default function SubtitleCuesContainer({
   const setAddToAnki = useDefinitionStore((state) => state.setAddToAnki)
     
   const handleSeek = useCallback((from: TSubtitleCue['from']) => {
-      player.current?.remoteControl.seek(timestampToSeconds({
-          timestamp: (from),
-          delay: delay.japanese
-      }))
+      player.current?.remoteControl.seek(from + delay.japanese)
   }, [player, activeSubtitleFile, delay.japanese]);
 
   const handleClick = useCallback((sentence: string, token: SubtitleToken) => {

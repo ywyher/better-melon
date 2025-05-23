@@ -49,8 +49,8 @@ export type SubtitleToken = {
 
 export type SubtitleCue = {
   id: number;
-  from: string;
-  to: string;
+  from: number;
+  to: number;
   transcription: SubtitleTranscription;
   content: string;
   tokens?: SubtitleToken[];

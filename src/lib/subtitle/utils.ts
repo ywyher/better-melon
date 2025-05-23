@@ -41,10 +41,12 @@ export function removeHtmlTags(text: string): string {
   return text.replace(/<[^>]*>/g, '');
 }
 
-export function timestampToSeconds({ timestamp, delay }: { timestamp: string, delay: number }): number {
+export function timestampToSeconds(timestamp: string, delay: number = 0): number {
   if(!timestamp) return 0;
   const cleanTimestamp = timestamp.trim();
-  
+
+  console.log(`timestamp`, timestamp)
+
   // Extract hours, minutes, seconds, and milliseconds using regex
   // This handles formats like "00:00:00,000", "00:00:00.000", and "00:00:00,-000"
   const regex = /(\d{2}):(\d{2}):(\d{2})[,.](-?\d+)/;

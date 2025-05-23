@@ -1,7 +1,6 @@
 'use client'
 
 import { TranscriptionItem } from "@/app/watch/[id]/[ep]/_components/transcriptions/transcription-item";
-import { timestampToSeconds } from "@/lib/subtitle/utils";
 import { usePlayerStore } from "@/lib/stores/player-store";
 import type { SubtitleCue, SubtitleTranscription } from "@/types/subtitle";
 import { closestCenter, DndContext, type DragEndEvent, KeyboardSensor, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
@@ -95,8 +94,8 @@ export default function SubtitleTranscriptions({ transcriptions, styles, syncPla
               const currentTimePlusBuffer = currentTime;
               
               const activeCues = cues.filter(cue => {
-                  const startTime = timestampToSeconds({ timestamp: cue.from, delay: transcriptionDelay });
-                  const endTime = timestampToSeconds({ timestamp: cue.to, delay: transcriptionDelay });
+                  const startTime = cue.from + transcriptionDelay
+                  const endTime = cue.to + transcriptionDelay
                   
                   return currentTimePlusBuffer >= startTime && currentTimePlusBuffer <= endTime;
               });
@@ -179,10 +178,7 @@ export default function SubtitleTranscriptions({ transcriptions, styles, syncPla
         setCurrentCueText(cue.content);
 
         if(pauseOnCue) {
-          const pauseAt = timestampToSeconds({
-            timestamp: cue.to,
-            delay: delay.japanese
-          })
+          const pauseAt = cue.to + delay.japanese
 
           setPauseAt(pauseAt - 0.3)
         }

@@ -87,8 +87,8 @@ export default function Playground() {
     if(!data?.length) return;
 
     const arr = data.map((cue) => {
-      const startTime = timestampToSeconds({ timestamp: cue.from, delay: 0 });
-      const endTime = timestampToSeconds({ timestamp: cue.to, delay: 0 });
+      const startTime = timestampToSeconds(cue.from);
+      const endTime = timestampToSeconds(cue.to);
 
       console.log(`${startTime}-${endTime}`)
       // console.log(`${cue.from}-${cue.to}`)

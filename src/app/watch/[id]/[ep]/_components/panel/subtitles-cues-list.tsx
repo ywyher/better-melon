@@ -3,7 +3,6 @@ import { TabsContent } from "@/components/ui/tabs";
 import { SubtitleCue as TSubtitleCue, SubtitleTranscription, SubtitleFormat } from "@/types/subtitle";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { usePlayerStore } from "@/lib/stores/player-store";
-import { timestampToSeconds } from "@/lib/subtitle/utils";
 import SubtitleCuesContainer from "@/app/watch/[id]/[ep]/_components/panel/subtitle-cues-container";
 
 type SubtitleCuesListProps = {
@@ -36,14 +35,8 @@ export default function SubtitleCuesList({
       return cues.map(cue => ({
           id: cue.id,
           index: cues.indexOf(cue),
-          start: timestampToSeconds({
-              timestamp: (cue.from) ,
-              delay: delay.japanese
-          }),
-          end: timestampToSeconds({
-              timestamp: (cue.to) ,
-              delay: delay.japanese
-          })
+          start: cue.from + delay.japanese,
+          end: cue.to + delay.japanese
       }));
   }, [cues, activeSubtitleFile?.file.name, delay.japanese]);
 

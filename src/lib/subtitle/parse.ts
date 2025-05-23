@@ -2,7 +2,7 @@ import Kuroshiro from "@sglkc/kuroshiro";
 import type { SubtitleCue, SubtitleTranscription, SubtitleFormat, SubtitleToken } from "@/types/subtitle";
 import {getTokenizer as getTokenizerKuromojin, type Tokenizer} from "kuromojin";
 import CustomKuromojiAnalyzer from "./custom-kuromoji-analyzer";
-import { removeHtmlTags, removeTags } from "@/lib/subtitle/utils";
+import { removeHtmlTags, removeTags, timestampToSeconds } from "@/lib/subtitle/utils";
 import nlp from 'compromise';
 
 type CacheKey = string; // URL or file name
@@ -447,8 +447,8 @@ export function parseSrt(content: string, transcription: SubtitleTranscription) 
     const timestampMatch = line.match(/(\d{2}:\d{2}:\d{2},\d{3}) --> (\d{2}:\d{2}:\d{2},\d{3})/);
 
     if (timestampMatch) {
-      currentEntry.from = timestampMatch[1];
-      currentEntry.to = timestampMatch[2];
+      currentEntry.from = timestampToSeconds(timestampMatch[1]);
+      currentEntry.to = timestampToSeconds(timestampMatch[2]);
       isReadingContent = true;
       console.log(`Parsed timestamps: from=${currentEntry.from}, to=${currentEntry.to}`);
       continue;
@@ -514,8 +514,8 @@ export function parseVtt(content: string, transcription: SubtitleTranscription) 
     const timestampMatch = line.match(/(\d{2}:\d{2}:\d{2}\.\d{3}) --> (\d{2}:\d{2}:\d{2}\.\d{3})/);
 
     if (timestampMatch) {
-      currentEntry.from = timestampMatch[1];
-      currentEntry.to = timestampMatch[2];
+      currentEntry.from = timestampToSeconds(timestampMatch[1]);
+      currentEntry.to = timestampToSeconds(timestampMatch[2]);
       isReadingContent = true;
       console.log(`Parsed timestamps: from=${currentEntry.from}, to=${currentEntry.to}`);
       continue;
@@ -585,8 +585,8 @@ export function parseAss(content: string, transcription: SubtitleTranscription) 
         const entry: Partial<SubtitleCue> = {
           transcription: transcription,
           id: idCounter++,
-          from: formatTimestamp(startTime),
-          to: formatTimestamp(endTime),
+          from: timestampToSeconds(formatTimestamp(startTime)),
+          to: timestampToSeconds(formatTimestamp(endTime)),
           content: removeTags(content.trim()),
         };
 

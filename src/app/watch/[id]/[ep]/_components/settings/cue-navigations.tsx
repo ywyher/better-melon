@@ -6,7 +6,7 @@ import { usePlayerStore } from "@/lib/stores/player-store";
 import { SubtitleCue, SubtitleFormat } from "@/types/subtitle";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { getExtension } from "@/lib/utils";
-import { timestampToSeconds } from "@/lib/subtitle/utils";
+import {  } from "@/lib/subtitle/utils";
 
 interface CueNavigationProps {
   direction: 'next' | 'previous';
@@ -46,15 +46,9 @@ export default function CueNavigations({ direction }: CueNavigationProps) {
     const format = getExtension(activeSubtitleFile.file.name || "srt") as SubtitleFormat;
     
     return subtitleCues.find(cue => {
-      const startTime = timestampToSeconds({
-        timestamp: cue.from,
-        delay: delay.japanese
-      });
+      const startTime = cue.from + delay.japanese
       
-      const endTime = timestampToSeconds({
-        timestamp: cue.to,
-        delay: delay.japanese
-      });
+      const endTime = cue.to + delay.japanese
       
       return currentTime >= startTime && currentTime <= endTime;
     }) || null;
@@ -84,10 +78,7 @@ export default function CueNavigations({ direction }: CueNavigationProps) {
       if (isNext) {
         // Find first cue after current time
         targetCue = subtitleCues.find(cue => {
-          const startTime = timestampToSeconds({
-            timestamp: cue.from,
-                delay: delay.japanese
-          });
+          const startTime = cue.from + delay.japanese
           return startTime > currentTime;
         });
         
@@ -96,10 +87,7 @@ export default function CueNavigations({ direction }: CueNavigationProps) {
       } else {
         // Find last cue before current time
         for (let i = subtitleCues.length - 1; i >= 0; i--) {
-          const startTime = timestampToSeconds({
-            timestamp: subtitleCues[i].from,
-                delay: delay.japanese
-          });
+          const startTime = subtitleCues[i].from + delay.japanese
           if (startTime < currentTime) {
             targetCue = subtitleCues[i];
             break;
@@ -112,10 +100,7 @@ export default function CueNavigations({ direction }: CueNavigationProps) {
     
     // Navigate to target cue with error handling
     if (targetCue && player.current) {
-      const targetTime = timestampToSeconds({
-        timestamp: targetCue.from,
-        delay: delay.japanese
-      });
+      const targetTime = targetCue.from + delay.japanese
       
       try {
         player.current.currentTime = targetTime;
