@@ -2,7 +2,7 @@ import Kuroshiro from "@sglkc/kuroshiro";
 import type { SubtitleCue, SubtitleTranscription, SubtitleFormat, SubtitleToken } from "@/types/subtitle";
 import {getTokenizer as getTokenizerKuromojin, type Tokenizer} from "kuromojin";
 import CustomKuromojiAnalyzer from "./custom-kuromoji-analyzer";
-import { removeHtmlTags } from "@/lib/subtitle/utils";
+import { removeHtmlTags, removeTags } from "@/lib/subtitle/utils";
 import nlp from 'compromise';
 
 type CacheKey = string; // URL or file name
@@ -402,13 +402,6 @@ async function convertSubtitlesForNonJapaneseTranscription(subs: SubtitleCue[], 
   );
 }
 
-function cleanContent(content: string) {
-  // Remove {\\an8}
-  const cleanedContent = content.replace(/\{\\an\d+\}/g, '');
-  
-  return cleanedContent;
-}
-
 export function parseSrt(content: string, transcription: SubtitleTranscription) {
   console.log('Parsing SRT content...');
   const lines = content.split('\n');
@@ -439,7 +432,7 @@ export function parseSrt(content: string, transcription: SubtitleTranscription) 
       const initialContent = (currentEntry.content || '') + 
         (currentEntry.content ? ' ' : '') + line;
 
-      currentEntry.content = cleanContent(initialContent);
+      currentEntry.content = removeTags(initialContent);
       console.log(`Appending content: "${currentEntry.content}"`);
       continue;
     }
@@ -575,12 +568,15 @@ export function parseAss(content: string, transcription: SubtitleTranscription) 
           continue;
         }
 
-        const formatTimestamp = (timestamp: string) => {
+       const formatTimestamp = (timestamp: string) => {
           const trimmed = timestamp.trim();
           let formatted = trimmed;
-          if (trimmed.startsWith('0:')) {
-            formatted = '0' + trimmed; // Normalize to "00:00:..."
+          
+          // Add leading zero if first digit is single (1: -> 01:, 2: -> 02:, etc.)
+          if (/^\d:/.test(trimmed)) {
+            formatted = '0' + trimmed;
           }
+          
           // Optional: Replace dot with comma if needed to match SRT style
           // formatted = formatted.replace('.', ',');
           return formatted;
@@ -591,7 +587,7 @@ export function parseAss(content: string, transcription: SubtitleTranscription) 
           id: idCounter++,
           from: formatTimestamp(startTime),
           to: formatTimestamp(endTime),
-          content: content.trim(),
+          content: removeTags(content.trim()),
         };
 
         console.log('Parsed entry:', entry);

@@ -31,6 +31,12 @@ export const getEnglishSubtitleUrl = (tracks: AnimeStreamingLinks['tracks']) => 
   )?.file || "";
 }
 
+export function removeTags(content: string) {
+  // Remove anything between curly brackets {}
+  const cleanedContent = content.replace(/\{[^}]*\}/g, '');
+  return cleanedContent;
+}
+
 export function removeHtmlTags(text: string): string {
   return text.replace(/<[^>]*>/g, '');
 }

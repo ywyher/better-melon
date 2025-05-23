@@ -135,7 +135,7 @@ export default function SubtitleFileSelector({ subtitleFiles }: {
                         </div>
                     )}
                         
-                    {subtitleFiles.filter(f => f.name.split('.').pop() != 'zip').map((file) => {
+                    {subtitleFiles.filter(f => f.name.split('.').pop() != 'zip' && f.name.split('.').pop() != '7z').map((file) => {
                         const isSelected = file.name === activeSubtitleFile?.file.name;
                         const isLoading = loading === file.name;
                         
