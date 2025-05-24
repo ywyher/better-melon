@@ -154,11 +154,11 @@ export const subtitleStyles = pgTable("subtitle_styles", {
   textShadow: textShadowEnum("text_shadow").notNull().default('outline'),
 
   backgroundColor: text("background_color").notNull().default('#000000'),
-  backgroundOpacity: real("background_opacity").notNull().default(0.5),
+  backgroundOpacity: real("background_opacity").notNull().default(0.8),
   backgroundBlur: real("background_blur").notNull().default(0),
   backgroundRadius: real("background_radius").notNull().default(6),
 
-  margin: real('margin').notNull().default(0.5),
+  margin: real('margin').notNull().default(1),
   
   state: subtitleStateEnum('state').notNull().default('default'),
   userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }),

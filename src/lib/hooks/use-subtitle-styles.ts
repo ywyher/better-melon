@@ -26,7 +26,7 @@ export const getTokenStyles = (
     fontWeight: styles.default.fontWeight ||  defaultSubtitleStyles.default.fontWeight,
     transition: 'all 0.15s ease',
     display: 'inline-block',
-    margin: `0 ${styles.default.margin}px` || defaultSubtitleStyles.default.margin,
+    margin: `0 ${styles.default.margin || defaultSubtitleStyles.default.margin}px`,
     cursor: 'pointer',
 
     textShadow: styles.default.textShadow === 'drop-shadow' 
@@ -50,7 +50,7 @@ export const getTokenStyles = (
     color: styles.active.textColor || defaultSubtitleStyles.active.textColor,
     opacity: styles.active.textOpacity || defaultSubtitleStyles.active.textOpacity,
     fontWeight: styles.active.fontWeight || defaultSubtitleStyles.active.fontWeight,
-    margin: `0 ${styles.active.margin || defaultSubtitleStyles.active.margin}`,
+    margin: `0 ${styles.active.margin || defaultSubtitleStyles.active.margin}px`,
     cursor: 'pointer',
 
     textShadow: styles.active.textShadow === 'drop-shadow' 
@@ -101,8 +101,6 @@ export const getContainerStyles = (styles: {
     borderRadius: styles.active.backgroundRadius 
       ? `${styles.active.backgroundRadius}px` 
       : '8px',
-    padding: '.5rem 1rem',
-    marginBottom: ".5rem",
     display: 'flex',
     flexWrap: 'wrap',
     justifyContent: 'center',
@@ -212,10 +210,6 @@ export const useSubtitleStyles = () => {
     console.info(`~Subtitle styles processed in ${(end - start).toFixed(2)}ms`);
     return result;
   }, [activeTranscriptions, isFullscreen, storeStyles, getStylesFromStore]);
-
-  useEffect(() => {
-    console.log(`styles hook`, styles)
-  }, [styles])
 
   return {
     isLoading: stylesQuery.isLoading,

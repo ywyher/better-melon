@@ -1,6 +1,7 @@
 'use client'
 
 import { SliderInput } from "@/components/form/slider-input";
+import TooltipWrapper from "@/components/tooltip-wrapper";
 import { useStyleFieldController } from "@/lib/hooks/use-style-field-controller";
 import { FieldControllerProps } from "@/types/subtitle";
 
@@ -24,7 +25,12 @@ export default function MarginController({
 
   return (
     <div className="flex flex-col gap-1">
-      <p>Margin</p>
+      <div className="flex flex-row gap-2 items-center">
+        <p>Margin</p>
+        <TooltipWrapper>
+          Left and right space between words
+        </TooltipWrapper>
+      </div>
       <SliderInput
         min={0}
         max={10}
