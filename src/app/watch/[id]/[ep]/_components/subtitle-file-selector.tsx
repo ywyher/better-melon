@@ -13,6 +13,7 @@ import DialogWrapper from "@/components/dialog-wrapper";
 import { usePlayerStore } from "@/lib/stores/player-store";
 import { SubtitleFile } from "@/types/subtitle";
 import { isFileJpn } from "@/lib/subtitle/utils";
+import { subtitleFormats } from "@/lib/constants/subtitle";
 
 export default function SubtitleFileSelector({ subtitleFiles }: { 
     subtitleFiles: SubtitleFile[];
@@ -135,7 +136,7 @@ export default function SubtitleFileSelector({ subtitleFiles }: {
                         </div>
                     )}
                         
-                    {subtitleFiles.filter(f => f.name.split('.').pop() != 'zip' && f.name.split('.').pop() != '7z').map((file) => {
+                    {subtitleFiles.filter(f => subtitleFormats.includes(f.name.split('.').pop() || "")).map((file) => {
                         const isSelected = file.name === activeSubtitleFile?.file.name;
                         const isLoading = loading === file.name;
                         

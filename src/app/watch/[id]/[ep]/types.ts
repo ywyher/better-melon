@@ -20,7 +20,10 @@ export type TranscriptionStyleSet = {
     default: CSSProperties;
     active: CSSProperties;
   };
-  containerStyle: CSSProperties;
+  containerStyle: {
+    default: CSSProperties;
+    active: CSSProperties;
+  };
 };
 
 export type TranscriptionStyles = { all: TranscriptionStyleSet } & Partial<Record<SubtitleTranscription, TranscriptionStyleSet>>;

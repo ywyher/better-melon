@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils';
 import { TranscriptionStyleSet } from '@/app/watch/[id]/[ep]/types';
 import { SubtitleSettings } from '@/lib/db/schema';
 import { isTokenExcluded } from '@/lib/subtitle/utils';
+import { StyleRegistry } from 'styled-jsx';
 
 type TranscriptionItemProps = {
   transcription: SubtitleTranscription;
@@ -87,34 +88,41 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
                 || token.id === activeToken?.id;
             
             const tokenStyle = isActive ? styles.tokenStyles.active : styles.tokenStyles.default;
+            const activeContainerStyle = styles.containerStyle.active
             
             return (
-                <span 
-                    key={`${token.id || tokenIdx}-${tokenIdx}`} // More stable keys
-                    style={tokenStyle}
-                    onClick={() => {
-                        handleActivate(cue.content, token, 'click');
-                    }}
-                    onMouseEnter={() => {
-                        handleTokenMouseEnter(cue.id, token.id)
-                        handleActivate(cue.content, token, 'hover');
-                    }}
-                    onMouseLeave={() => { 
-                        handleTokenMouseLeave()
-                    }}
-                    onMouseOver={(e) => {
-                        if (!isActive) {
-                            Object.assign(e.currentTarget.style, styles.tokenStyles.active);
-                        }
-                    }}
-                    onMouseOut={(e) => {
-                        if (!isActive) {
-                            Object.assign(e.currentTarget.style, styles.tokenStyles.default);
-                        }
+                <div
+                    key={`${token.id || tokenIdx}-${tokenIdx}`}
+                    style={{
+                        ...(isActive ? activeContainerStyle : {}),
                     }}
                 >
-                    {token.surface_form}
-                </span>
+                    <span
+                        style={tokenStyle}
+                        onClick={() => {
+                            handleActivate(cue.content, token, 'click');
+                        }}
+                        onMouseEnter={() => {
+                            handleTokenMouseEnter(cue.id, token.id)
+                            handleActivate(cue.content, token, 'hover');
+                        }}
+                        onMouseLeave={() => { 
+                            handleTokenMouseLeave()
+                        }}
+                        onMouseOver={(e) => {
+                            if (!isActive) {
+                                Object.assign(e.currentTarget.style, styles.tokenStyles.active);
+                            }
+                        }}
+                        onMouseOut={(e) => {
+                            if (!isActive) {
+                                Object.assign(e.currentTarget.style, styles.tokenStyles.default);
+                            }
+                        }}
+                    >
+                        {token.surface_form}
+                    </span>
+                </div>
             );
         });
     }, [
@@ -141,7 +149,7 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
         <div
             ref={setNodeRef}
             style={{
-                ...styles.containerStyle,
+                ...styles.containerStyle.default,
                 ...style,
             }}
             className={containerClassName}

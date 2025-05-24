@@ -1,12 +1,12 @@
 'use client'
 
 import { SelectInput } from "@/components/form/select-input";
-import { textShadowTypes } from "@/lib/constants/subtitle";
+import { fontFamilies, fontWeights } from "@/lib/constants/subtitle";
 import { useStyleFieldController } from "@/lib/hooks/use-style-field-controller";
 import { FieldControllerProps } from "@/types/subtitle";
 import { useMemo } from "react";
 
-export default function TextShadowController({ 
+export default function FontWeightController({ 
   transcription, 
   value,
   source,
@@ -19,21 +19,21 @@ export default function TextShadowController({
     source,
     syncPlayerSettings,
     state,
-    field: 'textShadow',
-    successMessage: 'Text shadow updated successfully',
-    errorMessage: 'Failed to update text shadow'
+    field: 'fontWeight',
+    successMessage: 'Font weight updated successfully',
+    errorMessage: 'Failed to update font weight'
   });
   
-  const textShadowOptions = useMemo(() => {
-    return textShadowTypes.map(shadow => ({ value: shadow, label: shadow }))
+  const fontWeightOptions = useMemo(() => {
+    return fontWeights.map(weight => ({ value: weight, label: weight }))
   }, []);
 
   return (
     <div className="flex flex-col gap-1">
-      <p>Text Shadow</p>
+      <p>Font Weight</p>
       <SelectInput 
-        options={textShadowOptions} 
-        placeholder="Select text shadow"
+        options={fontWeightOptions} 
+        placeholder="Select font weight"
         onChange={(v) => onSubmit(v)}
         disabled={isLoading}
         value={displayValue}

@@ -8,13 +8,15 @@ export default function TextOpacityController({
   transcription,
   value,
   source,
-  syncPlayerSettings
+  syncPlayerSettings,
+  state
 }: FieldControllerProps) {
   const { isLoading, displayValue, onSubmit } = useStyleFieldController({
     transcription,
     initialValue: value,
     source,
     syncPlayerSettings,
+    state,
     field: 'textOpacity',
     successMessage: 'Text opacity updated successfully',
     errorMessage: 'Failed to update text opacity'

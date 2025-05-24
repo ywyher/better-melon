@@ -20,7 +20,7 @@ export async function getMultipleTranscriptionsStyles(transcriptions: SubtitleTr
       return acc;
     }, {} as Record<SubtitleTranscription, typeof defaultSubtitleStyles>);
   }
-  
+
   // Always include 'all' in our query since it's the fallback style
   const transcriptionsToFetch = [...new Set([...transcriptions, 'all' as SubtitleTranscription])];
   
@@ -29,41 +29,60 @@ export async function getMultipleTranscriptionsStyles(transcriptions: SubtitleTr
       eq(subtitleStyles.userId, session.user.id),
       inArray(subtitleStyles.transcription, transcriptionsToFetch)
     ));
-  
-  // Create a map of transcription -> styles, but only for transcriptions that have
-  // explicit styles in the database
-  const stylesMap = fetchedStyles.reduce((acc, style) => {
-    acc[style.transcription] = style;
-    return acc;
-  }, {} as Record<SubtitleStyles['transcription'], typeof defaultSubtitleStyles>);
 
-  // We're no longer filling in missing transcriptions with default styles
-  // Only returning styles that were explicitly found in the database
-  
+  console.log(fetchedStyles);
+
+  // Create a map of transcription -> { default: style, active: style }
+  const stylesMap = fetchedStyles.reduce((acc, style) => {
+    // Initialize the transcription object if it doesn't exist
+    if (!acc[style.transcription]) {
+      acc[style.transcription] = {};
+    }
+    
+    // Add the style to the appropriate state
+    acc[style.transcription][style.state] = style;
+    
+    return acc;
+  }, {} as Record<SubtitleStyles['transcription'], Record<string, any>>);
+
+  // Ensure 'all' transcription has both default and active states
+  if (stylesMap['all']) {
+    if (!stylesMap['all'].default) {
+      stylesMap['all'].default = defaultSubtitleStyles.default;
+    }
+    if (!stylesMap['all'].active) {
+      stylesMap['all'].active = defaultSubtitleStyles.active;
+    }
+  } else {
+    // If 'all' doesn't exist at all, set it to defaultSubtitleStyles
+    stylesMap['all'] = defaultSubtitleStyles;
+  }
+
   return stylesMap as Record<SubtitleTranscription, typeof defaultSubtitleStyles>;
 }
 
-export async function getSubtitleStyles({ transcription }: { transcription: SubtitleStyles['transcription'] }) {
+export async function getSubtitleStyles({ transcription, state }: { transcription: SubtitleStyles['transcription'], state: SubtitleStyles['state'] }) {
     const session = await auth.api.getSession({ headers: await headers() });
     
     if (!session?.user.id) {
-      return defaultSubtitleStyles;
+      return state == 'default' ? defaultSubtitleStyles.default : defaultSubtitleStyles.active;
     }
     
     const [styles] = await db.select().from(subtitleStyles)
     .where(and(
         eq(subtitleStyles.userId, session.user.id),
-        eq(subtitleStyles.transcription, transcription)
+        eq(subtitleStyles.transcription, transcription),
+        eq(subtitleStyles.state, state)
     ))
 
     if(styles) {
       return styles
     }else {
-      return defaultSubtitleStyles
+      return state == 'default' ? defaultSubtitleStyles.default : defaultSubtitleStyles.active
     }
 }
 
-export async function ensureSubtitlStylesExists({ transcription }: { transcription: SubtitleStyles['transcription'] }) {
+export async function ensureSubtitlStylesExists({ transcription, state }: { transcription: SubtitleStyles['transcription'], state: SubtitleStyles['state'] }) {
   const { userId, error } = await ensureAuthenticated()
 
   if(!userId || error) return {
@@ -75,7 +94,8 @@ export async function ensureSubtitlStylesExists({ transcription }: { transcripti
       const [exists] = await db.select().from(subtitleStyles)
       .where(and(
         eq(subtitleStyles.userId, userId),
-        eq(subtitleStyles.transcription, transcription)
+        eq(subtitleStyles.transcription, transcription),
+        eq(subtitleStyles.state, state)
       ))
       
       if(exists?.id) return {
@@ -86,10 +106,14 @@ export async function ensureSubtitlStylesExists({ transcription }: { transcripti
 
       const newStylesId = generateId();
 
+      const styles = state == 'default' ? defaultSubtitleStyles.default : defaultSubtitleStyles.active
+
       await db.insert(subtitleStyles).values({
+          ...styles,
           id: newStylesId,
           userId: userId,
           transcription,
+          state,
           createdAt: new Date(),
           updatedAt: new Date(),
       });
@@ -112,12 +136,14 @@ export async function handleSubtitleStyles({
   field,
   value,
   transcription,
+  state
 }: {
   field: keyof Omit<SubtitleStyles, 'id' | 'userId' | 'createdAt' | 'updatedAt'>,
   value: string | number,
   transcription: SubtitleStyles['transcription']
+  state: SubtitleStyles['state']
 }) {
-  const { error, stylesId } = await ensureSubtitlStylesExists({ transcription });
+  const { error, stylesId } = await ensureSubtitlStylesExists({ transcription, state });
 
   if(!stylesId || error) return {
     message: null,

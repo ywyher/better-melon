@@ -69,4 +69,5 @@ export type FieldControllerProps = {
   transcription: SubtitleStyles['transcription'] 
   source: 'store' | 'database'
   syncPlayerSettings: GeneralSettings['syncPlayerSettings']
+  state: SubtitleStyles['state']
 }

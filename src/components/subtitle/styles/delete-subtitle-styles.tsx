@@ -23,7 +23,7 @@ export default function DeleteSubtitleStyles({
   syncPlayerSettings,
   transcription,
   source,
-  subtitleStylesId
+  subtitleStylesId,
 }: RemoveSubtitleStylesProps) {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const deleteStyles = useSubtitleStylesStore((state) => state.deleteStyles)

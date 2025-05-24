@@ -82,13 +82,29 @@ export const subtitleQueries = createQueryKeys('subtitle', {
     
       const start = performance.now();
       const stylesMap = await getMultipleTranscriptionsStyles(transcriptionsToFetch);
-      
+
       // Store fetched styles in the Zustand store, but only for transcriptions
       // that actually have styles in the database
       Object.entries(stylesMap).forEach(([transcription, styles]) => {
-        handleSubtitleStylesInStore(transcription as SubtitleTranscription, styles);
+        // Handle default state if it exists
+        if (styles.default) {
+          handleSubtitleStylesInStore(
+            transcription as SubtitleTranscription,
+            styles.default,
+            'default'
+          );
+        }
+        
+        // Handle active state if it exists
+        if (styles.active) {
+          handleSubtitleStylesInStore(
+            transcription as SubtitleTranscription,
+            styles.active,
+            'active'
+          );
+        }
       });
-      
+
       // Mark all checked transcriptions, even those without styles
       transcriptionsToFetch.forEach(transcription => {
         checkedTranscriptions.current.add(transcription);

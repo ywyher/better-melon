@@ -1,8 +1,8 @@
-what is .ssa, maybe will support it too ? check it out on death note ep 15 too
+apply container styles is left
 
-while parsing instead of saving timestamps as from and to
-we should prob convert them right away to seconds to avoid converting them while the player is playing
-this might optimize the performance try it
+we changed how displayValue works in the use-styles-controller maybe in the others too ?
+
+what is .ssa, maybe will support it too ? check it out on death note ep 15 too
 
 how did we forget about subtitle styles for active subtitles !!
 
@@ -24,14 +24,12 @@ add the ability to disable auto scroll to the current cue and the ability to cus
 
 update the skeletons for general settings and subtitle styles since you chagned the content
 
-hooks for other settings too
-
 hide spoilers
 
 watch or info page
 > Choose whether to go to the info page or watch page when selecting an anime.
 
-maybe on the info page if its an anime of 1episodes just fetch it right away
+maybe on the info page if its an anime of 1 episodes just prefetch it right away
 
 auto add to list
 

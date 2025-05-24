@@ -19,10 +19,10 @@ export const settingsQueries = createQueryKeys('settings', {
         queryKey: ['subtitle'],
         queryFn: async () => await getSubtitleSettings(),
     }),
-    subtitleStyles: (selectedTranscription: SubtitleStyles['transcription']) => ({
-      queryKey: ['settings', 'subtitle-styles', selectedTranscription],
+    subtitleStyles: (selectedTranscription: SubtitleStyles['transcription'], selectedState: SubtitleStyles['state']) => ({
+      queryKey: ['settings', 'subtitle-styles', selectedTranscription, selectedState],
       queryFn: async () => {
-        return await getSubtitleStyles({ transcription: selectedTranscription });
+        return await getSubtitleStyles({ transcription: selectedTranscription, state: selectedState });
       },
     }),
     forEpisode: () => ({

@@ -8,13 +8,15 @@ export default function BackgroundRadiusController({
   transcription,
   value,
   source,
-  syncPlayerSettings
+  syncPlayerSettings,
+  state
 }: FieldControllerProps) {
   const { isLoading, displayValue, onSubmit } = useStyleFieldController({
     transcription,
     initialValue: value,
     source,
     syncPlayerSettings,
+    state,
     field: 'backgroundRadius',
     successMessage: 'Background radius updated successfully',
     errorMessage: 'Failed to update background radius'

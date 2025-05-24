@@ -8,13 +8,15 @@ export default function BackgroundColorController({
   transcription,
   value,
   source,
-  syncPlayerSettings
+  syncPlayerSettings,
+  state
 }: FieldControllerProps) {
   const { isLoading, displayValue, onSubmit } = useStyleFieldController({
     transcription,
     initialValue: value,
     source,
     syncPlayerSettings,
+    state,
     field: 'backgroundColor',
     successMessage: 'Background color updated successfully',
     errorMessage: 'Failed to update background color'
