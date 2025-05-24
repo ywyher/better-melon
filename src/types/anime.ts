@@ -89,6 +89,11 @@ export interface Anime {
   id: number | string;
   idMal: number | string;
   title: AnimeTitle;
+  episodes: number;
+  nextAiringEpisode: {
+    episode: number
+    timeUntilAiring: number
+  } | null
   coverImage: AnimeCoverImage;
   genres: string[];
   status: AnimeStatus;
@@ -96,7 +101,6 @@ export interface Anime {
   endDate: AnimeDate
   description: string;
   bannerImage: string;
-  episodes: number;
   season: AnimeSeason;
   seasonYear: number;
   averageScore: number;

@@ -33,17 +33,17 @@ export default function AnimeData({
     setIsAddToList(addToList === 'true');
   }, [searchParams]);
 
-  const { loading, error, data, refetch } = useQuery(GET_ANIME, { 
+  const { data: animeData, loading: isAnimeDataLoading, error: animeError, refetch: animeRefetch } = useQuery(GET_ANIME, { 
     variables: { id: Number(animeId) },
     fetchPolicy: 'cache-first',
   });
 
   useEffect(() =>{ 
-    console.debug(`debug ${data}`)
-    if(data) {
-      setAnime(data.Media)
+    console.debug(`debug ${animeData}`)
+    if(animeData) {
+      setAnime(animeData.Media)
     }
-  }, [data])
+  }, [animeData])
 
   useEffect(() => {
     const prefetch = async () => {
@@ -72,8 +72,8 @@ export default function AnimeData({
     }
   }, [queryClient, anime])
   
-  if (loading || !anime) return <AnimeDataSkeleton />
-  if (error) return <Indicator onRetry={() => refetch()} type="error" message={error.message} />
+  if (isAnimeDataLoading || !anime) return <AnimeDataSkeleton />
+  if (animeError) return <Indicator onRetry={() => animeRefetch()} type="error" message={animeError.message} />
 
 
   return (
@@ -103,6 +103,7 @@ export default function AnimeData({
               <AnimeEpisodes 
                   id={animeId}
                   episodes={anime.episodes}
+                  nextAiringEpisode={anime.nextAiringEpisode}
                   router={router}
               />
 

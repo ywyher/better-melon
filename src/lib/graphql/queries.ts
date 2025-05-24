@@ -12,6 +12,10 @@ export const GET_ANIME = gql`
         english
       }
       episodes
+      nextAiringEpisode {
+        episode
+        timeUntilAiring
+      }
       coverImage {
         large
       }

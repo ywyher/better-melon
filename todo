@@ -1,10 +1,10 @@
-apply container styles is left
+http://localhost:3000/watch/161645/24 shows no subtitle found even tho there is
+apothecary season 2 shows 24 episodes even tho they only 19
+> anilist adds anime with the total planned episode count, even if not all episodes have aired yet.
 
 we changed how displayValue works in the use-styles-controller maybe in the others too ?
 
 what is .ssa, maybe will support it too ? check it out on death note ep 15 too
-
-how did we forget about subtitle styles for active subtitles !!
 
 puase player on definition trigger or hover or click or none !!!!
 

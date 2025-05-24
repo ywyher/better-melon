@@ -1,4 +1,3 @@
-// AnimeEpisodes.tsx
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Anime } from "@/types/anime"
@@ -6,11 +5,12 @@ import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.share
 
 type AnimeEpisodesProps = {
     episodes: Anime['episodes']
+    nextAiringEpisode: Anime['nextAiringEpisode']
     id: Anime['id']
     router: AppRouterInstance
 }
 
-export function AnimeEpisodes({ episodes, id, router }: AnimeEpisodesProps) {
+export function AnimeEpisodes({ episodes, nextAiringEpisode, id, router }: AnimeEpisodesProps) {
     const episodesArray = Array.from({ length: episodes || 0 }, (_, i) => i + 1)
     
     return (
@@ -21,7 +21,13 @@ export function AnimeEpisodes({ episodes, id, router }: AnimeEpisodesProps) {
             <CardContent>
                 {episodesArray.length > 0 ? (
                     <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-2">
-                        {episodesArray.map((episode) => (
+                        {episodesArray.filter(ep => {
+                            if(nextAiringEpisode) {
+                                return ep < nextAiringEpisode.episode
+                            }else {
+                                return ep
+                            }
+                        }).map((episode) => (
                             <Button 
                                 key={episode} 
                                 variant="outline"
