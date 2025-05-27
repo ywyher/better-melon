@@ -57,16 +57,25 @@ const ViewAll = ({ navigateToSearch, query }: { navigateToSearch: (query: string
   return (
     <div className="border-t p-0 bg-background mt-auto">
       <div 
-        className="flex items-center w-full justify-between cursor-pointer p-2 rounded hover:bg-accent"
+        className="flex flex-row items-center w-full justify-between cursor-pointer p-2 rounded hover:bg-accent"
         onClick={() => navigateToSearch(query)}
       >
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 w-full">
           <span>View all</span>
         </div>
-        <div className="text-xs text-muted-foreground hidden md:block">
-          <span className="rounded border px-1"><ArrowUpDown /></span> navigate,{" "}
-          <span className="rounded border px-1">Enter</span> select,{" "}
-          <span className="rounded border px-1">Esc</span> close
+        <div className="hidden md:flex flex-row gap-2 justify-end w-full text-xs text-muted-foreground">
+          <div className="flex flex-row gap-2">
+            <span className="rounded border px-1"><ArrowUpDown size={16} /></span>
+            <p>navigate,{" "}</p>
+          </div>
+          <div className="flex flex-row gap-2">
+            <span className="rounded border px-1">Enter</span> 
+            <p>select,{" "}</p>
+          </div>
+          <div className="flex flex-row gap-2">
+            <span className="rounded border px-1">Esc</span>
+            <p>close</p>
+          </div>
         </div>
       </div>
     </div>
@@ -90,7 +99,7 @@ export default function Search({ className = "" }: { className?: string }) {
 
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
-      if (e.key === "g" && (e.metaKey || e.ctrlKey)) {
+      if (e.key === "f" && (e.metaKey || e.ctrlKey)) {
         e.preventDefault()
         setOpen((open) => !open)
       }
