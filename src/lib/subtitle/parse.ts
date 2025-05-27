@@ -190,7 +190,6 @@ export async function parseSubtitleToJson({
     }
 
     if (!subtitles.length) {
-      console.error("No subtitles found in file");
       return [];
     }
     

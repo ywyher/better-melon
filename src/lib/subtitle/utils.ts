@@ -1,6 +1,7 @@
 import { excludedPos, subtitleFormats } from "@/lib/constants/subtitle";
 import { SubtitleSettings } from "@/lib/db/schema";
-import { fetchSubtitles, parseSrt, parseVtt } from "@/lib/subtitle/parse";
+import { FileSelectionError } from "@/lib/errors/player";
+import { fetchSubtitles, parseAss, parseSrt, parseVtt } from "@/lib/subtitle/parse";
 import { getExtension } from "@/lib/utils";
 import { AnimeStreamingLinks, SkipTime } from "@/types/anime";
 import { ActiveSubtitleFile, SubtitleFile, SubtitleFormat, SubtitleToken } from "@/types/subtitle";
@@ -12,7 +13,7 @@ export const getActiveSubtitleFile = (subtitleFiles: SubtitleFile[], preferredFo
     preferredFormat: preferredFormat
   })
 
-  if(!selectedFile) throw new Error("Couldn't select a file")
+  if(!selectedFile) throw new FileSelectionError()
 
   return {
     source: 'remote',
@@ -222,12 +223,22 @@ export function generateWebVTTFromSkipTimes({
 
 export async function isFileJpn(file: File) {
   const content = await fetchSubtitles(file)
+  const format = getExtension(file.name)
 
   let parsed
-  if(file.name.split('.').pop() == 'srt') {
-    parsed = parseSrt(content, 'japanese')
-  }else if(file.name.split('.').pop() == 'vtt') {
-    parsed = parseVtt(content, 'japanese')
+  
+  switch (format) {
+    case 'srt':
+      parsed = parseSrt(content, 'japanese');
+    break;
+    case 'vtt':
+      parsed = parseVtt(content, 'japanese');
+    break;
+    case 'ass':
+      parsed = parseAss(content, 'japanese');
+    break;
+    default:
+      throw new Error(`Unsupported subtitle format: ${format}`);
   }
 
   if(!parsed) return;

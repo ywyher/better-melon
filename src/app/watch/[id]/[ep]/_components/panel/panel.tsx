@@ -57,7 +57,7 @@ export default function SubtitlePanel({
     if(isCuesLoading) return <PanelSkeleton />
 
     return (
-        <Card className="flex flex-col gap-3 w-full lg:max-w-[500px] lg:min-h-[80vh] h-fit border-0 lg:border-1 p-0 m-0 lg:py-5">
+        <Card className="flex flex-col gap-3 w-full min-w-[500px] lg:max-w-[500px] lg:min-h-[80vh] h-fit border-0 lg:border-1 p-0 m-0 lg:py-5">
             <Tabs className="h-full" defaultValue={selectedTranscription || subtitleTranscriptions[0]} value={selectedTranscription}>
                 <PanelHeader 
                   isLoading={isCuesLoading}

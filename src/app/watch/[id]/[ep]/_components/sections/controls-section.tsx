@@ -3,7 +3,6 @@ import EpisodeNavigations from "@/app/watch/[id]/[ep]/_components/settings/episo
 import PlayerSettings from "@/app/watch/[id]/[ep]/_components/settings/player-settings";
 import SettingsSkeleton from "@/app/watch/[id]/[ep]/_components/settings/settings-skeleton";
 import { Separator } from "@/components/ui/separator";
-import type { GeneralSettings, PlayerSettings as TPlayerSettings } from "@/lib/db/schema";
 import { AnimeEpisodeData } from "@/types/anime";
 import { SettingsForEpisode } from "@/types/settings";
 
@@ -46,8 +45,20 @@ export default function ControlsSection({
                   </div>
                   <Separator orientation="vertical" />
                   <div className="flex flex-col gap-2 w-full flex-1">
-                      <EpisodeNavigations direction="previous" episodesLength={episodesLength} />
-                      <EpisodeNavigations direction="next" episodesLength={episodesLength} />
+                      <EpisodeNavigations
+                        direction="previous" 
+                        episodesLength={episodesLength}
+                        nextAiringEpisode={episodeData.details.nextAiringEpisode?.episode}
+                        animeId={episodeData.details.id}
+                        episodeNumber={episodeData.metadata.number}
+                      />
+                      <EpisodeNavigations 
+                        direction="next" 
+                        episodesLength={episodesLength}
+                        nextAiringEpisode={episodeData.details.nextAiringEpisode?.episode}
+                        animeId={episodeData.details.id}
+                        episodeNumber={episodeData.metadata.number}
+                      />
                   </div>
               </div>
           </div>

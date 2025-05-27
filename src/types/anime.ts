@@ -150,7 +150,7 @@ export type AnimeStreamingLinks = {
 
 export type AnimeEpisodeMetadata = {
   number: number;
-  title: string;
+  title: Anime['title']['english'];
   image: string;
   description?: string;
   thumbnails?: SubtitleTrack;

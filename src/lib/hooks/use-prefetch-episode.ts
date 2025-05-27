@@ -15,7 +15,7 @@ export function usePrefetchEpisode(
   episodeNumber: number,
   episodesLength: number,
   preferredFormat: SubtitleSettings["preferredFormat"],
-  isVideoReady: boolean
+  isReady: boolean
 ) {
   const [networkCondition, setNetworkCondition] = useState<'good'|'poor'|'n'>('n');
   const storeActiveTranscriptions = usePlayerStore((state) => state.activeTranscriptions) || [];
@@ -60,6 +60,10 @@ export function usePrefetchEpisode(
     return () => clearInterval(intervalId);
   }, []);
 
+  useEffect(() => {
+    console.log(`prefetch isReady`, isReady)
+  }, [isReady])
+
   const activeTranscriptions: SubtitleTranscription[] = useMemo(() => {
     if (!storeActiveTranscriptions.includes('japanese')) {
       return [...storeActiveTranscriptions, 'japanese'];
@@ -68,10 +72,10 @@ export function usePrefetchEpisode(
   }, [storeActiveTranscriptions]);
   
   const shouldFetchEpisodeData = useMemo(() => {
-    return isVideoReady && 
+    return isReady && 
            !isLastEpisode && 
            networkCondition !== 'poor';
-  }, [isVideoReady, isLastEpisode, networkCondition]);
+  }, [isReady, isLastEpisode, networkCondition]);
   
   const { 
     data: episodeData, 
@@ -92,24 +96,41 @@ export function usePrefetchEpisode(
   }, [isEpisodeDataFetching, episodeDataFetched, episodeNumber]);
 
   const shouldFetchSubtitles = useMemo(() => {
-    return isVideoReady && 
+    return isReady && 
            !isLastEpisode && 
            networkCondition !== 'poor';
-  }, [isVideoReady, isLastEpisode, networkCondition]);
+  }, [isReady, isLastEpisode, networkCondition]);
 
   const queries = useQueries({
     queries: activeTranscriptions.map((transcription) => {
       const isEnglish = transcription === 'english';
-      const activeSubtitleFile = episodeData ? 
-        getActiveSubtitleFile(episodeData.subtitles ?? [], preferredFormat) : 
-        undefined;
-      const englishSubtitleUrl = episodeData ? 
-        getEnglishSubtitleUrl(episodeData.streamingLinks?.tracks ?? []) : 
-        '';
+      
+      // Safely get subtitle file and URL with error handling
+      let activeSubtitleFile: ActiveSubtitleFile | undefined;
+      let englishSubtitleUrl = '';
+      
+      try {
+        activeSubtitleFile = episodeData ? 
+          getActiveSubtitleFile(episodeData.subtitles ?? [], preferredFormat) : 
+          undefined;
+      } catch (error) {
+        // If subtitle file selection fails, don't prefetch this transcription
+        console.debug(`Skipping subtitle prefetch for episode ${episodeNumber}, transcription ${transcription}: no suitable subtitle file`);
+        activeSubtitleFile = undefined;
+      }
+      
+      try {
+        englishSubtitleUrl = episodeData ? 
+          getEnglishSubtitleUrl(episodeData.streamingLinks?.tracks ?? []) : 
+          '';
+      } catch (error) {
+        console.debug(`Skipping English subtitle prefetch for episode ${episodeNumber}: no English track available`);
+        englishSubtitleUrl = '';
+      }
       
       return {
         ...subtitleQueries.transcriptions({
-          activeSubtitleFile: activeSubtitleFile as ActiveSubtitleFile | undefined,
+          activeSubtitleFile,
           englishSubtitleUrl,
           isEnglish,
           isTokenizerInitialized: true,
@@ -148,11 +169,11 @@ export function usePrefetchEpisode(
   }, [activeTranscriptions]);
 
   const shouldFetchStyles = useMemo(() => {
-    return isVideoReady && 
+    return isReady && 
            !isLastEpisode && 
            networkCondition !== 'poor' &&
            transcriptionsToFetch.length > 0;
-  }, [isVideoReady, isLastEpisode, networkCondition]);
+  }, [isReady, isLastEpisode, networkCondition]);
 
   const {
     data: stylesQuery,

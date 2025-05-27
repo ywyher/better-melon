@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { playerQueries } from '@/lib/queries/player';
+import { usePlayerStore } from '@/lib/stores/player-store';
 
 export function useEpisodeData(animeId: string, episodeNumber: number) {
   const loadingStartTime = useRef<number>(0);
@@ -11,6 +12,7 @@ export function useEpisodeData(animeId: string, episodeNumber: number) {
     data: episodeData,
     isLoading,
     error,
+    refetch
   } = useQuery({
     ...playerQueries.episodeData(animeId, episodeNumber),
     staleTime: 1000 * 60 * 5,
@@ -36,6 +38,7 @@ export function useEpisodeData(animeId: string, episodeNumber: number) {
     isLoading,
     error,
     loadingDuration,
-    episodesLength
+    episodesLength,
+    refetch
   };
 }

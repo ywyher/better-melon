@@ -3,26 +3,43 @@
 import { useParams, useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { SkipBack, SkipForward } from "lucide-react"
+import { Anime } from "@/types/anime"
 
-export default function EpisodeNavigations({ direction, episodesLength }: { direction: 'next' | 'previous', episodesLength: number }) {
+type EpisodeNavigationsProps = { 
+    direction: 'next' | 'previous',
+    episodesLength: number
+    nextAiringEpisode?: number
+    episodeNumber: number
+    animeId: Anime['id']
+}
+
+export default function EpisodeNavigations({ 
+    direction, 
+    episodesLength,
+    nextAiringEpisode,
+    animeId,
+    episodeNumber
+}: EpisodeNavigationsProps) {
     const router = useRouter();
-    const params = useParams<{ id: string; ep: string }>();
 
     const isNext = direction === 'next';
 
     const handleClick = () => {
-        const currentEp = parseInt(params.ep, 10);
+        const currentEp = Number(episodeNumber);
         if (isNaN(currentEp)) return;
 
         const newEp = isNext ? currentEp + 1 : currentEp - 1;
         if (newEp < 1) return;
 
-        router.push(`/watch/${params.id}/${newEp}`);
+        router.push(`/watch/${animeId}/${newEp}`);
     };
 
     const isDisabled 
-        =  (!isNext && parseInt(params.ep) == 1)
-        || (isNext && parseInt(params.ep) == episodesLength);
+        =  (!isNext && Number(episodeNumber) == 1)
+        || (
+            (isNext && Number(episodeNumber) == episodesLength)
+            || (isNext && Number(episodeNumber) + 1 >= Number(nextAiringEpisode))
+        );
 
     return (
         <Button 

@@ -27,8 +27,6 @@ export async function getEpisodeData(animeId: string, episodeNumber: number, pro
       throw new Error('Invalid data structure returned from API');
     }
 
-    console.log(`data`, data.streamingLinks.tracks)
-
     return {
       ...data,
       metadata: {

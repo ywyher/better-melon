@@ -8,14 +8,16 @@ import { useSettingsForEpisode } from '@/lib/hooks/use-settings-for-episode';
 import { usePrefetchEpisode } from '@/lib/hooks/use-prefetch-episode';
 import { useSubtitleTranscriptions } from '@/lib/hooks/use-subtitle-transcriptions';
 import { useSubtitleStyles } from '@/lib/hooks/use-subtitle-styles';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useEpisodeData } from '@/lib/hooks/use-episode-data';
 import PlayerSection from '@/app/watch/[id]/[ep]/_components/sections/player-section';
 import ControlsSection from '@/app/watch/[id]/[ep]/_components/sections/controls-section';
 import PanelSection from '@/app/watch/[id]/[ep]/_components/sections/panel-section';
 import { useDefinitionStore } from '@/lib/stores/definition-store';
-import { getActiveSubtitleFile } from '@/lib/subtitle/utils';
-import { AnimeEpisodeData, AnimeStreamingLinks } from '@/types/anime';
+import { AnimeEpisodeData } from '@/types/anime';
+import { SubtitlesNotAvailableError } from '@/lib/errors/player';
+import MissingSubtitlesDialog from '@/app/watch/[id]/[ep]/_components/missing-subtitles-dialog';
+import { useSetSubtitles } from '@/lib/hooks/use-set-subtitles';
 
 export default function WatchPage() {
   const params = useParams();
@@ -26,12 +28,10 @@ export default function WatchPage() {
   const panelState = usePlayerStore((state) => state.panelState);
   const isVideoReady = usePlayerStore((state) => state.isVideoReady);
   const setIsVideoReady = usePlayerStore((state) => state.setIsVideoReady);
-  const setActiveSubtitleFile = usePlayerStore((state) => state.setActiveSubtitleFile);
-  const setEnglishSubtitleUrl = usePlayerStore((state) => state.setEnglishSubtitleUrl);
-
 
   const setSentence = useDefinitionStore((state) => state.setSentence);
   const setToken = useDefinitionStore((state) => state.setToken);
+  const setActiveSubtitleFile = usePlayerStore((state) => state.setActiveSubtitleFile);
 
   const loadStartTimeRef = useRef<number>(performance.now());
   const [totalDuration, setTotalDuration] = useState<number>(0);
@@ -41,10 +41,11 @@ export default function WatchPage() {
     isLoading: isEpisodeDataLoading,
     error: episodeDataError,
     loadingDuration: episodeDataLoadingDuration,
-    episodesLength
+    episodesLength,
+    refetch: refetchEpisodeData
   } = useEpisodeData(animeId, episodeNumber);
 
-  const { 
+  const {
     settings,
     isLoading: isSettingsLoading,
     error: settingsError,
@@ -65,77 +66,60 @@ export default function WatchPage() {
     loadingDuration: stylesLoadingDuration 
   } = useSubtitleStyles();
 
+  const {
+    subtitleError,
+    subtitlesErrorDialog,
+    setSubtitlesErrorDialog,
+    resetSubtitleErrors
+  } = useSetSubtitles(episodeData, settings, episodeNumber);
+
   const isLoading = useMemo(() => {
     return (isEpisodeDataLoading || isTranscriptionsLoading || isStylesLoading || isSettingsLoading) && !isVideoReady;
   }, [isEpisodeDataLoading, isTranscriptionsLoading, isStylesLoading, isSettingsLoading, isVideoReady]);
 
   useEffect(() => {
-    if (!isLoading && 
-        isVideoReady && 
-        episodeDataLoadingDuration >= 0 && 
-        transcriptionsLoadingDuration >= 0 && 
-        settingsLoadingDuration >= 0 &&
-        stylesLoadingDuration >= 0) {
-      
+    if (!isLoading &&
+      isVideoReady &&
+      episodeDataLoadingDuration >= 0 &&
+      transcriptionsLoadingDuration >= 0 &&
+      settingsLoadingDuration >= 0 &&
+      stylesLoadingDuration >= 0) {
       const loadEndTime = performance.now();
       const elapsed = loadEndTime - loadStartTimeRef.current;
-      
       console.debug('Calculating loading duration:', {
         start: loadStartTimeRef.current,
         end: loadEndTime,
         elapsed,
         episodeNumber
       });
-      
       setTotalDuration(elapsed);
     }
   }, [
-    isLoading, 
-    isVideoReady, 
-    episodeDataLoadingDuration, 
-    transcriptionsLoadingDuration, 
+    isLoading,
+    isVideoReady,
+    episodeDataLoadingDuration,
+    transcriptionsLoadingDuration,
     settingsLoadingDuration,
-    stylesLoadingDuration, 
-    episodeNumber // Include episodeNumber to track when it changes
+    stylesLoadingDuration,
+    episodeNumber
   ]);
 
-  useEffect(() => {
-    if (!episodeData || !episodeData.streamingLinks || !settings || !settings.subtitleSettings) return;
-    
-    setActiveSubtitleFile(null);
-    setEnglishSubtitleUrl(null);
-    
-    if (episodeData.subtitles?.length > 0) {
-      const file = getActiveSubtitleFile(episodeData.subtitles, settings.subtitleSettings.preferredFormat)
-      if(file) {
-        setActiveSubtitleFile(file);
-      }
-    }
-    
-    if (episodeData.streamingLinks.tracks) {
-      const englishSub = episodeData.streamingLinks.tracks.find(
-        (s: AnimeStreamingLinks['tracks'][0]) => s.label === 'English'
-      )?.file || "";
-      setEnglishSubtitleUrl(englishSub);
-    }
-  }, [episodeData, setActiveSubtitleFile, setEnglishSubtitleUrl, settings]);
-
-  // Reset timers and flags when episode or anime changes
-  useEffect(() => {
+  useLayoutEffect(() => {
     console.debug('Resetting load timer for episode:', episodeNumber);
     loadStartTimeRef.current = performance.now();
-    setTotalDuration(0);
     setIsVideoReady(false);
+    setTotalDuration(0);
+    setActiveSubtitleFile(null)
     setToken(null)
     setSentence(null)
   }, [animeId, episodeNumber, setIsVideoReady]);
 
   usePrefetchEpisode(
-    animeId, 
-    episodeNumber + 1, 
+    animeId,
+    episodeNumber + 1,
     episodesLength, 
-    settings?.subtitleSettings?.preferredFormat || 'srt', 
-    isVideoReady
+    settings?.subtitleSettings?.preferredFormat || 'srt',
+    isVideoReady && episodeData?.details.nextAiringEpisode?.episode != episodeNumber + 1
   );
 
   const shouldShowPanel = useMemo(() => {
@@ -146,9 +130,37 @@ export default function WatchPage() {
       transcriptions.find(t => t?.transcription === 'japanese')
   }, [isMedium, panelState, episodeData?.metadata, transcriptions]);
 
-  const errors = [episodeDataError, transcriptionsError, settingsError, stylesError].filter(Boolean);
+  const errors = useMemo(() => {
+    return [
+      episodeDataError,
+      transcriptionsError,
+      settingsError,
+      stylesError,
+      subtitleError
+    ].filter(Boolean)
+  }, [episodeDataError, transcriptionsError, settingsError, stylesError, subtitleError]);
+
   if (errors.length > 0) {
-    return <Indicator type='error' message={errors[0]?.message || "An error occurred"} />;
+    const subtitlesError = errors.find(error => error instanceof SubtitlesNotAvailableError);
+    const error = subtitlesError || errors[0];
+
+    if (error instanceof SubtitlesNotAvailableError) {
+      return <MissingSubtitlesDialog
+        animeTitle={episodeData?.metadata.title || ""}
+        episodeNumber={episodeData?.metadata.number || 0}
+        open={subtitlesErrorDialog}
+        onSelect={() => {
+          refetchEpisodeData();
+          resetSubtitleErrors();
+        }}
+        setOpen={setSubtitlesErrorDialog}
+        errorMessage={error.message}
+      />;
+    }
+    return <Indicator
+      type='error'
+      message={error?.message || "An error occurred"}
+    />;
   }
 
   return (

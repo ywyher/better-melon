@@ -1,3 +1,20 @@
+usePrefetch prefetches next episode even if next episode doesn't exist
+
+prefetch doesn't really work with the current new watch page set subtitles
+
+next episode work even if all episodes aint realesed yet since anilist just set the final counter right away
+
+support for furigana
+
+make resend optional so anyone can self host the app with full functioanlity
+
+for is refetching add a loading overlay on the refetchinf thing
+1- the subtitle styles component
+
+better error handling
+1- in case subtitle files don't exist for a certain episode yet
+> currently on this route http://localhost:3000/watch/149118/8
+
 http://localhost:3000/watch/161645/24 shows no subtitle found even tho there is
 apothecary season 2 shows 24 episodes even tho they only 19
 > anilist adds anime with the total planned episode count, even if not all episodes have aired yet.
