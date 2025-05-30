@@ -15,8 +15,8 @@ export const env = createEnv({
     ANILIST_SECRET: z.string().min(1),
     ANILIST_REDIRECT_URL: z.string().url(),
     
-    RESEND_FROM_EMAIL: z.string().email(),
-    RESEND_API_KEY: z.string().min(1),
+    RESEND_FROM_EMAIL: z.string().email().optional(),
+    RESEND_API_KEY: z.string().optional(),
   },
   experimental__runtimeEnv: process.env,
 });

@@ -13,6 +13,8 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { AuthPort } from "@/components/auth/auth";
 import LoadingButton from "@/components/loading-button";
 import { emailSchema, passwordSchema, usernameSchema } from "@/types/auth";
+import { useQueryClient } from "@tanstack/react-query";
+import { getShouldVerifyEmail } from "@/components/auth/actions";
 
 export const registerSchema = z.object({
     username: usernameSchema,
@@ -24,12 +26,14 @@ type FormValues = z.infer<typeof registerSchema>;
 
 type RegisterProps = { 
     setPort: Dispatch<SetStateAction<AuthPort>>,
-    email: string
     setPassword: Dispatch<SetStateAction<string>>,
+    setOpen: (isAuthDialogOpen: boolean) => void
+    email: string
 };
 
-export default function Register({ setPort, email, setPassword }: RegisterProps) {
+export default function Register({ setPort, email, setPassword, setOpen }: RegisterProps) {
     const [isLoading, setIsLoading] = useState<boolean>(false)
+    const queryClient = useQueryClient()
     const isSmall = useIsSmall()
 
     const form = useForm<FormValues>({
@@ -55,20 +59,41 @@ export default function Register({ setPort, email, setPassword }: RegisterProps)
             setIsLoading(false)
             return;
         }
-        
-        const { error } = await authClient.emailOtp.sendVerificationOtp({
-            email: email || formData.email,
-            type: "email-verification"
-        })
-        
-        if(error) {
-            toast.error(error.message)
-            setIsLoading(false)
-            return;
-        }
 
-        setPassword(formData.password)
-        setPort('verify')
+        const shouldVerifyEmail = await getShouldVerifyEmail()
+        
+        if(shouldVerifyEmail) {
+            const { error } = await authClient.emailOtp.sendVerificationOtp({
+                email: email || formData.email,
+                type: "email-verification"
+            })
+            
+            if(error) {
+                toast.error(error.message)
+                setIsLoading(false)
+                return;
+            }
+    
+            setPassword(formData.password)
+            setPort('verify')
+        }else {
+            const result = await authClient.signIn.email({
+                email: email || formData.email,
+                password: formData.password,
+            });
+    
+            if(result.error) {
+                toast.error(result.error.message)
+                setIsLoading(false)
+                return;
+            }
+            
+            queryClient.clear()
+            toast.success("Logged in successfully")
+            setIsLoading(false)
+            setOpen(false)
+            setPort('check')
+        }
     }
 
     const onError = (errors: FieldErrors<FormValues>) => {

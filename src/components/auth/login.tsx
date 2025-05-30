@@ -14,7 +14,7 @@ import { AuthIdentifier, AuthPort } from "@/components/auth/auth";
 import LoadingButton from "@/components/loading-button";
 import { Button } from "@/components/ui/button";
 import { identifierSchema } from "@/types/auth";
-import { getEmailByUsername, getIsAccountVerified } from "@/components/auth/actions";
+import { getEmailByUsername, getIsAccountVerified, getShouldVerifyEmail } from "@/components/auth/actions";
 import { useQueryClient } from "@tanstack/react-query";
 import { FormField } from "@/components/form/form-field";
 
@@ -28,11 +28,11 @@ export const loginSchema = z.object({
 type FormValues = z.infer<typeof loginSchema>;
 
 type LoginProps = { 
-    setOpen: Dispatch<SetStateAction<boolean>>,
+    setOpen: (isAuthDialogOpen: boolean) => void,
     setPort: Dispatch<SetStateAction<AuthPort>>,
+    setPassword: Dispatch<SetStateAction<string>>,
     identifierValue: string
     identifier: AuthIdentifier
-    setPassword: Dispatch<SetStateAction<string>>,
 }
 
 export default function Login({ setPort, identifier, identifierValue, setOpen, setPassword }: LoginProps) {
@@ -61,8 +61,9 @@ export default function Login({ setPort, identifier, identifierValue, setOpen, s
         }
 
         const isAccountVerified = await getIsAccountVerified(email)
+        const shouldVerifyEmail = await getShouldVerifyEmail()
 
-        if(isAccountVerified) {
+        if(isAccountVerified || !shouldVerifyEmail) {
             const result = await authClient.signIn.email({
                 email: email,
                 password: formData.password,

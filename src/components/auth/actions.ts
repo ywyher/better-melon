@@ -4,6 +4,7 @@ import { AuthIdentifier } from "@/components/auth/auth";
 import { checkSchema } from "@/components/auth/check";
 import db from "@/lib/db";
 import { User, user } from "@/lib/db/schema";
+import { env } from "@/lib/env/server";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 
@@ -41,4 +42,8 @@ export async function getIsAccountVerified(email: string) {
         .where(eq(user.email, email))
 
     return data.emailVerified
+}
+
+export async function getShouldVerifyEmail() {
+    return env.RESEND_API_KEY && env.RESEND_FROM_EMAIL
 }

@@ -123,6 +123,7 @@ ANILIST_ID=your_anilist_id
 ANILIST_SECRET=your_anilist_secret
 ANILIST_REDIRECT_URL=http://localhost:3000/api/auth/oauth2/callback/anilist
 
+# OPTIONAL -> if not provided all created accounts will be unverified
 RESEND_FROM_EMAIL=noreply@yourdomain.com
 RESEND_API_KEY=your_resend_api_key
 ```

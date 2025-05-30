@@ -28,7 +28,7 @@ type FormValues = z.infer<typeof verifySchema>;
 
 type VerifyProps = { 
     setPort: Dispatch<SetStateAction<AuthPort>>,
-    setOpen: Dispatch<SetStateAction<boolean>>,
+    setOpen: (isAuthDialogOpen: boolean) => void,
     identifierValue: string
     identifier: AuthIdentifier
     password: string

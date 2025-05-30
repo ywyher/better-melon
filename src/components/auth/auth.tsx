@@ -9,7 +9,7 @@ import AnonymousLinkAccountAlert from "@/components/anonymous-link-account-alert
 import { Button } from "@/components/ui/button"
 import { User } from "@/lib/db/schema"
 import { ArrowLeft } from "lucide-react"
-import { Dispatch, SetStateAction, useState } from "react"
+import { useState } from "react"
 
 export type AuthPort = "login" | "register" | "check" | "verify"
 export type AuthIdentifier = "email" | "username"
@@ -17,7 +17,7 @@ export type AuthIdentifier = "email" | "username"
 type AuthProps = {
     user?: User
     open: boolean,
-    setOpen: Dispatch<SetStateAction<boolean>>
+    setOpen: (isAuthDialogOpen: boolean) => void
 }
 
 export default function Auth({ user, open, setOpen }: AuthProps) {
@@ -58,10 +58,11 @@ export default function Auth({ user, open, setOpen }: AuthProps) {
                 />
             )}
             {port == 'register' && (
-                <Register 
+                <Register
                     setPort={setPort}
                     email={identifierValue}
                     setPassword={setPassword}
+                    setOpen={setOpen}
                 />
             )}
             {port == 'verify' && (

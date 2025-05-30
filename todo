@@ -1,3 +1,8 @@
+the way we check for the .env on the client why requesting server .env is wrong
+just create a server action to return the values for ya
+
+check the index>header file for an error with the dialog wrapper
+
 currentyl user can create an account close the dialog without verifying then login without being verified, stop that beside making the verfication optional if resedn .env variables doesn't exist
 
 mark a wodd as kniwn
