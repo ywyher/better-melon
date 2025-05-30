@@ -27,11 +27,18 @@ export async function checkEmail({ data, identifier }: { data: z.infer<typeof ch
     }
 }
 
-export async function getEmailByUsername({ username }: { username: User['name'] }) {
+export async function getEmailByUsername(username: User['name']) {
     const [result] = await db.select().from(user)
         .where(eq(user.name, username))
 
     if(!result) return;
 
     return result.email
+}
+
+export async function getIsAccountVerified(email: string) {
+    const [data] = await db.select().from(user)
+        .where(eq(user.email, email))
+
+    return data.emailVerified
 }

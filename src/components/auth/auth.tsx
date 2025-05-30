@@ -54,6 +54,7 @@ export default function Auth({ user, open, setOpen }: AuthProps) {
                     identifierValue={identifierValue} 
                     setOpen={setOpen} 
                     identifier={identifier as AuthIdentifier}
+                    setPassword={setPassword}
                 />
             )}
             {port == 'register' && (

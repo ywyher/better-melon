@@ -14,7 +14,7 @@ import { AuthIdentifier, AuthPort } from "@/components/auth/auth";
 import LoadingButton from "@/components/loading-button";
 import { Button } from "@/components/ui/button";
 import { identifierSchema } from "@/types/auth";
-import { getEmailByUsername } from "@/components/auth/actions";
+import { getEmailByUsername, getIsAccountVerified } from "@/components/auth/actions";
 import { useQueryClient } from "@tanstack/react-query";
 import { FormField } from "@/components/form/form-field";
 
@@ -32,9 +32,10 @@ type LoginProps = {
     setPort: Dispatch<SetStateAction<AuthPort>>,
     identifierValue: string
     identifier: AuthIdentifier
+    setPassword: Dispatch<SetStateAction<string>>,
 }
 
-export default function Login({ setPort, identifier, identifierValue, setOpen }: LoginProps) {
+export default function Login({ setPort, identifier, identifierValue, setOpen, setPassword }: LoginProps) {
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const queryClient = useQueryClient()
     const isSmall = useIsSmall()
@@ -52,37 +53,54 @@ export default function Login({ setPort, identifier, identifierValue, setOpen }:
 
         let email: string | null = identifierValue;
         if(identifier == 'username') {
-            email = await getEmailByUsername({ username: identifierValue }) || null
+            email = await getEmailByUsername(identifierValue) || null
         }
-
         if(!email) {
             toast.error("Failed to get email")
             return
         }
 
-        const result = await authClient.signIn.email({
-            email: email,
-            password: formData.password,
-        });
+        const isAccountVerified = await getIsAccountVerified(email)
 
-        if(result.error) {
-            toast.error(result.error.message)
+        if(isAccountVerified) {
+            const result = await authClient.signIn.email({
+                email: email,
+                password: formData.password,
+            });
+    
+            if(result.error) {
+                toast.error(result.error.message)
+                setIsLoading(false)
+                return;
+            }
+            
+            queryClient.clear()
+            toast.success("Logged in successfully")
             setIsLoading(false)
-            return;
+            setOpen(false)
+            setPort('check')
+        }else {
+            const { error } = await authClient.emailOtp.sendVerificationOtp({
+                email: email,
+                type: "email-verification"
+            })
+            
+            if(error) {
+                toast.error(error.message)
+                setIsLoading(false)
+                return;
+            }
+    
+            setPassword(formData.password)
+            setPort('verify')
         }
-        
-        queryClient.clear()
-        toast.success("Logged in successfully")
-        setIsLoading(false)
-        setOpen(false)
-        setPort('check')
     }
 
     const onForgetPassword = async () => {
         setIsLoading(true)
         let email: string | null = identifierValue;
         if(identifier == 'username') {
-            email = await getEmailByUsername({ username: identifierValue }) || null
+            email = await getEmailByUsername(identifierValue) || null
         }
 
         if(!email) {

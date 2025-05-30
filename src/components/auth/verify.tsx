@@ -58,7 +58,7 @@ export default function Verify({
 
         let email: string | null = identifierValue;
         if(identifier == 'username') {
-            email = await getEmailByUsername({ username: identifierValue }) || null
+            email = await getEmailByUsername(identifierValue) || null
         }
 
         if(!email) {
@@ -97,7 +97,7 @@ export default function Verify({
     const handleResendOtp = async () => {
         let email: string | null = identifierValue
         if(identifier == 'username') {
-            email = await getEmailByUsername({ username: identifierValue }) || null
+            email = await getEmailByUsername(identifierValue) || null
         }
 
         if(!email) {
