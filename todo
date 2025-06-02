@@ -1,5 +1,6 @@
-in enabled-transcriptions it seems if there is one left you cant remove it ??
-it seems it doesnt really work in the first place if there are no transcriptions
+you dumb fuck enbaled-transcriptions now keep updating even if it shouldn't
+
+make sure anon activities doesn't get linked if you are loggin in and not registering
 
 If you're using Next.js you need to call router.refresh() after signing in to clear the router cache
 

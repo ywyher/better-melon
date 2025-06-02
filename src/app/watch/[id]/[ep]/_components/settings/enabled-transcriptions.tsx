@@ -26,9 +26,14 @@ export default function EnabledTranscriptions({ playerSettings, syncPlayerSettin
   const [debouncedTranscriptions] = useDebounce(selectedTranscriptions, 1000) // 1000ms debounce
 
   const hasInitializedRef = useRef(false)
+  const hasUserChangedRef = useRef(false)
+
+  const arraysEqual = (a: SubtitleTranscription[], b: SubtitleTranscription[]) => {
+    if (a.length !== b.length) return false;
+    return a.every((val, index) => val === b[index]);
+  };
 
   useEffect(() => {
-    // Only set initial values from playerSettings if we haven't done so already
     if (playerSettings && !hasInitializedRef.current) {
       setActiveTranscriptions(playerSettings.enabledTranscriptions);
       setSelectedTranscriptions(playerSettings.enabledTranscriptions);
@@ -83,13 +88,12 @@ export default function EnabledTranscriptions({ playerSettings, syncPlayerSettin
   });
 
   useEffect(() => {
-    const areTranscriptionsEqual = debouncedTranscriptions === playerSettings.enabledTranscriptions;
-    if (areTranscriptionsEqual) {
-      console.log("Skipping because transcriptions are equal");
-      return;
-    }
+    if (!hasInitializedRef.current || !hasUserChangedRef.current) return;
+    
+    if (arraysEqual(debouncedTranscriptions, playerSettings.enabledTranscriptions)) return;
+    
     mutate(debouncedTranscriptions);
-  }, [debouncedTranscriptions, playerSettings, mutate]);
+  }, [debouncedTranscriptions, mutate]);
 
   return (
     <TooltipWrapper
@@ -107,6 +111,7 @@ export default function EnabledTranscriptions({ playerSettings, syncPlayerSettin
               label: transcription,
             }))}
             onChange={(transcriptions) => {
+              hasUserChangedRef.current = true;
               setSelectedTranscriptions(transcriptions.map((transcription) => transcription.value) as SubtitleTranscription[]);
             }}
             className="w-full"
