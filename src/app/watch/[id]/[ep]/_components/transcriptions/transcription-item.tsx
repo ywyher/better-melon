@@ -65,6 +65,8 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
             || isTokenExcluded(token)
         ) return;
 
+        navigator.clipboard.writeText(token.surface_form);
+
         if (storeToken && storeToken.id === token.id) {
             // If clicking on the same token, clear it
             setToken(null);

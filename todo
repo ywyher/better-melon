@@ -1,9 +1,25 @@
-the way we check for the .env on the client why requesting server .env is wrong
-just create a server action to return the values for ya
+in enabled-transcriptions it seems if there is one left you cant remove it ??
+it seems it doesnt really work in the first place if there are no transcriptions
+
+If you're using Next.js you need to call router.refresh() after signing in to clear the router cache
+
+prefetch funtioanlity is trying to refetch next episode on movies! !
+also the delay doesnt get set for whatever reason !
+also when not fullscreen you make the font smaller remove that since if we remove the panel its too small
+styles controlers doesnt work too ?
+add a button on the panel to take you to the current active cue
+
+check out
+1- https://github.com/shaka-project/shaka-player
+2- https://github.com/zhw2590582/ArtPlayer
+
+so when we log as anon we should invalidate the session query
+
+ability to move the transcriptoins around freely through a handler on the top left or something
+
+animekai as a provider
 
 check the index>header file for an error with the dialog wrapper
-
-currentyl user can create an account close the dialog without verifying then login without being verified, stop that beside making the verfication optional if resedn .env variables doesn't exist
 
 mark a wodd as kniwn
 custom styles foe known words
@@ -13,18 +29,8 @@ each with its custom styles
 
 support for furigana
 
-make resend optional so anyone can self host the app with full functioanlity
-
 for is refetching add a loading overlay on the refetchinf thing
 1- the subtitle styles component
-
-better error handling
-1- in case subtitle files don't exist for a certain episode yet
-> currently on this route http://localhost:3000/watch/149118/8
-
-http://localhost:3000/watch/161645/24 shows no subtitle found even tho there is
-apothecary season 2 shows 24 episodes even tho they only 19
-> anilist adds anime with the total planned episode count, even if not all episodes have aired yet.
 
 we changed how displayValue works in the use-styles-controller maybe in the others too ?
 
@@ -41,9 +47,6 @@ begin where you left off > save where the user ended last time they watched a ce
 prob not that important tho 
 -> maybe the best way to implement this is to save watched episode an a history table and each video with its own how much the user have seen of it
 
-subtitles sometime take quite a bit of time before being addded to jimaku
-so in that case give a warning to the user and stop the hook before the give an error
-
 add the ability to disable auto scroll to the current cue and the ability to customize the countdown when the user is scrolling before it returns to the current cue
 
 update the skeletons for general settings and subtitle styles since you chagned the content
@@ -56,8 +59,6 @@ watch or info page
 maybe on the info page if its an anime of 1 episodes just prefetch it right away
 
 auto add to list
-
-so when we log as anon we should invalidate the session query a7a
 
 dialog z-index > toast z-index => bad UX 
 i suppose it can be fixed using createPortal from react

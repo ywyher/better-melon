@@ -83,9 +83,11 @@ export default function EnabledTranscriptions({ playerSettings, syncPlayerSettin
   });
 
   useEffect(() => {
-    if((!debouncedTranscriptions.length && hasInitializedRef) 
-      || !playerSettings.enabledTranscriptions.length) return;
-    if(debouncedTranscriptions == playerSettings.enabledTranscriptions) return;
+    const areTranscriptionsEqual = debouncedTranscriptions === playerSettings.enabledTranscriptions;
+    if (areTranscriptionsEqual) {
+      console.log("Skipping because transcriptions are equal");
+      return;
+    }
     mutate(debouncedTranscriptions);
   }, [debouncedTranscriptions, playerSettings, mutate]);
 

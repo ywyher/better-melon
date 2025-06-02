@@ -37,9 +37,9 @@ export const getTokenStyles = (
       ? '-1px -1px 0px rgba(255, 255, 255, 0.5), 1px 1px 1px rgba(0, 0, 0, 0.8)'
       : 'none',
       
-    WebkitTextStroke: styles.default.textShadow === 'outline'
-      ? (isFullscreen ? '.5px black' : '.3px black') 
-      : 'none',
+    // WebkitTextStroke: styles.default.textShadow === 'outline'
+    //   ? (isFullscreen ? '.5px black' : '.3px black') 
+    //   : 'none',
   };
   
   const activeFontSize = isFullscreen ? styles.active.fontSize || defaultSubtitleStyles.active.fontSize : ((styles.active.fontSize || defaultSubtitleStyles.active.fontSize)/1.5);
@@ -61,9 +61,9 @@ export const getTokenStyles = (
       ? '-1px -1px 0px rgba(255, 255, 255, 0.5), 1px 1px 1px rgba(0, 0, 0, 0.8)'
       : 'none',
       
-    WebkitTextStroke: styles.active.textShadow === 'outline'
-      ? (isFullscreen ? '.5px black' : '.3px black') 
-      : 'none',
+    // WebkitTextStroke: styles.active.textShadow === 'outline'
+    //   ? (isFullscreen ? '.5px black' : '.3px black') 
+    //   : 'none',
   };
 
   return {
