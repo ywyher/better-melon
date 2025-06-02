@@ -7,6 +7,9 @@ type DefinitionStore = {
 
     token: SubtitleToken | null;
     setToken: (token: DefinitionStore['token']) => void;
+
+    definition: string | null;
+    setDefinition: (defintion: DefinitionStore['definition']) => void;
     
     addToAnki: boolean;
     setAddToAnki: (token: DefinitionStore['addToAnki']) => void;
@@ -19,6 +22,9 @@ export const useDefinitionStore = create<DefinitionStore>()(
 
         token: null,
         setToken: (token: DefinitionStore['token']) => set({ token }),
+
+        definition: null,
+        setDefinition: (definition: DefinitionStore['definition']) => set({ definition }),
 
         addToAnki: true,
         setAddToAnki: (addToAnki: DefinitionStore['addToAnki']) => set({ addToAnki }),

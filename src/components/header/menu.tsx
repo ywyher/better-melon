@@ -46,7 +46,7 @@ export function Menu({ isSmall }: { isSmall: boolean }) {
     }
 
     queryClient.invalidateQueries({ queryKey: userQueries.session._def })
-    router.refresh()
+    router.push('/')
     setOpen(false)
   }
 

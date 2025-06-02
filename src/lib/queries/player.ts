@@ -9,6 +9,6 @@ export const playerQueries = createQueryKeys('player', {
           const episodeData = await getEpisodeData(animeId, episodeNumber, 'hianime')
 
           return episodeData as AnimeEpisodeData
-        },
+        }
     }),
 })

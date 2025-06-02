@@ -5,7 +5,6 @@ import { usePlayerStore } from "@/lib/stores/player-store";
 import type { SubtitleCue, SubtitleTranscription } from "@/types/subtitle";
 import { closestCenter, DndContext, type DragEndEvent, KeyboardSensor, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from "@dnd-kit/sortable";
-import { useMediaState } from "@vidstack/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { TranscriptionQuery, TranscriptionStyles } from "@/app/watch/[id]/[ep]/types";
 import { useDebounce } from "@/components/multiple-selector";
@@ -16,6 +15,7 @@ import { useMutation } from "@tanstack/react-query";
 import { SyncStrategy } from "@/types";
 import { showSyncSettingsToast } from "@/components/sync-settings-toast";
 import { Button } from "@/components/ui/button";
+import { useMediaState } from "@vidstack/react";
 
 export default function SubtitleTranscriptions({ transcriptions, styles, syncPlayerSettings, cuePauseDuration, definitionTrigger }: {
   transcriptions: TranscriptionQuery[];
@@ -46,7 +46,7 @@ export default function SubtitleTranscriptions({ transcriptions, styles, syncPla
   const currentTime = useMediaState('currentTime', player);
   // const isFullscreen = true;
   // const controlsVisible = true;
-  // const currentTime = 1200;
+  // const currentTime = 200;
 
   const sensors = useSensors(
     useSensor(PointerSensor, {

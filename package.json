@@ -34,6 +34,7 @@
     "@radix-ui/react-switch": "^1.2.2",
     "@radix-ui/react-tabs": "^1.1.9",
     "@radix-ui/react-tooltip": "^1.2.4",
+    "@scriptin/jmdict-simplified-types": "^3.6.1",
     "@sglkc/kuroshiro": "^1.0.1",
     "@sglkc/kuroshiro-analyzer-kuromoji": "^1.0.1",
     "@t3-oss/env-nextjs": "^0.13.4",

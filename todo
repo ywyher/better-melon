@@ -1,7 +1,3 @@
-you dumb fuck enbaled-transcriptions now keep updating even if it shouldn't
-
-make sure anon activities doesn't get linked if you are loggin in and not registering
-
 If you're using Next.js you need to call router.refresh() after signing in to clear the router cache
 
 prefetch funtioanlity is trying to refetch next episode on movies! !

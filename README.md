@@ -11,9 +11,6 @@ Animelon doesn’t provide all animes, and its entries are rarely updated, makin
 > [!warning]
 > This project is still in beta
 
-> [!note]
-> The only crucial feature not yet implemented is definition-on-select functionality. You can use Yomitan as an alternative for now.
-
 ## Completed Features
 
 - Search/Filtering system
@@ -50,12 +47,12 @@ Animelon doesn’t provide all animes, and its entries are rarely updated, makin
 - Pause at each subtitle
   1. Unpause duration -> duration before the player unpauses it self
 - Definition on select or hover setting
-- .ass subtitle support
+- .ass/.srt/.vtt subtitle support
+- Definition-on-select functionality
 
 ## Planned Features
 - More providers
 - Audio support for anki
-- Definition-on-select functionality
 - User-friendly/modern UI redesign
 
 # Better Melon Self-Hosting Guide
@@ -98,7 +95,8 @@ docker run -d \
 ```
 
 ### 4. Register for External Services
-- Setup better-melon-mapper by following the steps shown [here](https://github.com/ywyher/better-melon-mapper)
+- Setup better-melon-api by following the steps shown [here](https://github.com/ywyher/better-melon-api)
+- Setup better-melon-dictionary-indexer by following the steps shown [here](https://github.com/ywyher/better-melon-dictionary-indexer)
 - Setup shinra proxy by following the steps shown [here](https://github.com/xciphertv/shrina-proxy)
 - Set up AniList API credentials at [anilist.co/settings/developer](https://anilist.co/settings/developer)
 - Register for [Resend](https://resend.com/) for email functionality
@@ -114,7 +112,7 @@ DATABASE_URL=postgres://postgres:postgres@localhost:5432/better-melon
 NEXT_PUBLIC_BETTER_AUTH_URL=http://localhost:3000
 BETTER_AUTH_SECRET=your_secret_key_here
 
-MAPPER_URL=http://localhost:6969/api
+API_URL=http://localhost:6969/api
 
 NEXT_PUBLIC_PROXY_URL=http://localhost:8080/proxy
 NEXT_PUBLIC_ANKI_CONNECT_URL=http://localhost:8765
@@ -147,5 +145,6 @@ pnpm start  # or npm start
 - [Anilist](https://anilist.co/) -> Used to fetch anime general data
 - [Ciphertv](https://github.com/xciphertv/shrina-proxy) -> For the proxy <3
 - [Better Auth](https://better-auth.com/) -> Simply the best auth library out there
-- [Better Melon Mapper](https://github.com/ywyher/better-melon-mapper) -> our own mapper lol
+- [Better Melon Api](https://github.com/ywyher/better-melon-api) -> our own api
+- [Better Melon Dictionary Indexer](https://github.com/ywyher/better-melon-dictionary-indexer) -> our own dictionary indexer
 - [ywyh (Me)](https://github.com/ywyher) – for being goated ig

@@ -14,12 +14,12 @@ import PlayerSkeleton from '@/app/watch/[id]/[ep]/_components/player/player-skel
 import { useThrottledCallback } from 'use-debounce';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import DefinitionCard from '@/components/definition-card';
 import { generateWebVTTFromSkipTimes } from '@/lib/subtitle/utils';
 import SubtitleTranscriptionsContainer from '@/app/watch/[id]/[ep]/_components/transcriptions/transcriptions-container';
 import { env } from '@/lib/env/client';
 import { TranscriptionQuery, TranscriptionStyles } from '@/app/watch/[id]/[ep]/types';
 import { GeneralSettings, PlayerSettings, SubtitleSettings } from '@/lib/db/schema';
+import DefinitionCard from '@/components/definition-card/definition-card';
 
 type PlayerProps = {
   animeId: string;

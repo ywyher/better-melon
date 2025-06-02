@@ -1,8 +1,8 @@
 "use client"
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { invokeAnkiConnect } from "@/lib/anki";
 import { useDefinitionStore } from "@/lib/stores/definition-store";
 import { X } from "lucide-react";
@@ -19,9 +19,10 @@ import { usePlayerStore } from '@/lib/stores/player-store';
 import { takeSnapshot } from '@/lib/anki';
 import { useQuery } from '@tanstack/react-query';
 import { ankiQueries } from '@/lib/queries/anki';
+import DefinitionCardContent from '@/components/definition-card/definition-card-content';
 
 export default function DefinitionCard() {
-  const { sentence, setSentence, setToken, token, addToAnki } = useDefinitionStore()
+  const { sentence, setSentence, setToken, token, addToAnki, definition } = useDefinitionStore()
   const setActiveTokenId = usePlayerStore((state) => state.setActiveTokenId)
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const player = usePlayerStore((state) => state.player);
@@ -42,7 +43,7 @@ export default function DefinitionCard() {
       x: position.x + delta.x,
       y: position.y + delta.y,
     });
-  };
+  }
 
   const handleAddNote = async () => {
     if(!preset || !token || !sentence) {
@@ -58,6 +59,8 @@ export default function DefinitionCard() {
           ? token.surface_form
           : value === "sentence"
           ? sentence
+          : value == 'definition'
+          ? definition
           : ""
       };
     });
@@ -144,15 +147,16 @@ export default function DefinitionCard() {
             <X />
           </Button>
         </CardHeader>
+        <DefinitionCardContent query={token?.surface_form}  />
         {addToAnki && (
-          <CardContent className="p-0">
+          <CardFooter className="p-0">
             <Button
               className="w-full"
               onClick={() => handleAddNote()}
             >
               Add to anki
             </Button>
-          </CardContent>
+          </CardFooter>
         )}
       </Card>
     )

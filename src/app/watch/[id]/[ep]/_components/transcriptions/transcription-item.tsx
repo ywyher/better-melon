@@ -9,7 +9,6 @@ import { cn } from '@/lib/utils';
 import { TranscriptionStyleSet } from '@/app/watch/[id]/[ep]/types';
 import { SubtitleSettings } from '@/lib/db/schema';
 import { isTokenExcluded } from '@/lib/subtitle/utils';
-import { StyleRegistry } from 'styled-jsx';
 
 type TranscriptionItemProps = {
   transcription: SubtitleTranscription;

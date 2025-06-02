@@ -9,7 +9,7 @@ export const env = createEnv({
 
     BETTER_AUTH_SECRET: z.string().min(1),
     
-    MAPPER_URL: z.string().url(),
+    API_URL: z.string().url(),
     
     ANILIST_ID: z.string().min(1),
     ANILIST_SECRET: z.string().min(1),
