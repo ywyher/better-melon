@@ -1,15 +1,25 @@
-import { getJMdictEntries } from "@/components/definition-card/actions";
+import { getDictionaryEntries, getJMdictEntries } from "@/components/definition-card/actions";
 import { createQueryKeys } from "@lukemorales/query-key-factory";
-import { JMdictWord } from "@scriptin/jmdict-simplified-types";
 
 export const definitionQueries = createQueryKeys('definition', {
-    definition: (query: string, setDefinition: (defintion: string) => void) => ({
-        queryKey: ['definition', query],
+    jmdict: (query: string, setDefinition: (definition: string) => void) => ({
+        queryKey: ['definition', 'jmdict', query],
         queryFn: async () => {
-          const entries = await getJMdictEntries(query)
+          const { entries, isFuzzy } = await getJMdictEntries(query)
 
-          setDefinition(entries[0].sense[0].gloss[0].text || "Nothing found")
-          return entries as JMdictWord[]
+          setDefinition(entries[0]?.sense[0]?.gloss[0]?.text || "Nothing found")
+          return {
+            entries,
+            isFuzzy
+          }
+        },
+    }),
+    dictionary: (query: string) => ({
+        queryKey: ['definition', 'dictionary', query],
+        queryFn: async () => {
+          const data = await getDictionaryEntries(query)
+
+          return data
         },
     }),
 })

@@ -41,12 +41,12 @@ export default function SubtitleTranscriptions({ transcriptions, styles, syncPla
   // This would stop the player from repausing it self if we are still in the small time window
   const lastPauseTime = useRef<number>(0);
     
-  const isFullscreen = useMediaState('fullscreen', player);
-  const controlsVisible = useMediaState('controlsVisible', player);
-  const currentTime = useMediaState('currentTime', player);
-  // const isFullscreen = true;
-  // const controlsVisible = true;
-  // const currentTime = 200;
+  // const isFullscreen = useMediaState('fullscreen', player);
+  // const controlsVisible = useMediaState('controlsVisible', player);
+  // const currentTime = useMediaState('currentTime', player);
+  const isFullscreen = true;
+  const controlsVisible = true;
+  const currentTime = 200;
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -261,7 +261,7 @@ export default function SubtitleTranscriptions({ transcriptions, styles, syncPla
 
   return (
     <div
-      className="absolute left-1/2 transform -translate-x-1/2 flex flex-col items-center w-[100%]"
+      className="absolute left-1/2 transform -translate-x-1/2 flex flex-col w-[100%]"
       style={wrapperStyles}
     >
       <Button

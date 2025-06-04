@@ -126,7 +126,7 @@ export const mapScreenshotNamingPatternValues = (pattern: string, animeMetadata:
   
   // Replace {title} placeholder
   if (result.includes('{title}')) {
-    result = result.replace(/{title}/g, animeMetadata.title || '');
+    result = result.replace(/{title}/g, animeMetadata.title.toLowerCase().replace(' ', '_') || '');
   }
   
   // Replace {counter} placeholder

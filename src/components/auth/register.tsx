@@ -51,7 +51,7 @@ export default function Register({ setPort, email, setPassword, setOpen }: Regis
         const result = await authClient.signUp.email({
             email: email || formData.email,
             password: formData.password,
-            name: formData.username,
+            name: "",
         });
 
         if(result.error) {

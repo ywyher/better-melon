@@ -1,0 +1,1 @@
+export type Index = 'jmdict' | 'jmnedict' | 'kanjidic2'

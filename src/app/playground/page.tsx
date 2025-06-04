@@ -15,7 +15,7 @@ export default function Playground() {
   
   useEffect(() => {
     setEnglishSubtitleUrl("https://s.megastatics.com/subtitle/92580649ff01096b4a0de6428f58bedb/eng-0.vtt");
-    setActiveTranscriptions(['japanese']);
+    setActiveTranscriptions(['japanese', 'english']);
     setActiveSubtitleFile({
       file: {
         last_modified: "2024-04-28T16:23:56.084911647Z",
@@ -31,7 +31,7 @@ export default function Playground() {
   const { styles } = useSubtitleStyles();
 
   return (
-    <div className="relative w-screen h-screen">
+    <div className="relative h-screen">
       <DefinitionCard />
       <SubtitleTranscriptions
         styles={styles}        
