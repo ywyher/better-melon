@@ -1,5 +1,6 @@
 'use client'
 
+import JMdictSection from "@/components/definition-card/sections/jmdict/section"
 import { useDefinition } from "@/lib/hooks/use-definition"
 import { JMdictWord } from "@scriptin/jmdict-simplified-types"
 
@@ -21,7 +22,7 @@ export default function DefinitionCardContent({
     <div className="flex flex-col gap-2">
       {isExpanded ? (
         <div>
-          <>{JSON.stringify(dictionary, null, 2)}</>
+          <JMdictSection entries={dictionary?.find(d => d.index == 'jmdict')?.entries as JMdictWord[]} />
         </div>
       ): (
         <p className="text-red-500">

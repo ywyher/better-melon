@@ -1,3 +1,10 @@
+
+useful for domains shit:
+https://regery.com/
+https://receive-smss.com/
+
+forget password doesnt work
+
 If you're using Next.js you need to call router.refresh() after signing in to clear the router cache
 
 prefetch funtioanlity is trying to refetch next episode on movies! !

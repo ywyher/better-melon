@@ -11,7 +11,8 @@ import { cn } from "@/lib/utils";
 import { useDraggable } from "@dnd-kit/core";
 import { useQuery } from "@tanstack/react-query";
 import { Expand, Plus, Shrink, X } from "lucide-react";
-import { Dispatch, SetStateAction } from "react";
+import { useRouter } from "next/navigation";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import { toast } from "sonner";
 
 type DefinitionCardBaseProps = {
@@ -30,13 +31,14 @@ export default function DefinitionCardBase({
   isExpanded,
   setIsExpanded
 }: DefinitionCardBaseProps) {
+  const router = useRouter()
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: 'definition-card',
   });
   
   const { data: preset } = useQuery(ankiQueries.defaultPreset())
   const { sentence, setSentence, setToken, token, addToAnki, definition } = useDefinitionStore()
-  
+
   const setActiveTokenId = usePlayerStore((state) => state.setActiveTokenId)
   const player = usePlayerStore((state) => state.player);
 
@@ -48,8 +50,21 @@ export default function DefinitionCardBase({
   };
 
   const handleAddNote = async () => {
-    if(!preset || !token || !sentence) {
-      toast.warning("Setup anki configurations thorugh /profile/settings")
+    const connection = await invokeAnkiConnect('deckNames', 6)
+    if(connection.error) {
+      toast.warning("Make sure to open an instance of Anki")
+      return
+    }
+
+    if(!preset?.fields || !token || !sentence) {
+      toast.warning("You have to setup anki configurations.", {
+        action: {
+          onClick: () => {
+            router.push('/settings/anki')
+          },
+          label: 'Go!'
+        }
+      })
       return;
     }
   
@@ -130,7 +145,7 @@ export default function DefinitionCardBase({
       className={cn(
         "flex flex-col gap-5 min-w-[300px] p-3 z-50",
         isExpanded ?
-          "w-[100%] h-[calc(100vh-(var(--header-height)*1.5))]"
+          "w-[100%] h-fit"
         :
           "absolute top-5 left-1/2 -translate-x-1/2 cursor-move shadow-lg",
       )}
@@ -163,7 +178,7 @@ export default function DefinitionCardBase({
       </CardHeader>
       <DefinitionCardContent
         isExpanded={isExpanded}
-        query={token?.surface_form}
+        query={'見る'}
       />
     </Card>
   )
