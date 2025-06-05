@@ -13,7 +13,8 @@ type Kanjidic2Props = {
 }
 
 export default function Kanjidic2Section({ entries }: Kanjidic2Props) {
-return (
+  if(!entries?.length) return
+  return (
     <div className="flex flex-col gap-3">
       <Kanjidic2Header length={entries.length} />
       {entries.map((entry, idx) => (
@@ -46,7 +47,7 @@ return (
               ))}
             </div>
           </div>
-          <Separator />
+          {idx < entries.length - 1 && <Separator />}
         </div>
       ))}
     </div>

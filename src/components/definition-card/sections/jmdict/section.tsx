@@ -15,7 +15,7 @@ export default function JMdictSection({ entries }: JMdictSectionProps) {
 
   return (
     <div className="flex flex-col gap-5">
-      {entries.map((entry) => (
+      {entries.map((entry, idx) => (
         <div key={entry.id} className="flex flex-col justify-between gap-5">
           <div className="px-3">
             {/* Main character display */}
@@ -60,7 +60,7 @@ export default function JMdictSection({ entries }: JMdictSectionProps) {
               </div>
             </div>
           </div>
-          <Separator />
+          {idx < entries.length - 1 && <Separator />}
         </div>
       ))}
     </div>

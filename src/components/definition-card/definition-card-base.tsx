@@ -178,7 +178,7 @@ export default function DefinitionCardBase({
       </CardHeader>
       <DefinitionCardContent
         isExpanded={isExpanded}
-        query={'学校'}
+        query={token?.surface_form}
       />
     </Card>
   )

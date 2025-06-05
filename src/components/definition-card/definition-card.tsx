@@ -34,7 +34,7 @@ export default function DefinitionCard() {
     });
   }
 
-  // if(!sentence || !token) return;
+  if(!sentence || !token) return;
 
   return (
     <>
