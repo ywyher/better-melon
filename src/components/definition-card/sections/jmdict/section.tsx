@@ -1,12 +1,13 @@
-import JMdictCharacter from "@/components/definition-card/sections/jmdict/character"
+import JMdictWord from "@/components/definition-card/sections/jmdict/character"
 import JMdictForms from "@/components/definition-card/sections/jmdict/forms"
 import JMdictMeaning from "@/components/definition-card/sections/jmdict/gloss"
+import DotSeparator from "@/components/dot-separator"
 import { Separator } from "@/components/ui/separator"
-import { JMdictWord } from "@scriptin/jmdict-simplified-types"
+import type { JMdictWord as TJMdictWord } from "@scriptin/jmdict-simplified-types"
 import { Dot } from "lucide-react"
 
 type JMdictSectionProps = {
-  entries: JMdictWord[]
+  entries: TJMdictWord[]
 }
 
 export default function JMdictSection({ entries }: JMdictSectionProps) {
@@ -15,13 +16,12 @@ export default function JMdictSection({ entries }: JMdictSectionProps) {
   return (
     <div className="flex flex-col gap-5">
       {entries.map((entry) => (
-        <div className="flex flex-col justify-between gap-5">
+        <div key={entry.id} className="flex flex-col justify-between gap-5">
           <div className="px-3">
             {/* Main character display */}
             <div className="mb-4">
-              <JMdictCharacter character={entry.kanji[0] || entry.kana[0]} />
+              <JMdictWord word={entry.kanji[0] || entry.kana[0]} />
             </div>
-            
             {/* Content grid */}
             <div className="grid grid-cols-12 gap-6">
               {/* Forms section */}
@@ -48,9 +48,7 @@ export default function JMdictSection({ entries }: JMdictSectionProps) {
                               key={`${entry.id}-sense-${senseIdx}-gloss-${glossIdx}`} 
                               gloss={gloss}
                               append={
-                                glossIdx < sense.gloss.length - 1 ? (
-                                  <span className="text-gray-400 mx-1"><Dot /></span>
-                                ) : null
+                                glossIdx < sense.gloss.length - 1 && <DotSeparator />
                               }
                             />
                           ))}

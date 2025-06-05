@@ -1,8 +1,9 @@
 'use client'
 
 import JMdictSection from "@/components/definition-card/sections/jmdict/section"
+import Kanjidic2Section from "@/components/definition-card/sections/kanjidic2/section"
 import { useDefinition } from "@/lib/hooks/use-definition"
-import { JMdictWord } from "@scriptin/jmdict-simplified-types"
+import { JMdictWord, Kanjidic2Character } from "@scriptin/jmdict-simplified-types"
 
 type DefinitionCardContentProps = {
   isExpanded: boolean
@@ -21,8 +22,13 @@ export default function DefinitionCardContent({
   return (
     <div className="flex flex-col gap-2">
       {isExpanded ? (
-        <div>
-          <JMdictSection entries={dictionary?.find(d => d.index == 'jmdict')?.entries as JMdictWord[]} />
+        <div className="grid grid-cols-12 gap-4">
+          <div className="col-span-8">
+            <JMdictSection entries={dictionary?.find(d => d.index == 'jmdict')?.entries as JMdictWord[]} />
+          </div>
+            <div className="col-span-4">
+              <Kanjidic2Section entries={dictionary?.find(d => d.index == 'kanjidic2')?.entries as Kanjidic2Character[]} />
+            </div>
         </div>
       ): (
         <p className="text-red-500">

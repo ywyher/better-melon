@@ -1,15 +1,15 @@
 import { Badge } from "@/components/ui/badge"
-import { JMdictKana, JMdictKanji } from "@scriptin/jmdict-simplified-types"
+import type { JMdictKana, JMdictKanji } from "@scriptin/jmdict-simplified-types"
 
-type JMdictCharacterProps = {
-  character: JMdictKanji | JMdictKana
+type JMdictWordProps = {
+  word: JMdictKanji | JMdictKana
 }
 
-export default function JMdictCharacter({ character }: JMdictCharacterProps) {
+export default function JMdictWord({ word }: JMdictWordProps) {
   return (
     <div className="flex flex-col gap-3">
-      <p>{character.text}</p>
-      {character.common && <Badge variant="secondary">common word</Badge>}
+      <p>{word.text}</p>
+      {word.common && <Badge variant="secondary">common word</Badge>}
     </div>
   )
 }

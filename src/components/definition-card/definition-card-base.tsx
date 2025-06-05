@@ -178,7 +178,7 @@ export default function DefinitionCardBase({
       </CardHeader>
       <DefinitionCardContent
         isExpanded={isExpanded}
-        query={'見る'}
+        query={'学校'}
       />
     </Card>
   )

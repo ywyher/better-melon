@@ -1,3 +1,4 @@
+import DotSeparator from "@/components/dot-separator"
 import { JMdictKana, JMdictKanji } from "@scriptin/jmdict-simplified-types"
 import { Dot } from "lucide-react"
 import { Fragment } from "react"
@@ -22,9 +23,7 @@ export default function JMdictForms({ kanji, kana }: JMdictFormsProps) {
         {allForms.map((form, index) => (
           <Fragment key={`form-${index}`}>
             <span className="text-gray-300 font-medium">{form.text}</span>
-            {index < allForms.length - 1 && (
-              <span className="text-gray-400 mx-1"><Dot /></span>
-            )}
+            {index < allForms.length - 1 && <DotSeparator />}
           </Fragment>
         ))}
       </div>
