@@ -31,7 +31,7 @@ export const useDefinitionStore = create<DefinitionStore>()(
         position: { x: 0, y: 0 },
         setPosition: (position: DefinitionStore['position']) => set({ position }),
 
-        isExpanded: false,
+        isExpanded: true,
         setIsExpanded: (isExpanded: DefinitionStore['isExpanded']) => set({ isExpanded }),
 
         sentences: {

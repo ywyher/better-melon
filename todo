@@ -1,3 +1,5 @@
+"sentence-kana": sentenceKanji?.text, in jmdict kanji, we gotta convert it :(
+
 we have to implement the delay in transcriptionsLookup 
 
 for pos join the array instad of [0]

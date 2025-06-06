@@ -23,7 +23,7 @@ export default function JMdictKanji({ kanji, kana, pos, definition, sentenceEngl
       "sentence-english": sentenceEnglish?.text,
       "sentence-kana": toKana(sentenceKanji?.text),
       "part-of-speech": pos
-        ?.map(p => jmdictTags[p] || p) // Get tag value or fallback to original if not found
+        ?.map(p => jmdictTags[p] || p)
         .join(', ')
     },
   })
