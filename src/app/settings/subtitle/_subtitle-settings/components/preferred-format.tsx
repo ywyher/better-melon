@@ -31,7 +31,7 @@ export default function PreferredFormat({ value }: {
                 <div className="w-full md:col-span-4 flex flex-row gap-3">
                     <SelectInput 
                         value={displayValue || ""}
-                        onChange={v => onSubmit(v as SubtitleSettings['preferredFormat'])}
+                        onValueChange={v => onSubmit(v as SubtitleSettings['preferredFormat'])}
                         disabled={isLoading}
                         options={subtitleFormats.map((f) => {
                             return {

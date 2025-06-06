@@ -4,6 +4,7 @@ import DefinitionCardContent from "@/components/definition-card/definition-card-
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { invokeAnkiConnect, takeSnapshot } from "@/lib/anki";
+import useAddToAnki from "@/lib/hooks/use-add-to-anki";
 import { ankiQueries } from "@/lib/queries/anki";
 import { useDefinitionStore } from "@/lib/stores/definition-store";
 import { usePlayerStore } from "@/lib/stores/player-store";
@@ -12,7 +13,7 @@ import { useDraggable } from "@dnd-kit/core";
 import { useQuery } from "@tanstack/react-query";
 import { Expand, Plus, Shrink, X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Dispatch, SetStateAction, useEffect } from "react";
+import { Dispatch, SetStateAction } from "react";
 import { toast } from "sonner";
 
 type DefinitionCardBaseProps = {
@@ -31,94 +32,24 @@ export default function DefinitionCardBase({
   isExpanded,
   setIsExpanded
 }: DefinitionCardBaseProps) {
-  const router = useRouter()
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: 'definition-card',
   });
-  
-  const { data: preset } = useQuery(ankiQueries.defaultPreset())
-  const { sentence, setSentence, setToken, token, addToAnki, definition } = useDefinitionStore()
 
+  const { setSentence, setToken, addToAnki: isAddToAnki, sentence, token, definition } = useDefinitionStore()
   const setActiveTokenId = usePlayerStore((state) => state.setActiveTokenId)
-  const player = usePlayerStore((state) => state.player);
-
+  
+  const { addToAnki } = useAddToAnki({ 
+    word: token?.surface_form,
+    sentence,
+    definition
+  })
   
   const style = transform ? {
     transform: `translate3d(${position.x + transform.x}px, ${position.y + transform.y}px, 0)`,
   } : {
     transform: `translate3d(${position.x}px, ${position.y}px, 0)`,
   };
-
-  const handleAddNote = async () => {
-    const connection = await invokeAnkiConnect('deckNames', 6)
-    if(connection.error) {
-      toast.warning("Make sure to open an instance of Anki")
-      return
-    }
-
-    if(!preset?.fields || !token || !sentence) {
-      toast.warning("You have to setup anki configurations.", {
-        action: {
-          onClick: () => {
-            router.push('/settings/anki')
-          },
-          label: 'Go!'
-        }
-      })
-      return;
-    }
-  
-    const noteFields = Object.entries(preset.fields)
-    .filter(([, value]) => value)
-    .map(([key, value]) => {
-      return {
-        [key]: value === "expression"
-          ? token.surface_form
-          : value === "sentence"
-          ? sentence
-          : value == 'definition'
-          ? definition
-          : ""
-      };
-    });
-
-    const noteOptions = {
-      "note": {
-        "deckName": preset.deck,
-        "modelName": preset.model,
-        "fields": noteFields.reduce((acc, obj) => ({ ...acc, ...obj }), {}),
-        "options": {
-          "allowDuplicate": false,
-          "duplicateScope": "deck",
-          "duplicateScopeOptions": {
-            "deckName": "Default",
-            "checkChildren": false,
-            "checkAllModels": false
-          }
-        },
-        "tags": [
-          "better-melon"
-        ],
-        "picture": (Object.entries(preset.fields).find(([,value]) => value == 'image') && player.current) ? [
-          {
-            "data": takeSnapshot(player.current),
-            "filename": `frame_${Date.now()}.png`,
-            "fields": [
-              "Image"
-            ]
-          }
-        ] : undefined
-      }
-    };
-
-    const { error } = await invokeAnkiConnect(preset.isGui ? 'guiAddCards' : 'addNote', 6, noteOptions)
-  
-    if(error) {
-      toast.error(error)
-    } else {
-      toast.success("Note created successfully")
-    }
-  }
 
   const handleExpand = () => {
     if(!isExpanded) {
@@ -134,7 +65,6 @@ export default function DefinitionCardBase({
     setToken(null)
     setActiveTokenId(null)
   }
-
 
   return (
     <Card
@@ -153,10 +83,10 @@ export default function DefinitionCardBase({
       <CardHeader className="flex flex-row justify-between items-center p-0">
         <CardTitle>{token?.surface_form}</CardTitle>
         <div className='flex flex-row gap-2'>
-          {addToAnki && (
+          {isAddToAnki && (
             <Button
               className="cursor-pointer z-20 rounded-full p-1 w-7 h-7"
-              onClick={() => handleAddNote()}
+              onClick={() => addToAnki()}
             >
               <Plus />
             </Button>
@@ -178,7 +108,8 @@ export default function DefinitionCardBase({
       </CardHeader>
       <DefinitionCardContent
         isExpanded={isExpanded}
-        query={token?.surface_form}
+        // query={token?.surface_form}
+        query={'見る'}
       />
     </Card>
   )

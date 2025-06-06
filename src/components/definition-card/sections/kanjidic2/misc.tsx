@@ -1,4 +1,4 @@
-import type { Kanjidic2Misc } from "@scriptin/jmdict-simplified-types"
+import type { Kanjidic2Misc } from "@/types/kanjidic2"
 
 type Kanjidic2MiscProps ={
   misc: Kanjidic2Misc

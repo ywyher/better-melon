@@ -21,7 +21,6 @@ export default function AnkiPreset() {
     useEffect(() => {
         if (presets && presets.length > 0) {
             const defaultPreset = presets.find(preset => preset.isDefault === true)
-            
             setSelectedPreset(defaultPreset?.id || "new")
         }
     }, [presets])

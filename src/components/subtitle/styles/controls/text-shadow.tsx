@@ -34,7 +34,7 @@ export default function TextShadowController({
       <SelectInput 
         options={textShadowOptions} 
         placeholder="Select text shadow"
-        onChange={(v) => onSubmit(v)}
+        onValueChange={(v) => onSubmit(v)}
         disabled={isLoading}
         value={displayValue}
       />

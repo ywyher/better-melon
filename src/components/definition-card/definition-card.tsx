@@ -12,11 +12,8 @@ import DefinitionCardBase from '@/components/definition-card/definition-card-bas
 import { useDefinitionStore } from '@/lib/stores/definition-store';
 
 export default function DefinitionCard() { 
-  const sentence = useDefinitionStore((state) => state.sentence)
-  const token = useDefinitionStore((state) => state.token)
-  
   const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [isExpanded, setIsExpanded] = useState<boolean>(false)
+  const [isExpanded, setIsExpanded] = useState<boolean>(true)
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -34,7 +31,7 @@ export default function DefinitionCard() {
     });
   }
 
-  if(!sentence || !token) return;
+  // if(!sentence || !token) return;
 
   return (
     <>

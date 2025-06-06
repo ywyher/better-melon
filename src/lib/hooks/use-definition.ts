@@ -1,6 +1,6 @@
 import { definitionQueries } from "@/lib/queries/definition";
 import { useDefinitionStore } from "@/lib/stores/definition-store";
-import { JMdictWord } from "@scriptin/jmdict-simplified-types";
+import type { JMdictWord } from "@/types/jmdict";
 import { useQuery } from "@tanstack/react-query";
 
 type useDefinitionProps = {

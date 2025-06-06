@@ -1,10 +1,10 @@
 import JMdictWord from "@/components/definition-card/sections/jmdict/character"
 import JMdictForms from "@/components/definition-card/sections/jmdict/forms"
-import JMdictMeaning from "@/components/definition-card/sections/jmdict/gloss"
+import JMdictMeaning from "@/components/definition-card/sections/jmdict/meaning"
+import JMdictHeader from "@/components/definition-card/sections/jmdict/header"
 import DotSeparator from "@/components/dot-separator"
 import { Separator } from "@/components/ui/separator"
-import type { JMdictWord as TJMdictWord } from "@scriptin/jmdict-simplified-types"
-import { Dot } from "lucide-react"
+import type { JMdictWord as TJMdictWord  } from "@/types/jmdict"
 
 type JMdictSectionProps = {
   entries: TJMdictWord[]
@@ -15,13 +15,19 @@ export default function JMdictSection({ entries }: JMdictSectionProps) {
 
   return (
     <div className="flex flex-col gap-5">
+      <JMdictHeader length={entries.length} />
       {entries.map((entry, idx) => (
         <div key={entry.id} className="flex flex-col justify-between gap-5">
           <div className="px-3">
             {/* Main character display */}
             <div className="mb-4">
-              <JMdictWord word={entry.kanji[0] || entry.kana[0]} />
+              <JMdictWord 
+                word={entry.kanji[0] || entry.kana[0]}
+                meaning={entry.sense[0].gloss[0]}
+                sentence={entry.sense[0].examples.length ? entry.sense[0].examples[0].sentences[0] : undefined}
+              />
             </div>
+
             {/* Content grid */}
             <div className="grid grid-cols-12 gap-6">
               {/* Forms section */}
@@ -46,7 +52,7 @@ export default function JMdictSection({ entries }: JMdictSectionProps) {
                           {sense.gloss.map((gloss, glossIdx) => (
                             <JMdictMeaning
                               key={`${entry.id}-sense-${senseIdx}-gloss-${glossIdx}`} 
-                              gloss={gloss}
+                              meaning={gloss}
                               append={
                                 glossIdx < sense.gloss.length - 1 && <DotSeparator />
                               }

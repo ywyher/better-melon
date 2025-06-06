@@ -2,7 +2,9 @@
 
 import { env } from "@/lib/env/server";
 import { Index } from "@/types/dictionary";
-import { JMdictWord, JMnedictWord, Kanjidic2Character } from "@scriptin/jmdict-simplified-types";
+import { JMdictWord } from "@/types/jmdict";
+import { JMnedictWord } from "@/types/jmnedict";
+import { Kanjidic2Character } from "@/types/kanjidic2";
 
 export type JMdictResponse = {
   success: boolean;

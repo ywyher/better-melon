@@ -1,6 +1,10 @@
 export const ankiFieldsValues = [
-    "expression",
-    "sentence",
+    "kanji",
+    "kana",
+    "definition",
+    "sentence-kanji",
+    "sentence-kana",
+    "sentence-english",
+    "part-of-speech",
     "image",
-    "definition"
 ]

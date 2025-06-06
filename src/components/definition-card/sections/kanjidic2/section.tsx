@@ -2,11 +2,10 @@ import Kanjidic2Header from "@/components/definition-card/sections/kanjidic2/hea
 import Kanjidic2Menaing from "@/components/definition-card/sections/kanjidic2/meaning"
 import Kanjidic2Literal from "@/components/definition-card/sections/kanjidic2/literal"
 import Kanjidic2Reading from "@/components/definition-card/sections/kanjidic2/reading"
-import type { Kanjidic2Character as TKanjidic2Character } from "@scriptin/jmdict-simplified-types"
-import { Dot, Minus } from "lucide-react"
 import Kanjidic2Misc from "@/components/definition-card/sections/kanjidic2/misc"
 import { Separator } from "@/components/ui/separator"
 import DotSeparator from "@/components/dot-separator"
+import type { Kanjidic2Character as TKanjidic2Character } from "@/types/kanjidic2"
 
 type Kanjidic2Props = {
   entries: TKanjidic2Character[]
@@ -32,7 +31,7 @@ export default function Kanjidic2Section({ entries }: Kanjidic2Props) {
               {entry.readingMeaning?.groups.map((g, idx) => (
                 <div 
                   key={idx}
-                  className="col-span-10 flex flex-col gap-4"
+                  className="col-span-10 flex flex-col gap-5"
                 >
                   <div className="flex flex-row gap-1 flex-wrap">
                     {g.meanings.map((m, idx) => (

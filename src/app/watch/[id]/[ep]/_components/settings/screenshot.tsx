@@ -108,7 +108,7 @@ export default function Screenshot({
                 <SelectInput
                   options={formatOptions}
                   value={selectedFormat}
-                  onChange={(v) => setSelectedFormat(v as GeneralSettings['screenshotFormat'])}
+                  onValueChange={(v) => setSelectedFormat(v as GeneralSettings['screenshotFormat'])}
                   className="w-fit"
                   placeholder="Select format"
                 />

@@ -1,6 +1,5 @@
 import DotSeparator from "@/components/dot-separator"
-import { JMdictKana, JMdictKanji } from "@scriptin/jmdict-simplified-types"
-import { Dot } from "lucide-react"
+import { JMdictKana, JMdictKanji } from "@/types/jmdict"
 import { Fragment } from "react"
 
 type JMdictFormsProps = {

@@ -1,4 +1,4 @@
-import type { Kanjidic2Meaning } from "@scriptin/jmdict-simplified-types"
+import { Kanjidic2Meaning } from "@/types/kanjidic2"
 
 type Kanjidic2MeaningProps = {
   meaning: Kanjidic2Meaning
@@ -6,6 +6,6 @@ type Kanjidic2MeaningProps = {
 
 export default function Kanjidic2Menaing({ meaning }: Kanjidic2MeaningProps) {
   return (
-    <div className="text-2xl">{meaning.value}</div>
+    <div className="text-xl">{meaning.value}</div>
   )
 }

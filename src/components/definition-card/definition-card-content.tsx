@@ -4,7 +4,8 @@ import JMdictSection from "@/components/definition-card/sections/jmdict/section"
 import Kanjidic2Section from "@/components/definition-card/sections/kanjidic2/section"
 import { useDefinition } from "@/lib/hooks/use-definition"
 import { cn } from "@/lib/utils"
-import { JMdictWord, Kanjidic2Character } from "@scriptin/jmdict-simplified-types"
+import { JMdictWord } from "@/types/jmdict"
+import { Kanjidic2Character } from "@/types/kanjidic2"
 
 type DefinitionCardContentProps = {
   isExpanded: boolean

@@ -1,6 +1,6 @@
 import DotSeparator from "@/components/dot-separator"
 import { kanjidic2Reading } from "@/lib/constants/kanjidic2"
-import type { Kanjidic2Reading } from "@scriptin/jmdict-simplified-types"
+import type { Kanjidic2Reading } from "@/types/kanjidic2"
 import { Dot } from "lucide-react"
 import { Fragment } from "react"
 

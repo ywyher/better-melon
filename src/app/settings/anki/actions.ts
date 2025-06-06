@@ -1,6 +1,6 @@
 'use server'
 
-import { AnkiPresetSchema } from "@/app/settings/anki/_components/anki-preset-form"
+import { AnkiPresetSchema } from "@/app/settings/anki/_components/types"
 import { auth } from "@/lib/auth"
 import db from "@/lib/db"
 import { AnkiPreset, ankiPreset } from "@/lib/db/schema"

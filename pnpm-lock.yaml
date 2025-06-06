@@ -83,9 +83,6 @@ importers:
       '@radix-ui/react-tooltip':
         specifier: ^1.2.4
         version: 1.2.4(@types/react-dom@19.1.2(@types/react@19.1.2))(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      '@scriptin/jmdict-simplified-types':
-        specifier: ^3.6.1
-        version: 3.6.1
       '@sglkc/kuroshiro':
         specifier: ^1.0.1
         version: 1.0.1
@@ -1818,9 +1815,6 @@ packages:
 
   '@rushstack/eslint-patch@1.11.0':
     resolution: {integrity: sha512-zxnHvoMQVqewTJr/W4pKjF0bMGiKJv1WX7bSrkl46Hg0QjESbzBROWK0Wg4RphzSOS5Jiy7eFimmM3UgMrMZbQ==}
-
-  '@scriptin/jmdict-simplified-types@3.6.1':
-    resolution: {integrity: sha512-vb0c/sq2eBETJgDxRmsSq5Ym0s6axt7MdPlQKvjA1+eVnk7fUB+OD/J0Xckek2QNqNgsiB37kFGuJDnCwFBunQ==}
 
   '@selderee/plugin-htmlparser2@0.11.0':
     resolution: {integrity: sha512-P33hHGdldxGabLFjPPpaTxVolMrzrcegejx+0GxjrIb9Zv48D8yAIA/QTDR2dFl7Uz7urX8aX6+5bCZslr+gWQ==}
@@ -6174,8 +6168,6 @@ snapshots:
   '@rtsao/scc@1.1.0': {}
 
   '@rushstack/eslint-patch@1.11.0': {}
-
-  '@scriptin/jmdict-simplified-types@3.6.1': {}
 
   '@selderee/plugin-htmlparser2@0.11.0':
     dependencies:
