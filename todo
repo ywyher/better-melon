@@ -1,3 +1,5 @@
+there is built-in getAccessToken no need to listAccountsWithFullData on anilist !!
+
 "sentence-kana": sentenceKanji?.text, in jmdict kanji, we gotta convert it :(
 
 we have to implement the delay in transcriptionsLookup 

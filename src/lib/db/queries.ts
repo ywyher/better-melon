@@ -23,7 +23,7 @@ export async function getSession() {
 }
 
 export async function listAccoutns({ userId }: { userId: User['id'] }) {
-  const data = await db.select().from(account).where(eq(account.userId, "dnldZfdJG1SHuJL9yRFe3wCYhhls1GDb"))
+  const data = await db.select().from(account).where(eq(account.userId, userId))
   return data
 }
 
@@ -50,4 +50,11 @@ export async function getSettingsForEpisode() {
       generalSettings: general || defaultGeneralSettings,
       playerSettings: player || defaultPlayerSettings,
     }
+}
+
+export async function getAccountProvider(userId: string) {
+  const [data] = await db.select().from(account)
+    .where(eq(account.userId, userId))
+
+  return data.providerId
 }

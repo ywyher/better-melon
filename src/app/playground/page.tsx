@@ -33,14 +33,14 @@ export default function Playground() {
   return (
     <div className="relative h-screen">
       <DefinitionCard />
-      <SubtitleTranscriptions
+      {/* <SubtitleTranscriptions
         styles={styles}
         transcriptions={transcriptions}
         cuePauseDuration={0}
         definitionTrigger="click"
         syncPlayerSettings="never"
         transcriptionsLookup={transcriptionsLookup}
-      />
+      /> */}
     </div>
   );
 }

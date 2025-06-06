@@ -3,6 +3,7 @@
 import JMdictSection from "@/components/definition-card/sections/jmdict/section"
 import JMnedictSection from "@/components/definition-card/sections/jmnedict/seciton"
 import Kanjidic2Section from "@/components/definition-card/sections/kanjidic2/section"
+import { Separator } from "@/components/ui/separator"
 import { cn } from "@/lib/utils"
 import { Index } from "@/types/dictionary"
 import { JMdictWord } from "@/types/jmdict"
@@ -33,7 +34,7 @@ export default function DefinitionCardContent({
             <JMdictSection entries={dictionary?.find(d => d.index == 'jmdict')?.entries as JMdictWord[]} />
           </div>
             <div className="col-span-4">
-              <div>
+              <div className="flex flex-col gap-4">
                 <Kanjidic2Section
                   entries={dictionary?.find(d => d.index == 'kanjidic2')?.entries as Kanjidic2Character[]} 
                   sentances={{
@@ -41,7 +42,10 @@ export default function DefinitionCardContent({
                     english: (dictionary?.find(d => d.index == 'jmdict')?.entries as JMdictWord[])[0].sense[0].examples[0].sentences.find(s => s.land == 'eng')?.text || "",
                   }}
                 />
-                <JMnedictSection entries={dictionary?.find(d => d.index == 'jmnedict')?.entries as JMnedictWord[]} />
+                <Separator />
+                <JMnedictSection
+                  entries={dictionary?.find(d => d.index == 'jmnedict')?.entries as JMnedictWord[]}
+                />
               </div>
             </div>
         </div>
