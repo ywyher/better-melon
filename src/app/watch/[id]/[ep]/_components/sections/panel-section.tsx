@@ -2,38 +2,42 @@ import EpisodesListSkeleton from '@/app/watch/[id]/[ep]/_components/episodes/epi
 import SubtitlePanel from '../panel/panel';
 import PanelSkeleton from '../panel/panel-skeleton';
 import { AnimeEpisodeMetadata } from '@/types/anime';
-import { SubtitleCue, SubtitleFile } from '@/types/subtitle';
+import { SubtitleFile } from '@/types/subtitle';
 import EpisodesList from '@/app/watch/[id]/[ep]/_components/episodes/episodes-list';
+import { TranscriptionQuery, TranscriptionsLookup } from '@/app/watch/[id]/[ep]/types';
+import { useEffect } from 'react';
 
 interface PanelSectionProps {
   isLoading: boolean;
   animeMetadata: AnimeEpisodeMetadata;
   subtitleFiles?: SubtitleFile[];
-  japaneseTranscription?: SubtitleCue[];
+  transcriptions?: TranscriptionQuery[];
+  transcriptionsLookup?: TranscriptionsLookup
 }
 
 export default function PanelSection({
   isLoading,
   animeMetadata,
   subtitleFiles,
-  japaneseTranscription,
+  transcriptions,
+  transcriptionsLookup
 }: PanelSectionProps) {
-
   return (
     <div className="flex flex-col gap-5 w-full md:w-auto">
       {isLoading ? (
         <PanelSkeleton />
       ) : (
         <>
-          {(japaneseTranscription && subtitleFiles) && (
+          {(transcriptions && subtitleFiles && transcriptionsLookup) && (
             <SubtitlePanel
               subtitleFiles={subtitleFiles}
-              japaneseTranscription={japaneseTranscription}
+              transcriptions={transcriptions}
+              transcriptionsLookup={transcriptionsLookup}
             />
           )}
         </>
       )}
-{/*       
+    {/*       
       {(isLoading || !animeMetadata) ? (
         <EpisodesListSkeleton />
       ) : (

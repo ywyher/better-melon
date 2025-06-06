@@ -12,10 +12,8 @@ export function useDefinition({
   isExpanded,
   query
 }: useDefinitionProps) {
-  const setDefinition = useDefinitionStore((state) => state.setDefinition)
-
-  const { data: jmdict, isLoading: isJMdictLoading, error: jMdictError } = useQuery({
-    ...definitionQueries.jmdict(query || "", setDefinition),
+  const { data: jmdictEntries, isLoading: isJMdictLoading, error: jMdictError } = useQuery({
+    ...definitionQueries.jmdict(query || ""),
     enabled: !!query && !isExpanded
   })
 
@@ -25,10 +23,9 @@ export function useDefinition({
   })
 
   return {
-    isLoading: isExpanded ? isDictionaryLoading : isJMdictLoading,
     dictionary: isExpanded ? dictionary : null,
-    entries: isExpanded ? null : jmdict?.entries as JMdictWord[],
-    isFuzzy: isExpanded ? false : jmdict?.isFuzzy,
+    entries: isExpanded ? null : jmdictEntries,
+    isLoading: isExpanded ? isDictionaryLoading : isJMdictLoading,
     error: isExpanded ? dictionaryError : jMdictError
   };
 }

@@ -4,7 +4,7 @@ import PlayerSkeleton from "../player/player-skeleton";
 import { usePlayerStore } from '@/lib/stores/player-store';
 import { TopControls } from '@/app/watch/[id]/[ep]/_components/sections/top-controls';
 import { AnimeEpisodeData } from '@/types/anime';
-import { TranscriptionQuery, TranscriptionStyles } from '@/app/watch/[id]/[ep]/types';
+import { TranscriptionQuery, TranscriptionsLookup, TranscriptionStyles } from '@/app/watch/[id]/[ep]/types';
 import { SubtitleCue } from '@/types/subtitle';
 import { SettingsForEpisode } from '@/types/settings';
 
@@ -19,6 +19,7 @@ interface PlayerSectionProps {
   transcriptions: TranscriptionQuery[];
   transcriptionsStyles: TranscriptionStyles;
   settings: SettingsForEpisode
+  transcriptionsLookup: TranscriptionsLookup
 }
 
 export default function PlayerSection({
@@ -31,7 +32,8 @@ export default function PlayerSection({
   isMedium,
   transcriptions,
   transcriptionsStyles,
-  settings
+  settings,
+  transcriptionsLookup
 }: PlayerSectionProps) {
   const panelState = usePlayerStore((state) => state.panelState);
   const setPanelState = usePlayerStore((state) => state.setPanelState);
@@ -70,6 +72,7 @@ export default function PlayerSection({
                   transcriptionsStyles={transcriptionsStyles}
                   cuePauseDuration={settings.playerSettings.cuePauseDuration}
                   definitionTrigger={settings.subtitleSettings.definitionTrigger}
+                  transcriptionsLookup={transcriptionsLookup}
                 />
               </>
             )}

@@ -15,9 +15,9 @@ import { useThrottledCallback } from 'use-debounce';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { generateWebVTTFromSkipTimes } from '@/lib/subtitle/utils';
-import SubtitleTranscriptionsContainer from '@/app/watch/[id]/[ep]/_components/transcriptions/transcriptions-container';
+import SubtitleTranscriptions from '@/app/watch/[id]/[ep]/_components/transcriptions/transcriptions';
 import { env } from '@/lib/env/client';
-import { TranscriptionQuery, TranscriptionStyles } from '@/app/watch/[id]/[ep]/types';
+import { TranscriptionQuery, TranscriptionsLookup, TranscriptionStyles } from '@/app/watch/[id]/[ep]/types';
 import { GeneralSettings, PlayerSettings, SubtitleSettings } from '@/lib/db/schema';
 import DefinitionCard from '@/components/definition-card/definition-card';
 
@@ -32,6 +32,7 @@ type PlayerProps = {
   syncPlayerSettings: GeneralSettings['syncPlayerSettings']
   cuePauseDuration: PlayerSettings['cuePauseDuration']
   definitionTrigger: SubtitleSettings['definitionTrigger']
+  transcriptionsLookup: TranscriptionsLookup
 }
 
 const MemoizedPlayerSkeleton = memo(PlayerSkeleton);
@@ -48,7 +49,8 @@ export default function Player({
   transcriptionsStyles,
   syncPlayerSettings,
   cuePauseDuration,
-  definitionTrigger
+  definitionTrigger,
+  transcriptionsLookup
 }: PlayerProps) {
     const router = useRouter()
     
@@ -244,12 +246,13 @@ export default function Player({
                         currentTime={player.current?.currentTime || 0}
                         skipTimes={skipTimes}
                     />
-                    <SubtitleTranscriptionsContainer
+                    <SubtitleTranscriptions
                       transcriptions={transcriptions}
                       styles={transcriptionsStyles}
                       syncPlayerSettings={syncPlayerSettings}
                       cuePauseDuration={cuePauseDuration}
                       definitionTrigger={definitionTrigger}
+                      transcriptionsLookup={transcriptionsLookup}
                     />
                     <MemoizedDefinitionCard />
                 </MediaPlayer>

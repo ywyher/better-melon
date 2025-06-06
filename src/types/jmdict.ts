@@ -1,3 +1,4 @@
+import { jmdictTags } from "@/lib/constants/jmdict";
 import { DictionaryMetadata, Language3Letter, Tag, Xref } from "@/types/dictionary";
 
 /**
@@ -267,3 +268,5 @@ export type JMdictGloss = {
      */
     text: string;
 };
+
+export type JMdictPos = keyof typeof jmdictTags

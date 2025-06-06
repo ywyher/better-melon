@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 import type { SubtitleCue as TSubtitleCue, SubtitleToken } from "@/types/subtitle";
 import { Button } from "@/components/ui/button";
 import { Clipboard, Play } from "lucide-react";
+import { TranscriptionsLookup } from '@/app/watch/[id]/[ep]/types';
 
 type SubtitleCueProps = { 
     index: number;
@@ -13,7 +14,7 @@ type SubtitleCueProps = {
     start: number;
     activeToken: SubtitleToken | null;
     handleSeek: (from: TSubtitleCue["from"]) => void
-    handleClick: (sentence: string, token: SubtitleToken) => void
+    handleClick: (token: SubtitleToken, cueId: number) => void
     handleCopy: (sentence: string) => void
 }
 
@@ -26,7 +27,7 @@ function SubtitleCueBase({
   activeToken,
   handleSeek,
   handleClick,
-  handleCopy
+  handleCopy,
 }: SubtitleCueProps) {
     return (
         <div
@@ -68,7 +69,7 @@ function SubtitleCueBase({
                                 "hover:text-orange-400",
                                 activeToken?.id === token.id && "text-orange-400"
                             )}
-                            onClick={() => handleClick(cue.content, token)}
+                            onClick={() => handleClick(token, cue.id)}
                         >
                             {token.surface_form}
                         </span>

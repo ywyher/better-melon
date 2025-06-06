@@ -16,6 +16,7 @@ import { useAnkiData } from "@/lib/hooks/use-anki-preset-data"
 import { AnkiFieldMappings } from "@/app/settings/anki/_components/anki-field-mapping"
 import { AnkiPresetSettings } from "@/app/settings/anki/_components/anki-preset-settings"
 import { AnkiPresetSchema } from "@/app/settings/anki/_components/types"
+import { AnkiFieldKey } from "@/types/anki"
 
 type PresetFormProps = {
   preset: AnkiPreset | null
@@ -50,7 +51,7 @@ export default function AnkiPresetForm({
 
   useEffect(() => {
     if (modelFieldNames?.data && modelFieldNames.data.length > 0) {
-      const fieldsObject = modelFieldNames.data.reduce((acc: Record<string, string | undefined>, fieldName: string) => {
+      const fieldsObject = modelFieldNames.data.reduce((acc: Record<string, string | undefined>, fieldName: AnkiFieldKey) => {
         acc[fieldName] = preset?.fields?.[fieldName] || ""
         return acc
       }, {})

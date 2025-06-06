@@ -1,17 +1,17 @@
-import { invokeAnkiConnect, takeSnapshot } from "@/lib/anki"
+import { invokeAnkiConnect } from "@/lib/anki"
 import { ankiQueries } from "@/lib/queries/anki"
 import { usePlayerStore } from "@/lib/stores/player-store"
+import { takeSnapshot } from "@/lib/utils"
+import { AnkiFieldKey } from "@/types/anki"
 import { useQuery } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 
 type UseAddToAnkiProps = {
-  word?: string | null;
-  sentence?: string | null;
-  definition?: string | null;
+  fields: Partial<Record<AnkiFieldKey, string>>;
 }
 
-export default function useAddToAnki({ word, sentence, definition }: UseAddToAnkiProps) {
+export default function useAddToAnki({ fields }: UseAddToAnkiProps) {
   const { data: preset } = useQuery(ankiQueries.defaultPreset())
 
   const router = useRouter()
@@ -24,7 +24,7 @@ export default function useAddToAnki({ word, sentence, definition }: UseAddToAnk
       return
     }
 
-    if(!preset?.fields || !word || !sentence) {
+    if(!preset?.fields || !fields) {
       return toast.warning("You have to setup anki configurations.", {
         action: {
           onClick: () => {
@@ -35,25 +35,21 @@ export default function useAddToAnki({ word, sentence, definition }: UseAddToAnk
       })
     }
   
-    const noteFields = Object.entries(preset.fields)
-    .filter(([, value]) => value)
-    .map(([key, value]) => {
-      return {
-        [key]: value === "expression"
-          ? word
-          : value === "sentence"
-          ? sentence
-          : value == 'definition'
-          ? definition
-          : ""
-      };
-    });
+  const noteFields = Object.entries(preset.fields)
+    .filter(([, value]) => value) // filter out falsy preset values
+    .reduce((acc, [key, value]) => {
+      const fieldValue = fields[value as keyof typeof fields];
+      if (fieldValue !== null && fieldValue !== undefined) { // Only add non-null values
+        acc[key] = fieldValue;
+      }
+      return acc;
+    }, {} as Record<string, string>);
 
     const noteOptions = {
       "note": {
         "deckName": preset.deck,
         "modelName": preset.model,
-        "fields": noteFields.reduce((acc, obj) => ({ ...acc, ...obj }), {}),
+        "fields": noteFields,
         "options": {
           "allowDuplicate": false,
           "duplicateScope": "deck",

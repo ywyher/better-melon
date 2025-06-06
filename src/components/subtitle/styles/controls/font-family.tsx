@@ -34,7 +34,7 @@ export default function FontFamilyController({
       <SelectInput 
         options={fontFamilyOptions} 
         placeholder="Select font family"
-        onValueChange={(v) => onSubmit(v)}
+        onChange={(v) => onSubmit(v)}
         disabled={isLoading}
         value={displayValue}
       />

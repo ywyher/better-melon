@@ -12,13 +12,16 @@ import PanelHeader from "@/app/watch/[id]/[ep]/_components/panel/panel-header";
 import SubtitleCuesList from "@/app/watch/[id]/[ep]/_components/panel/subtitles-cues-list";
 import PanelSkeleton from "@/app/watch/[id]/[ep]/_components/panel/panel-skeleton";
 import { subtitleQueries } from "@/lib/queries/subtitle";
+import { TranscriptionQuery, TranscriptionsLookup } from "@/app/watch/[id]/[ep]/types";
 
 export default function SubtitlePanel({ 
   subtitleFiles,
-  japaneseTranscription
+  transcriptions,
+  transcriptionsLookup
 }: { 
   subtitleFiles: SubtitleFile[],
-  japaneseTranscription: SubtitleCue[]
+  transcriptions: TranscriptionQuery[]
+  transcriptionsLookup: TranscriptionsLookup
 }) {
     const [selectedTranscription, setSelectedTranscription] = useState<SubtitleTranscription>('japanese')
     const [previousCues, setPreviousCues] = useState<TSubtitleCue[] | undefined>();
@@ -28,7 +31,7 @@ export default function SubtitlePanel({
     
     const { data: subtitleCues, isLoading: isCuesLoading, error: cuesError } = useQuery({
       ...subtitleQueries.cues(activeSubtitleFile!, selectedTranscription),
-      placeholderData: japaneseTranscription,
+      placeholderData: transcriptions.find(t => t.transcription == 'japanese')!.cues,
       enabled: !!activeSubtitleFile
     })
 
@@ -49,9 +52,9 @@ export default function SubtitlePanel({
     }, [subtitleCues, isCuesLoading, previousCues]);
 
     if (cuesError) {
-        return (
-          <Indicator color="red" message={cuesError?.message || "Error"} type="error" />
-        );
+      return (
+        <Indicator color="red" message={cuesError?.message || "Error"} type="error" />
+      );
     }
 
     if(isCuesLoading) return <PanelSkeleton />
@@ -68,9 +71,10 @@ export default function SubtitlePanel({
                 <CardContent className="h-full flex justify-center items-center w-full">
                   {activeSubtitleFile && cues ? (
                       <SubtitleCuesList
-                          isLoading={isCuesLoading}
-                          selectedTranscription={selectedTranscription}
-                          cues={cues}
+                        isLoading={isCuesLoading}
+                        selectedTranscription={selectedTranscription}
+                        cues={cues}
+                        transcriptionsLookup={transcriptionsLookup}
                       />
                   ): (
                     <Card className="w-full p-4 bg-yellow-50 border-yellow-200">

@@ -6,7 +6,7 @@ import type { SubtitleCue, SubtitleTranscription } from "@/types/subtitle";
 import { closestCenter, DndContext, type DragEndEvent, KeyboardSensor, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { TranscriptionQuery, TranscriptionStyles } from "@/app/watch/[id]/[ep]/types";
+import { TranscriptionQuery, TranscriptionsLookup, TranscriptionStyles } from "@/app/watch/[id]/[ep]/types";
 import { useDebounce } from "@/components/multiple-selector";
 import { handleTranscriptionOrder } from "@/app/settings/subtitle/_transcription-order/actions";
 import { toast } from "sonner";
@@ -17,13 +17,23 @@ import { showSyncSettingsToast } from "@/components/sync-settings-toast";
 import { Button } from "@/components/ui/button";
 import { useMediaState } from "@vidstack/react";
 
-export default function SubtitleTranscriptions({ transcriptions, styles, syncPlayerSettings, cuePauseDuration, definitionTrigger }: {
+type SubtitleTranscriptionsProps = {
   transcriptions: TranscriptionQuery[];
   styles: TranscriptionStyles;
   syncPlayerSettings: GeneralSettings['syncPlayerSettings']
   cuePauseDuration: PlayerSettings['cuePauseDuration']
   definitionTrigger: SubtitleSettings['definitionTrigger']
-}) {
+  transcriptionsLookup: TranscriptionsLookup
+}
+
+export default function SubtitleTranscriptions({ 
+  transcriptions,
+  styles,
+  syncPlayerSettings,
+  cuePauseDuration,
+  definitionTrigger,
+  transcriptionsLookup 
+}: SubtitleTranscriptionsProps) {
   const player = usePlayerStore((state) => state.player);
   const activeTranscriptions = usePlayerStore((state) => state.activeTranscriptions);
   const delay = usePlayerStore((state) => state.delay);
@@ -261,7 +271,7 @@ export default function SubtitleTranscriptions({ transcriptions, styles, syncPla
 
   return (
     <div
-      className="absolute left-1/2 transform -translate-x-1/2 flex flex-col w-[100%]"
+      className="absolute left-1/2 transform -translate-x-1/2 flex items-center flex-col w-[100%]"
       style={wrapperStyles}
     >
       <Button
@@ -307,6 +317,7 @@ export default function SubtitleTranscriptions({ transcriptions, styles, syncPla
                             containerStyle: containerStyle
                           }}
                           definitionTrigger={definitionTrigger}
+                          transcriptionsLookup={transcriptionsLookup}
                       />
                   );
               })}

@@ -34,7 +34,7 @@ export default function FontWeightController({
       <SelectInput 
         options={fontWeightOptions} 
         placeholder="Select font weight"
-        onValueChange={(v) => onSubmit(v)}
+        onChange={(v) => onSubmit(v)}
         disabled={isLoading}
         value={displayValue}
       />

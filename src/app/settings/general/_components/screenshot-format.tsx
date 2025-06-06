@@ -28,7 +28,7 @@ export default function ScreenshotFormat({ value }: { value: GeneralSettings['sc
                     options={screenshotFormats.map((f) => {
                         return { value: f, label: f }
                     })}
-                    onValueChange={(v) =>{ 
+                    onChange={(v) =>{ 
                         const newFormat = v as GeneralSettings['screenshotFormat']
                         onSubmit(newFormat)
                     }}

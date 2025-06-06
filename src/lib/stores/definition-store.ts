@@ -2,31 +2,65 @@ import { SubtitleToken } from '@/types/subtitle';
 import { create } from 'zustand'
 
 type DefinitionStore = {
-    sentence: string | null;
-    setSentence: (sentence: DefinitionStore['sentence']) => void;
+    position: {
+        x: number;
+        y: number
+    };
+    setPosition: (position: DefinitionStore['position']) => void;
+
+    isExpanded: boolean;
+    setIsExpanded: (isExpanded: DefinitionStore['isExpanded']) => void;
+
+    sentences: {
+        kanji: string | null;
+        kana: string | null;
+        english: string | null;
+    };
+    setSentences: (sentences: DefinitionStore['sentences']) => void;
 
     token: SubtitleToken | null;
     setToken: (token: DefinitionStore['token']) => void;
 
-    definition: string | null;
-    setDefinition: (defintion: DefinitionStore['definition']) => void;
-    
-    addToAnki: boolean;
-    setAddToAnki: (token: DefinitionStore['addToAnki']) => void;
+
+    isAddToAnki: boolean;
+    setIsAddToAnki: (token: DefinitionStore['isAddToAnki']) => void;
 }
 
 export const useDefinitionStore = create<DefinitionStore>()(
     (set) => ({
-        sentence: null,
-        setSentence: (sentence: DefinitionStore['sentence']) => set({ sentence }),
+        position: { x: 0, y: 0 },
+        setPosition: (position: DefinitionStore['position']) => set({ position }),
 
-        token: null,
+        isExpanded: false,
+        setIsExpanded: (isExpanded: DefinitionStore['isExpanded']) => set({ isExpanded }),
+
+        sentences: {
+            kanji: null,
+            english: null,
+            kana: null,
+        },
+        setSentences: (sentences: DefinitionStore['sentences']) => set({ sentences }),
+
+        token: {
+            "word_id": 93180,
+            "word_type": "KNOWN",
+            "word_position": 14,
+            "surface_form": "見る",
+            "pos": "助詞",
+            "pos_detail_1": "接続助詞",
+            "pos_detail_2": "*",
+            "pos_detail_3": "*",
+            "conjugated_type": "*",
+            "conjugated_form": "*",
+            "basic_form": "が",
+            "reading": "ガ",
+            "pronunciation": "ガ",
+            "id": "44-7"
+            },
         setToken: (token: DefinitionStore['token']) => set({ token }),
+        
 
-        definition: null,
-        setDefinition: (definition: DefinitionStore['definition']) => set({ definition }),
-
-        addToAnki: true,
-        setAddToAnki: (addToAnki: DefinitionStore['addToAnki']) => set({ addToAnki }),
+        isAddToAnki: true,
+        setIsAddToAnki: (isAddToAnki: DefinitionStore['isAddToAnki']) => set({ isAddToAnki }),
     })
 );

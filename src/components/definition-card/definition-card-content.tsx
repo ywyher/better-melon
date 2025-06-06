@@ -2,25 +2,26 @@
 
 import JMdictSection from "@/components/definition-card/sections/jmdict/section"
 import Kanjidic2Section from "@/components/definition-card/sections/kanjidic2/section"
-import { useDefinition } from "@/lib/hooks/use-definition"
 import { cn } from "@/lib/utils"
+import { Index } from "@/types/dictionary"
 import { JMdictWord } from "@/types/jmdict"
+import { JMnedictWord } from "@/types/jmnedict"
 import { Kanjidic2Character } from "@/types/kanjidic2"
 
 type DefinitionCardContentProps = {
   isExpanded: boolean
-  query?: string
+  dictionary: {
+    index: Index;
+    entries: JMdictWord[] | Kanjidic2Character[] | JMnedictWord[];
+  }[] | undefined | null;
+  entries?: JMdictWord[] | null
 }
 
 export default function DefinitionCardContent({
   isExpanded,
-  query
+  dictionary,
+  entries
 }: DefinitionCardContentProps) {
-  const { dictionary, entries, isFuzzy, isLoading, error } = useDefinition({ query, isExpanded })
-
-  if(error) return <>{error.message || "An error occurred"}</>
-  if(isLoading) return <>Loading...</>
-
   return (
     <div className="flex flex-col gap-2">
       {isExpanded ? (
@@ -35,11 +36,10 @@ export default function DefinitionCardContent({
             </div>
         </div>
       ): (
-        <p className="text-red-500">
+        <p>
           {entries?.[0].sense?.[0]?.gloss?.[0]?.text || "Nothing found"}
         </p>
       )}
-      {isFuzzy && <p className="text-xs">This is fuzzy translation, might lack accuracy</p>}
     </div>
   )
 }

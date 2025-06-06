@@ -4,19 +4,21 @@ import { SubtitleCue as TSubtitleCue, SubtitleTranscription, SubtitleFormat } fr
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { usePlayerStore } from "@/lib/stores/player-store";
 import SubtitleCuesContainer from "@/app/watch/[id]/[ep]/_components/panel/subtitle-cues-container";
+import { TranscriptionsLookup } from "@/app/watch/[id]/[ep]/types";
 
 type SubtitleCuesListProps = {
     isLoading: boolean;
     selectedTranscription: SubtitleTranscription;
-    cues: TSubtitleCue[]
+    cues: TSubtitleCue[];
+    transcriptionsLookup: TranscriptionsLookup
 }
 
 export default function SubtitleCuesList({
     selectedTranscription,
     isLoading,
-    cues
+    cues,
+    transcriptionsLookup
 }: SubtitleCuesListProps) {
-
   const [activeIndex, setActiveIndex] = useState<number>(-1);
   const [autoScroll, setAutoScroll] = useState<boolean>(true);
   
@@ -27,18 +29,6 @@ export default function SubtitleCuesList({
   
   const player = usePlayerStore((state) => state.player);
   const delay = usePlayerStore((state) => state.delay);
-  const activeSubtitleFile = usePlayerStore((state) => state.activeSubtitleFile);
-
-  const cueTimeRanges = useMemo(() => {
-      if (!cues?.length) return [];
-      
-      return cues.map(cue => ({
-          id: cue.id,
-          index: cues.indexOf(cue),
-          start: cue.from + delay.japanese,
-          end: cue.to + delay.japanese
-      }));
-  }, [cues, activeSubtitleFile?.file.name, delay.japanese]);
 
   const rowVirtualizer = useVirtualizer({
       count: cues?.length || 0,
@@ -51,19 +41,23 @@ export default function SubtitleCuesList({
   });
 
   const findActiveCue = useCallback((currentTime: number) => {
-      const activeCue = cueTimeRanges.find(cue => 
-        currentTime >= cue.start && currentTime <= cue.end
+      if (!cues?.length) return;
+      
+      const activeCueIndex = cues.findIndex(cue => 
+        currentTime >= (cue.from + delay.japanese) && currentTime <= (cue.to + delay.japanese)
       );
       
-      if (activeCue) {
+      if (activeCueIndex !== -1) {
+          const activeCue = cues[activeCueIndex];
+          
           if (activeCue.id !== activeCueIdRef.current) {
               activeCueIdRef.current = activeCue.id;
               
-              if (activeCue.index !== activeIndex) {
-                  setActiveIndex(activeCue.index);
+              if (activeCueIndex !== activeIndex) {
+                  setActiveIndex(activeCueIndex);
                   
                   if (autoScroll) {
-                      rowVirtualizer.scrollToIndex(activeCue.index, { 
+                      rowVirtualizer.scrollToIndex(activeCueIndex, { 
                           align: 'center',
                           behavior: 'smooth'
                       });
@@ -74,10 +68,10 @@ export default function SubtitleCuesList({
           activeCueIdRef.current = -1;
           setActiveIndex(-1);
       }
-  }, [cueTimeRanges, activeIndex, activeCueIdRef, autoScroll, rowVirtualizer]);
+  }, [cues, delay.japanese, activeIndex, activeCueIdRef, autoScroll, rowVirtualizer]);
 
   useEffect(() => {
-      if(!player.current || !cues?.length || !cueTimeRanges.length) return;
+      if(!player.current || !cues?.length) return;
 
       return player.current.subscribe(({ currentTime }) => {
           const now = Date.now();
@@ -86,7 +80,7 @@ export default function SubtitleCuesList({
               findActiveCue(currentTime);
           }
       });
-  }, [player, cues, cueTimeRanges, findActiveCue]);
+  }, [player, cues, findActiveCue]);
 
   const handleManualScroll = useCallback(() => {
       setAutoScroll(false);
@@ -121,6 +115,7 @@ export default function SubtitleCuesList({
               items={rowVirtualizer}
               activeCueIdRef={activeCueIdRef}
               cues={cues}
+              transcriptionsLookup={transcriptionsLookup}
             />
           </TabsContent>
       </div>

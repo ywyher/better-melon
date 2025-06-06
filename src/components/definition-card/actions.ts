@@ -10,7 +10,6 @@ export type JMdictResponse = {
   success: boolean;
   data?: {
     entries: JMdictWord[];
-    isFuzzy: boolean
   }
   message?: string
 }
@@ -34,7 +33,6 @@ export async function getJMdictEntries(query?: string) {
 
     return {
       entries: data.entries,
-      isFuzzy: data.isFuzzy
     }
   } catch (error) {
     throw new Error(`Failed to fetch jmdict entries: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -81,8 +79,8 @@ export async function getDictionaryEntries(query?: string) {
 
     return data.map(result => {
       return {
+        entries: result.entries,
         index: result.index as Index,
-        entries: result.entries
       }
     });
   } catch (error) {

@@ -6,22 +6,24 @@ import { CSS } from '@dnd-kit/utilities';
 import { useDefinitionStore } from '@/lib/stores/definition-store';
 import { SubtitleCue, SubtitleToken, SubtitleTranscription } from '@/types/subtitle';
 import { cn } from '@/lib/utils';
-import { TranscriptionStyleSet } from '@/app/watch/[id]/[ep]/types';
+import { TranscriptionsLookup, TranscriptionStyleSet } from '@/app/watch/[id]/[ep]/types';
 import { SubtitleSettings } from '@/lib/db/schema';
-import { isTokenExcluded } from '@/lib/subtitle/utils';
+import { getSentencesForCue, isTokenExcluded } from '@/lib/subtitle/utils';
 
 type TranscriptionItemProps = {
   transcription: SubtitleTranscription;
   activeSubtitleSets: Record<SubtitleTranscription, SubtitleCue[]>;
   styles: TranscriptionStyleSet;
   definitionTrigger: SubtitleSettings['definitionTrigger']
+  transcriptionsLookup: TranscriptionsLookup
 }
 
 export const TranscriptionItem = React.memo(function TranscriptionItem({ 
     transcription,
     activeSubtitleSets,
     styles,
-    definitionTrigger
+    definitionTrigger,
+    transcriptionsLookup
 }: TranscriptionItemProps) {
     const {
         attributes,
@@ -37,10 +39,10 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
     }), [transform, transition]);
 
     const activeToken = useDefinitionStore((state) => state.token);
-    const setSentence = useDefinitionStore((state) => state.setSentence);
+    const setSentences = useDefinitionStore((state) => state.setSentences);
+    const storeSentences = useDefinitionStore((state) => state.sentences)
     const setToken = useDefinitionStore((state) => state.setToken);
     const storeToken = useDefinitionStore((state) => state.token)
-    const storeSentence = useDefinitionStore((state) => state.sentence)
     
     const [hoveredTokenId, setHoveredTokenId] = useState<string | number | null>(null);
     const [hoveredCueId, setHoveredCueId] = useState<number | null>(null);
@@ -55,9 +57,9 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
         setHoveredTokenId(null);
     }, []);
 
-    const handleActivate = useCallback((sentence: string, token: SubtitleToken, trigger: SubtitleSettings['definitionTrigger']) => {
+    const handleActivate = useCallback((cueId: number, token: SubtitleToken, trigger: SubtitleSettings['definitionTrigger']) => {
         if (
-            !sentence 
+            !cueId
             || !token 
             || transcription == 'english' 
             || definitionTrigger != trigger
@@ -69,13 +71,18 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
         if (storeToken && storeToken.id === token.id) {
             // If clicking on the same token, clear it
             setToken(null);
-            setSentence(null);
+            setSentences({
+                kanji: null,
+                kana: null,
+                english: null,
+            });
         } else {
             // Otherwise set the new token and sentence
             setToken(token);
-            setSentence(sentence);
+            const sentences = getSentencesForCue(transcriptionsLookup, cueId);
+            setSentences(sentences);
         }
-    }, [storeToken, storeSentence, setToken, setSentence]);
+    }, [storeToken, storeSentences, setToken, setSentences]);
   
 
     const renderTokens = useCallback((cue: SubtitleCue) => {
@@ -101,11 +108,11 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
                     <span
                         style={tokenStyle}
                         onClick={() => {
-                            handleActivate(cue.content, token, 'click');
+                            handleActivate(cue.id, token, 'click');
                         }}
                         onMouseEnter={() => {
                             handleTokenMouseEnter(cue.id, token.id)
-                            handleActivate(cue.content, token, 'hover');
+                            handleActivate(cue.id, token, 'hover');
                         }}
                         onMouseLeave={() => { 
                             handleTokenMouseLeave()

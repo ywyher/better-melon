@@ -2,16 +2,12 @@ import { getDictionaryEntries, getJMdictEntries } from "@/components/definition-
 import { createQueryKeys } from "@lukemorales/query-key-factory";
 
 export const definitionQueries = createQueryKeys('definition', {
-    jmdict: (query: string, setDefinition: (definition: string) => void) => ({
+    jmdict: (query: string) => ({
         queryKey: ['definition', 'jmdict', query],
         queryFn: async () => {
-          const { entries, isFuzzy } = await getJMdictEntries(query)
+          const { entries } = await getJMdictEntries(query)
 
-          setDefinition(entries[0]?.sense[0]?.gloss[0]?.text || "Nothing found")
-          return {
-            entries,
-            isFuzzy
-          }
+          return entries
         },
     }),
     dictionary: (query: string) => ({

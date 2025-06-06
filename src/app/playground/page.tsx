@@ -27,19 +27,20 @@ export default function Playground() {
     });
   }, [setEnglishSubtitleUrl, setActiveTranscriptions, setActiveSubtitleFile]);
   
-  const { transcriptions } = useSubtitleTranscriptions()
+  const { transcriptions, transcriptionsLookup } = useSubtitleTranscriptions()
   const { styles } = useSubtitleStyles();
 
   return (
     <div className="relative h-screen">
       <DefinitionCard />
-      {/* <SubtitleTranscriptions
-        styles={styles}        
+      <SubtitleTranscriptions
+        styles={styles}
         transcriptions={transcriptions}
         cuePauseDuration={0}
         definitionTrigger="click"
         syncPlayerSettings="never"
-      /> */}
+        transcriptionsLookup={transcriptionsLookup}
+      />
     </div>
   );
 }

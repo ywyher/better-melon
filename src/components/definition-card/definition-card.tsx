@@ -12,8 +12,11 @@ import DefinitionCardBase from '@/components/definition-card/definition-card-bas
 import { useDefinitionStore } from '@/lib/stores/definition-store';
 
 export default function DefinitionCard() { 
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [isExpanded, setIsExpanded] = useState<boolean>(true)
+  const setPosition = useDefinitionStore((state) => state.setPosition)
+  const position = useDefinitionStore((state) => state.position)
+  const isExpanded = useDefinitionStore((state) => state.isExpanded)
+  const token = useDefinitionStore((state) => state.token)
+  const sentences = useDefinitionStore((state) => state.sentences)
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -31,25 +34,15 @@ export default function DefinitionCard() {
     });
   }
 
-  // if(!sentence || !token) return;
+  if(!sentences || !token) return;
 
   return (
     <>
       {isExpanded ? (
-        <DefinitionCardBase
-          position={position}
-          setPosition={setPosition}
-          isExpanded={isExpanded}
-          setIsExpanded={setIsExpanded}
-        />
+        <DefinitionCardBase />
       ): (
         <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
-          <DefinitionCardBase
-            position={position}
-            setPosition={setPosition}
-            isExpanded={isExpanded}
-            setIsExpanded={setIsExpanded}
-          />
+          <DefinitionCardBase />
         </DndContext>
       )}
     </>

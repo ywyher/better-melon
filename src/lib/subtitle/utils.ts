@@ -4,7 +4,7 @@ import { FileSelectionError } from "@/lib/errors/player";
 import { fetchSubtitles, parseAss, parseSrt, parseVtt } from "@/lib/subtitle/parse";
 import { getExtension } from "@/lib/utils";
 import { AnimeStreamingLinks, SkipTime } from "@/types/anime";
-import { ActiveSubtitleFile, SubtitleFile, SubtitleFormat, SubtitleToken } from "@/types/subtitle";
+import { ActiveSubtitleFile, SubtitleCue, SubtitleFile, SubtitleFormat, SubtitleToken, SubtitleTranscription } from "@/types/subtitle";
 import {franc} from 'franc-min'
 
 export const getActiveSubtitleFile = (subtitleFiles: SubtitleFile[], preferredFormat: SubtitleSettings['preferredFormat']) => {
@@ -299,3 +299,31 @@ export function isTokenExcluded(token: SubtitleToken) {
   return excludedPos.includes(token.pos)
   || excludedPos.includes(token.pos_detail_1) // for numbers
 }
+
+export const getSentencesForCue = (transcriptionLookup: Map<SubtitleTranscription, Map<number, SubtitleCue>>, cueId: number) => {
+  const sentences = {
+    kanji: null as string | null,
+    kana: null as string | null,
+    english: null as string | null,
+  };
+
+  // Get Japanese (kanji) sentence
+  const japaneseCue = transcriptionLookup.get('japanese')?.get(cueId);
+  if (japaneseCue) {
+    sentences.kanji = japaneseCue.content;
+  }
+
+  // Get Kana sentence
+  const kanaCue = transcriptionLookup.get('hiragana')?.get(cueId);
+  if (kanaCue) {
+    sentences.kana = kanaCue.content;
+  }
+
+  // Get English sentence
+  const englishCue = transcriptionLookup.get('english')?.get(cueId);
+  if (englishCue) {
+    sentences.english = englishCue.content;
+  }
+
+  return sentences;
+};

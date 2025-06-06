@@ -1,8 +1,7 @@
 import { Button } from "@/components/ui/button";
-import { takeSnapshot } from "@/lib/anki";
 import { GeneralSettings } from "@/lib/db/schema";
 import { usePlayerStore } from "@/lib/stores/player-store";
-import { downloadBase64Image, mapScreenshotNamingPatternValues } from "@/lib/utils";
+import { downloadBase64Image, mapScreenshotNamingPatternValues, takeSnapshot } from "@/lib/utils";
 import { AnimeEpisodeMetadata } from "@/types/anime";
 import { Camera } from "lucide-react";
 import { toast } from "sonner";
@@ -108,7 +107,7 @@ export default function Screenshot({
                 <SelectInput
                   options={formatOptions}
                   value={selectedFormat}
-                  onValueChange={(v) => setSelectedFormat(v as GeneralSettings['screenshotFormat'])}
+                  onChange={(v) => setSelectedFormat(v as GeneralSettings['screenshotFormat'])}
                   className="w-fit"
                   placeholder="Select format"
                 />

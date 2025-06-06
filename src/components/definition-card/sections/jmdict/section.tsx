@@ -1,10 +1,10 @@
-import JMdictWord from "@/components/definition-card/sections/jmdict/character"
+import JMdictKanji from "@/components/definition-card/sections/jmdict/kanji"
 import JMdictForms from "@/components/definition-card/sections/jmdict/forms"
 import JMdictMeaning from "@/components/definition-card/sections/jmdict/meaning"
 import JMdictHeader from "@/components/definition-card/sections/jmdict/header"
 import DotSeparator from "@/components/dot-separator"
 import { Separator } from "@/components/ui/separator"
-import type { JMdictWord as TJMdictWord  } from "@/types/jmdict"
+import type { JMdictPos, JMdictWord as TJMdictWord  } from "@/types/jmdict"
 
 type JMdictSectionProps = {
   entries: TJMdictWord[]
@@ -21,10 +21,13 @@ export default function JMdictSection({ entries }: JMdictSectionProps) {
           <div className="px-3">
             {/* Main character display */}
             <div className="mb-4">
-              <JMdictWord 
-                word={entry.kanji[0] || entry.kana[0]}
-                meaning={entry.sense[0].gloss[0]}
-                sentence={entry.sense[0].examples.length ? entry.sense[0].examples[0].sentences[0] : undefined}
+              <JMdictKanji 
+                kanji={entry.kanji[0]}
+                kana={entry.kana[0]}
+                pos={entry.sense[0].partOfSpeech as JMdictPos[]}
+                definition={entry.sense[0].gloss[0]}
+                sentenceKanji={entry.sense[0].examples.length ? entry.sense[0].examples[0].sentences.find(s => s.land == 'jpn') : undefined}
+                sentenceEnglish={entry.sense[0].examples.length ? entry.sense[0].examples[0].sentences.find(s => s.land == 'eng') : undefined}
               />
             </div>
 
