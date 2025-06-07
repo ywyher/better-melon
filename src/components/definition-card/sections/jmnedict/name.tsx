@@ -13,7 +13,7 @@ export default function JMnedictName({ kana, kanji, translation }: JMnedictNameP
     fields: {
       kanji: kanji.text,
       kana: kana.text,
-      definition: translation.g,
+      definition: translation.text,
     },
   })
 

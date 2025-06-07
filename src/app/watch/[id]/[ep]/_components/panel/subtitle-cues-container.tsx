@@ -32,7 +32,7 @@ export default function SubtitleCuesContainer({
     player.current?.remoteControl.seek(from + delay.japanese)
   }, [player, activeSubtitleFile, delay.japanese]);
 
-  const handleClick = useCallback((token: SubtitleToken, cueId: number) => {
+  const handleClick = useCallback((token: SubtitleToken, from: number, to: number) => {
     if (
       !token
       || isTokenExcluded(token)
@@ -49,7 +49,7 @@ export default function SubtitleCuesContainer({
     } else {
       // Otherwise set the new token and get sentences for all transcriptions
       setToken(token);
-      const sentences = getSentencesForCue(transcriptionsLookup, cueId);
+      const sentences = getSentencesForCue(transcriptionsLookup, from, to);
       setSentences(sentences);
     }
     

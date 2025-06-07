@@ -9,7 +9,7 @@ export type TranscriptionQuery = {
   cues: SubtitleCue[];
 }
 
-export type TranscriptionsLookup = Map<SubtitleTranscription, Map<number, SubtitleCue>>
+export type TranscriptionsLookup = Map<SubtitleTranscription, Map<string, SubtitleCue>>
 
 export type SubtitleQuery = UseQueryResult<{
     transcription: SubtitleTranscription;

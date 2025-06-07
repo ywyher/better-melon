@@ -38,8 +38,8 @@ export default function DefinitionCardContent({
                 <Kanjidic2Section
                   entries={dictionary?.find(d => d.index == 'kanjidic2')?.entries as Kanjidic2Character[]} 
                   sentances={{
-                    kanji: (dictionary?.find(d => d.index == 'jmdict')?.entries as JMdictWord[])[0].sense[0].examples[0].sentences.find(s => s.land == 'jpn')?.text || "",
-                    english: (dictionary?.find(d => d.index == 'jmdict')?.entries as JMdictWord[])[0].sense[0].examples[0].sentences.find(s => s.land == 'eng')?.text || "",
+                    kanji: (dictionary?.find(d => d.index == 'jmdict')?.entries as JMdictWord[])[0].sense[0].examples?.[0]?.sentences.find(s => s.land == 'jpn')?.text || "",
+                    english: (dictionary?.find(d => d.index == 'jmdict')?.entries as JMdictWord[])[0].sense[0].examples?.[0]?.sentences.find(s => s.land == 'eng')?.text || "",
                   }}
                 />
                 <Separator />

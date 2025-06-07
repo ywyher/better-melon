@@ -51,12 +51,12 @@ export default function SubtitleTranscriptions({
   // This would stop the player from repausing it self if we are still in the small time window
   const lastPauseTime = useRef<number>(0);
     
-  // const isFullscreen = useMediaState('fullscreen', player);
-  // const controlsVisible = useMediaState('controlsVisible', player);
-  // const currentTime = useMediaState('currentTime', player);
-  const isFullscreen = true;
-  const controlsVisible = true;
-  const currentTime = 200;
+  const isFullscreen = useMediaState('fullscreen', player);
+  const controlsVisible = useMediaState('controlsVisible', player);
+  const currentTime = useMediaState('currentTime', player);
+  // const isFullscreen = true;
+  // const controlsVisible = true;
+  // const currentTime = 200;
 
   const sensors = useSensors(
     useSensor(PointerSensor, {

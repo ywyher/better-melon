@@ -14,7 +14,7 @@ type SubtitleCueProps = {
     start: number;
     activeToken: SubtitleToken | null;
     handleSeek: (from: TSubtitleCue["from"]) => void
-    handleClick: (token: SubtitleToken, cueId: number) => void
+    handleClick: (token: SubtitleToken, from: number, to: number) => void
     handleCopy: (sentence: string) => void
 }
 
@@ -69,7 +69,7 @@ function SubtitleCueBase({
                                 "hover:text-orange-400",
                                 activeToken?.id === token.id && "text-orange-400"
                             )}
-                            onClick={() => handleClick(token, cue.id)}
+                            onClick={() => handleClick(token, cue.from, cue.to)}
                         >
                             {token.surface_form}
                         </span>

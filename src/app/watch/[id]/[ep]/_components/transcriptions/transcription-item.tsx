@@ -57,16 +57,17 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
         setHoveredTokenId(null);
     }, []);
 
-    const handleActivate = useCallback((cueId: number, token: SubtitleToken, trigger: SubtitleSettings['definitionTrigger']) => {
+    const handleActivate = useCallback(async (from: number, to: number, token: SubtitleToken, trigger: SubtitleSettings['definitionTrigger']) => {
         if (
-            !cueId
+            !from
+            || !to
             || !token 
             || transcription == 'english' 
             || definitionTrigger != trigger
             || isTokenExcluded(token)
         ) return;
 
-        navigator.clipboard.writeText(token.surface_form);
+        await navigator.clipboard.writeText(token.surface_form);
 
         if (storeToken && storeToken.id === token.id) {
             // If clicking on the same token, clear it
@@ -79,7 +80,7 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
         } else {
             // Otherwise set the new token and sentence
             setToken(token);
-            const sentences = getSentencesForCue(transcriptionsLookup, cueId);
+            const sentences = getSentencesForCue(transcriptionsLookup, from, to);
             setSentences(sentences);
         }
     }, [storeToken, storeSentences, setToken, setSentences]);
@@ -108,11 +109,11 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
                     <span
                         style={tokenStyle}
                         onClick={() => {
-                            handleActivate(cue.id, token, 'click');
+                            handleActivate(cue.from, cue.to, token, 'click');
                         }}
                         onMouseEnter={() => {
                             handleTokenMouseEnter(cue.id, token.id)
-                            handleActivate(cue.id, token, 'hover');
+                            handleActivate(cue.from, cue.to, token, 'hover');
                         }}
                         onMouseLeave={() => { 
                             handleTokenMouseLeave()

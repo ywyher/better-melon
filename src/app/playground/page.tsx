@@ -4,6 +4,7 @@ import SubtitleTranscriptions from "@/app/watch/[id]/[ep]/_components/transcript
 import DefinitionCard from "@/components/definition-card/definition-card";
 import { useSubtitleStyles } from "@/lib/hooks/use-subtitle-styles";
 import { useSubtitleTranscriptions } from "@/lib/hooks/use-subtitle-transcriptions";
+import { useDefinitionStore } from "@/lib/stores/definition-store";
 import { usePlayerStore } from "@/lib/stores/player-store";
 import { useEffect } from "react";
 
@@ -12,6 +13,7 @@ export default function Playground() {
   const setActiveSubtitleFile = usePlayerStore((state) => state.setActiveSubtitleFile);
   const setActiveTranscriptions = usePlayerStore((state) => state.setActiveTranscriptions);
   const setEnglishSubtitleUrl = usePlayerStore((state) => state.setEnglishSubtitleUrl);
+  const sentences = useDefinitionStore((state) => state.sentences)
   
   useEffect(() => {
     setEnglishSubtitleUrl("https://s.megastatics.com/subtitle/92580649ff01096b4a0de6428f58bedb/eng-0.vtt");
@@ -26,6 +28,10 @@ export default function Playground() {
       source: 'remote'
     });
   }, [setEnglishSubtitleUrl, setActiveTranscriptions, setActiveSubtitleFile]);
+
+  useEffect(() => {
+    console.log(`sentences`, sentences)
+  }, [sentences])
   
   const { transcriptions, transcriptionsLookup } = useSubtitleTranscriptions()
   const { styles } = useSubtitleStyles();
@@ -33,14 +39,14 @@ export default function Playground() {
   return (
     <div className="relative h-screen">
       <DefinitionCard />
-      {/* <SubtitleTranscriptions
+      <SubtitleTranscriptions
         styles={styles}
         transcriptions={transcriptions}
         cuePauseDuration={0}
         definitionTrigger="click"
         syncPlayerSettings="never"
         transcriptionsLookup={transcriptionsLookup}
-      /> */}
+      />
     </div>
   );
 }

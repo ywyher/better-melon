@@ -16,9 +16,9 @@ type JMdictKanjiProps = {
 export default function JMdictKanji({ kanji, kana, pos, definition, sentenceEnglish, sentenceKanji }: JMdictKanjiProps) {
   const { addToAnki } = useAddToAnki({
     fields: {
-      kanji: kanji.text,
-      kana: kana.text,
-      definition: definition.text,
+      kanji: kanji.text || "",
+      kana: kana.text || "",
+      definition: definition.text || "",
       "sentence-kanji": sentenceKanji?.text,
       "sentence-english": sentenceEnglish?.text,
       "sentence-kana": toKana(sentenceKanji?.text),

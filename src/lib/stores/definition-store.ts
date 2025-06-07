@@ -31,7 +31,7 @@ export const useDefinitionStore = create<DefinitionStore>()(
         position: { x: 0, y: 0 },
         setPosition: (position: DefinitionStore['position']) => set({ position }),
 
-        isExpanded: true,
+        isExpanded: false,
         setIsExpanded: (isExpanded: DefinitionStore['isExpanded']) => set({ isExpanded }),
 
         sentences: {
@@ -41,22 +41,23 @@ export const useDefinitionStore = create<DefinitionStore>()(
         },
         setSentences: (sentences: DefinitionStore['sentences']) => set({ sentences }),
 
-        token: {
-            "word_id": 93180,
-            "word_type": "KNOWN",
-            "word_position": 14,
-            "surface_form": "見る",
-            "pos": "助詞",
-            "pos_detail_1": "接続助詞",
-            "pos_detail_2": "*",
-            "pos_detail_3": "*",
-            "conjugated_type": "*",
-            "conjugated_form": "*",
-            "basic_form": "が",
-            "reading": "ガ",
-            "pronunciation": "ガ",
-            "id": "44-7"
-            },
+        // token: {
+        //     "word_id": 93180,
+        //     "word_type": "KNOWN",
+        //     "word_position": 14,
+        //     "surface_form": "見る",
+        //     "pos": "助詞",
+        //     "pos_detail_1": "接続助詞",
+        //     "pos_detail_2": "*",
+        //     "pos_detail_3": "*",
+        //     "conjugated_type": "*",
+        //     "conjugated_form": "*",
+        //     "basic_form": "が",
+        //     "reading": "ガ",
+        //     "pronunciation": "ガ",
+        //     "id": "44-7"
+        //     },
+        token: null,
         setToken: (token: DefinitionStore['token']) => set({ token }),
         
 

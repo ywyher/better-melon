@@ -1,3 +1,4 @@
+import { TranscriptionsLookup } from "@/app/watch/[id]/[ep]/types";
 import { excludedPos, subtitleFormats } from "@/lib/constants/subtitle";
 import { SubtitleSettings } from "@/lib/db/schema";
 import { FileSelectionError } from "@/lib/errors/player";
@@ -300,7 +301,39 @@ export function isTokenExcluded(token: SubtitleToken) {
   || excludedPos.includes(token.pos_detail_1) // for numbers
 }
 
-export const getSentencesForCue = (transcriptionLookup: Map<SubtitleTranscription, Map<number, SubtitleCue>>, cueId: number) => {
+export const getTranscriptionsLookupKey = (from: number, to: number) => {
+  return `${Math.floor(from)}-${Math.floor(to)}`;
+};
+
+export const findBestMatchingCue = (
+  cueMap: Map<string, SubtitleCue>, 
+  targetFrom: number, 
+  targetTo: number,
+  tolerance: number = 1.0 // 1 second tolerance
+): SubtitleCue | null => {
+  let bestMatch: SubtitleCue | null = null;
+  let bestScore = Infinity;
+
+  for (const cue of cueMap.values()) {
+    const fromDiff = Math.abs(cue.from - targetFrom);
+    const toDiff = Math.abs(cue.to - targetTo);
+    const totalDiff = fromDiff + toDiff;
+
+    // Only consider cues within tolerance
+    if (fromDiff <= tolerance && toDiff <= tolerance && totalDiff < bestScore) {
+      bestScore = totalDiff;
+      bestMatch = cue;
+    }
+  }
+
+  return bestMatch;
+};
+
+export const getSentencesForCue = (
+  transcriptionLookup: TranscriptionsLookup, 
+  from: number, 
+  to: number
+) => {
   const sentences = {
     kanji: null as string | null,
     kana: null as string | null,
@@ -308,21 +341,27 @@ export const getSentencesForCue = (transcriptionLookup: Map<SubtitleTranscriptio
   };
 
   // Get Japanese (kanji) sentence
-  const japaneseCue = transcriptionLookup.get('japanese')?.get(cueId);
-  if (japaneseCue) {
-    sentences.kanji = japaneseCue.content;
+  const japaneseCueMap = transcriptionLookup.get('japanese');
+  if (japaneseCueMap) {
+    const japaneseCue = findBestMatchingCue(japaneseCueMap, from, to);
+    if (japaneseCue) {
+      sentences.kanji = japaneseCue.content;
+    }
   }
 
-  // Get Kana sentence
-  const kanaCue = transcriptionLookup.get('hiragana')?.get(cueId);
+  // Get Kana sentence - exact match since it's from same file as Japanese
+  const kanaCue = transcriptionLookup.get('hiragana')?.get(getTranscriptionsLookupKey(from, to));
   if (kanaCue) {
     sentences.kana = kanaCue.content;
   }
 
   // Get English sentence
-  const englishCue = transcriptionLookup.get('english')?.get(cueId);
-  if (englishCue) {
-    sentences.english = englishCue.content;
+  const englishCueMap = transcriptionLookup.get('english');
+  if (englishCueMap) {
+    const englishCue = findBestMatchingCue(englishCueMap, from, to);
+    if (englishCue) {
+      sentences.english = englishCue.content;
+    }
   }
 
   return sentences;

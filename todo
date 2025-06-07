@@ -1,10 +1,11 @@
+try this for animepahe ?
+https://github.com/ElijahCodes12345/animepahe-api
+
 there is built-in getAccessToken no need to listAccountsWithFullData on anilist !!
 
 "sentence-kana": sentenceKanji?.text, in jmdict kanji, we gotta convert it :(
 
 we have to implement the delay in transcriptionsLookup 
-
-for pos join the array instad of [0]
 
 useful for domains and vps shit:
 https://my.hivelocity.net/sign-up?referralCode=JKUA
@@ -13,8 +14,6 @@ https://regery.com/
 https://receive-smss.com/
 
 forget password doesnt work
-
-If you're using Next.js you need to call router.refresh() after signing in to clear the router cache
 
 prefetch funtioanlity is trying to refetch next episode on movies! !
 also the delay doesnt get set for whatever reason !
@@ -63,8 +62,6 @@ prob not that important tho
 add the ability to disable auto scroll to the current cue and the ability to customize the countdown when the user is scrolling before it returns to the current cue
 
 update the skeletons for general settings and subtitle styles since you chagned the content
-
-hide spoilers
 
 watch or info page
 > Choose whether to go to the info page or watch page when selecting an anime.

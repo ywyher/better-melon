@@ -45,6 +45,7 @@
     "better-auth": "^1.2.8",
     "btoa": "^1.2.1",
     "class-variance-authority": "^0.7.1",
+    "clipboardy": "^4.0.0",
     "clsx": "^2.1.1",
     "cmdk": "1.0.0",
     "compromise": "^14.14.4",

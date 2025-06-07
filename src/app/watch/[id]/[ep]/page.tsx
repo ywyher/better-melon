@@ -32,6 +32,7 @@ export default function WatchPage() {
   const setSentences = useDefinitionStore((state) => state.setSentences);
   const setToken = useDefinitionStore((state) => state.setToken);
   const setActiveSubtitleFile = usePlayerStore((state) => state.setActiveSubtitleFile);
+  const englishSubtitleUrl = usePlayerStore((state) => state.englishSubtitleUrl);
 
   const loadStartTimeRef = useRef<number>(performance.now());
   const [totalDuration, setTotalDuration] = useState<number>(0);
@@ -172,7 +173,8 @@ export default function WatchPage() {
 
   useEffect(() => {
     console.log(`sentences`, sentences)
-  }, [sentences])
+    console.log(`transcriptionsLookup`, transcriptionsLookup)
+  }, [sentences, transcriptionsLookup])
 
   return (
     <div className="flex flex-col md:flex-row w-full md:gap-10">

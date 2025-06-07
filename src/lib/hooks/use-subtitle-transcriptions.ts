@@ -2,6 +2,7 @@ import { TranscriptionQuery } from "@/app/watch/[id]/[ep]/types";
 import { useInitializeTokenizer } from "@/lib/hooks/use-initialize-tokenizer";
 import { subtitleQueries } from "@/lib/queries/subtitle";
 import { usePlayerStore } from "@/lib/stores/player-store";
+import { getTranscriptionsLookupKey } from "@/lib/subtitle/utils";
 import { SubtitleCue, SubtitleTranscription } from "@/types/subtitle";
 import { useQueries } from "@tanstack/react-query";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -80,20 +81,20 @@ export const useSubtitleTranscriptions = () => {
   });
 
   const transcriptionsLookup = useMemo(() => {
-    const lookup = new Map<SubtitleTranscription, Map<number, SubtitleCue>>();
+    const lookup = new Map<SubtitleTranscription, Map<string, SubtitleCue>>();
     
     transcriptions.forEach(transcription => {
       if(!transcription) return
-      const cueMap = new Map<number, SubtitleCue>();
+      const cueMap = new Map<string, SubtitleCue>();
       transcription.cues.forEach(cue => {
-        cueMap.set(cue.id, cue);
+        cueMap.set(getTranscriptionsLookupKey(cue.from, cue.to), cue);
       });
       lookup.set(transcription.transcription, cueMap);
     });
     
     return lookup;
   }, [transcriptions]);
-
+  
   const isLoading = isTokenizerLoading || queries.some(q => q.isLoading);
   const error = queries.find(q => q.error)?.error;
 
