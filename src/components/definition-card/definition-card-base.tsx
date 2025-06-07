@@ -1,13 +1,14 @@
 'use client'
 
 import DefinitionCardContent from "@/components/definition-card/definition-card-content";
-import DefinitionCardHeader from "@/components/definition-card/defintion-card-header";
+import DefinitionCardHeader from "@/components/definition-card/definition-card-header";
 import { Card } from "@/components/ui/card";
 import { useDefinition } from "@/lib/hooks/use-definition";
 import { useDefinitionStore } from "@/lib/stores/definition-store";
 import { cn } from "@/lib/utils";
 import { useDraggable } from "@dnd-kit/core";
 import { useEffect } from "react";
+import { createPortal } from "react-dom";
 
 export default function DefinitionCardBase() {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
@@ -26,16 +27,16 @@ export default function DefinitionCardBase() {
 
   const { dictionary, entries, isLoading, error } = useDefinition({ query: token?.surface_form, isExpanded })
 
-  return (
+  const cardContent = (
     <Card
       ref={setNodeRef} 
-      style={style}
-      {...listeners}
-      {...attributes}
+      style={isExpanded ? undefined : style}
+      {...(isExpanded ? {} : listeners)}
+      {...(isExpanded ? {} : attributes)}
       className={cn(
         "flex flex-col gap-5 min-w-[300px] p-3 z-50",
         isExpanded ?
-          "w-[100%] h-fit"
+          "fixed top-[var(--header-height)] left-1/2 -translate-x-1/2 h-[calc(98vh-var(--header-height))] w-full container mx-auto max-h-none overflow-y-scroll"
         :
           "absolute top-5 left-1/2 -translate-x-1/2 cursor-move shadow-lg",
       )}
@@ -47,7 +48,16 @@ export default function DefinitionCardBase() {
         isExpanded={isExpanded}
         dictionary={dictionary}
         entries={entries}
+        isLoading={isLoading}
       />
     </Card>
-  )
+  );
+
+  // When expanded, render to document body via portal
+  if (isExpanded && typeof document !== 'undefined') {
+    return createPortal(cardContent, document.body);
+  }
+
+  // Normal rendering within the MediaPlayer
+  return cardContent;
 }

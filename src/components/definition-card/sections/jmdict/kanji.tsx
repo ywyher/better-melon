@@ -1,5 +1,4 @@
 import useAddToAnki from "@/lib/hooks/use-add-to-anki"
-import { toKana } from 'wanakana'
 import type { JMdictGloss, JMdictKana, JMdictKanji, JMdictPos, JMdictSentence } from "@/types/jmdict"
 import { jmdictTags } from "@/lib/constants/jmdict"
 import { Badge } from "@/components/ui/badge"

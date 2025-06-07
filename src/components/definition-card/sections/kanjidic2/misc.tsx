@@ -10,7 +10,7 @@ export default function Kanjidic2Misc({ misc }: Kanjidic2MiscProps) {
       <p className="text-gray-500 font-bold text-md">
         {misc.strokeCounts} strokes,
         JLPT N{misc.jlptLevel},
-        taugh in grede {misc.grade}
+        taught in grade {misc.grade}
       </p>
     </div>
   )

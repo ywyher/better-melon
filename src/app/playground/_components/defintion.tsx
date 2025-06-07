@@ -8,6 +8,12 @@ import { useDefinitionStore } from "@/lib/stores/definition-store";
 import { usePlayerStore } from "@/lib/stores/player-store";
 import { useEffect } from "react";
 
+import { MediaPlayer, type MediaPlayerInstance, MediaProvider, Poster, useMediaState } from '@vidstack/react';
+import { DefaultAudioLayout, defaultLayoutIcons, DefaultVideoLayout } from '@vidstack/react/player/layouts/default';
+import { Track } from "@vidstack/react";
+import '@vidstack/react/player/styles/default/theme.css';
+import '@vidstack/react/player/styles/default/layouts/video.css';
+
 export default function DefinitionPlayground() {
   const setActiveSubtitleFile = usePlayerStore((state) => state.setActiveSubtitleFile);
   const setActiveTranscriptions = usePlayerStore((state) => state.setActiveTranscriptions);
@@ -35,17 +41,34 @@ export default function DefinitionPlayground() {
   const { transcriptions, transcriptionsLookup } = useSubtitleTranscriptions()
   const { styles } = useSubtitleStyles();
 
+  const url = "http://localhost:8080/proxy?url=https://frostywinds57.live/_v7/af9590f35dc83df1743cb7a42fb27e1d774d69d735058842262eaa1a8448ee6af7ae3b241bcdc0fc8fd10155d82c5fcfa232daf76ee0a09aca6a64dfd264b7d9fa2517256de0b588c790ece83c7d98040c9b1b333bbd82044ca5bcc4b6140661a653aaeac58ca922caf3a87efc10d31729f04a8135742dac190b80c13050b903/master.m3u8"
+
   return (
-    <div className="relative h-screen">
-      <DefinitionCard />
-      <SubtitleTranscriptions
-        styles={styles}
-        transcriptions={transcriptions}
-        cuePauseDuration={0}
-        definitionTrigger="click"
-        syncPlayerSettings="never"
-        transcriptionsLookup={transcriptionsLookup}
-      />
-    </div>
+    <MediaPlayer
+        title={""}
+        src={url}
+        load='eager'
+        posterLoad='eager'
+        crossOrigin="anonymous"
+        className='relative w-full h-fit'
+        aspectRatio="16/9"
+    >
+        <MediaProvider>
+        </MediaProvider>
+        <DefaultAudioLayout icons={defaultLayoutIcons} />
+        <DefaultVideoLayout
+            icons={defaultLayoutIcons} 
+        />
+        <DefinitionCard />
+        <SubtitleTranscriptions
+          transcriptions={transcriptions}
+          styles={styles}
+          syncPlayerSettings={'always'}
+          cuePauseDuration={0}
+          definitionTrigger={'click'}
+          transcriptionsLookup={transcriptionsLookup}
+        />
+    </MediaPlayer>
+
   );
 }

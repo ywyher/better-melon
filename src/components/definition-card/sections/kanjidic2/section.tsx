@@ -1,5 +1,5 @@
 import Kanjidic2Header from "@/components/definition-card/sections/kanjidic2/header"
-import Kanjidic2Menaing from "@/components/definition-card/sections/kanjidic2/meaning"
+import Kanjidic2Meaning from "@/components/definition-card/sections/kanjidic2/meaning"
 import Kanjidic2Literal from "@/components/definition-card/sections/kanjidic2/literal"
 import Kanjidic2Reading from "@/components/definition-card/sections/kanjidic2/reading"
 import Kanjidic2Misc from "@/components/definition-card/sections/kanjidic2/misc"
@@ -47,7 +47,7 @@ export default function Kanjidic2Section({ entries, sentences }: Kanjidic2Props)
                   <div className="flex flex-row gap-1 flex-wrap">
                     {g.meanings.map((m, idx) => (
                       <div key={idx} className="flex flex-row gap-0">
-                        <Kanjidic2Menaing key={idx} meaning={m} />
+                        <Kanjidic2Meaning key={idx} meaning={m} />
                         {idx < g.meanings.length - 1 && <DotSeparator />}
                       </div>
                     ))}
