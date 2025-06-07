@@ -7,6 +7,7 @@ import { useDefinitionStore } from "@/lib/stores/definition-store";
 import { getSentencesForCue, isTokenExcluded } from "@/lib/subtitle/utils";
 import { toast } from "sonner";
 import { TranscriptionsLookup } from "@/app/watch/[id]/[ep]/types";
+import { useDelayStore } from "@/lib/stores/delay-store";
 
 export default function SubtitleCuesContainer({
   items,
@@ -20,7 +21,7 @@ export default function SubtitleCuesContainer({
   transcriptionsLookup: TranscriptionsLookup
 }) {
   const player = usePlayerStore((state) => state.player)
-  const delay = usePlayerStore((state) => state.delay)
+  const delay = useDelayStore((state) => state.delay);
   const activeSubtitleFile = usePlayerStore((state) => state.activeSubtitleFile)
   
   const activeToken = useDefinitionStore((state) => state.token)

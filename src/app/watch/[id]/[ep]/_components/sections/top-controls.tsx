@@ -1,12 +1,13 @@
 import SubtitlePanel from "@/app/watch/[id]/[ep]/_components/panel/panel";
 import SettingsDialog from "@/app/watch/[id]/[ep]/_components/settings/settings-dialog";
+import { TranscriptionQuery, TranscriptionsLookup } from "@/app/watch/[id]/[ep]/types";
 import DialogWrapper from "@/components/dialog-wrapper";
 import { Button } from "@/components/ui/button";
-import { PlayerStore } from "@/lib/stores/player-store";
+import { PlayerStore, usePlayerStore } from "@/lib/stores/player-store";
 import { AnimeEpisodeData } from "@/types/anime";
 import { SettingsForEpisode } from "@/types/settings";
 import { SubtitleCue } from "@/types/subtitle";
-import { Captions, Loader2, PanelLeftClose, PanelLeftOpen } from "lucide-react";
+import { Captions, Loader2, PanelLeftClose, PanelLeftOpen, Search } from "lucide-react";
 
 type TopControlsProps = {
   isLoading: boolean;
@@ -15,7 +16,8 @@ type TopControlsProps = {
   isMedium: boolean;
   panelState: PlayerStore['panelState'];
   setPanelState: (state: PlayerStore['panelState']) => void;
-  japaneseTranscriptions?: SubtitleCue[];
+  transcriptions: TranscriptionQuery[];
+  transcriptionsLookup: TranscriptionsLookup
   settings: SettingsForEpisode
 }
 
@@ -26,9 +28,11 @@ export function TopControls({
   isMedium,
   panelState,
   setPanelState,
-  japaneseTranscriptions,
+  transcriptions,
+  transcriptionsLookup,
   settings
 }: TopControlsProps) {
+  const player = usePlayerStore((state) => state.player)
   return (
     <div className="flex flex-row gap-3 items-center">
       {loadingDuration > 0 && (
@@ -36,7 +40,17 @@ export function TopControls({
           Loaded in {(loadingDuration / 1000).toFixed(2)}s
         </div>
       )}
-      {(isLoading || !episodeData || !japaneseTranscriptions) ? (
+      <Button
+        variant='outline'
+        onClick={() => {
+          player.current?.remoteControl.seek(427)
+        }}
+      >
+        <Search 
+          className='animate-spin'
+        />
+      </Button>
+      {(isLoading || !episodeData || !transcriptions) ? (
         <div className="flex flex-row gap-2">
           <Button variant='outline'>
             <Loader2 className='animate-spin' />
@@ -67,7 +81,8 @@ export function TopControls({
             >
               <SubtitlePanel
                 subtitleFiles={episodeData.subtitles}
-                japaneseTranscription={japaneseTranscriptions}
+                transcriptions={transcriptions}
+                transcriptionsLookup={transcriptionsLookup}
               />
             </DialogWrapper>
           ) : (

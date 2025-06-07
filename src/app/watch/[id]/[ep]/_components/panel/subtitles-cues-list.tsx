@@ -5,6 +5,7 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 import { usePlayerStore } from "@/lib/stores/player-store";
 import SubtitleCuesContainer from "@/app/watch/[id]/[ep]/_components/panel/subtitle-cues-container";
 import { TranscriptionsLookup } from "@/app/watch/[id]/[ep]/types";
+import { useDelayStore } from "@/lib/stores/delay-store";
 
 type SubtitleCuesListProps = {
     isLoading: boolean;
@@ -28,7 +29,7 @@ export default function SubtitleCuesList({
   const lastUpdateTimeRef = useRef<number>(0);
   
   const player = usePlayerStore((state) => state.player);
-  const delay = usePlayerStore((state) => state.delay);
+  const delay = useDelayStore((state) => state.delay);;
 
   const rowVirtualizer = useVirtualizer({
       count: cues?.length || 0,

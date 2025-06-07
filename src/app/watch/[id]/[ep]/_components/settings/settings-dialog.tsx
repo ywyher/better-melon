@@ -32,8 +32,8 @@ export default function SettingsDialog({ generalSettings }: {
           w-full overflow-y-auto
         ">
           <DelayController />
-          <Separator />
-          <SubtitleStyles syncPlayerSettings={generalSettings.syncPlayerSettings} source="store" />
+          {/* <Separator />
+          <SubtitleStyles syncPlayerSettings={generalSettings.syncPlayerSettings} source="store" /> */}
         </div>
       </DialogWrapper>
     )

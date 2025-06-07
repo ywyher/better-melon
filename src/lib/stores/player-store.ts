@@ -27,9 +27,6 @@ export type PlayerStore = {
   isVideoReady: boolean;
   setIsVideoReady: (sub: PlayerStore['isVideoReady']) => void;
 
-  delay: SubtitleDelay
-  setDelay: (sub: PlayerStore['delay']) => void;
-  
   autoPlay: boolean;
   setAutoPlay: (sub: PlayerStore['autoPlay']) => void;
 
@@ -77,12 +74,6 @@ export const usePlayerStore = create<PlayerStore>()(
 
       isVideoReady: false,
       setIsVideoReady: (isVideoReady: PlayerStore['isVideoReady']) => set({ isVideoReady }),
-
-      delay: {
-        japanese: 0,
-        english: 0
-      },
-      setDelay: (delay: PlayerStore['delay']) => set({ delay }),
       
       autoPlay: false,
       setAutoPlay: (autoPlay: PlayerStore['autoPlay']) => set({ autoPlay }),
@@ -112,10 +103,6 @@ export const usePlayerStore = create<PlayerStore>()(
           activeTranscriptions: ['japanese', 'english'],
           subtitleCues: [],
           isVideoReady: false,
-          delay: {
-            japanese: 0,
-            english: 0,
-          },
           autoPlay: false, 
           autoSkip: false,
           autoNext: false,

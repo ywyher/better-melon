@@ -22,7 +22,7 @@ export default function JMdictSection({ entries }: JMdictSectionProps) {
             {/* Main character display */}
             <div className="mb-4">
               <JMdictKanji 
-                kanji={entry.kanji[0]}
+                kanji={entry.kanji[0] || entry.kana[0]}
                 kana={entry.kana[0]}
                 pos={entry.sense[0].partOfSpeech as JMdictPos[]}
                 definition={entry.sense[0].gloss[0]}

@@ -7,6 +7,7 @@ import { useDefinition } from "@/lib/hooks/use-definition";
 import { useDefinitionStore } from "@/lib/stores/definition-store";
 import { cn } from "@/lib/utils";
 import { useDraggable } from "@dnd-kit/core";
+import { useEffect } from "react";
 
 export default function DefinitionCardBase() {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({

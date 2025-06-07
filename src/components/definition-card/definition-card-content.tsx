@@ -42,7 +42,7 @@ export default function DefinitionCardContent({
                     english: (dictionary?.find(d => d.index == 'jmdict')?.entries as JMdictWord[])[0].sense[0].examples?.[0]?.sentences.find(s => s.land == 'eng')?.text || "",
                   }}
                 />
-                <Separator />
+                {dictionary?.find(d => d.index == 'kanjidic2')?.entries && <Separator />}
                 <JMnedictSection
                   entries={dictionary?.find(d => d.index == 'jmnedict')?.entries as JMnedictWord[]}
                 />

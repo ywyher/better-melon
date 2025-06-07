@@ -5,22 +5,81 @@ import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { Separator } from "@/components/ui/separator";
+import { useDelayStore } from "@/lib/stores/delay-store";
 
-export default function DelayController() {
-  const delay = usePlayerStore((state) => state.delay);
-  const setDelay = usePlayerStore((state) => state.setDelay);
-  const [japaneseProgress, setJapaneseProgress] = useState([delay.japanese]);
-  const [englishProgress, setEnglishProgress] = useState([delay.english]);
+interface DelaySliderProps {
+  label: string;
+  value: number;
+  step: number;
+  onChange: (value: number) => void;
+}
+
+function DelaySlider({ label, value, step, onChange }: DelaySliderProps) {
+  const [progress, setProgress] = useState([value]);
 
   useEffect(() => {
-    setJapaneseProgress([delay.japanese]);
-    setEnglishProgress([delay.english]);
-  }, [delay.japanese, delay.english]);
+    setProgress([value]);
+  }, [value]);
+
+  const handleValueChange = (newValue: number[]) => {
+    setProgress(newValue);
+  };
+
+  const handleCommit = () => {
+    onChange(progress[0]);
+  };
+
+  const handleKeyUp = (event: React.KeyboardEvent) => {
+    if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+      onChange(progress[0]);
+    }
+  };
+
+  return (
+    <div className="flex flex-col gap-2 w-full flex-1">
+      <span className="text-xs font-medium">{label}</span>
+      <div className="flex flex-row items-center gap-3">
+        <div className="flex-1">
+          <Slider
+            value={progress}
+            min={-30}
+            max={30}
+            step={step}
+            onValueChange={handleValueChange}
+            onPointerUp={handleCommit}
+            onKeyUp={handleKeyUp}
+          />
+        </div>
+        <div className="w-12 text-right">
+          {progress[0]}s
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function DelayController() {
+  const delay = useDelayStore((state) => state.delay);
+  const setDelay = useDelayStore((state) => state.setDelay);
 
   const resetDelays = () => {
     setDelay({
       japanese: 0,
       english: 0
+    });
+  };
+
+  const handleJapaneseChange = (value: number) => {
+    setDelay({
+      ...delay,
+      japanese: value
+    });
+  };
+
+  const handleEnglishChange = (value: number) => {
+    setDelay({
+      ...delay,
+      english: value
     });
   };
 
@@ -38,55 +97,21 @@ export default function DelayController() {
       </div>
 
       <div className="flex flex-row gap-3 justify-between items-center">
-        {/* Japanese Subtitle Delay */}
-        <div className="flex flex-col gap-2 w-full flex-1">
-          <span className="text-xs font-medium">Japanese</span>
-          <div className="flex flex-row items-center gap-3">
-            <div className="flex-1">
-              <Slider
-                value={japaneseProgress}
-                min={-30}
-                max={30}
-                step={0.5}
-                onValueChange={(e) => setJapaneseProgress(e)}
-                onPointerUp={() => {
-                  setDelay({
-                    ...delay,
-                    japanese: japaneseProgress[0]
-                  });
-                }}
-              />
-            </div>
-            <div className="w-12 text-right">
-              {japaneseProgress[0]}s
-            </div>
-          </div>
-        </div>
+        <DelaySlider
+          label="Japanese"
+          value={delay.japanese}
+          step={0.5}
+          onChange={handleJapaneseChange}
+        />
+        
         <Separator orientation="vertical" />
-        {/* English Subtitle Delay */}
-        <div className="flex flex-col gap-2 w-full flex-1">
-          <span className="text-xs font-medium">English</span>
-          <div className="flex flex-row items-center gap-3">
-            <div className="flex-1">
-              <Slider
-                value={englishProgress}
-                min={-30}
-                max={30}
-                step={1}
-                onValueChange={(e) => setEnglishProgress(e)}
-                onPointerUp={() => {
-                  setDelay({
-                    ...delay,
-                    english: englishProgress[0]
-                  });
-                }}
-              />
-            </div>
-            <div className="w-12 text-right">
-              {englishProgress[0]}s
-            </div>
-          </div>
-        </div>
+        
+        <DelaySlider
+          label="English"
+          value={delay.english}
+          step={0.5}
+          onChange={handleEnglishChange}
+        />
       </div>
     </div>
   );

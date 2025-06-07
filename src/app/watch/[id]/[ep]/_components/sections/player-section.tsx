@@ -49,7 +49,8 @@ export default function PlayerSection({
           isMedium={isMedium}
           panelState={panelState}
           setPanelState={setPanelState}
-          japaneseTranscriptions={transcriptions.find(t => t?.transcription == 'japanese')?.cues}
+          transcriptions={transcriptions}
+          transcriptionsLookup={transcriptionsLookup}
           settings={settings}
         />
       </div>

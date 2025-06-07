@@ -16,6 +16,7 @@ import { SyncStrategy } from "@/types";
 import { showSyncSettingsToast } from "@/components/sync-settings-toast";
 import { Button } from "@/components/ui/button";
 import { useMediaState } from "@vidstack/react";
+import { useDelayStore } from "@/lib/stores/delay-store";
 
 type SubtitleTranscriptionsProps = {
   transcriptions: TranscriptionQuery[];
@@ -36,7 +37,7 @@ export default function SubtitleTranscriptions({
 }: SubtitleTranscriptionsProps) {
   const player = usePlayerStore((state) => state.player);
   const activeTranscriptions = usePlayerStore((state) => state.activeTranscriptions);
-  const delay = usePlayerStore((state) => state.delay);
+  const delay = useDelayStore((state) => state.delay);;
   const pauseOnCue = usePlayerStore((state) => state.pauseOnCue);
 
   const [order, setOrder] = useState<SubtitleTranscription[]>(() => [...activeTranscriptions]);

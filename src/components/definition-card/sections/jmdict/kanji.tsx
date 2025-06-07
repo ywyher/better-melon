@@ -3,6 +3,7 @@ import { toKana } from 'wanakana'
 import type { JMdictGloss, JMdictKana, JMdictKanji, JMdictPos, JMdictSentence } from "@/types/jmdict"
 import { jmdictTags } from "@/lib/constants/jmdict"
 import { Badge } from "@/components/ui/badge"
+import { useEffect } from "react"
 
 type JMdictKanjiProps = {
   kanji: JMdictKanji
@@ -19,9 +20,9 @@ export default function JMdictKanji({ kanji, kana, pos, definition, sentenceEngl
       kanji: kanji.text || "",
       kana: kana.text || "",
       definition: definition.text || "",
-      "sentence-kanji": sentenceKanji?.text,
-      "sentence-english": sentenceEnglish?.text,
-      "sentence-kana": toKana(sentenceKanji?.text),
+      "sentence-kanji": sentenceKanji?.text || "",
+      "sentence-english": sentenceEnglish?.text || "",
+      "sentence-kana": toKana(sentenceKanji?.text) || "",
       "part-of-speech": pos
         ?.map(p => jmdictTags[p] || p)
         .join(', ')
