@@ -40,7 +40,7 @@ export default function Header() {
     };
   }, []);
   
-  const headerBaseClasses = "sticky top-0 container mx-auto z-50 flex flex-row items-center justify-between py-3 transition-all duration-300 ease-in-out";
+  const headerBaseClasses = "sticky top-0 h-16 max-h-16 container mx-auto z-50 flex flex-row items-center justify-between py-3 transition-all duration-300 ease-in-out";
   
   const scrolledClasses = scrolled ? cn(
     "px-3 top-2 rounded-lg", 

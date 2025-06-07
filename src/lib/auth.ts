@@ -158,7 +158,7 @@ export const auth = betterAuth({
           try {
             const response = await fetch(
               `${env.APP_URL}/api/auth/otp`,
-              {
+              {  
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",

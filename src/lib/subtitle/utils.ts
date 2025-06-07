@@ -1,11 +1,17 @@
+import { TranscriptionsLookup } from "@/app/watch/[id]/[ep]/types";
 import { excludedPos, subtitleFormats } from "@/lib/constants/subtitle";
 import { SubtitleSettings } from "@/lib/db/schema";
 import { FileSelectionError } from "@/lib/errors/player";
+import { DelayStore } from "@/lib/stores/delay-store";
 import { fetchSubtitles, parseAss, parseSrt, parseVtt } from "@/lib/subtitle/parse";
 import { getExtension } from "@/lib/utils";
 import { AnimeStreamingLinks, SkipTime } from "@/types/anime";
 import { ActiveSubtitleFile, SubtitleFile, SubtitleFormat, SubtitleToken } from "@/types/subtitle";
 import {franc} from 'franc-min'
+import Kuroshiro from "@sglkc/kuroshiro";
+import KuromojiAnalyzer from "@sglkc/kuroshiro-analyzer-kuromoji";
+import CustomKuromojiAnalyzer from "@/lib/subtitle/custom-kuromoji-analyzer";
+import { getTokenizer } from "kuromojin";
 
 export const getActiveSubtitleFile = (subtitleFiles: SubtitleFile[], preferredFormat: SubtitleSettings['preferredFormat']) => {
   const selectedFile = selectSubtitleFile({
@@ -298,4 +304,94 @@ export function getSubtitleFormat(
 export function isTokenExcluded(token: SubtitleToken) {
   return excludedPos.includes(token.pos)
   || excludedPos.includes(token.pos_detail_1) // for numbers
+}
+
+export const getTranscriptionsLookupKey = (from: number, to: number, delay: number = 0) => {
+  // idk why its only works with - instead of + but sure
+  return `${Math.floor(from - delay)}-${Math.floor(to - delay)}`
+}
+
+const findBestMatchingCue = (transcriptionMap: Map<string, any>, targetKey: string, tolerance: number = 3) => {
+  // First try exact match
+  const exactMatch = transcriptionMap.get(targetKey);
+  if (exactMatch) return exactMatch;
+
+  // Parse the target key to get time range
+  const [fromStr, toStr] = targetKey.split('-');
+  const targetFrom = parseInt(fromStr);
+  const targetTo = parseInt(toStr);
+  const targetMidpoint = (targetFrom + targetTo) / 2;
+
+  let bestMatch = null;
+  let bestScore = Infinity;
+
+  // Search through all keys for the best overlap
+  for (const [key, cue] of transcriptionMap) {
+    const [keyFromStr, keyToStr] = key.split('-');
+    const keyFrom = parseInt(keyFromStr);
+    const keyTo = parseInt(keyToStr);
+    const keyMidpoint = (keyFrom + keyTo) / 2;
+
+    // Calculate overlap and distance
+    const overlapStart = Math.max(targetFrom, keyFrom);
+    const overlapEnd = Math.min(targetTo, keyTo);
+    const overlap = Math.max(0, overlapEnd - overlapStart);
+    const distance = Math.abs(targetMidpoint - keyMidpoint);
+
+    // Score based on overlap (higher is better) and distance (lower is better)
+    const score = distance - overlap;
+
+    // Only consider if within tolerance and has some overlap or is very close
+    if (distance <= tolerance && (overlap > 0 || distance <= 1) && score < bestScore) {
+      bestMatch = cue;
+      bestScore = score;
+    }
+  }
+
+  return bestMatch;
+};
+
+export const getSentencesForCue = (transcriptionLookup: TranscriptionsLookup, from: number, to: number, delay: DelayStore['delay']) => {
+  const sentences = {
+    kanji: null as string | null,
+    kana: null as string | null,
+    english: null as string | null,
+  };
+
+  const jpnKey = getTranscriptionsLookupKey(from, to)
+  const engKey = getTranscriptionsLookupKey(from, to, delay.english)
+
+  console.log(`sentences jpnKey`, jpnKey)
+  console.log(`sentences engKey`, engKey)
+
+  // Get Japanese (kanji) sentence
+  const japaneseCue = transcriptionLookup.get('japanese')?.get(jpnKey);
+  if (japaneseCue) {
+    sentences.kanji = japaneseCue.content;
+  }
+
+  // Get Kana sentence
+  const kanaCue = transcriptionLookup.get('hiragana')?.get(jpnKey);
+  if (kanaCue) {
+    sentences.kana = kanaCue.content;
+  }
+
+  // Get English sentence with fuzzy matching
+  const englishMap = transcriptionLookup.get('english');
+  if (englishMap) {
+    const englishCue = findBestMatchingCue(englishMap, engKey, 3); // Allow up to 3 second tolerance for English
+    if (englishCue) {
+      sentences.english = englishCue.content;
+    }
+  }
+
+  return sentences;
+};
+
+export const convertToKana = async (sentence: string) => {
+  const tokenizer = await getTokenizer({ dicPath: '/dict' })
+  const kuroshiro = new Kuroshiro();
+  const analyzer = new CustomKuromojiAnalyzer({ tokenizer });
+  await kuroshiro.init(analyzer);
+  return await kuroshiro.convert(sentence, { to: "hiragana" });
 }

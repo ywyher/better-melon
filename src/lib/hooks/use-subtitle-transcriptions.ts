@@ -2,7 +2,8 @@ import { TranscriptionQuery } from "@/app/watch/[id]/[ep]/types";
 import { useInitializeTokenizer } from "@/lib/hooks/use-initialize-tokenizer";
 import { subtitleQueries } from "@/lib/queries/subtitle";
 import { usePlayerStore } from "@/lib/stores/player-store";
-import { SubtitleTranscription } from "@/types/subtitle";
+import { getTranscriptionsLookupKey } from "@/lib/subtitle/utils";
+import { SubtitleCue, SubtitleTranscription } from "@/types/subtitle";
 import { useQueries } from "@tanstack/react-query";
 import { useEffect, useMemo, useRef, useState } from "react";
 
@@ -11,15 +12,16 @@ export const useSubtitleTranscriptions = () => {
   const activeSubtitleFile = usePlayerStore((state) => state.activeSubtitleFile);
   const storeActiveTranscriptions = usePlayerStore((state) => state.activeTranscriptions) || [];
   
-  // Ensure 'japanese' is always included in the active transcriptions
+  // Ensure 'japanese', 'english', and 'hiragana' are always included in the active transcriptions
   const activeTranscriptions: SubtitleTranscription[] = useMemo(() => {
-    // Check if 'japanese' is already included
-    if (!storeActiveTranscriptions.includes('japanese')) {
-      // If not, create a new array with 'japanese' added
-      return [...storeActiveTranscriptions, 'japanese'];
-    }
-    // If 'japanese' is already included, use the original array
-    return storeActiveTranscriptions;
+    const requiredTranscriptions: SubtitleTranscription[] = ['japanese', 'english', 'hiragana'];
+    
+    // Get unique transcriptions by combining required ones with existing ones
+    const uniqueTranscriptions = Array.from(
+      new Set([...storeActiveTranscriptions, ...requiredTranscriptions])
+    );
+    
+    return uniqueTranscriptions;
   }, [storeActiveTranscriptions]);
 
   const { isInitialized: isTokenizerInitialized, isLoading: isTokenizerLoading, error: tokenizerError } = useInitializeTokenizer();
@@ -70,31 +72,50 @@ export const useSubtitleTranscriptions = () => {
 
   // Combine the tokenizer and subtitle loading states
   const transcriptions = queries.map((q) => {
-    if (!q.data) return;
-    return {
-      transcription: q.data.transcription,
-      format: q.data.format,
-      cues: q.data.cues,
-    };
-  });
-  const japanese = transcriptions.find(t => t?.transcription === 'japanese');
-
-  const isLoading = isTokenizerLoading || queries.some(q => q.isLoading);
-  const error = queries.find(q => q.error)?.error;
-
-  
-  return {
-    isLoading,
-    error,
-    transcriptions: queries.map((q) => {
       if(!q.data) return;
       return {
         transcription: q.data.transcription,
         format: q.data.format,
         cues: q.data.cues,
       }
-    }).filter(q => q != undefined) as TranscriptionQuery[],
+  }).filter(q => q != undefined) as TranscriptionQuery[]
+
+  const transcriptionsLookup = useMemo(() => {
+    const lookup = new Map<SubtitleTranscription, Map<string, SubtitleCue>>();
+
+    transcriptions.forEach(transcription => {
+      if(!transcription) return
+      const cueMap = new Map<string, SubtitleCue>();
+      transcription.cues.forEach(cue => {
+        if(cue.transcription == 'english') {
+          // Apply English delay when storing
+          cueMap.set(
+            getTranscriptionsLookupKey(cue.from, cue.to), 
+            cue
+          );
+        } else {
+          // Apply Japanese delay when storing
+          cueMap.set(
+            getTranscriptionsLookupKey(cue.from, cue.to), 
+            cue
+          );
+        }
+      });
+      lookup.set(transcription.transcription, cueMap);
+    });
+    
+    return lookup;
+  }, [transcriptions]);
+  
+  const isLoading = isTokenizerLoading || queries.some(q => q.isLoading);
+  const error = queries.find(q => q.error)?.error;
+
+  return {
+    isLoading,
+    error,
+    transcriptions,
+    transcriptionsLookup,
     loadingDuration: loadingDuration,
-    isTokenizerInitialized: isTokenizerInitialized
+    isTokenizerInitialized: isTokenizerInitialized,
   };
 }

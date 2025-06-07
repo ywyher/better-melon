@@ -80,7 +80,7 @@
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
 
-  --header-height: 57px;
+  --header-height: 4rem;
   --bottombar-height: 68px;
 }
 

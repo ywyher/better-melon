@@ -1,7 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { playerQueries } from '@/lib/queries/player';
-import { usePlayerStore } from '@/lib/stores/player-store';
 
 export function useEpisodeData(animeId: string, episodeNumber: number) {
   const loadingStartTime = useRef<number>(0);

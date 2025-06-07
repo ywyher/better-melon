@@ -34,7 +34,6 @@
     "@radix-ui/react-switch": "^1.2.2",
     "@radix-ui/react-tabs": "^1.1.9",
     "@radix-ui/react-tooltip": "^1.2.4",
-    "@scriptin/jmdict-simplified-types": "^3.6.1",
     "@sglkc/kuroshiro": "^1.0.1",
     "@sglkc/kuroshiro-analyzer-kuromoji": "^1.0.1",
     "@t3-oss/env-nextjs": "^0.13.4",
@@ -46,6 +45,7 @@
     "better-auth": "^1.2.8",
     "btoa": "^1.2.1",
     "class-variance-authority": "^0.7.1",
+    "clipboardy": "^4.0.0",
     "clsx": "^2.1.1",
     "cmdk": "1.0.0",
     "compromise": "^14.14.4",
@@ -84,6 +84,7 @@
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^11.1.0",
     "vaul": "^1.1.2",
+    "wanakana": "^5.3.1",
     "zod": "^3.24.3",
     "zustand": "^5.0.3"
   },

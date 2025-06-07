@@ -2,6 +2,8 @@ import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { S3Client } from "@aws-sdk/client-s3";
 import { Anime, AnimeEpisodeMetadata } from "@/types/anime";
+import { MediaPlayerInstance } from "@vidstack/react";
+import { defaultGeneralSettings } from "@/lib/constants/settings";
 
 export const s3 = new S3Client({
   region: "auto",
@@ -126,7 +128,7 @@ export const mapScreenshotNamingPatternValues = (pattern: string, animeMetadata:
   
   // Replace {title} placeholder
   if (result.includes('{title}')) {
-    result = result.replace(/{title}/g, animeMetadata.title || '');
+    result = result.replace(/{title}/g, animeMetadata.title.toLowerCase().replace(' ', '_') || '');
   }
   
   // Replace {counter} placeholder
@@ -146,3 +148,24 @@ export const mapScreenshotNamingPatternValues = (pattern: string, animeMetadata:
   
   return result;
 };
+
+export function takeSnapshot(player: MediaPlayerInstance, format: 'png' | 'jpeg' | 'webp' = defaultGeneralSettings.screenshotFormat, quality = 0.95) {
+    const videoEl = player.el?.querySelector('video') as HTMLVideoElement;
+    if (!videoEl) return;
+    
+    const canvas = document.createElement('canvas');
+    canvas.width = videoEl.videoWidth;
+    canvas.height = videoEl.videoHeight;
+    
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    
+    ctx.drawImage(videoEl, 0, 0, canvas.width, canvas.height);
+    
+    const mimeType = `image/${format}`;
+    const dataURL = format === 'png' 
+      ? canvas.toDataURL(mimeType)
+      : canvas.toDataURL(mimeType, quality);
+
+    return dataURL.split(',')[1];
+}

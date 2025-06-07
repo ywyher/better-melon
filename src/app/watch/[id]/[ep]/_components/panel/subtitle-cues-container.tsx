@@ -1,53 +1,61 @@
 import { Virtualizer } from "@tanstack/react-virtual";
-import { SubtitleToken, SubtitleCue as TSubtitleCue } from "@/types/subtitle";
+import { SubtitleToken, SubtitleTranscription, SubtitleCue as TSubtitleCue } from "@/types/subtitle";
 import SubtitleCue from "@/app/watch/[id]/[ep]/_components/panel/subtitle-cue";
-import { RefObject, useCallback } from "react";
+import { RefObject, useCallback, useEffect } from "react";
 import { usePlayerStore } from "@/lib/stores/player-store";
 import { useDefinitionStore } from "@/lib/stores/definition-store";
-import { isTokenExcluded } from "@/lib/subtitle/utils";
+import { getSentencesForCue, isTokenExcluded } from "@/lib/subtitle/utils";
 import { toast } from "sonner";
+import { TranscriptionsLookup } from "@/app/watch/[id]/[ep]/types";
+import { useDelayStore } from "@/lib/stores/delay-store";
 
 export default function SubtitleCuesContainer({
   items,
   cues,
-  activeCueIdRef
+  activeCueIdRef,
+  transcriptionsLookup
 }: {
   items: Virtualizer<HTMLDivElement, Element>
   cues: TSubtitleCue[];
   activeCueIdRef: RefObject<number>
+  transcriptionsLookup: TranscriptionsLookup
 }) {
   const player = usePlayerStore((state) => state.player)
-  const delay = usePlayerStore((state) => state.delay)
+  const delay = useDelayStore((state) => state.delay);
   const activeSubtitleFile = usePlayerStore((state) => state.activeSubtitleFile)
   
   const activeToken = useDefinitionStore((state) => state.token)
-  const setSentence = useDefinitionStore((state) => state.setSentence)
+  const setSentences = useDefinitionStore((state) => state.setSentences)
   const setToken = useDefinitionStore((state) => state.setToken)
-  const setAddToAnki = useDefinitionStore((state) => state.setAddToAnki)
+  const setIsAddToAnki = useDefinitionStore((state) => state.setIsAddToAnki)
     
   const handleSeek = useCallback((from: TSubtitleCue['from']) => {
-      player.current?.remoteControl.seek(from + delay.japanese)
+    player.current?.remoteControl.seek(from + delay.japanese)
   }, [player, activeSubtitleFile, delay.japanese]);
 
-  const handleClick = useCallback((sentence: string, token: SubtitleToken) => {
+  const handleClick = useCallback((token: SubtitleToken, from: number, to: number) => {
     if (
-      !sentence 
-      || !token
+      !token
       || isTokenExcluded(token)
     ) return;
     
     if (activeToken && activeToken.id === token.id) {
       // If clicking on the same token, clear it and the sentence
       setToken(null);
-      setSentence(null);
+      setSentences({
+        kanji: null,
+        kana: null,
+        english: null,
+      });
     } else {
-      // Otherwise set the new token and sentence
+      // Otherwise set the new token and get sentences for all transcriptions
       setToken(token);
-      setSentence(sentence);
+      const sentences = getSentencesForCue(transcriptionsLookup, from, to, delay);
+      setSentences(sentences);
     }
     
-    setAddToAnki(false);
-  }, [activeToken, setToken, setSentence, setAddToAnki]);
+    setIsAddToAnki(false);
+  }, [activeToken, setToken, setSentences, setIsAddToAnki, getSentencesForCue]);
 
   const handleCopy = useCallback(async (sentence: string) => {
       if(!sentence) return;

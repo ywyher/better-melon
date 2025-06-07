@@ -1,3 +1,4 @@
+import { AnkiFieldKey } from "@/types/anki";
 import { InferSelectModel, relations } from "drizzle-orm";
 import { pgTable, text, timestamp, boolean, jsonb, pgEnum, real } from "drizzle-orm/pg-core";
 			
@@ -244,7 +245,7 @@ export const verification = pgTable("verification", {
 
 export type User = InferSelectModel<typeof user>;
 export type AnkiPreset = Omit<InferSelectModel<typeof ankiPreset>, 'fields'> & {
-  fields: Record<string, string>;
+  fields: Partial<Record<AnkiFieldKey, string>>;
 };
 export type SubtitleStyles = InferSelectModel<typeof subtitleStyles>
 export type SubtitleSettings = InferSelectModel<typeof subtitleSettings>

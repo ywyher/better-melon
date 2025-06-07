@@ -29,9 +29,15 @@ export default function WatchPage() {
   const isVideoReady = usePlayerStore((state) => state.isVideoReady);
   const setIsVideoReady = usePlayerStore((state) => state.setIsVideoReady);
 
-  const setSentence = useDefinitionStore((state) => state.setSentence);
+  const setSentences = useDefinitionStore((state) => state.setSentences);
   const setToken = useDefinitionStore((state) => state.setToken);
   const setActiveSubtitleFile = usePlayerStore((state) => state.setActiveSubtitleFile);
+  const setEnglishSubtitleUrl = usePlayerStore((state) => state.setEnglishSubtitleUrl);
+  const senteces = useDefinitionStore((state) => state.sentences)
+
+  useEffect(() => {
+    console.log(`senteces`, senteces)
+  }, [senteces])
 
   const loadStartTimeRef = useRef<number>(performance.now());
   const [totalDuration, setTotalDuration] = useState<number>(0);
@@ -55,6 +61,7 @@ export default function WatchPage() {
   const { 
     transcriptions, 
     isLoading: isTranscriptionsLoading, 
+    transcriptionsLookup,
     error: transcriptionsError,
     loadingDuration: transcriptionsLoadingDuration,
   } = useSubtitleTranscriptions();
@@ -110,8 +117,13 @@ export default function WatchPage() {
     setIsVideoReady(false);
     setTotalDuration(0);
     setActiveSubtitleFile(null)
+    setEnglishSubtitleUrl(null)
     setToken(null)
-    setSentence(null)
+    setSentences({
+      kanji: null,
+      kana: null,
+      english: null,
+    })
   }, [animeId, episodeNumber, setIsVideoReady]);
 
   usePrefetchEpisode(
@@ -123,11 +135,11 @@ export default function WatchPage() {
   );
 
   const shouldShowPanel = useMemo(() => {
-    return !isMedium && 
+    return (!isMedium && 
       panelState === 'visible' && 
       episodeData?.metadata && 
       transcriptions && 
-      transcriptions.find(t => t?.transcription === 'japanese')
+      transcriptions.find(t => t?.transcription === 'japanese')) ? true : false
   }, [isMedium, panelState, episodeData?.metadata, transcriptions]);
 
   const errors = useMemo(() => {
@@ -178,6 +190,7 @@ export default function WatchPage() {
           transcriptions={transcriptions}
           transcriptionsStyles={styles}
           settings={settings}
+          transcriptionsLookup={transcriptionsLookup}
         />
         {/* Settings below player */}
         <ControlsSection
@@ -193,7 +206,8 @@ export default function WatchPage() {
           isLoading={isLoading}
           animeMetadata={episodeData?.metadata as AnimeEpisodeData['metadata']}
           subtitleFiles={episodeData?.subtitles as AnimeEpisodeData['subtitles']}
-          japaneseTranscription={transcriptions.find(t => t?.transcription == 'japanese')!.cues}
+          transcriptions={transcriptions}
+          transcriptionsLookup={transcriptionsLookup}
         />
       )}
     </div>

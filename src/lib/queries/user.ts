@@ -28,7 +28,7 @@ export const userQueries = createQueryKeys('user', {
 });
 
 export function useSession() {
-    return useQuery({
-        ...userQueries.session(),
-    })
+  return useQuery({
+    ...userQueries.session(),
+  })
 }
