@@ -72,22 +72,34 @@ export const useSubtitleTranscriptions = () => {
 
   // Combine the tokenizer and subtitle loading states
   const transcriptions = queries.map((q) => {
-    if (!q.data) return;
-    return {
-      transcription: q.data.transcription,
-      format: q.data.format,
-      cues: q.data.cues,
-    };
-  });
+      if(!q.data) return;
+      return {
+        transcription: q.data.transcription,
+        format: q.data.format,
+        cues: q.data.cues,
+      }
+  }).filter(q => q != undefined) as TranscriptionQuery[]
 
   const transcriptionsLookup = useMemo(() => {
     const lookup = new Map<SubtitleTranscription, Map<string, SubtitleCue>>();
-    
+
     transcriptions.forEach(transcription => {
       if(!transcription) return
       const cueMap = new Map<string, SubtitleCue>();
       transcription.cues.forEach(cue => {
-        cueMap.set(getTranscriptionsLookupKey(cue.from, cue.to), cue);
+        if(cue.transcription == 'english') {
+          // Apply English delay when storing
+          cueMap.set(
+            getTranscriptionsLookupKey(cue.from, cue.to), 
+            cue
+          );
+        } else {
+          // Apply Japanese delay when storing
+          cueMap.set(
+            getTranscriptionsLookupKey(cue.from, cue.to), 
+            cue
+          );
+        }
       });
       lookup.set(transcription.transcription, cueMap);
     });
@@ -98,20 +110,12 @@ export const useSubtitleTranscriptions = () => {
   const isLoading = isTokenizerLoading || queries.some(q => q.isLoading);
   const error = queries.find(q => q.error)?.error;
 
-  
   return {
     isLoading,
     error,
-    transcriptions: queries.map((q) => {
-      if(!q.data) return;
-      return {
-        transcription: q.data.transcription,
-        format: q.data.format,
-        cues: q.data.cues,
-      }
-    }).filter(q => q != undefined) as TranscriptionQuery[],
+    transcriptions,
+    transcriptionsLookup,
     loadingDuration: loadingDuration,
     isTokenizerInitialized: isTokenizerInitialized,
-    transcriptionsLookup
   };
 }

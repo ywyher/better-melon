@@ -1,7 +1,7 @@
 import { SubtitleDelay } from '@/types/subtitle';
 import { create } from 'zustand'
 
-type DelayStore = {
+export type DelayStore = {
   delay: SubtitleDelay
   setDelay: (sub: DelayStore['delay']) => void;
 }

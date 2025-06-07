@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils';
 import { TranscriptionsLookup, TranscriptionStyleSet } from '@/app/watch/[id]/[ep]/types';
 import { SubtitleSettings } from '@/lib/db/schema';
 import { getSentencesForCue, isTokenExcluded } from '@/lib/subtitle/utils';
+import { useDelayStore } from '@/lib/stores/delay-store';
 
 type TranscriptionItemProps = {
   transcription: SubtitleTranscription;
@@ -32,6 +33,7 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
         transform,
         transition,
     } = useSortable({id: transcription});
+    const delay = useDelayStore((state) => state.delay);
 
     const style = useMemo(() => ({
         transform: CSS.Transform.toString(transform),
@@ -80,7 +82,7 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
         } else {
             // Otherwise set the new token and sentence
             setToken(token);
-            const sentences = getSentencesForCue(transcriptionsLookup, from, to);
+            const sentences = getSentencesForCue(transcriptionsLookup, from, to, delay);
             setSentences(sentences);
         }
     }, [storeToken, storeSentences, setToken, setSentences]);

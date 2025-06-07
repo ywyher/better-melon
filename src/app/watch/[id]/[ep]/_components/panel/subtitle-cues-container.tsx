@@ -50,7 +50,7 @@ export default function SubtitleCuesContainer({
     } else {
       // Otherwise set the new token and get sentences for all transcriptions
       setToken(token);
-      const sentences = getSentencesForCue(transcriptionsLookup, from, to);
+      const sentences = getSentencesForCue(transcriptionsLookup, from, to, delay);
       setSentences(sentences);
     }
     

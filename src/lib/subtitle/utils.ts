@@ -2,6 +2,7 @@ import { TranscriptionsLookup } from "@/app/watch/[id]/[ep]/types";
 import { excludedPos, subtitleFormats } from "@/lib/constants/subtitle";
 import { SubtitleSettings } from "@/lib/db/schema";
 import { FileSelectionError } from "@/lib/errors/player";
+import { DelayStore } from "@/lib/stores/delay-store";
 import { fetchSubtitles, parseAss, parseSrt, parseVtt } from "@/lib/subtitle/parse";
 import { getExtension } from "@/lib/utils";
 import { AnimeStreamingLinks, SkipTime } from "@/types/anime";
@@ -301,64 +302,80 @@ export function isTokenExcluded(token: SubtitleToken) {
   || excludedPos.includes(token.pos_detail_1) // for numbers
 }
 
-export const getTranscriptionsLookupKey = (from: number, to: number) => {
-  return `${Math.floor(from)}-${Math.floor(to)}`;
-};
+export const getTranscriptionsLookupKey = (from: number, to: number, delay: number = 0) => {
+  // idk why its only works with - instead of + but sure
+  return `${Math.floor(from - delay)}-${Math.floor(to - delay)}`
+}
 
-export const findBestMatchingCue = (
-  cueMap: Map<string, SubtitleCue>, 
-  targetFrom: number, 
-  targetTo: number,
-  tolerance: number = 1.0 // 1 second tolerance
-): SubtitleCue | null => {
-  let bestMatch: SubtitleCue | null = null;
+const findBestMatchingCue = (transcriptionMap: Map<string, any>, targetKey: string, tolerance: number = 2) => {
+  // First try exact match
+  const exactMatch = transcriptionMap.get(targetKey);
+  if (exactMatch) return exactMatch;
+
+  // Parse the target key to get time range
+  const [fromStr, toStr] = targetKey.split('-');
+  const targetFrom = parseInt(fromStr);
+  const targetTo = parseInt(toStr);
+  const targetMidpoint = (targetFrom + targetTo) / 2;
+
+  let bestMatch = null;
   let bestScore = Infinity;
 
-  for (const cue of cueMap.values()) {
-    const fromDiff = Math.abs(cue.from - targetFrom);
-    const toDiff = Math.abs(cue.to - targetTo);
-    const totalDiff = fromDiff + toDiff;
+  // Search through all keys for the best overlap
+  for (const [key, cue] of transcriptionMap) {
+    const [keyFromStr, keyToStr] = key.split('-');
+    const keyFrom = parseInt(keyFromStr);
+    const keyTo = parseInt(keyToStr);
+    const keyMidpoint = (keyFrom + keyTo) / 2;
 
-    // Only consider cues within tolerance
-    if (fromDiff <= tolerance && toDiff <= tolerance && totalDiff < bestScore) {
-      bestScore = totalDiff;
+    // Calculate overlap and distance
+    const overlapStart = Math.max(targetFrom, keyFrom);
+    const overlapEnd = Math.min(targetTo, keyTo);
+    const overlap = Math.max(0, overlapEnd - overlapStart);
+    const distance = Math.abs(targetMidpoint - keyMidpoint);
+
+    // Score based on overlap (higher is better) and distance (lower is better)
+    const score = distance - overlap;
+
+    // Only consider if within tolerance and has some overlap or is very close
+    if (distance <= tolerance && (overlap > 0 || distance <= 1) && score < bestScore) {
       bestMatch = cue;
+      bestScore = score;
     }
   }
 
   return bestMatch;
 };
 
-export const getSentencesForCue = (
-  transcriptionLookup: TranscriptionsLookup, 
-  from: number, 
-  to: number
-) => {
+export const getSentencesForCue = (transcriptionLookup: TranscriptionsLookup, from: number, to: number, delay: DelayStore['delay']) => {
   const sentences = {
     kanji: null as string | null,
     kana: null as string | null,
     english: null as string | null,
   };
 
+  const jpnKey = getTranscriptionsLookupKey(from, to)
+  const engKey = getTranscriptionsLookupKey(from, to, delay.english)
+
+  console.log(`sentences jpnKey`, jpnKey)
+  console.log(`sentences engKey`, engKey)
+
   // Get Japanese (kanji) sentence
-  const japaneseCueMap = transcriptionLookup.get('japanese');
-  if (japaneseCueMap) {
-    const japaneseCue = findBestMatchingCue(japaneseCueMap, from, to);
-    if (japaneseCue) {
-      sentences.kanji = japaneseCue.content;
-    }
+  const japaneseCue = transcriptionLookup.get('japanese')?.get(jpnKey);
+  if (japaneseCue) {
+    sentences.kanji = japaneseCue.content;
   }
 
-  // Get Kana sentence - exact match since it's from same file as Japanese
-  const kanaCue = transcriptionLookup.get('hiragana')?.get(getTranscriptionsLookupKey(from, to));
+  // Get Kana sentence
+  const kanaCue = transcriptionLookup.get('hiragana')?.get(jpnKey);
   if (kanaCue) {
     sentences.kana = kanaCue.content;
   }
 
-  // Get English sentence
-  const englishCueMap = transcriptionLookup.get('english');
-  if (englishCueMap) {
-    const englishCue = findBestMatchingCue(englishCueMap, from, to);
+  // Get English sentence with fuzzy matching
+  const englishMap = transcriptionLookup.get('english');
+  if (englishMap) {
+    const englishCue = findBestMatchingCue(englishMap, engKey, 3); // Allow up to 3 second tolerance for English
     if (englishCue) {
       sentences.english = englishCue.content;
     }
