@@ -1,24 +1,30 @@
 import { Badge } from "@/components/ui/badge"
 import useAddToAnki from "@/lib/hooks/use-add-to-anki"
-import { toKana } from "wanakana"
+import { subtitleQueries } from "@/lib/queries/subtitle"
+import { useQuery } from "@tanstack/react-query"
+import { toast } from "sonner"
 
 type Kanjidic2LiteralProps = {
   literal: string
   definition: string
-  sentances: {
+  sentences: {
     kanji: string;
     english: string;
   }
 }
 
-export default function Kanjidic2Literal({ literal, definition, sentances }: Kanjidic2LiteralProps) {
+export default function Kanjidic2Literal({ literal, definition, sentences }: Kanjidic2LiteralProps) {
+  const { data: kanaSentence, isLoading } = useQuery({
+    ...subtitleQueries.toKana(sentences.kanji || ""),
+  })
+
   const { addToAnki } = useAddToAnki({
     fields: {
       kanji: literal,
       definition: definition,
-      "sentence-kanji": sentances.kanji,
-      "sentence-english": sentances.english,
-      "sentence-kana": toKana(sentances.kanji),
+      "sentence-kanji": sentences.kanji,
+      "sentence-english": sentences.english,
+      "sentence-kana": kanaSentence,
     },
   })
 
@@ -32,7 +38,13 @@ export default function Kanjidic2Literal({ literal, definition, sentances }: Kan
         {literal}
       </div>
       <Badge
-        onClick={() => addToAnki()}
+        onClick={() => {
+          if(!isLoading) {
+            addToAnki()
+          }else {
+            toast.warning(`Still converting kanji sentence to kana please, again later`)
+          }
+        }}
         className="cursor-pointer"
       >
         Add to anki

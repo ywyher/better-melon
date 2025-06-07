@@ -18,9 +18,6 @@ import { AnimeEpisodeData } from '@/types/anime';
 import { SubtitlesNotAvailableError } from '@/lib/errors/player';
 import MissingSubtitlesDialog from '@/app/watch/[id]/[ep]/_components/missing-subtitles-dialog';
 import { useSetSubtitles } from '@/lib/hooks/use-set-subtitles';
-import { SubtitleCue, SubtitleTranscription } from '@/types/subtitle';
-import { getTranscriptionsLookupKey } from '@/lib/subtitle/utils';
-import { useDelayStore } from '@/lib/stores/delay-store';
 
 export default function WatchPage() {
   const params = useParams();
@@ -35,8 +32,12 @@ export default function WatchPage() {
   const setSentences = useDefinitionStore((state) => state.setSentences);
   const setToken = useDefinitionStore((state) => state.setToken);
   const setActiveSubtitleFile = usePlayerStore((state) => state.setActiveSubtitleFile);
-  const englishSubtitleUrl = usePlayerStore((state) => state.englishSubtitleUrl);
-  const delay = useDelayStore((state) => state.delay);
+  const setEnglishSubtitleUrl = usePlayerStore((state) => state.setEnglishSubtitleUrl);
+  const senteces = useDefinitionStore((state) => state.sentences)
+
+  useEffect(() => {
+    console.log(`senteces`, senteces)
+  }, [senteces])
 
   const loadStartTimeRef = useRef<number>(performance.now());
   const [totalDuration, setTotalDuration] = useState<number>(0);
@@ -116,6 +117,7 @@ export default function WatchPage() {
     setIsVideoReady(false);
     setTotalDuration(0);
     setActiveSubtitleFile(null)
+    setEnglishSubtitleUrl(null)
     setToken(null)
     setSentences({
       kanji: null,
@@ -172,24 +174,6 @@ export default function WatchPage() {
       message={error?.message || "An error occurred"}
     />;
   }
-
-  const sentences = useDefinitionStore((state) => state.sentences)
-
-  useEffect(() => {
-    console.log(`englishSubtitleUrl`, englishSubtitleUrl)
-  }, [englishSubtitleUrl])
-  
-  useEffect(() => {
-    console.log(`sentence delay`, delay)
-  }, [delay])
-
-  useEffect(() => {
-    console.log(`sentences`, sentences)
-  }, [sentences])
-
-  useEffect(() => {
-    console.log(`sentences`, transcriptionsLookup)
-  }, [transcriptionsLookup])
 
   return (
     <div className="flex flex-col md:flex-row w-full md:gap-10">

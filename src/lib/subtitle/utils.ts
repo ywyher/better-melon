@@ -6,8 +6,12 @@ import { DelayStore } from "@/lib/stores/delay-store";
 import { fetchSubtitles, parseAss, parseSrt, parseVtt } from "@/lib/subtitle/parse";
 import { getExtension } from "@/lib/utils";
 import { AnimeStreamingLinks, SkipTime } from "@/types/anime";
-import { ActiveSubtitleFile, SubtitleCue, SubtitleFile, SubtitleFormat, SubtitleToken, SubtitleTranscription } from "@/types/subtitle";
+import { ActiveSubtitleFile, SubtitleFile, SubtitleFormat, SubtitleToken } from "@/types/subtitle";
 import {franc} from 'franc-min'
+import Kuroshiro from "@sglkc/kuroshiro";
+import KuromojiAnalyzer from "@sglkc/kuroshiro-analyzer-kuromoji";
+import CustomKuromojiAnalyzer from "@/lib/subtitle/custom-kuromoji-analyzer";
+import { getTokenizer } from "kuromojin";
 
 export const getActiveSubtitleFile = (subtitleFiles: SubtitleFile[], preferredFormat: SubtitleSettings['preferredFormat']) => {
   const selectedFile = selectSubtitleFile({
@@ -307,7 +311,7 @@ export const getTranscriptionsLookupKey = (from: number, to: number, delay: numb
   return `${Math.floor(from - delay)}-${Math.floor(to - delay)}`
 }
 
-const findBestMatchingCue = (transcriptionMap: Map<string, any>, targetKey: string, tolerance: number = 2) => {
+const findBestMatchingCue = (transcriptionMap: Map<string, any>, targetKey: string, tolerance: number = 3) => {
   // First try exact match
   const exactMatch = transcriptionMap.get(targetKey);
   if (exactMatch) return exactMatch;
@@ -383,3 +387,11 @@ export const getSentencesForCue = (transcriptionLookup: TranscriptionsLookup, fr
 
   return sentences;
 };
+
+export const convertToKana = async (sentence: string) => {
+  const tokenizer = await getTokenizer({ dicPath: '/dict' })
+  const kuroshiro = new Kuroshiro();
+  const analyzer = new CustomKuromojiAnalyzer({ tokenizer });
+  await kuroshiro.init(analyzer);
+  return await kuroshiro.convert(sentence, { to: "hiragana" });
+}

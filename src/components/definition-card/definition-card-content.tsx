@@ -37,7 +37,7 @@ export default function DefinitionCardContent({
               <div className="flex flex-col gap-4">
                 <Kanjidic2Section
                   entries={dictionary?.find(d => d.index == 'kanjidic2')?.entries as Kanjidic2Character[]} 
-                  sentances={{
+                  sentences={{
                     kanji: (dictionary?.find(d => d.index == 'jmdict')?.entries as JMdictWord[])[0].sense[0].examples?.[0]?.sentences.find(s => s.land == 'jpn')?.text || "",
                     english: (dictionary?.find(d => d.index == 'jmdict')?.entries as JMdictWord[])[0].sense[0].examples?.[0]?.sentences.find(s => s.land == 'eng')?.text || "",
                   }}

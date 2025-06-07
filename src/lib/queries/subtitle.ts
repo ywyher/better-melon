@@ -1,7 +1,7 @@
 import { getMultipleTranscriptionsStyles } from "@/components/subtitle/styles/actions";
 import { SubtitleStylesStore } from "@/lib/stores/subtitle-styles-store";
 import { parseSubtitleToJson } from "@/lib/subtitle/parse";
-import { getSubtitleFormat, getSubtitleSource } from "@/lib/subtitle/utils";
+import { convertToKana, getSubtitleFormat, getSubtitleSource } from "@/lib/subtitle/utils";
 import type { ActiveSubtitleFile, SubtitleTranscription } from "@/types/subtitle";
 import { createQueryKeys } from "@lukemorales/query-key-factory";
 import { Dispatch, RefObject, SetStateAction } from "react";
@@ -116,6 +116,12 @@ export const subtitleQueries = createQueryKeys('subtitle', {
       console.debug(`~Subtitle styles fetched and stored in ${duration.toFixed(2)}ms for ${transcriptionsToFetch.length} transcriptions`);
       
       return stylesMap;
+    }
+  }),
+  toKana: (sentence: string) => ({
+    queryKey: ['toKana', sentence],
+    queryFn: async () => {
+      return convertToKana(sentence)
     }
   })
 });

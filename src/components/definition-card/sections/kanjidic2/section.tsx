@@ -9,13 +9,13 @@ import type { Kanjidic2Character as TKanjidic2Character } from "@/types/kanjidic
 
 type Kanjidic2Props = {
   entries: TKanjidic2Character[]
-  sentances: {
+  sentences: {
     kanji: string
     english: string
   }
 }
 
-export default function Kanjidic2Section({ entries, sentances }: Kanjidic2Props) {
+export default function Kanjidic2Section({ entries, sentences }: Kanjidic2Props) {
   if(!entries?.length) return
   return (
     <div className="flex flex-col gap-3">
@@ -33,9 +33,9 @@ export default function Kanjidic2Section({ entries, sentances }: Kanjidic2Props)
                 <Kanjidic2Literal 
                   literal={entry.literal}
                   definition={entry.readingMeaning?.groups[0].meanings[0].value || ""}
-                  sentances={{
-                    kanji: sentances.kanji,
-                    english: sentances.english
+                  sentences={{
+                    kanji: sentences.kanji,
+                    english: sentences.english
                   }}
                 />
               </div>

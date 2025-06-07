@@ -3,7 +3,9 @@ import { toKana } from 'wanakana'
 import type { JMdictGloss, JMdictKana, JMdictKanji, JMdictPos, JMdictSentence } from "@/types/jmdict"
 import { jmdictTags } from "@/lib/constants/jmdict"
 import { Badge } from "@/components/ui/badge"
-import { useEffect } from "react"
+import { useQuery } from "@tanstack/react-query"
+import { subtitleQueries } from "@/lib/queries/subtitle"
+import { toast } from "sonner"
 
 type JMdictKanjiProps = {
   kanji: JMdictKanji
@@ -14,7 +16,11 @@ type JMdictKanjiProps = {
   sentenceEnglish?: JMdictSentence
 }
 
-export default function JMdictKanji({ kanji, kana, pos, definition, sentenceEnglish, sentenceKanji }: JMdictKanjiProps) {
+export default function JMdictKanji({ kanji, kana, pos, definition, sentenceEnglish, sentenceKanji }: JMdictKanjiProps) {  
+  const { data: kanaSentence, isLoading } = useQuery({
+    ...subtitleQueries.toKana(sentenceKanji?.text || ""),
+  })
+  
   const { addToAnki } = useAddToAnki({
     fields: {
       kanji: kanji.text || "",
@@ -22,7 +28,7 @@ export default function JMdictKanji({ kanji, kana, pos, definition, sentenceEngl
       definition: definition.text || "",
       "sentence-kanji": sentenceKanji?.text || "",
       "sentence-english": sentenceEnglish?.text || "",
-      "sentence-kana": toKana(sentenceKanji?.text) || "",
+      "sentence-kana": kanaSentence || "",
       "part-of-speech": pos
         ?.map(p => jmdictTags[p] || p)
         .join(', ')
@@ -35,7 +41,13 @@ export default function JMdictKanji({ kanji, kana, pos, definition, sentenceEngl
       <div className="flex flex-col gap-3">
         {(kanji.common || kana.common) && <Badge variant="secondary" className="min-w-[100px]">common kanji</Badge>}
         <Badge
-          onClick={() => addToAnki()}
+          onClick={() => {
+            if(!isLoading) {
+              addToAnki()
+            }else {
+              toast.warning(`Still converting kanji sentence to kana please, again later`)
+            }
+          }}
           className="cursor-pointer min-w-[100px]"
         >
           Add to anki
