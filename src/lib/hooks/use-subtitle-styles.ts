@@ -45,7 +45,9 @@ export const getTokenStyles = (
     //   : 'none',
   };
   
-  const activeFontSize = shouldScaleFontDown ? styles.active.fontSize || defaultSubtitleStyles.active.fontSize : ((styles.active.fontSize || defaultSubtitleStyles.active.fontSize)/1.5);
+  const activeFontSize = shouldScaleFontDown 
+    ? ((styles.active.fontSize || defaultSubtitleStyles.active.fontSize)/1.5)
+    : styles.active.fontSize || defaultSubtitleStyles.active.fontSize;
 
   const activeStyle: CSSProperties = {
     fontSize: activeFontSize,
