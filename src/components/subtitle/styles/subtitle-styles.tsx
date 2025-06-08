@@ -1,4 +1,5 @@
 "use client"
+
 import SubtitleTranscriptionSelector from "@/components/subtitle/subtitle-transcription-selector";
 import SubtitleStylesSkeleton from "@/components/subtitle/styles/subtitle-styles-skeleton";
 import { GeneralSettings, SubtitleStyles as TSubtitleStyles } from "@/lib/db/schema";
@@ -34,8 +35,12 @@ export default function SubtitleStyles({ syncPlayerSettings: propSyncStrategy, s
   });
 
   const storeStyles = useSubtitleStylesStore((state) =>
-    source === 'store' ? state.getStyles(selectedTranscription) : (selectedState == 'default' ? defaultSubtitleStyles.default : defaultSubtitleStyles.active)
+    source === 'store' ? state.getStyles(selectedTranscription, selectedState) : (selectedState == 'default' ? defaultSubtitleStyles.default : defaultSubtitleStyles.active)
   );
+
+  useEffect(() => {
+    console.log(storeStyles)
+  }, [storeStyles])
 
   const styles = useMemo(() => {
     return source === 'database' ? remoteStyles : storeStyles
@@ -57,6 +62,13 @@ export default function SubtitleStyles({ syncPlayerSettings: propSyncStrategy, s
     }
     return false;
   }, [source, isRemoteStylesLoading, propSyncStrategy, isGeneralSettingsLoading]);
+
+  const shouldShowDeleteButton = useMemo(() => {
+    const currentStyles = source === 'database' ? remoteStyles : storeStyles;
+    const defaultStyles = selectedState === 'active' ? defaultSubtitleStyles.active : defaultSubtitleStyles.default;
+    
+    return currentStyles && JSON.stringify(currentStyles) !== JSON.stringify(defaultStyles);
+  }, [source, remoteStyles, storeStyles, selectedState]);
 
   useEffect(() => {
     console.log({
@@ -84,14 +96,12 @@ export default function SubtitleStyles({ syncPlayerSettings: propSyncStrategy, s
               setSelectedState={setSelectedState}
             />
           </div>
-          {(
-            (selectedState == 'active' && JSON.stringify(remoteStyles) != JSON.stringify(defaultSubtitleStyles.active)) ||
-            (selectedState == 'default' && JSON.stringify(remoteStyles) != JSON.stringify(defaultSubtitleStyles.default))
-          ) && (
+          {shouldShowDeleteButton && (
             <DeleteSubtitleStyles
               syncPlayerSettings={syncPlayerSettings}
               transcription={selectedTranscription}
               source={source}
+              state={selectedState}
               subtitleStylesId={
                 source === 'database' 
                   ? remoteStyles?.id || ""

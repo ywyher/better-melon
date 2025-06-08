@@ -173,34 +173,34 @@ export async function handleSubtitleStyles({
 }
 
 export async function deleteSubtitleStyles({
-    subtitleStylesId
+  subtitleStylesId
 }: {
-    subtitleStylesId: SubtitleStyles['id']
+  subtitleStylesId: SubtitleStyles['id']
 }) {
     const headersList = await headers();
     const currentUser = await auth.api.getSession({ headers: headersList });
     
     if (!currentUser?.user?.id) {
-        return {
-            message: null,
-            error: "Not authenticated. Please sign in to delete styles."
-        };
+      return {
+        message: null,
+        error: "Not authenticated. Please sign in to delete styles."
+      };
     }
 
     try {
-        await db.delete(subtitleStyles).where(and(
-            eq(subtitleStyles.id, subtitleStylesId),
-            eq(subtitleStyles.userId, currentUser.user.id)
-        ))        
-        
-        return {
-            message: "Subtitle styles removed successfully",
-            error: null
-        };
+      await db.delete(subtitleStyles).where(and(
+        eq(subtitleStyles.id, subtitleStylesId),
+        eq(subtitleStyles.userId, currentUser.user.id)
+      ))        
+      
+      return {
+        message: "Subtitle styles removed successfully",
+        error: null
+      };
     } catch (error: unknown) {
-        return {
-            message: null,
-            error: error instanceof Error ? error.message : "Failed to delete subtitle styles",
-        };
+      return {
+        message: null,
+        error: error instanceof Error ? error.message : "Failed to delete subtitle styles",
+      };
     }
 }

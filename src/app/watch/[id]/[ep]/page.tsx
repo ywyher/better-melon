@@ -71,6 +71,10 @@ export default function WatchPage() {
     loadingDuration: stylesLoadingDuration 
   } = useSubtitleStyles();
 
+  useEffect(() => {
+    console.log(`styles only`, styles)
+  }, [styles])
+
   const {
     subtitleError,
     subtitlesErrorDialog,

@@ -146,6 +146,7 @@ export const useSubtitleStyles = () => {
 
   const shouldScaleFontDown = useMemo(() => {
     return !isFullscreen && panelState == 'visible'
+    // return false;
   }, [isFullscreen, panelState])
   
   // Fetch styles from database only for transcriptions we haven't checked yet
@@ -199,21 +200,23 @@ export const useSubtitleStyles = () => {
       const activeStyleData = getStylesFromStore(transcription, 'active');
 
       if (
-        defaultStyleData
-        && activeStyleData
-        && JSON.stringify(activeStyleData) != JSON.stringify(defaultSubtitleStyles.default)
-        && JSON.stringify(activeStyleData) != JSON.stringify(defaultSubtitleStyles.active)
+        defaultStyleData || activeStyleData
       ) {
-        result[transcription] = {
-          tokenStyles: getTokenStyles(shouldScaleFontDown, {
-            active: activeStyleData,
-            default: defaultAllStyles
-          }),
-          containerStyle: getContainerStyles({
-            active: activeStyleData,
-            default: defaultAllStyles
-          })
-        };
+        const hasCustomDefault = defaultStyleData && JSON.stringify(defaultStyleData) !== JSON.stringify(defaultSubtitleStyles.default);
+        const hasCustomActive = activeStyleData && JSON.stringify(activeStyleData) !== JSON.stringify(defaultSubtitleStyles.active);
+        
+        if (hasCustomDefault || hasCustomActive) {
+          result[transcription] = {
+            tokenStyles: getTokenStyles(shouldScaleFontDown, {
+              active: activeStyleData,
+              default: defaultStyleData
+            }),
+            containerStyle: getContainerStyles({
+              active: activeStyleData,
+              default: defaultStyleData
+            })
+          };
+        }
       }
     });
     

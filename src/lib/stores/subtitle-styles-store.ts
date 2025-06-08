@@ -1,5 +1,6 @@
 import { defaultSubtitleStyles } from '@/components/subtitle/styles/constants';
 import { SubtitleStyles } from '@/lib/db/schema';
+import { generateId } from 'better-auth';
 import { create } from 'zustand';
 
 export type SubtitleStylesStore = {
@@ -33,26 +34,34 @@ export const useSubtitleStylesStore = create<SubtitleStylesStore>()((set, get) =
   
   ensureStylesExists: (transcription: SubtitleStyles['transcription'], state: SubtitleStyles['state']) => {
     const internalState = get();
+
+    console.log(`transcription`, transcription)
     
     if (internalState.styles?.[transcription]?.[state]) {
+      console.log('cached')
       return internalState.styles[transcription][state] as SubtitleStyles;
     }
     
     const defaultStyle = state === 'default' ? defaultSubtitleStyles.default : defaultSubtitleStyles.active;
+    const styleWithEdits = {
+      ...defaultStyle,
+      id: generateId(),
+      transcription
+    };
     
     set((internalState) => ({
       styles: {
         ...internalState.styles,
         [transcription]: {
           ...internalState.styles?.[transcription],
-          [state]: defaultStyle
+          [state]: styleWithEdits,
         }
       }
     }));
     
-    return defaultStyle;
+    return styleWithEdits;
   },
-  
+
   handleStyles: (
     transcription: SubtitleStyles['transcription'],
     updatedFields: Partial<SubtitleStyles>,

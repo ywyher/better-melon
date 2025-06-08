@@ -62,7 +62,7 @@ export function useStyleFieldController({
         toast.success(message || successMessage || `${field} updated successfully`);
       } else {
         console.log('~source -> store')
-        handleStyles(transcription, { [field]: value });
+        handleStyles(transcription, { [field]: value }, state);
         
         let resolvedStrategy = syncPlayerSettings as SyncStrategy;
         
