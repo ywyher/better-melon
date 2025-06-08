@@ -1,7 +1,6 @@
 "use client"
 
 import SubtitleTranscriptionSelector from "@/components/subtitle/subtitle-transcription-selector";
-import SubtitleStylesSkeleton from "@/components/subtitle/styles/subtitle-styles-skeleton";
 import { GeneralSettings, SubtitleStyles as TSubtitleStyles } from "@/lib/db/schema";
 import { useQuery } from "@tanstack/react-query"
 import { useEffect, useMemo, useState } from "react";
@@ -12,6 +11,8 @@ import DeleteSubtitleStyles from "@/components/subtitle/styles/delete-subtitle-s
 import SegmentedToggle from "@/components/segmented-toggle";
 import { subitlteStylesState } from "@/lib/constants/subtitle";
 import { defaultSubtitleStyles } from "@/components/subtitle/styles/constants";
+import { LoadingOverlay } from "@/components/loading-overlay";
+import SubtitleStylesSkeleton from "@/components/subtitle/styles/subtitle-styles-skeleton";
 
 type SubtitleStylesProps = {
   source: 'store' | 'database',
@@ -22,7 +23,7 @@ export default function SubtitleStyles({ syncPlayerSettings: propSyncStrategy, s
   const [selectedTranscription, setSelectedTranscription] = useState<TSubtitleStyles['transcription']>('all');
   const [selectedState, setSelectedState] = useState<TSubtitleStyles['state']>('default');
   
-  const { data: remoteStyles, isLoading: isRemoteStylesLoading } = useQuery({
+  const { data: remoteStyles, isLoading: isRemoteStylesLoading, isRefetching } = useQuery({
     ...settingsQueries.subtitleStyles(selectedTranscription, selectedState),
     refetchOnWindowFocus: false,
     enabled: !!selectedTranscription && !!selectedState && source === 'database'
@@ -80,7 +81,7 @@ export default function SubtitleStyles({ syncPlayerSettings: propSyncStrategy, s
   if (!styles || isLoading) return <SubtitleStylesSkeleton />;
   
   return (
-    <div className="flex flex-col gap-0">
+    <div className="flex flex-col gap-0 relative">
       <div className="flex flex-col md:flex-row gap-3 justify-between">
         <div className="text-xl font-semibold">Subtitle Styles</div>
         <div className="flex flex-row gap-2">
@@ -118,6 +119,7 @@ export default function SubtitleStyles({ syncPlayerSettings: propSyncStrategy, s
         syncPlayerSettings={syncPlayerSettings}
         state={selectedState}
       />
+      {isRefetching && <LoadingOverlay />}
     </div>
   );
 }
