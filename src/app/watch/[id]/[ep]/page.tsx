@@ -33,11 +33,6 @@ export default function WatchPage() {
   const setToken = useDefinitionStore((state) => state.setToken);
   const setActiveSubtitleFile = usePlayerStore((state) => state.setActiveSubtitleFile);
   const setEnglishSubtitleUrl = usePlayerStore((state) => state.setEnglishSubtitleUrl);
-  const senteces = useDefinitionStore((state) => state.sentences)
-
-  useEffect(() => {
-    console.log(`senteces`, senteces)
-  }, [senteces])
 
   const loadStartTimeRef = useRef<number>(performance.now());
   const [totalDuration, setTotalDuration] = useState<number>(0);
@@ -126,12 +121,20 @@ export default function WatchPage() {
     })
   }, [animeId, episodeNumber, setIsVideoReady]);
 
+  const shouldPrefetch = useMemo(() => {
+    if(episodeData?.details.nextAiringEpisode) {
+      return isVideoReady && episodeData?.details.nextAiringEpisode?.episode != episodeNumber + 1
+    }else {
+      return isVideoReady && episodeData?.details.episodes != episodeNumber
+    };
+  }, [isVideoReady, episodeData])
+
   usePrefetchEpisode(
     animeId,
     episodeNumber + 1,
     episodesLength, 
     settings?.subtitleSettings?.preferredFormat || 'srt',
-    isVideoReady && episodeData?.details.nextAiringEpisode?.episode != episodeNumber + 1
+    shouldPrefetch
   );
 
   const shouldShowPanel = useMemo(() => {
