@@ -8,15 +8,18 @@ import { SubtitleTranscription } from "@/types/subtitle";
 import { useQuery } from "@tanstack/react-query";
 import { useMediaState } from "@vidstack/react";
 import { CSSProperties, useEffect, useMemo, useRef, useState } from "react";
+import { Fullscreen } from "lucide-react";
 
 export const getTokenStyles = (
-  isFullscreen: boolean, 
+  shouldScaleFontDown: boolean, 
   styles: {
     active: Partial<SubtitleStyles>,
     default: Partial<SubtitleStyles>
   }
 ): { default: CSSProperties; active: CSSProperties } => {
-  const defaultFontSize = isFullscreen ? styles.default.fontSize || defaultSubtitleStyles.default.fontSize : ((styles.default.fontSize || defaultSubtitleStyles.default.fontSize)/1.5);
+  const defaultFontSize = shouldScaleFontDown 
+   ? ((styles.default.fontSize || defaultSubtitleStyles.default.fontSize)/1.5)
+   : styles.default.fontSize || defaultSubtitleStyles.default.fontSize;
 
   const defaultStyle: CSSProperties = {
     fontSize: defaultFontSize,
@@ -38,11 +41,11 @@ export const getTokenStyles = (
       : 'none',
       
     // WebkitTextStroke: styles.default.textShadow === 'outline'
-    //   ? (isFullscreen ? '.5px black' : '.3px black') 
+    //   ? (shouldScaleFontDown ? '.5px black' : '.3px black') 
     //   : 'none',
   };
   
-  const activeFontSize = isFullscreen ? styles.active.fontSize || defaultSubtitleStyles.active.fontSize : ((styles.active.fontSize || defaultSubtitleStyles.active.fontSize)/1.5);
+  const activeFontSize = shouldScaleFontDown ? styles.active.fontSize || defaultSubtitleStyles.active.fontSize : ((styles.active.fontSize || defaultSubtitleStyles.active.fontSize)/1.5);
 
   const activeStyle: CSSProperties = {
     fontSize: activeFontSize,
@@ -62,7 +65,7 @@ export const getTokenStyles = (
       : 'none',
       
     // WebkitTextStroke: styles.active.textShadow === 'outline'
-    //   ? (isFullscreen ? '.5px black' : '.3px black') 
+    //   ? (shouldScaleFontDown ? '.5px black' : '.3px black') 
     //   : 'none',
   };
 
@@ -116,10 +119,12 @@ export const getContainerStyles = (styles: {
 
 export const useSubtitleStyles = () => {
   const activeTranscriptions = usePlayerStore((state) => state.activeTranscriptions);
+  const panelState = usePlayerStore((state) => state.panelState)
   const isFullscreen = useMediaState('fullscreen', usePlayerStore((state) => state.player));
+  
+  const storeStyles = useSubtitleStylesStore((state) => state.styles);
   const handleSubtitleStylesInStore = useSubtitleStylesStore((state) => state.handleStyles);
   const getStylesFromStore = useSubtitleStylesStore((state) => state.getStyles);
-  const storeStyles = useSubtitleStylesStore((state) => state.styles);
   
   // Track loading duration
   const [loadingDuration, setLoadingDuration] = useState<number>(0);
@@ -136,6 +141,10 @@ export const useSubtitleStyles = () => {
       return !checkedTranscriptions.current.has(transcription);
     });
   }, [activeTranscriptions]);
+
+  const shouldScaleFontDown = useMemo(() => {
+    return !isFullscreen && panelState == 'visible'
+  }, [isFullscreen, panelState])
   
   // Fetch styles from database only for transcriptions we haven't checked yet
   const stylesQuery = useQuery({
@@ -160,7 +169,7 @@ export const useSubtitleStyles = () => {
     if (!activeTranscriptions || activeTranscriptions.length === 0) {
       return { 
         all: {
-          tokenStyles: getTokenStyles(isFullscreen, {
+          tokenStyles: getTokenStyles(shouldScaleFontDown, {
             active: activeAllStyles,
             default: defaultAllStyles
           }),
@@ -173,7 +182,7 @@ export const useSubtitleStyles = () => {
     }
     
     result.all = {
-      tokenStyles: getTokenStyles(isFullscreen, {
+      tokenStyles: getTokenStyles(shouldScaleFontDown, {
         active: activeAllStyles,
         default: defaultAllStyles
       }),
@@ -194,7 +203,7 @@ export const useSubtitleStyles = () => {
         && JSON.stringify(activeStyleData) != JSON.stringify(defaultSubtitleStyles.active)
       ) {
         result[transcription] = {
-          tokenStyles: getTokenStyles(isFullscreen, {
+          tokenStyles: getTokenStyles(shouldScaleFontDown, {
             active: activeStyleData,
             default: defaultAllStyles
           }),
@@ -209,7 +218,7 @@ export const useSubtitleStyles = () => {
     const end = performance.now();
     console.info(`~Subtitle styles processed in ${(end - start).toFixed(2)}ms`);
     return result;
-  }, [activeTranscriptions, isFullscreen, storeStyles, getStylesFromStore]);
+  }, [activeTranscriptions, isFullscreen, storeStyles, getStylesFromStore, shouldScaleFontDown]);
 
   return {
     isLoading: stylesQuery.isLoading,

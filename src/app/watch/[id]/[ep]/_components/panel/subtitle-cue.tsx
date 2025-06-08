@@ -1,9 +1,7 @@
-import { memo } from 'react';
 import { cn } from "@/lib/utils";
 import type { SubtitleCue as TSubtitleCue, SubtitleToken } from "@/types/subtitle";
 import { Button } from "@/components/ui/button";
 import { Clipboard, Play } from "lucide-react";
-import { TranscriptionsLookup } from '@/app/watch/[id]/[ep]/types';
 
 type SubtitleCueProps = { 
     index: number;

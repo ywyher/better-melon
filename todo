@@ -20,9 +20,6 @@ https://jink.host/
 https://regery.com/
 https://receive-smss.com/
 
-prefetch funtioanlity is trying to refetch next episode on movies! !
-also the delay doesnt get set for whatever reason !
-also when not fullscreen you make the font smaller remove that since if we remove the panel its too small
 styles controlers doesnt work too ?
 add a button on the panel to take you to the current active cue
 
@@ -50,8 +47,6 @@ for is refetching add a loading overlay on the refetchinf thing
 1- the subtitle styles component
 
 we changed how displayValue works in the use-styles-controller maybe in the others too ?
-
-what is .ssa, maybe will support it too ? check it out on death note ep 15 too
 
 puase player on definition trigger or hover or click or none !!!!
 
