@@ -1,22 +1,24 @@
 "use client"
 
-import React, { Fragment, useCallback, useState, useMemo } from 'react';
+import React, { Fragment, useCallback, useState, useMemo, useEffect } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { useDefinitionStore } from '@/lib/stores/definition-store';
 import { SubtitleCue, SubtitleToken, SubtitleTranscription } from '@/types/subtitle';
 import { cn } from '@/lib/utils';
-import { TranscriptionsLookup, TranscriptionStyleSet } from '@/app/watch/[id]/[ep]/types';
+import { TranscriptionsLookup, TranscriptionStyles, TranscriptionStyleSet } from '@/app/watch/[id]/[ep]/types';
 import { SubtitleSettings } from '@/lib/db/schema';
-import { getSentencesForCue, isTokenExcluded } from '@/lib/subtitle/utils';
+import { getSentencesForCue, isTokenExcluded, parseFuriganaToken } from '@/lib/subtitle/utils';
 import { useDelayStore } from '@/lib/stores/delay-store';
+import DOMPurify from 'dompurify';
 
 type TranscriptionItemProps = {
   transcription: SubtitleTranscription;
   activeSubtitleSets: Record<SubtitleTranscription, SubtitleCue[]>;
   styles: TranscriptionStyleSet;
   definitionTrigger: SubtitleSettings['definitionTrigger']
-  transcriptionsLookup: TranscriptionsLookup
+  transcriptionsLookup: TranscriptionsLookup;
+  japaneseStyles: TranscriptionStyleSet
 }
 
 export const TranscriptionItem = React.memo(function TranscriptionItem({ 
@@ -24,7 +26,8 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
     activeSubtitleSets,
     styles,
     definitionTrigger,
-    transcriptionsLookup
+    transcriptionsLookup,
+    japaneseStyles
 }: TranscriptionItemProps) {
     const {
         attributes,
@@ -94,49 +97,130 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
         }
         
         return cue.tokens.map((token, tokenIdx) => {
-            const isActive = 
-                (hoveredCueId === cue.id && hoveredTokenId === token.id && transcription !== 'english')
-                || token.id === activeToken?.id;
-            
-            const tokenStyle = isActive ? styles.tokenStyles.active : styles.tokenStyles.default;
-            const activeContainerStyle = styles.containerStyle.active
+
+        const isActive = 
+            (hoveredCueId === cue.id && hoveredTokenId === token.id && transcription !== 'english')
+            || token.id === activeToken?.id;
+        
+        const tokenStyle = isActive ? styles.tokenStyles.active : styles.tokenStyles.default;
+        const activeContainerStyles = isActive ? styles.containerStyle.active : undefined;
+        
+        // Special handling for furigana transcription
+        if (transcription === 'furigana') {
+            const { baseText, rubyText } = parseFuriganaToken(token.surface_form);
+
+            // Use Japanese styles for base text, furigana styles for ruby text
+            const baseTextStyle = japaneseStyles 
+                ? (isActive ? japaneseStyles.tokenStyles.active : japaneseStyles.tokenStyles.default)
+                : tokenStyle;
+
+            const baseBackgroundStyle = japaneseStyles 
+                ? (isActive ? japaneseStyles.containerStyle.active : undefined)
+                : undefined;
+                
+            const rubyTextStyle = {
+                ...tokenStyle,
+            };
             
             return (
                 <div
                     key={`${token.id || tokenIdx}-${tokenIdx}`}
-                    style={{
-                        ...(isActive ? activeContainerStyle : {}),
+                    className='flex flex-col gap-1'
+                    onClick={() => {
+                        handleActivate(
+                            cue.from,
+                            cue.to,
+                            {
+                                ...token,
+                                surface_form: baseText
+                            },
+                            'click'
+                        );
+                    }}
+                    onMouseEnter={() => {
+                        handleTokenMouseEnter(cue.id, token.id)
+                        handleActivate(
+                            cue.from,
+                            cue.to,
+                            {
+                                ...token,
+                                surface_form: baseText
+                            },
+                            'hover'
+                        );
+                    }}
+                    onMouseLeave={() => { 
+                        handleTokenMouseLeave()
                     }}
                 >
-                    <span
-                        style={tokenStyle}
-                        onClick={() => {
-                            handleActivate(cue.from, cue.to, token, 'click');
+                    {/* Ruby text (furigana) - positioned above */}
+                    {rubyText && (
+                        <div
+                            style={{
+                                ...activeContainerStyles,
+                                width: '100% !important'
+                            }}
+                        >
+                            <span style={rubyTextStyle}>
+                                {rubyText}
+                            </span>
+                        </div>
+                    )}
+                    
+                    {/* Base text (kanji/kana) - positioned below */}
+                    <div
+                        style={{
+                            ...baseBackgroundStyle,
+                            width: '100% !important'
                         }}
-                        onMouseEnter={() => {
-                            handleTokenMouseEnter(cue.id, token.id)
-                            handleActivate(cue.from, cue.to, token, 'hover');
-                        }}
-                        onMouseLeave={() => { 
-                            handleTokenMouseLeave()
-                        }}
-                        onMouseOver={(e) => {
-                            if (!isActive) {
-                                Object.assign(e.currentTarget.style, styles.tokenStyles.active);
-                            }
-                        }}
-                        onMouseOut={(e) => {
-                            if (!isActive) {
-                                Object.assign(e.currentTarget.style, styles.tokenStyles.default);
-                            }
-                        }}
-                        dangerouslySetInnerHTML={{ __html: token?.surface_form }}
-                    />
+                        className='flex flex-row justify-center items-center text-center'
+                    >
+                        <span style={baseTextStyle}>
+                            {baseText}
+                        </span>
+                    </div>
                 </div>
             );
-        });
+        }
+    
+        // Regular rendering for other transcriptions
+        return (
+            <div
+                key={`${token.id || tokenIdx}-${tokenIdx}`}
+                style={{
+                    ...(isActive ? activeContainerStyles : {}),
+                }}
+            >
+                <span
+                    style={tokenStyle}
+                    onClick={() => {
+                        handleActivate(cue.from, cue.to, token, 'click');
+                    }}
+                    onMouseEnter={() => {
+                        handleTokenMouseEnter(cue.id, token.id)
+                        handleActivate(cue.from, cue.to, token, 'hover');
+                    }}
+                    onMouseLeave={() => { 
+                        handleTokenMouseLeave()
+                    }}
+                    onMouseOver={(e) => {
+                        if (!isActive) {
+                            Object.assign(e.currentTarget.style, styles.tokenStyles.active);
+                        }
+                    }}
+                    onMouseOut={(e) => {
+                        if (!isActive) {
+                            Object.assign(e.currentTarget.style, styles.tokenStyles.default);
+                        }
+                    }}
+                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(token.surface_form) }}
+                />
+            </div>
+        );
+    });
     }, [
-        styles, // Important: ensure renderTokens updates when styles change
+        styles,
+        japaneseStyles, // Add this dependency
         hoveredCueId, 
         hoveredTokenId, 
         transcription, 
@@ -149,7 +233,7 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
     // Memoize container className
     const containerClassName = useMemo(() => 
         cn(
-            'flex flex-row items-center',
+            transcription === 'furigana' && 'flex flex-row items-end',
             transcription === 'english' && 'flex flex-row gap-1',
         ),
         [transcription]
@@ -157,6 +241,10 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
     
     // Get only the cues we need for this transcription
     const activeCues = activeSubtitleSets[transcription] || [];
+
+    useEffect(() => {
+        console.log(activeCues)
+    }, [activeCues])
 
     return (
         <div

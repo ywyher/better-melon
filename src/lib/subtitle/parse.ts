@@ -215,7 +215,6 @@ export async function parseSubtitleToJson({
     
     // If not pure Japanese, convert to the target transcription
     if (transcription !== 'japanese') {
-      console.log('transcription != japanese')
       const conversionStart = performance.now();
       const convertedSubs = await convertSubtitlesForNonJapaneseTranscription(tokenizedSubs, transcription);
       const conversionEnd = performance.now();

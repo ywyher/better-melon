@@ -2,6 +2,8 @@ import { cn } from "@/lib/utils";
 import type { SubtitleCue as TSubtitleCue, SubtitleToken } from "@/types/subtitle";
 import { Button } from "@/components/ui/button";
 import { Clipboard, Play } from "lucide-react";
+import DOMPurify from 'dompurify';
+import { parseFuriganaToken } from '@/lib/subtitle/utils';
 
 type SubtitleCueProps = { 
     index: number;
@@ -28,7 +30,7 @@ function SubtitleCueBase({
   handleCopy,
 }: SubtitleCueProps) {
     return (
-        <div
+        <div 
             style={{
               position: 'absolute' as const,
               top: 0,
@@ -38,39 +40,80 @@ function SubtitleCueBase({
               transform: `translateY(${start}px)`,
             }}
             className={cn(
-                "absolute top-0 left-0 w-full py-2 pe-1 border-b",
-                "flex items-center",
-                isActive && "text-orange-400",
+                "group flex cursor-pointer items-center border-l-2 border-b-2 border-b-primary border-l-transparent transition-all hover:bg-muted/50",
+                isActive && "border-l-primary bg-muted",
                 className
             )}
         >
-            <div className="flex flex-row gap-0">
+            <div className="flex items-center gap-0 opacity-0 transition-opacity group-hover:opacity-100">
                 <Button
+                    size="sm"
                     onClick={() => handleSeek(cue.from)}
                     variant='ghost'
                 >
-                    <Play className="hover:fill-[#fb923c]" />
+                    <Play className="h-3 w-3" />
                 </Button>
                 <Button
+                    size="sm"
                     onClick={() => handleCopy(cue.content)}
                     variant='ghost'
                 >
-                    <Clipboard className="hover:fill-[#fb923c]" />
+                    <Clipboard className="h-3 w-3" />
                 </Button>
             </div>
-            <div className="flex flex-row gap-2">
-                <div className="flex items-center flex-wrap">
-                    {cue.tokens?.length ? cue.tokens.map((token, idx) => (
-                        <span 
-                            key={idx}
-                            className={cn(
-                                "hover:text-orange-400",
-                                activeToken?.id === token.id && "text-orange-400"
-                            )}
-                            onClick={() => handleClick(token, cue.from, cue.to)}
-                            dangerouslySetInnerHTML={{ __html: token.surface_form }}
-                        />
-                    )) : null}
+            <div className="flex flex-col gap-0">
+                <div className="flex flex-wrap gap-1 items-end">
+                    {cue.tokens?.length ? cue.tokens.map((token, idx) => {
+                        // Check if this is furigana transcription
+                        if (cue.transcription === 'furigana') {
+                            const { baseText, rubyText } = parseFuriganaToken(token.surface_form);
+                            
+                            return (
+                                <div
+                                    key={idx}
+                                    className={cn(
+                                        "cursor-pointer rounded transition-colors hover:bg-primary/10",
+                                        activeToken?.id === token.id && "bg-primary/20"
+                                    )}
+                                    onClick={() => handleClick(
+                                        {
+                                            ...token,
+                                            surface_form: baseText
+                                        },
+                                        cue.from,
+                                        cue.to
+                                    )}
+                                >
+                                    <div className='flex flex-col items-center'>
+                                        {/* Ruby text (furigana) - positioned above */}
+                                        {rubyText && (
+                                            <div>
+                                                <span>{rubyText}</span>
+                                            </div>
+                                        )}
+                                        
+                                        {/* Base text (kanji/kana) - positioned below */}
+                                        <div>
+                                            <span>{baseText}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        }
+                        
+                        // Regular rendering for other transcriptions
+                        return (
+                            <span
+                                key={idx}
+                                className={cn(
+                                    "cursor-pointer rounded transition-colors hover:bg-primary/10",
+                                    activeToken?.id === token.id && "bg-primary/20"
+                                )}
+                                onClick={() => handleClick(token, cue.from, cue.to)}
+                                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(token.surface_form) }}
+                            />
+                        );
+                    }) : null}
                 </div>
             </div>
         </div>

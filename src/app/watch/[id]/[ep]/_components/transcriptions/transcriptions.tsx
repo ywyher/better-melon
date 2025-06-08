@@ -15,8 +15,8 @@ import { useMutation } from "@tanstack/react-query";
 import { SyncStrategy } from "@/types";
 import { showSyncSettingsToast } from "@/components/sync-settings-toast";
 import { Button } from "@/components/ui/button";
-import { useMediaState } from "@vidstack/react";
 import { useDelayStore } from "@/lib/stores/delay-store";
+import { useMediaState } from "@vidstack/react";
 
 type SubtitleTranscriptionsProps = {
   transcriptions: TranscriptionQuery[];
@@ -52,12 +52,12 @@ export default function SubtitleTranscriptions({
   // This would stop the player from repausing it self if we are still in the small time window
   const lastPauseTime = useRef<number>(0);
     
-  // const isFullscreen = useMediaState('fullscreen', player);
-  // const controlsVisible = useMediaState('controlsVisible', player);
-  // const currentTime = useMediaState('currentTime', player);
-  const isFullscreen = true;
-  const controlsVisible = true;
-  const currentTime = 10;
+  const isFullscreen = useMediaState('fullscreen', player);
+  const controlsVisible = useMediaState('controlsVisible', player);
+  const currentTime = useMediaState('currentTime', player);
+  // const isFullscreen = true;
+  // const controlsVisible = true;
+  // const currentTime = 10;
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -310,11 +310,18 @@ export default function SubtitleTranscriptions({
                     styles[transcription]?.containerStyle
                     || styles["all"].containerStyle
 
+                  // Get Japanese styles for furigana base text
+                  const japaneseStyles = {
+                      tokenStyles: styles['japanese']?.tokenStyles || styles['all'].tokenStyles,
+                      containerStyle: styles['japanese']?.containerStyle || styles['all'].containerStyle
+                  }
+
                   return (
                       <TranscriptionItem
                           key={transcription}
                           transcription={transcription}
                           activeSubtitleSets={activeSubtitleSets}
+                          japaneseStyles={japaneseStyles}
                           styles={{
                             tokenStyles: tokenStyles,
                             containerStyle: containerStyle

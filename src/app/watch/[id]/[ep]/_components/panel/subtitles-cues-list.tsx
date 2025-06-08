@@ -29,17 +29,41 @@ export default function SubtitleCuesList({
   const lastUpdateTimeRef = useRef<number>(0);
   
   const player = usePlayerStore((state) => state.player);
-  const delay = useDelayStore((state) => state.delay);;
+  const delay = useDelayStore((state) => state.delay);
+
+  useEffect(() => {
+    rowVirtualizer.measure()
+  }, [selectedTranscription])
+
+  // Dynamic size estimation based on transcription type
+  const estimateSize = useCallback((index: number) => {
+    const cue = cues?.[index];
+    if (!cue) return 60;
+    
+    // Furigana needs more space for stacked text
+    if (selectedTranscription === 'furigana') {
+      return 95; // Increased height for furigana
+    }
+    
+    // Check if the content is particularly long and might wrap
+    const contentLength = cue.content?.length || 0;
+    if (contentLength > 50) {
+      return 80; // Extra space for long content that might wrap
+    }
+    
+    return 60; // Default size
+  }, [cues, selectedTranscription]);
 
   const rowVirtualizer = useVirtualizer({
       count: cues?.length || 0,
       getScrollElement: () => scrollAreaRef.current,
-      estimateSize: () => 60,
+      estimateSize: estimateSize,
       overscan: 5,
       measureElement: (element: Element) => {
         return element.getBoundingClientRect().height || 60;
       },
   });
+
 
   const findActiveCue = useCallback((currentTime: number) => {
       if (!cues?.length) return;

@@ -1,7 +1,7 @@
 import { Virtualizer } from "@tanstack/react-virtual";
-import { SubtitleToken, SubtitleTranscription, SubtitleCue as TSubtitleCue } from "@/types/subtitle";
+import { SubtitleToken, SubtitleCue as TSubtitleCue } from "@/types/subtitle";
 import SubtitleCue from "@/app/watch/[id]/[ep]/_components/panel/subtitle-cue";
-import { RefObject, useCallback, useEffect } from "react";
+import { RefObject, useCallback } from "react";
 import { usePlayerStore } from "@/lib/stores/player-store";
 import { useDefinitionStore } from "@/lib/stores/definition-store";
 import { getSentencesForCue, isTokenExcluded } from "@/lib/subtitle/utils";
@@ -74,18 +74,18 @@ export default function SubtitleCuesContainer({
           if (!cue) return null;
           
           return (
-              <SubtitleCue
-                  key={`${row.key}-${cue.id}`}
-                  cue={cue} 
-                  index={row.index}
-                  isActive={activeCueIdRef.current === cue.id}
-                  size={row.size}
-                  start={row.start}
-                  activeToken={activeToken}
-                  handleSeek={handleSeek}
-                  handleCopy={handleCopy}
-                  handleClick={handleClick}
-              />
+            <SubtitleCue
+              key={`${row.key}-${cue.id}`}
+              cue={cue} 
+              index={row.index}
+              isActive={activeCueIdRef.current === cue.id}
+              size={row.size}
+              start={row.start}
+              activeToken={activeToken}
+              handleSeek={handleSeek}
+              handleCopy={handleCopy}
+              handleClick={handleClick}
+            />
           );
       })}
     </>

@@ -119,7 +119,7 @@ export default function SubtitleStyles({ syncPlayerSettings: propSyncStrategy, s
         syncPlayerSettings={syncPlayerSettings}
         state={selectedState}
       />
-      {isRefetching && <LoadingOverlay />}
+      {/* {isRefetching && <LoadingOverlay />} */}
     </div>
   );
 }

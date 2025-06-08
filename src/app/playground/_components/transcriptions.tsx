@@ -1,9 +1,9 @@
 'use client'
 
 import SubtitleTranscriptions from "@/app/watch/[id]/[ep]/_components/transcriptions/transcriptions";
+import DefinitionCard from "@/components/definition-card/definition-card";
 import { useSubtitleStyles } from "@/lib/hooks/use-subtitle-styles";
 import { useSubtitleTranscriptions } from "@/lib/hooks/use-subtitle-transcriptions";
-import { useDefinitionStore } from "@/lib/stores/definition-store";
 import { usePlayerStore } from "@/lib/stores/player-store";
 import { useEffect } from "react";
 
@@ -12,7 +12,7 @@ export default function TranscriptionsPlayground() {
   const setActiveTranscriptions = usePlayerStore((state) => state.setActiveTranscriptions);
   
   useEffect(() => {
-    setActiveTranscriptions(['furigana', 'japanese']);
+    setActiveTranscriptions(['japanese', 'furigana']);
     setActiveSubtitleFile({
       file: {
         last_modified: "2024-04-28T16:23:56.084911647Z",
@@ -28,13 +28,16 @@ export default function TranscriptionsPlayground() {
   const { styles } = useSubtitleStyles();
 
   return (
-    <SubtitleTranscriptions
-      transcriptions={transcriptions}
-      styles={styles}
-      syncPlayerSettings={'always'}
-      cuePauseDuration={0}
-      definitionTrigger={'click'}
-      transcriptionsLookup={transcriptionsLookup}
-    />
+    <>
+      <DefinitionCard />
+      <SubtitleTranscriptions
+        transcriptions={transcriptions}
+        styles={styles}
+        syncPlayerSettings={'always'}
+        cuePauseDuration={0}
+        definitionTrigger={'click'}
+        transcriptionsLookup={transcriptionsLookup}
+      />
+    </>
   );
 }

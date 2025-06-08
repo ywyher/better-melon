@@ -26,6 +26,8 @@
 2. so when we log as anon we should invalidate the session query
 3. check the index>header file for an error with the dialog wrapper
 4. dialog z-index > toast z-index => bad UX i suppose it can be fixed using createPortal from react
+5. color picker doesnt set the color in styles
+6. add to anki doesn't work from the panel since we dunno how to capture an image of the selected cue timestamp yet
  
 # Notes
 1. there is built-in getAccessToken no need to listAccountsWithFullData on anilist !!
@@ -36,6 +38,7 @@
 6. use cache for session which are being fetched from the server ??
 7. check turoborepo
 8. for schedules dont use anilist its based on japanese tv
+9. some settings that uses onBlur to update, make sure to only update if value changed
 
 # Checkout
 
