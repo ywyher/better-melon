@@ -42,8 +42,7 @@ export function TranscriptionItem({ transcription, text }: TranscriptionItemProp
       className='text-lg md:text-xl'
       {...attributes}
       {...listeners}
-    >
-      {text}
-    </div>
+      dangerouslySetInnerHTML={{ __html: text }}
+    />
   );
 }
