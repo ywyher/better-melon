@@ -68,9 +68,8 @@ function SubtitleCueBase({
                                 activeToken?.id === token.id && "text-orange-400"
                             )}
                             onClick={() => handleClick(token, cue.from, cue.to)}
-                        >
-                            {token.surface_form}
-                        </span>
+                            dangerouslySetInnerHTML={{ __html: token.surface_form }}
+                        />
                     )) : null}
                 </div>
             </div>

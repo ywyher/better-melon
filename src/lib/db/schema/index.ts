@@ -134,6 +134,7 @@ export const subtitleTranscriptionEnum = pgEnum("subtitle_transcription", [
   "katakana",
   "romaji",
   "english",
+  "furigana"
 ]);
 
 export const fontWeightEnum = pgEnum("font_weight_enum", [
@@ -183,6 +184,7 @@ export const transcriptionEnum = pgEnum("transcription_enum", [
   "katakana",
   "romaji",
   "english",
+  "furigana"
 ])
 
 export const playerSettings = pgTable("player_settings", {

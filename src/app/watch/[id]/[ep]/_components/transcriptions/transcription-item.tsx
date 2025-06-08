@@ -130,9 +130,8 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
                                 Object.assign(e.currentTarget.style, styles.tokenStyles.default);
                             }
                         }}
-                    >
-                        {token.surface_form}
-                    </span>
+                        dangerouslySetInnerHTML={{ __html: token?.surface_form }}
+                    />
                 </div>
             );
         });
@@ -149,7 +148,10 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
     
     // Memoize container className
     const containerClassName = useMemo(() => 
-        cn(transcription === 'english' && 'flex flex-row gap-1'),
+        cn(
+            'flex flex-row items-center',
+            transcription === 'english' && 'flex flex-row gap-1',
+        ),
         [transcription]
     );
     

@@ -57,7 +57,7 @@ export type SubtitleCue = {
 }
 
 export type SubtitleFormat = 'srt' | 'vtt' | 'ass'
-export type SubtitleTranscription = "japanese" | "hiragana" | "katakana" | "romaji" | "english"
+export type SubtitleTranscription = "japanese" | "hiragana" | "katakana" | "romaji" | "english" | "furigana"
 
 export type SubtitleDelay = {
   japanese: number,

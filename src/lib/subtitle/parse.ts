@@ -151,7 +151,7 @@ export async function parseSubtitleToJson({
   transcription?: SubtitleTranscription 
 }): Promise<SubtitleCue[]> {
   const cacheKey = getCacheKey(source);
-  console.debug(`cacheKey`, subtitleCache.get(cacheKey))
+  // console.debug(`cacheKey`, subtitleCache.get(cacheKey))
   
   const fetchStart = performance.now();
   const content = await fetchSubtitles(source);
@@ -215,6 +215,7 @@ export async function parseSubtitleToJson({
     
     // If not pure Japanese, convert to the target transcription
     if (transcription !== 'japanese') {
+      console.log('transcription != japanese')
       const conversionStart = performance.now();
       const convertedSubs = await convertSubtitlesForNonJapaneseTranscription(tokenizedSubs, transcription);
       const conversionEnd = performance.now();
@@ -364,16 +365,22 @@ async function convertSubtitlesForNonJapaneseTranscription(subs: SubtitleCue[], 
     throw new Error("Kuroshiro not initialized for transcription conversion");
   }
 
+  const kuroshiroOptions = {
+    to: transcription != 'furigana' ? transcription : 'hiragana',
+    mode: transcription === 'romaji' 
+    ? 'spaced' 
+    : transcription == 'furigana' 
+    ? 'furigana'
+    : 'normal' 
+  }
+
   return Promise.all(
     subs.map(async sub => {
       if (!sub.content || !kuroshiro) {
         return sub;
       }
       
-      const convertedContent = await kuroshiro.convert(sub.content, { 
-        to: transcription,
-        mode: transcription === 'romaji' ? 'spaced' : 'normal'
-      });
+      const convertedContent = await kuroshiro.convert(sub.content, kuroshiroOptions);
       
       // Converting the already tokenized text so we get consistent tokens across transcriptions
       const convertedTokens = sub.tokens
@@ -381,7 +388,7 @@ async function convertSubtitlesForNonJapaneseTranscription(subs: SubtitleCue[], 
             sub.tokens
               .filter(token => token.surface_form !== ' ' && token.surface_form !== '　')
               .map(async token => {
-                const convertedToken = await kuroshiro.convert(token.surface_form, { to: transcription });
+                const convertedToken = await kuroshiro.convert(token.surface_form, kuroshiroOptions);
                 return {
                   ...token,
                   surface_form: convertedToken
@@ -411,16 +418,16 @@ export function parseSrt(content: string, transcription: SubtitleTranscription) 
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i].trim();
-    console.log(`Line ${i}: "${line}"`);
+    // console.log(`Line ${i}: "${line}"`);
 
     if (line === '') {
       if (Object.keys(currentEntry).length > 0) {
-        console.log('Pushing entry:', currentEntry);
+        // console.log('Pushing entry:', currentEntry);
         result.push(currentEntry);
         currentEntry = {};
         isReadingContent = false;
       } else {
-        console.log('Skipping empty line');
+        // console.log('Skipping empty line');
       }
       continue;
     }
@@ -432,13 +439,13 @@ export function parseSrt(content: string, transcription: SubtitleTranscription) 
         (currentEntry.content ? ' ' : '') + line;
 
       currentEntry.content = removeTags(initialContent);
-      console.log(`Appending content: "${currentEntry.content}"`);
+      // console.log(`Appending content: "${currentEntry.content}"`);
       continue;
     }
 
     if (/^\d+$/.test(line) && !currentEntry.id) {
       currentEntry.id = parseInt(line);
-      console.log(`Parsed ID: ${currentEntry.id}`);
+      // console.log(`Parsed ID: ${currentEntry.id}`);
       continue;
     }
 
@@ -449,15 +456,15 @@ export function parseSrt(content: string, transcription: SubtitleTranscription) 
       currentEntry.from = timestampToSeconds(timestampMatch[1]);
       currentEntry.to = timestampToSeconds(timestampMatch[2]);
       isReadingContent = true;
-      console.log(`Parsed timestamps: from=${currentEntry.from}, to=${currentEntry.to}`);
+      // console.log(`Parsed timestamps: from=${currentEntry.from}, to=${currentEntry.to}`);
       continue;
     }
 
-    console.warn(`Unrecognized line format: "${line}"`);
+    // console.warn(`Unrecognized line format: "${line}"`);
   }
 
   if (Object.keys(currentEntry).length > 0) {
-    console.log('Pushing final entry:', currentEntry);
+    // console.log('Pushing final entry:', currentEntry);
     result.push(currentEntry);
   }
 
@@ -482,20 +489,20 @@ export function parseVtt(content: string, transcription: SubtitleTranscription) 
 
   for (let i = startIndex; i < lines.length; i++) {
     const line = lines[i].trim();
-    console.log(`Line ${i}: "${line}"`);
+    // console.log(`Line ${i}: "${line}"`);
 
     if (line === '') {
       if (Object.keys(currentEntry).length > 0 && currentEntry.from && currentEntry.to) {
         if (!currentEntry.id) {
           currentEntry.id = idCounter++;
-          console.log(`Assigned ID: ${currentEntry.id}`);
+          // console.log(`Assigned ID: ${currentEntry.id}`);
         }
-        console.log('Pushing entry:', currentEntry);
+        // console.log('Pushing entry:', currentEntry);
         result.push(currentEntry);
         currentEntry = {};
         isReadingContent = false;
       } else {
-        console.log('Skipping empty line');
+        // console.log('Skipping empty line');
       }
       continue;
     }
@@ -506,7 +513,7 @@ export function parseVtt(content: string, transcription: SubtitleTranscription) 
       const initialContent = (currentEntry.content || '') +
         (currentEntry.content ? ' ' : '') + line;
       currentEntry.content = removeHtmlTags(initialContent);
-      console.log(`Appending content: "${currentEntry.content}"`);
+      // console.log(`Appending content: "${currentEntry.content}"`);
       continue;
     }
 
@@ -516,19 +523,19 @@ export function parseVtt(content: string, transcription: SubtitleTranscription) 
       currentEntry.from = timestampToSeconds(timestampMatch[1]);
       currentEntry.to = timestampToSeconds(timestampMatch[2]);
       isReadingContent = true;
-      console.log(`Parsed timestamps: from=${currentEntry.from}, to=${currentEntry.to}`);
+      // console.log(`Parsed timestamps: from=${currentEntry.from}, to=${currentEntry.to}`);
       continue;
     }
 
-    console.warn(`Unrecognized line format: "${line}"`);
+    // console.warn(`Unrecognized line format: "${line}"`);
   }
 
   if (Object.keys(currentEntry).length > 0 && currentEntry.from && currentEntry.to) {
     if (!currentEntry.id) {
       currentEntry.id = idCounter++;
-      console.log(`Assigned final ID: ${currentEntry.id}`);
+      // console.log(`Assigned final ID: ${currentEntry.id}`);
     }
-    console.log('Pushing final entry:', currentEntry);
+    // console.log('Pushing final entry:', currentEntry);
     result.push(currentEntry);
   }
 
@@ -544,15 +551,15 @@ export function parseAss(content: string, transcription: SubtitleTranscription) 
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i].trim();
-    console.log(`Line ${i}: "${line}"`);
+    // console.log(`Line ${i}: "${line}"`);
 
     if (line === '') {
-      console.log('Skipping empty line');
+      // console.log('Skipping empty line');
       continue;
     }
 
     if (line.startsWith("Dialogue:")) {
-      console.log('Found dialogue line');
+      // console.log('Found dialogue line');
 
       const parts = line.split(',');
 
@@ -563,7 +570,7 @@ export function parseAss(content: string, transcription: SubtitleTranscription) 
         const content = textParts.join(','); // Handles commas in text
 
         if (!content) {
-          console.log('Skipping entry with empty content');
+          // console.log('Skipping entry with empty content');
           continue;
         }
 
@@ -589,13 +596,13 @@ export function parseAss(content: string, transcription: SubtitleTranscription) 
           content: removeTags(content.trim()),
         };
 
-        console.log('Parsed entry:', entry);
+        // console.log('Parsed entry:', entry);
         result.push(entry);
       } else {
         console.warn(`Malformed Dialogue line at index ${i}:`, line);
       }
     } else {
-      console.log('Non-dialogue line, skipping');
+      // console.log('Non-dialogue line, skipping');
     }
   }
 
