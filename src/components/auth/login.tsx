@@ -17,6 +17,7 @@ import { identifierSchema } from "@/types/auth";
 import { getEmailByUsername, getIsAccountVerified, getShouldVerifyEmail } from "@/components/auth/actions";
 import { useQueryClient } from "@tanstack/react-query";
 import { FormField } from "@/components/form/form-field";
+import { useRouter } from "next/navigation";
 
 export const loginSchema = z.object({
     identifier: identifierSchema,
@@ -39,6 +40,7 @@ export default function Login({ setPort, identifier, identifierValue, setOpen, s
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const queryClient = useQueryClient()
     const isSmall = useIsSmall()
+    const router = useRouter()
 
     const form = useForm<FormValues>({
         resolver: zodResolver(loginSchema),
@@ -70,12 +72,13 @@ export default function Login({ setPort, identifier, identifierValue, setOpen, s
             });
     
             if(result.error) {
-                toast.error(result.error.message)
-                setIsLoading(false)
+                toast.error(result.error.message);
+                setIsLoading(false);
                 return;
             }
             
             queryClient.clear()
+            router.refresh()
             toast.success("Logged in successfully")
             setIsLoading(false)
             setOpen(false)

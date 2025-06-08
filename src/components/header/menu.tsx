@@ -30,7 +30,6 @@ import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { userQueries } from "@/lib/queries/user";
 
 export function Menu({ isSmall }: { isSmall: boolean }) {
   const [open, setOpen] = useState<boolean>(false)
@@ -45,8 +44,8 @@ export function Menu({ isSmall }: { isSmall: boolean }) {
       return;
     }
 
-    queryClient.invalidateQueries({ queryKey: userQueries.session._def })
-    router.push('/')
+    queryClient.clear()
+    router.refresh()
     setOpen(false)
   }
 

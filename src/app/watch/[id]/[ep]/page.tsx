@@ -18,6 +18,7 @@ import { AnimeEpisodeData } from '@/types/anime';
 import { SubtitlesNotAvailableError } from '@/lib/errors/player';
 import MissingSubtitlesDialog from '@/app/watch/[id]/[ep]/_components/missing-subtitles-dialog';
 import { useSetSubtitles } from '@/lib/hooks/use-set-subtitles';
+import { useSession } from '@/lib/queries/user';
 
 export default function WatchPage() {
   const params = useParams();
@@ -36,6 +37,8 @@ export default function WatchPage() {
 
   const loadStartTimeRef = useRef<number>(performance.now());
   const [totalDuration, setTotalDuration] = useState<number>(0);
+
+  const { data: user, isLoading: isUserLoading } = useSession()
 
   const {
     episodeData,
@@ -68,10 +71,6 @@ export default function WatchPage() {
     loadingDuration: stylesLoadingDuration 
   } = useSubtitleStyles();
 
-  useEffect(() => {
-    console.log(`styles`, styles)
-  }, [styles])
-
   const {
     subtitleError,
     subtitlesErrorDialog,
@@ -80,7 +79,7 @@ export default function WatchPage() {
   } = useSetSubtitles(episodeData, settings, episodeNumber);
 
   const isLoading = useMemo(() => {
-    return (isEpisodeDataLoading || isTranscriptionsLoading || isStylesLoading || isSettingsLoading) && !isVideoReady;
+    return (isEpisodeDataLoading || isTranscriptionsLoading || isStylesLoading || isSettingsLoading || isUserLoading) && !isVideoReady;
   }, [isEpisodeDataLoading, isTranscriptionsLoading, isStylesLoading, isSettingsLoading, isVideoReady]);
 
   useEffect(() => {
@@ -123,7 +122,7 @@ export default function WatchPage() {
       kana: null,
       english: null,
     })
-  }, [animeId, episodeNumber, setIsVideoReady]);
+  }, [animeId, episodeNumber, setIsVideoReady, user]);
 
   const shouldPrefetch = useMemo(() => {
     if(episodeData?.details.nextAiringEpisode) {

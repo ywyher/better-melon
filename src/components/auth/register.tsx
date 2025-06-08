@@ -15,6 +15,7 @@ import LoadingButton from "@/components/loading-button";
 import { emailSchema, passwordSchema, usernameSchema } from "@/types/auth";
 import { useQueryClient } from "@tanstack/react-query";
 import { getShouldVerifyEmail } from "@/components/auth/actions";
+import { useRouter } from "next/navigation";
 
 export const registerSchema = z.object({
     username: usernameSchema,
@@ -35,6 +36,7 @@ export default function Register({ setPort, email, setPassword, setOpen }: Regis
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const queryClient = useQueryClient()
     const isSmall = useIsSmall()
+    const router = useRouter()
 
     const form = useForm<FormValues>({
         resolver: zodResolver(registerSchema),
@@ -89,6 +91,7 @@ export default function Register({ setPort, email, setPassword, setOpen }: Regis
             }
             
             queryClient.clear()
+            router.refresh()
             toast.success("Logged in successfully")
             setIsLoading(false)
             setOpen(false)
