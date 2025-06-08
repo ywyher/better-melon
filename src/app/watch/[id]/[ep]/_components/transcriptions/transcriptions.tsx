@@ -15,8 +15,8 @@ import { useMutation } from "@tanstack/react-query";
 import { SyncStrategy } from "@/types";
 import { showSyncSettingsToast } from "@/components/sync-settings-toast";
 import { Button } from "@/components/ui/button";
-import { useMediaState } from "@vidstack/react";
 import { useDelayStore } from "@/lib/stores/delay-store";
+import { useMediaState } from "@vidstack/react";
 
 type SubtitleTranscriptionsProps = {
   transcriptions: TranscriptionQuery[];
@@ -57,7 +57,7 @@ export default function SubtitleTranscriptions({
   const currentTime = useMediaState('currentTime', player);
   // const isFullscreen = true;
   // const controlsVisible = true;
-  // const currentTime = 200;
+  // const currentTime = 10;
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -81,7 +81,8 @@ export default function SubtitleTranscriptions({
               hiragana: [],
               katakana: [],
               romaji: [],
-              english: []
+              english: [],
+              furigana: []
           };
       };
       
@@ -90,7 +91,8 @@ export default function SubtitleTranscriptions({
           hiragana: [],
           katakana: [],
           romaji: [],
-          english: []
+          english: [],
+          furigana: []
       };
 
       transcriptions.forEach(t => {
@@ -98,7 +100,7 @@ export default function SubtitleTranscriptions({
               const { transcription, cues } = t;
               const subtitleTranscription = transcription as SubtitleTranscription;
               
-              const transcriptionDelay = ['hiragana', 'katakana', 'romaji', 'japanese'].includes(subtitleTranscription) 
+              const transcriptionDelay = ['hiragana', 'katakana', 'romaji', 'japanese', 'furigana'].includes(subtitleTranscription) 
                   ? delay.japanese 
                   : delay.english;
               
@@ -308,11 +310,18 @@ export default function SubtitleTranscriptions({
                     styles[transcription]?.containerStyle
                     || styles["all"].containerStyle
 
+                  // Get Japanese styles for furigana base text
+                  const japaneseStyles = {
+                      tokenStyles: styles['japanese']?.tokenStyles || styles['all'].tokenStyles,
+                      containerStyle: styles['japanese']?.containerStyle || styles['all'].containerStyle
+                  }
+
                   return (
                       <TranscriptionItem
                           key={transcription}
                           transcription={transcription}
                           activeSubtitleSets={activeSubtitleSets}
+                          japaneseStyles={japaneseStyles}
                           styles={{
                             tokenStyles: tokenStyles,
                             containerStyle: containerStyle

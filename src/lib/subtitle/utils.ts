@@ -395,3 +395,27 @@ export const convertToKana = async (sentence: string) => {
   await kuroshiro.init(analyzer);
   return await kuroshiro.convert(sentence, { to: "hiragana" });
 }
+
+// Helper function to parse furigana HTML and extract parts
+export const parseFuriganaToken = (htmlString: string) => {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(htmlString, 'text/html');
+  const rubyElement = doc.querySelector('ruby');
+  
+  if (!rubyElement) {
+    return { baseText: htmlString, rubyText: null };
+  }
+  
+  // Extract base text (everything except rt elements)
+  const baseText = Array.from(rubyElement.childNodes)
+    .filter(node => node.nodeType === Node.TEXT_NODE || 
+                   (node.nodeType === Node.ELEMENT_NODE && node.nodeName !== 'RT' && node.nodeName !== 'RP'))
+    .map(node => node.textContent)
+    .join('');
+    
+  // Extract ruby text (rt elements)
+  const rtElement = rubyElement.querySelector('rt');
+  const rubyText = rtElement ? rtElement.textContent : null;
+  
+  return { baseText, rubyText };
+};

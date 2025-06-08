@@ -95,7 +95,6 @@ export const getContainerStyles = (styles: {
     flexWrap: 'wrap',
     justifyContent: 'center',
     textAlign: 'center',
-    width: 'fit-content'
   }
 
   const activeStyles: CSSProperties = {
