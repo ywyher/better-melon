@@ -1,3 +1,12 @@
+look at this repo: https://github.com/ripose-jp/Memento
+they have more dictionaries for stuff like pitch accent and so on
+
+this too for more info about pitch accent databases
+https://github.com/IllDepence/anki_add_pitch_plugin/tree/master/src
+https://github.com/Ben-Kerman/anki-jrp
+https://github.com/javdejong/nhk-pronunciation
+
+
 getSentencesForCue delay doesnt really work well with delay
 
 try this for animepahe ?
@@ -5,17 +14,11 @@ https://github.com/ElijahCodes12345/animepahe-api
 
 there is built-in getAccessToken no need to listAccountsWithFullData on anilist !!
 
-"sentence-kana": sentenceKanji?.text, in jmdict kanji, we gotta convert it :(
-
-we have to implement the delay in transcriptionsLookup 
-
 useful for domains and vps shit:
 https://my.hivelocity.net/sign-up?referralCode=JKUA
 https://jink.host/
 https://regery.com/
 https://receive-smss.com/
-
-forget password doesnt work
 
 prefetch funtioanlity is trying to refetch next episode on movies! !
 also the delay doesnt get set for whatever reason !

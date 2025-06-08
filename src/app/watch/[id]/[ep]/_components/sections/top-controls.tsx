@@ -40,7 +40,7 @@ export function TopControls({
           Loaded in {(loadingDuration / 1000).toFixed(2)}s
         </div>
       )}
-      <Button
+      {/* <Button
         variant='outline'
         onClick={() => {
           player.current?.remoteControl.seek(427)
@@ -49,7 +49,7 @@ export function TopControls({
         <Search 
           className='animate-spin'
         />
-      </Button>
+      </Button> */}
       {(isLoading || !episodeData || !transcriptions) ? (
         <div className="flex flex-row gap-2">
           <Button variant='outline'>

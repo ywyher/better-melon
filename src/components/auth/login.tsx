@@ -99,6 +99,16 @@ export default function Login({ setPort, identifier, identifierValue, setOpen, s
 
     const onForgetPassword = async () => {
         setIsLoading(true)
+
+        const shouldVerifyEmail = await getShouldVerifyEmail()
+
+        if(!shouldVerifyEmail) {
+            toast.error("This action is disabled at the moment.")
+            setIsLoading(false)
+            return
+        }
+
+
         let email: string | null = identifierValue;
         if(identifier == 'username') {
             email = await getEmailByUsername(identifierValue) || null

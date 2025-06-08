@@ -57,6 +57,7 @@ export default function DefinitionCardHeader({ entries }: DefinitionCardHeaderPr
       kana: null,
       english: null,
     })
+    setIsExpanded(false)
     setToken(null)
     setActiveTokenId(null)
   }
