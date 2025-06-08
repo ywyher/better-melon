@@ -11,9 +11,9 @@ type JMnedictNameProps = {
 export default function JMnedictName({ kana, kanji, translation }: JMnedictNameProps) {
   const { addToAnki } = useAddToAnki({
     fields: {
-      kanji: kanji.text,
-      kana: kana.text,
-      definition: translation.text,
+      kanji: kanji.text || "",
+      kana: kana.text || "",
+      definition: translation.text || "",
     },
   })
 

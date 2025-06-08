@@ -72,6 +72,8 @@ export const generalSettings = pgTable("general_settings", {
   screenshotNamingPattern: text('screenshotNamingPattern').notNull().default('better_melon_{title}_{counter}_{random}'),
   screenshotFormat: screenshotFormatEnum('screenshot_format').notNull().default('png'),
 
+  
+
   userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }).unique(),
   createdAt: timestamp("created_at").notNull(),
   updatedAt: timestamp("updated_at").notNull()
