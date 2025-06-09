@@ -13,17 +13,14 @@ export const subtitleQueries = createQueryKeys('subtitle', {
     queryFn: async () => {
       if (!activeSubtitleFile) return undefined;
   
-      const format = activeSubtitleFile.source === 'remote' 
-        ? activeSubtitleFile.file.url.split('.').pop() as "srt" | "vtt"
-        : activeSubtitleFile.file.name.split('.').pop() as "srt" | "vtt";
-
-      return await parseSubtitleToJson({ 
-        source: activeSubtitleFile.source === 'remote' 
-          ? activeSubtitleFile.file.url 
-          : activeSubtitleFile.file,
+      const source = getSubtitleSource(false, '', activeSubtitleFile);
+      const format = getSubtitleFormat(false, '', activeSubtitleFile);
+      
+      return await parseSubtitleToJson({
         format,
+        source,
         transcription
-      });
+      })
     }
   }),
   transcriptions: ({ activeSubtitleFile, englishSubtitleUrl, transcription, isEnglish, isTokenizerInitialized }: {
@@ -39,35 +36,39 @@ export const subtitleQueries = createQueryKeys('subtitle', {
       activeSubtitleFile,
       transcription,
     ],
-    queryFn: async () => {
-      if ((isEnglish && !englishSubtitleUrl) 
-        || (!isEnglish && !activeSubtitleFile)) {
-        throw new Error(`Couldn't get the file for ${transcription} subtitles`);
-      }
+  queryFn: async () => {
+    if ((isEnglish && !englishSubtitleUrl) 
+      || (!isEnglish && !activeSubtitleFile)) {
+      throw new Error(`Couldn't get the file for ${transcription} subtitles`);
+    }
 
-      if (!activeSubtitleFile) {
-        throw new Error(`Active subtitle file is null`);
-      }
-      
-      if (!isTokenizerInitialized) {
-        throw new Error(`tokenizer isn't initialized`);
-      }
-      
-      const source = getSubtitleSource(isEnglish, englishSubtitleUrl, activeSubtitleFile);
-      const format = getSubtitleFormat(isEnglish, englishSubtitleUrl, activeSubtitleFile);
-      
-      const cues = await parseSubtitleToJson({
-        source,
-        format,
-        transcription
-      });
-      
-      return {
-        transcription,
-        format,
-        cues
-      };
-    },
+    if (!activeSubtitleFile && !englishSubtitleUrl) {
+      throw new Error(`No subtitle source available`);
+    }
+    
+    if (!activeSubtitleFile) {
+      throw new Error(`Active subtitle file is null`);
+    }
+    
+    if (!isTokenizerInitialized) {
+      throw new Error(`tokenizer isn't initialized`);
+    }
+    
+    const source = getSubtitleSource(isEnglish, englishSubtitleUrl, activeSubtitleFile);
+    const format = getSubtitleFormat(isEnglish, englishSubtitleUrl, activeSubtitleFile);
+
+    const cues = await parseSubtitleToJson({
+      format,
+      source,
+      transcription
+    })
+
+    return {
+      transcription,
+      format,
+      cues
+    };
+  },
   }),
   styles: ({ transcriptionsToFetch, checkedTranscriptions, handleSubtitleStylesInStore, getStylesFromStore, setLoadingDuration }: {
     transcriptionsToFetch: SubtitleTranscription[];

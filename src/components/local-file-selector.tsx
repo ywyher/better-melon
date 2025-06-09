@@ -2,7 +2,6 @@
 
 import { subtitleFormats } from "@/lib/constants/subtitle";
 import { usePlayerStore } from "@/lib/stores/player-store";
-import { isFileJpn } from "@/lib/subtitle/utils";
 import { cn, getExtension } from "@/lib/utils";
 import { Check, Loader2, Upload, X } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -46,7 +45,9 @@ export default function LocalFileSelector({ onSelect }: LocalFileSelectorProps) 
     setFileState({ loading: true, fileName: null, error: null });
     
     try {
-      const isJpn = await isFileJpn(file);
+      const isJpn = await Promise.resolve(setTimeout(() => {
+        return true;
+      }, 100));
       
       if (isJpn) {
         setFileState({ loading: false, fileName: file.name, error: null });

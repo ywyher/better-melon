@@ -3,7 +3,7 @@ import { excludedPos, subtitleFormats } from "@/lib/constants/subtitle";
 import { SubtitleSettings } from "@/lib/db/schema";
 import { FileSelectionError } from "@/lib/errors/player";
 import { DelayStore } from "@/lib/stores/delay-store";
-import { fetchSubtitles, parseAss, parseSrt, parseVtt } from "@/lib/subtitle/parse";
+import { parseAss, parseSrt, parseVtt } from "@/lib/subtitle/parse";
 import { getExtension } from "@/lib/utils";
 import { AnimeStreamingLinks, SkipTime } from "@/types/anime";
 import { ActiveSubtitleFile, SubtitleFile, SubtitleFormat, SubtitleToken } from "@/types/subtitle";
@@ -51,8 +51,6 @@ export function removeHtmlTags(text: string): string {
 export function timestampToSeconds(timestamp: string, delay: number = 0): number {
   if(!timestamp) return 0;
   const cleanTimestamp = timestamp.trim();
-
-  console.log(`timestamp`, timestamp)
 
   // Extract hours, minutes, seconds, and milliseconds using regex
   // This handles formats like "00:00:00,000", "00:00:00.000", and "00:00:00,-000"
@@ -227,36 +225,36 @@ export function generateWebVTTFromSkipTimes({
     return vttString;
 }
 
-export async function isFileJpn(file: File) {
-  const content = await fetchSubtitles(file)
-  const format = getExtension(file.name)
+// export async function isFileJpn(file: File) {
+//   const content = await fetchSubtitles(file)
+//   const format = getExtension(file.name)
 
-  let parsed
+//   let parsed
   
-  switch (format) {
-    case 'srt':
-      parsed = parseSrt(content, 'japanese');
-    break;
-    case 'vtt':
-      parsed = parseVtt(content, 'japanese');
-    break;
-    case 'ass':
-      parsed = parseAss(content, 'japanese');
-    break;
-    default:
-      throw new Error(`Unsupported subtitle format: ${format}`);
-  }
+//   switch (format) {
+//     case 'srt':
+//       parsed = parseSrt(content, 'japanese');
+//     break;
+//     case 'vtt':
+//       parsed = parseVtt(content, 'japanese');
+//     break;
+//     case 'ass':
+//       parsed = parseAss(content, 'japanese');
+//     break;
+//     default:
+//       throw new Error(`Unsupported subtitle format: ${format}`);
+//   }
 
-  if(!parsed) return;
+//   if(!parsed) return;
 
-  const toBeTested = parsed?.slice(0, Math.ceil(parsed?.length / 2))
-    .map((cue) => cue.content)
-    .join(' ')
+//   const toBeTested = parsed?.slice(0, Math.ceil(parsed?.length / 2))
+//     .map((cue) => cue.content)
+//     .join(' ')
 
-  const result = franc(toBeTested)
+//   const result = franc(toBeTested)
 
-  return result == 'jpn' ? true : false
-}
+//   return result == 'jpn' ? true : false
+// }
 
 export function getSubtitleSource(
   isEnglish: boolean,

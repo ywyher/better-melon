@@ -82,7 +82,7 @@ export default function Player({
     }, [setPlayer]);
 
     useEffect(() => {
-      if(!streamingLinks) return;
+      if(!streamingLinks || !streamingLinks.sources[0]) return;
 
       const url = `${env.NEXT_PUBLIC_PROXY_URL}?url=${streamingLinks.sources[0].url}`
       setVideoSrc(url)

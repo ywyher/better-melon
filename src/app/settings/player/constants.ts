@@ -5,7 +5,7 @@ export const defaultPlayerSettings: PlayerSettings =  {
     autoPlay: false,
     autoNext: false,
     autoSkip: false,
-    enabledTranscriptions: ['japanese', 'english'],
+    enabledTranscriptions: ['japanese', 'hiragana', 'english'],
     pauseOnCue: false,
     cuePauseDuration: null,
     userId: "",

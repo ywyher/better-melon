@@ -10,6 +10,8 @@ export const env = createEnv({
     BETTER_AUTH_SECRET: z.string().min(1),
     
     API_URL: z.string().url(),
+
+    REDIS_PORT: z.string().min(1),
     
     ANILIST_ID: z.string().min(1),
     ANILIST_SECRET: z.string().min(1),

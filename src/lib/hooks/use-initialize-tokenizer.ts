@@ -1,44 +1,58 @@
-import { initializeTokenizer, isTokenizerInitialized } from "@/lib/subtitle/parse";
-import { Tokenizer } from "kuromojin";
+import { checkTokenizerStatus, initializeTokenizerAction } from "@/lib/subtitle/actions";
 import { useEffect, useState } from "react";
 
 export function useInitializeTokenizer() {
-  const [isInitialized, setIsInitialized] = useState<boolean>(isTokenizerInitialized());
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isInitialized, setIsInitialized] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-  const [tokenizer, setTokenizer] = useState<Tokenizer | null | undefined>(null)
+  const [initializationTime, setInitializationTime] = useState<number>(0);
 
   useEffect(() => {
-    const initialize = async () => {
-      if (!isTokenizerInitialized()) {
-        try {
-          setIsLoading(true);
-          
-          const start = performance.now();
-          const tokenizer = await initializeTokenizer('hook');
-          const end = performance.now();
-          console.debug(`~Initialize Tokenizer: ${(end - start).toFixed(2)}ms`);
+    const checkAndInitialize = async () => {
+      try {
+        setIsLoading(true);
+        
+        // Check if tokenizer is already initialized
+        const statusResult = await checkTokenizerStatus();
+        
+        if (!statusResult.success) {
+          throw new Error(statusResult.error);
+        }
+        
+        if (statusResult.isInitialized) {
+          console.debug('Tokenizer already initialized on server');
           setIsInitialized(true);
           setIsLoading(false);
-          setTokenizer(tokenizer)
-        } catch (err) {
-          console.error("Failed to initialize tokenizer:", err);
-          setError(err instanceof Error ? err : new Error("Unknown error during tokenizer initialization"));
-          setIsLoading(false);
-          setTokenizer(null)
+          return;
         }
-      } else if (isTokenizerInitialized() && !isInitialized) {
-        setIsInitialized(true);
+        
+        // Initialize tokenizer
+        console.debug('Initializing tokenizer on server...');
+        const initResult = await initializeTokenizerAction();
+        
+        if (initResult.success) {
+          console.debug(`Tokenizer initialized: ${initResult.initializationTime?.toFixed(2)}ms`);
+          setIsInitialized(true);
+          setInitializationTime(initResult.initializationTime || 0);
+        } else {
+          throw new Error(initResult.error || 'Failed to initialize tokenizer');
+        }
+      } catch (err) {
+        console.error("Failed to initialize tokenizer:", err);
+        setError(err instanceof Error ? err : new Error("Unknown error during tokenizer initialization"));
+        setIsInitialized(false);
+      } finally {
+        setIsLoading(false);
       }
     };
     
-    initialize();
-  }, [isInitialized]);
+    checkAndInitialize();
+  }, []);
   
   return {
     isInitialized,
     isLoading,
     error,
-    tokenizer
+    initializationTime
   };
 }

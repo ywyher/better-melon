@@ -84,8 +84,11 @@ export const useSubtitleTranscriptions = () => {
     const lookup = new Map<SubtitleTranscription, Map<string, SubtitleCue>>();
 
     transcriptions.forEach(transcription => {
+      console.log(`transcription`, transcription)
       if(!transcription) return
       const cueMap = new Map<string, SubtitleCue>();
+      console.log(transcription.cues)
+      console.log(typeof transcription.cues)
       transcription.cues.forEach(cue => {
         if(cue.transcription == 'english') {
           // Apply English delay when storing
@@ -107,6 +110,12 @@ export const useSubtitleTranscriptions = () => {
     return lookup;
   }, [transcriptions]);
   
+  const refetchAll = () => {
+    queries.forEach((query) => {
+      if (query.refetch) query.refetch();
+    });
+  };
+
   const isLoading = isTokenizerLoading || queries.some(q => q.isLoading);
   const error = queries.find(q => q.error)?.error;
 
@@ -117,5 +126,6 @@ export const useSubtitleTranscriptions = () => {
     transcriptionsLookup,
     loadingDuration: loadingDuration,
     isTokenizerInitialized: isTokenizerInitialized,
+    refetch: refetchAll
   };
 }

@@ -30,7 +30,7 @@ export async function getMultipleTranscriptionsStyles(transcriptions: SubtitleTr
       inArray(subtitleStyles.transcription, transcriptionsToFetch)
     ));
 
-  console.log(fetchedStyles);
+  // console.log(fetchedStyles);
 
   // Create a map of transcription -> { default: style, active: style }
   const stylesMap = fetchedStyles.reduce((acc, style) => {

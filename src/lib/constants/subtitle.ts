@@ -1,5 +1,7 @@
 import { SubtitleStyles } from "@/lib/db/schema"
 
+export const subtitleCacheGroup = 'subtitle:'
+
 export const excludedPos = ['数', '記号']
 export const subtitleTranscriptions = ['japanese', 'hiragana', 'katakana', 'romaji', 'english', 'furigana'] as const
 export const subtitleFormats = [
