@@ -49,6 +49,7 @@ Animelon doesn’t provide all animes, and its entries are rarely updated, makin
 - Definition on select or hover setting
 - .ass/.srt/.vtt subtitle support
 - Definition-on-select functionality
+- Caching through redis
 
 ## Planned Features
 - More providers
@@ -78,20 +79,11 @@ pnpm i  # or npm i
 ### 3. Set Up Required Services
 You need the following:
 - PostgreSQL database
+- Redis
 
-**Option A: Using Docker Compose**
+**Using Docker Compose**
 ```sh
 docker compose -f docker.yaml up -d
-```
-
-**Option B: Running Services Manually**
-```sh
-# Start PostgreSQL
-docker run -d \
-  --name=postgres \
-  -p 5432:5432 \
-  --restart unless-stopped \
-  postgres
 ```
 
 ### 4. Register for External Services
@@ -99,7 +91,7 @@ docker run -d \
 - Setup better-melon-dictionary-indexer by following the steps shown [here](https://github.com/ywyher/better-melon-dictionary-indexer)
 - Setup shinra proxy by following the steps shown [here](https://github.com/xciphertv/shrina-proxy)
 - Set up AniList API credentials at [anilist.co/settings/developer](https://anilist.co/settings/developer)
-- Register for [Resend](https://resend.com/) for email functionality
+- Register for [Resend](https://resend.com/) for email functionality (Optional)
 
 ### 5. Configure Environment Variables
 Create a `.env` file in the root directory with the following:
@@ -116,6 +108,8 @@ API_URL=http://localhost:6969/api
 
 NEXT_PUBLIC_PROXY_URL=http://localhost:8080/proxy
 NEXT_PUBLIC_ANKI_CONNECT_URL=http://localhost:8765
+
+REDIS_PORT=6379
 
 ANILIST_ID=your_anilist_id
 ANILIST_SECRET=your_anilist_secret

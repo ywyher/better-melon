@@ -18,7 +18,6 @@
 12. input validation/sanitization for login/register
 13. episodes metadata for the episode selector
 14. preview subtitle for when the settings change (not important)
-15. implement redis for caching
 
 # Bugs
 1. getSentencesForCue delay doesnt really work well with delay
