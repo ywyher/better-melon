@@ -84,7 +84,8 @@ export default function Player({
     useEffect(() => {
       if(!streamingLinks || !streamingLinks.sources[0]) return;
 
-      const url = `${env.NEXT_PUBLIC_PROXY_URL}?url=${streamingLinks.sources[0].url}`
+    //   const url = `${env.NEXT_PUBLIC_PROXY_URL}?url=${streamingLinks.sources[0].url}`
+      const url = `http://localhost:8080/proxy?url=https://frostywinds57.live/_v7/af9590f35dc83df1743cb7a42fb27e1d774d69d735058842262eaa1a8448ee6af7ae3b241bcdc0fc8fd10155d82c5fcfa232daf76ee0a09aca6a64dfd264b7d9fa2517256de0b588c790ece83c7d98040c9b1b333bbd82044ca5bcc4b6140661a653aaeac58ca922caf3a87efc10d31729f04a8135742dac190b80c13050b903/master.m3u8`
       setVideoSrc(url)
       setIsInitialized(true);
       setLoadingDuration({ start: new Date(), end: undefined })

@@ -3,7 +3,7 @@
 import { TranscriptionItem } from "@/app/watch/[id]/[ep]/_components/transcriptions/transcription-item";
 import { usePlayerStore } from "@/lib/stores/player-store";
 import type { SubtitleCue, SubtitleTranscription } from "@/types/subtitle";
-import { closestCenter, DndContext, type DragEndEvent, KeyboardSensor, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
+import { closestCenter, DndContext, type DragEndEvent, KeyboardSensor, PointerSensor, useDraggable, useSensor, useSensors } from "@dnd-kit/core";
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { TranscriptionQuery, TranscriptionsLookup, TranscriptionStyles } from "@/app/watch/[id]/[ep]/types";
@@ -52,12 +52,12 @@ export default function SubtitleTranscriptions({
   // This would stop the player from repausing it self if we are still in the small time window
   const lastPauseTime = useRef<number>(0);
     
-  // const isFullscreen = useMediaState('fullscreen', player);
-  // const controlsVisible = useMediaState('controlsVisible', player);
-  // const currentTime = useMediaState('currentTime', player);
-  const isFullscreen = true;
-  const controlsVisible = true;
-  const currentTime = 10;
+  const isFullscreen = useMediaState('fullscreen', player);
+  const controlsVisible = useMediaState('controlsVisible', player);
+  const currentTime = useMediaState('currentTime', player);
+  // const isFullscreen = true;
+  // const controlsVisible = true;
+  // const currentTime = 10;
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -274,7 +274,7 @@ export default function SubtitleTranscriptions({
 
   return (
     <div
-      className="absolute left-1/2 transform -translate-x-1/2 flex items-center flex-col w-[100%]"
+      className="absolute left-1/2 transform -translate-x-1/2 flex items-center z-50 flex-col w-[100%]"
       style={wrapperStyles}
     >
       <Button
@@ -290,7 +290,7 @@ export default function SubtitleTranscriptions({
         className="hidden"
       >
       </Button>
-      <DndContext 
+      <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}
           onDragEnd={handleDragEnd}

@@ -71,10 +71,6 @@ export default function WatchPage() {
     loadingDuration: stylesLoadingDuration 
   } = useSubtitleStyles();
 
-  useEffect(() => {
-    console.log(`styles only`, styles)
-  }, [styles])
-
   const {
     subtitleError,
     subtitlesErrorDialog,
@@ -218,6 +214,8 @@ export default function WatchPage() {
           subtitleFiles={episodeData?.subtitles as AnimeEpisodeData['subtitles']}
           transcriptions={transcriptions}
           transcriptionsLookup={transcriptionsLookup}
+          autoScrollToCue={settings.playerSettings.autoScrollToCue}
+          autoScrollResumeDelay={settings.playerSettings.autoScrollResumeDelay}
         />
       )}
     </div>

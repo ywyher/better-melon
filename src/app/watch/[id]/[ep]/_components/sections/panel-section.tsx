@@ -6,6 +6,7 @@ import { SubtitleFile } from '@/types/subtitle';
 import EpisodesList from '@/app/watch/[id]/[ep]/_components/episodes/episodes-list';
 import { TranscriptionQuery, TranscriptionsLookup } from '@/app/watch/[id]/[ep]/types';
 import { useEffect } from 'react';
+import { PlayerSettings } from '@/lib/db/schema';
 
 interface PanelSectionProps {
   isLoading: boolean;
@@ -13,6 +14,8 @@ interface PanelSectionProps {
   subtitleFiles?: SubtitleFile[];
   transcriptions?: TranscriptionQuery[];
   transcriptionsLookup?: TranscriptionsLookup
+  autoScrollToCue: PlayerSettings['autoScrollToCue']
+  autoScrollResumeDelay: PlayerSettings['autoScrollResumeDelay']
 }
 
 export default function PanelSection({
@@ -20,7 +23,9 @@ export default function PanelSection({
   animeMetadata,
   subtitleFiles,
   transcriptions,
-  transcriptionsLookup
+  transcriptionsLookup,
+  autoScrollToCue,
+  autoScrollResumeDelay
 }: PanelSectionProps) {
   return (
     <div className="flex flex-col gap-5 w-full md:w-auto">
@@ -33,6 +38,8 @@ export default function PanelSection({
               subtitleFiles={subtitleFiles}
               transcriptions={transcriptions}
               transcriptionsLookup={transcriptionsLookup}
+              autoScrollToCue={autoScrollToCue}
+              autoScrollResumeDelay={autoScrollResumeDelay}
             />
           )}
         </>

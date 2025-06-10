@@ -6,22 +6,27 @@ import { usePlayerStore } from "@/lib/stores/player-store";
 import SubtitleCuesContainer from "@/app/watch/[id]/[ep]/_components/panel/subtitle-cues-container";
 import { TranscriptionsLookup } from "@/app/watch/[id]/[ep]/types";
 import { useDelayStore } from "@/lib/stores/delay-store";
+import { PlayerSettings } from "@/lib/db/schema";
 
 type SubtitleCuesListProps = {
-    isLoading: boolean;
-    selectedTranscription: SubtitleTranscription;
-    cues: TSubtitleCue[];
-    transcriptionsLookup: TranscriptionsLookup
+  isLoading: boolean;
+  selectedTranscription: SubtitleTranscription;
+  cues: TSubtitleCue[];
+  transcriptionsLookup: TranscriptionsLookup
+  autoScrollToCue: PlayerSettings['autoScrollToCue']
+  autoScrollResumeDelay: PlayerSettings['autoScrollResumeDelay'] // Updated name
 }
 
 export default function SubtitleCuesList({
-    selectedTranscription,
-    isLoading,
-    cues,
-    transcriptionsLookup
+  selectedTranscription,
+  isLoading,
+  cues,
+  transcriptionsLookup,
+  autoScrollToCue,
+  autoScrollResumeDelay
 }: SubtitleCuesListProps) {
   const [activeIndex, setActiveIndex] = useState<number>(-1);
-  const [autoScroll, setAutoScroll] = useState<boolean>(true);
+  const [autoScroll, setAutoScroll] = useState<boolean>(autoScrollToCue); // Use setting
   
   const activeCueIdRef = useRef<number>(-1);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
@@ -30,6 +35,10 @@ export default function SubtitleCuesList({
   
   const player = usePlayerStore((state) => state.player);
   const delay = useDelayStore((state) => state.delay);
+
+  useEffect(() => {
+    setAutoScroll(autoScrollToCue);
+  }, [autoScrollToCue]);
 
   useEffect(() => {
     rowVirtualizer.measure()
@@ -64,9 +73,8 @@ export default function SubtitleCuesList({
       },
   });
 
-
   const findActiveCue = useCallback((currentTime: number) => {
-      if (!cues?.length) return;
+      if (!cues?.length || !autoScrollToCue) return; // Check setting
       
       const activeCueIndex = cues.findIndex(cue => 
         currentTime >= (cue.from + delay.japanese) && currentTime <= (cue.to + delay.japanese)
@@ -93,30 +101,43 @@ export default function SubtitleCuesList({
           activeCueIdRef.current = -1;
           setActiveIndex(-1);
       }
-  }, [cues, delay.japanese, activeIndex, activeCueIdRef, autoScroll, rowVirtualizer]);
+  }, [cues, delay.japanese, activeIndex, activeCueIdRef, autoScroll, rowVirtualizer, autoScrollToCue]);
 
   useEffect(() => {
-      if(!player.current || !cues?.length) return;
+    if(!player.current || !cues?.length) return;
 
-      return player.current.subscribe(({ currentTime }) => {
-          const now = Date.now();
-          if (now - lastUpdateTimeRef.current > 250) {
-              lastUpdateTimeRef.current = now;
-              findActiveCue(currentTime);
-          }
-      });
+    return player.current.subscribe(({ currentTime }) => {
+        const now = Date.now();
+        if (now - lastUpdateTimeRef.current > 250) {
+            lastUpdateTimeRef.current = now;
+            findActiveCue(currentTime);
+        }
+    });
   }, [player, cues, findActiveCue]);
 
   const handleManualScroll = useCallback(() => {
-      setAutoScroll(false);
-      
+    if (!autoScrollToCue) return
+    
+    setAutoScroll(false);
+    
+    if (autoScrollTimerRef.current) {
+        clearTimeout(autoScrollTimerRef.current);
+    }
+    
+    // Use the setting value or fallback to 5000ms
+    const delayMs = (autoScrollResumeDelay || 5) * 1000;
+    
+    autoScrollTimerRef.current = setTimeout(() => {
+        setAutoScroll(true);
+    }, delayMs);
+  }, [autoScrollToCue, autoScrollResumeDelay]);
+
+  useEffect(() => {
+    return () => {
       if (autoScrollTimerRef.current) {
-          clearTimeout(autoScrollTimerRef.current);
+        clearTimeout(autoScrollTimerRef.current);
       }
-      
-      autoScrollTimerRef.current = setTimeout(() => {
-          setAutoScroll(true);
-      }, 5000);
+    };
   }, []);
     
   return (

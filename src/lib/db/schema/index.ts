@@ -53,7 +53,6 @@ export const ankiPresetRelations = relations(ankiPreset, ({ one }) => ({
   })
 }))
 
-
 export const syncStrategyEnum = pgEnum("sync_strategy", [
   "always",
   "never",
@@ -194,7 +193,11 @@ export const playerSettings = pgTable("player_settings", {
   autoNext: boolean('auto_next').notNull().default(false),
   autoSkip: boolean('auto_skip').notNull().default(false),
 
+  autoScrollToCue: boolean('auto_scroll_to_cue').notNull().default(true),
+  autoScrollResumeDelay: real('auto_scroll_resume_delay').default(3), // in seconds
+
   pauseOnCue: boolean('pause_on_cue').notNull().default(false),
+  // duration before unpausing the video
   cuePauseDuration: real('cue_pause_duration'), // in seconds
 
   enabledTranscriptions: transcriptionEnum('enabled_transcriptions').array().notNull().default(["japanese", "english"]),

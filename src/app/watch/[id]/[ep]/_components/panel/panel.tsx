@@ -13,15 +13,20 @@ import SubtitleCuesList from "@/app/watch/[id]/[ep]/_components/panel/subtitles-
 import PanelSkeleton from "@/app/watch/[id]/[ep]/_components/panel/panel-skeleton";
 import { subtitleQueries } from "@/lib/queries/subtitle";
 import { TranscriptionQuery, TranscriptionsLookup } from "@/app/watch/[id]/[ep]/types";
+import { PlayerSettings } from "@/lib/db/schema";
 
 export default function SubtitlePanel({ 
   subtitleFiles,
   transcriptions,
-  transcriptionsLookup
+  transcriptionsLookup,
+  autoScrollToCue,
+  autoScrollResumeDelay
 }: { 
   subtitleFiles: SubtitleFile[],
   transcriptions: TranscriptionQuery[]
   transcriptionsLookup: TranscriptionsLookup
+  autoScrollToCue: PlayerSettings['autoScrollToCue']
+  autoScrollResumeDelay: PlayerSettings['autoScrollResumeDelay']
 }) {
     const [selectedTranscription, setSelectedTranscription] = useState<SubtitleTranscription>('japanese')
     const [previousCues, setPreviousCues] = useState<TSubtitleCue[] | undefined>();
@@ -75,6 +80,8 @@ export default function SubtitlePanel({
                         selectedTranscription={selectedTranscription}
                         cues={cues}
                         transcriptionsLookup={transcriptionsLookup}
+                        autoScrollToCue={autoScrollToCue}
+                        autoScrollResumeDelay={autoScrollResumeDelay}
                       />
                   ): (
                     <Card className="w-full p-4 bg-yellow-50 border-yellow-200">

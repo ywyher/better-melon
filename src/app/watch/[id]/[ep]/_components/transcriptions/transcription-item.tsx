@@ -11,6 +11,7 @@ import { SubtitleSettings } from '@/lib/db/schema';
 import { getSentencesForCue, isTokenExcluded, parseFuriganaToken } from '@/lib/subtitle/utils';
 import { useDelayStore } from '@/lib/stores/delay-store';
 import DOMPurify from 'dompurify';
+import { GripVertical } from 'lucide-react';
 
 type TranscriptionItemProps = {
   transcription: SubtitleTranscription;
@@ -35,7 +36,10 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
         setNodeRef,
         transform,
         transition,
-    } = useSortable({id: transcription});
+    } = useSortable({
+        id: transcription,
+        disabled: false
+    });
     const delay = useDelayStore((state) => state.delay);
 
     const style = useMemo(() => ({
@@ -253,10 +257,17 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
                 ...styles.containerStyle.default,
                 ...style,
             }}
-            className={containerClassName}
-            {...attributes}
-            {...listeners}
+            className={cn(containerClassName, "relative group")}
         >
+            {/* Drag Handle */}
+            <div
+                {...attributes}
+                {...listeners}
+                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-8 opacity-0 group-hover:opacity-100 transition-opacity cursor-grab active:cursor-grabbing p-1 bg-background/80 rounded border"
+            >
+                <GripVertical className="w-4 h-4 text-muted-foreground" />
+            </div>
+            
             {activeCues.map((cue, idx) => (
                 <Fragment key={`cue-${cue.id || idx}`}>
                     {renderTokens(cue)}

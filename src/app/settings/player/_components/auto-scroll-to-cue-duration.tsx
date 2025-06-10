@@ -8,13 +8,17 @@ import { usePlayerSettings } from "@/lib/hooks/use-player-settings"
 import { X } from "lucide-react"
 import { useEffect, useState } from "react"
   
-export default function CuePauseDuration({ value }: { 
-    value: PlayerSettings['cuePauseDuration']
+export default function autoScrollResumeDelay({ value }: { 
+    value: PlayerSettings['autoScrollResumeDelay']
 }) {
     const { isLoading, onSubmit } = usePlayerSettings({
-        field: 'cuePauseDuration',
+        field: 'autoScrollResumeDelay',
         initialValue: value,
     })
+
+    useEffect(() => {
+        console.log(`test`, value)
+    }, [value])
 
     // we use these here since with display value we get some bugs !
     const [inputValue, setInputValue] = useState<number | null>(value !== undefined ? value : null)
@@ -24,6 +28,7 @@ export default function CuePauseDuration({ value }: {
     }
 
     const handleSubmit = (val: number | null) => {
+        if(!val) return;
         onSubmit(val)
     }
 
@@ -33,11 +38,12 @@ export default function CuePauseDuration({ value }: {
                 <div className="flex flex-row gap-2 items-center">
                     <h3 className="font-medium">Cue pause duration <i className="text-gray-400">(in seconds)</i></h3>
                     <TooltipWrapper>
-                        No value {"->"} it won't unpause it self
+                        No value {"->"} will immediatly scroll to active cue
                     </TooltipWrapper>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                    Duration before the player unpause it self
+                    If the user scrolls the panel manually, auto-scrolling is paused. 
+                    Once the user stops interacting, a countdown (defined by the duration option) starts before auto-scrolling resumes.
                 </p>
             </div>
             <div className="col-span-1 flex flex-row gap-2 justify-end">

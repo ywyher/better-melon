@@ -69,6 +69,5 @@ export default function DefinitionPlayground() {
           transcriptionsLookup={transcriptionsLookup}
         />
     </MediaPlayer>
-
   );
 }

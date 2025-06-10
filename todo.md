@@ -1,11 +1,5 @@
 # Features
 1. add a button on the panel to take you to the current active cue
-2. ability to move the transcriptoins around freely through a handler on the top left or something
-3. mark a word as known
->   custom styles for known words
->   import known words to anki deck
->   maybe also other status for words like hard or easy
->   each with its custom styles
 5. puase player on definition trigger or hover or click or none !!!!
 6. later add a protips page or something to show tips like the ctrl + c copy the current cue text !! or basically a hotkeys instructions when we add the rest (if there is)
 7. begin where you left off > save where the user ended last time they watched a certain episode
@@ -13,11 +7,44 @@
 8. add the ability to disable auto scroll to the current cue and the ability to customize the
 9. countdown when the user is scrolling before it returns to the current cue
 10. watch or info page
->     Choose whether to go to the info page or watch page when selecting an anime.
+>    Choose whether to go to the info page or watch page when selecting an anime.
 11. auto add to list
 12. input validation/sanitization for login/register
 13. episodes metadata for the episode selector
 14. preview subtitle for when the settings change (not important)
+
+# Migaku features i wanna add (why am i torturing my self)
+1. if clicking shift and hover over a word show the definition card
+2. knowns words => import from anki
+3. if already have a card show in the ui, prob not
+4. shortcuts ahhh
+5. ability to search anki deck for a word via a button as well as a hotkey (ctrl + alt + c)
+6. ability to hide the subtitles without removing transcriptions from the select list 
+7. these hotkeys
+- A to play the previous subtitle
+- D to play the next subittle
+- S to replay the current subitlte
+- W to hide the subtitles
+- Q to mine a a word -> check the whole subtitle and only create a card for the unknown words
+8. the ability to create multiple card at once (hard one, later ig)
+- how this works is that it create multiples cards for each unknown word in the select subititles
+9. built in card creator instead of having an option to show anki GUI (hard one, later ig)
+- the benift from this is that the user can have a dictionary opened at the same time in case he want to look something up
+10. if a word is not parsed correctly you should be able to click a button or shortcut that will search the longest word first from the kanji we have in the current subtitle
+11. mass export cards that will check the whole subtitle file and add cards for unknown words (hard, later ig)
+
+as for known words should we allow user to manually add to the database,
+or only the words that he have in his anki deck !!!
+prob manually as well as the ability to import from an anki deck ?
+we should have these types
+1. unknown -> red
+2. tracking/learning -> purple
+3. known -> green
+4. ignore -> gray
+each should have its own styling
+should have hotkeys: 
+1. 1 mark as unknwn
+2. 2 mark as tracking and so on
 
 # Bugs
 1. getSentencesForCue delay doesnt really work well with delay
@@ -26,6 +53,7 @@
 4. dialog z-index > toast z-index => bad UX i suppose it can be fixed using createPortal from react
 5. color picker doesnt set the color in styles
 6. add to anki doesn't work from the panel since we dunno how to capture an image of the selected cue timestamp yet
+7. still tokenizing of tokenizer not in redis and not in memory
  
 # Notes
 1. there is built-in getAccessToken no need to listAccountsWithFullData on anilist !!

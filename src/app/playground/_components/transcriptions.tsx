@@ -120,7 +120,7 @@ export default function TranscriptionsPlayground() {
       <SubtitleTranscriptions
         transcriptions={transcriptions}
         styles={styles}
-        syncPlayerSettings={'never'}
+        syncPlayerSettings={'always'}
         cuePauseDuration={0}
         definitionTrigger={'click'}
         transcriptionsLookup={transcriptionsLookup}
