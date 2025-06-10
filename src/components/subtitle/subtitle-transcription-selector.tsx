@@ -37,7 +37,7 @@ export default function SubtitleTranscriptionSelector({
             value={selectedTranscription || "all"} 
             onValueChange={(v: SubtitleStyles['transcription']) => onChange(v)}
         >
-            <SelectTrigger className="w-[200px] capitalize cursor-pointer">
+            <SelectTrigger className="w-full lg:w-[200px] capitalize cursor-pointer">
                 <SelectValue placeholder="Select preset" />
             </SelectTrigger>
             <SelectContent>

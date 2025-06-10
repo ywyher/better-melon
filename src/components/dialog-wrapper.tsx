@@ -2,6 +2,7 @@ import React, { Dispatch, SetStateAction, useState } from "react";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger
@@ -9,6 +10,7 @@ import {
 import {
   Drawer,
   DrawerContent,
+  DrawerDescription,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger
@@ -18,6 +20,7 @@ import { cn } from "@/lib/utils";
 
 type DialogWrapperProps = {
   title?: React.ReactNode;
+  description?: React.ReactNode
   children: React.ReactNode;
   className?: string;
   open?: boolean;
@@ -28,7 +31,8 @@ type DialogWrapperProps = {
 }
 
 export default function DialogWrapper({ 
-  title, 
+  title,
+  description,
   children, 
   className = "", 
   open,
@@ -55,12 +59,13 @@ export default function DialogWrapper({
         {trigger && <DrawerTrigger asChild>{trigger}</DrawerTrigger>}
         <DrawerContent className="min-h-[85vh] max-h-[85vh]">
           <div className={cn("pb-3 px-3", className)}>
-            <DrawerHeader className="pt-6">
-              <DrawerTitle className={
-                cn(
-                  title && 'p-0 m-0'
-                )
-              }>{title}</DrawerTitle>
+            <DrawerHeader className={cn(
+              (title || description) && "px-6 py-4 border-b bg-background/95 backdrop-blur h-fit"
+            )}>
+              <DrawerTitle className="text-xl font-semibold">{title}</DrawerTitle>
+              <DrawerDescription className="text-sm text-muted-foreground mt-1">
+                {description}
+              </DrawerDescription>
             </DrawerHeader>
             {children}
           </div>
@@ -73,12 +78,13 @@ export default function DialogWrapper({
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
       <DialogContent className={className}>
-        <DialogHeader>
-          <DialogTitle className={
-            cn(
-              title && 'p-0 m-0'
-            )
-          }>{title}</DialogTitle>
+        <DialogHeader className={cn(
+          (title || description) && "px-6 py-4 border-b bg-background/95 backdrop-blur h-fit",
+        )}>
+          <DialogTitle className="text-xl font-semibold">{title}</DialogTitle>
+          <DialogDescription className="text-sm text-muted-foreground mt-1">
+            {description}
+          </DialogDescription>
         </DialogHeader>
         {children}
       </DialogContent>

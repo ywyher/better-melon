@@ -81,45 +81,65 @@ export default function SubtitleStyles({ syncPlayerSettings: propSyncStrategy, s
   if (!styles || isLoading) return <SubtitleStylesSkeleton />;
   
   return (
-    <div className="flex flex-col gap-0 relative">
-      <div className="flex flex-col md:flex-row gap-3 justify-between">
-        <div className="text-xl font-semibold">Subtitle Styles</div>
-        <div className="flex flex-row gap-2">
-          <div className="flex flex-row gap-2">
-            <SegmentedToggle 
-              options={subitlteStylesState}
-              onValueChange={(v) => setSelectedState(v)}
-              value={selectedState}
-            />
-            <SubtitleTranscriptionSelector
-              selectedTranscription={selectedTranscription}
-              setSelectedTranscription={setSelectedTranscription}
-              setSelectedState={setSelectedState}
-            />
+    <div className="flex flex-col h-full min-h-0">
+      <div className="flex-shrink-0 pb-6 pt-3 border-b bg-background/80 backdrop-blur sticky top-0 z-10">
+        <div className="flex flex-col lg:flex-row gap-4 justify-between items-start lg:items-center">
+          <div>
+            <h3 className="text-lg font-medium">Subtitle Styles</h3>
+            <p className="text-sm text-muted-foreground mt-1">
+              Customize subtitle appearance and behavior
+            </p>
           </div>
-          {shouldShowDeleteButton && (
-            <DeleteSubtitleStyles
-              syncPlayerSettings={syncPlayerSettings}
-              transcription={selectedTranscription}
-              source={source}
-              state={selectedState}
-              subtitleStylesId={
-                source === 'database' 
-                  ? remoteStyles?.id || ""
-                  : styles['id']
-              }
-            />
-          )}
+          
+          <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
+            <div className="flex flex-row gap-2 sm:w-full lg:w-fit">
+              <SegmentedToggle 
+                options={subitlteStylesState}
+                onValueChange={(v) => setSelectedState(v)}
+                value={selectedState}
+              />
+              <SubtitleTranscriptionSelector
+                selectedTranscription={selectedTranscription}
+                setSelectedTranscription={setSelectedTranscription}
+                setSelectedState={setSelectedState}
+              />
+            </div>
+            
+            {shouldShowDeleteButton && (
+              <DeleteSubtitleStyles
+                syncPlayerSettings={syncPlayerSettings}
+                transcription={selectedTranscription}
+                source={source}
+                state={selectedState}
+                subtitleStylesId={
+                  source === 'database' 
+                    ? remoteStyles?.id || ""
+                    : styles['id']
+                }
+              />
+            )}
+          </div>
         </div>
       </div>
-      <SubtitleStylesControls
-        transcription={selectedTranscription}
-        styles={styles}
-        source={source}
-        syncPlayerSettings={syncPlayerSettings}
-        state={selectedState}
-      />
-      {/* {isRefetching && <LoadingOverlay />} */}
+
+      {/* Scrollable Content Container */}
+      <div className="flex-1 min-h-0 relative">
+        <div className="h-full overflow-y-auto">
+          <SubtitleStylesControls
+            transcription={selectedTranscription}
+            styles={styles}
+            source={source}
+            syncPlayerSettings={syncPlayerSettings}
+            state={selectedState}
+          />
+        </div>
+        
+        {isRefetching && (
+          <div className="absolute inset-0 bg-background/50 backdrop-blur-sm flex items-center justify-center">
+            <LoadingOverlay />
+          </div>
+        )}
+      </div>
     </div>
   );
 }
