@@ -4,17 +4,14 @@ import SubtitleTranscriptions from "@/app/watch/[id]/[ep]/_components/transcript
 import DefinitionCard from "@/components/definition-card/definition-card";
 import { useSubtitleStyles } from "@/lib/hooks/use-subtitle-styles";
 import { useSubtitleTranscriptions } from "@/lib/hooks/use-subtitle-transcriptions";
-import { useDefinitionStore } from "@/lib/stores/definition-store";
 import { usePlayerStore } from "@/lib/stores/player-store";
 import { useEffect, useMemo, useRef } from "react";
-
 import { MediaPlayer, MediaPlayerInstance, MediaProvider } from '@vidstack/react';
 import { DefaultAudioLayout, defaultLayoutIcons, DefaultVideoLayout } from '@vidstack/react/player/layouts/default';
 import '@vidstack/react/player/styles/default/theme.css';
 import '@vidstack/react/player/styles/default/layouts/video.css';
 import PanelSection from "@/app/watch/[id]/[ep]/_components/sections/panel-section";
 import { AnimeEpisodeMetadata } from "@/types/anime";
-import { env } from "@/lib/env/client";
 import { useSettingsForEpisode } from "@/lib/hooks/use-settings-for-episode";
 
 export default function PlayerPanelPlayground() {
@@ -28,7 +25,6 @@ export default function PlayerPanelPlayground() {
     setPlayer(player)
   }, [setPlayer]);
 
-  
   useEffect(() => {
     setActiveTranscriptions(['japanese']);
     setActiveSubtitleFile({

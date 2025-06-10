@@ -151,8 +151,11 @@ export async function initializeTokenizer(name?: string): Promise<Tokenizer> {
   return await tokenizerInitPromise;
 }
 
-export function isTokenizerInitialized() {
-  return tokenizer ? true : false
+export async function isTokenizerInitialized() {
+  if (tokenizer) return true
+  const cachedTokenizer = await getTokenizerFromRedis()
+  if(cachedTokenizer) return true
+  return false
 }
 
 async function tokenizeJapaneseSubtitles(subs: SubtitleCue[], transcription: SubtitleTranscription): Promise<SubtitleCue[]> {

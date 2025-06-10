@@ -4,7 +4,7 @@ import { initializeTokenizer, isTokenizerInitialized } from "@/app/api/subtitles
 
 export async function checkTokenizerStatus() {
   try {
-    const isInitialized = isTokenizerInitialized();
+    const isInitialized = await isTokenizerInitialized();
     return {
       success: true,
       isInitialized,
