@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 export default function AnkiError() {
   return (
     <Card className="
-      w-full max-w-2xl mx-auto pt-0 mb-20 md:mb-0
+      w-full min-w-xl max-w-3xl mx-auto pt-0 mb-20 md:mb-0
       shadow-lg border-2 border-amber-200 dark:border-amber-400
       min-h-100vh
     ">

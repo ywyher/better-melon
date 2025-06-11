@@ -5,7 +5,7 @@ import SubtitleStyles from "@/components/subtitle/styles/subtitle-styles";
 
 export default function SubtitleSettingsPage() {
   return (
-    <div className="flex flex-col gap-5 pt-5">
+    <div className="flex flex-col gap-5">
       <SubtitleSettings />
       <Separator />
       <TranscriptionOrder />

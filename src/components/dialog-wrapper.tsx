@@ -81,7 +81,10 @@ export default function DialogWrapper({
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
-      <DialogContent className={className}>
+      <DialogContent className={cn(
+        className,
+        'min-w-fit'
+      )}>
         <DialogHeader className={cn(
           (title || description) && "px-4 py-4 border-b bg-background/95 backdrop-blur h-fit",
           headerClassName

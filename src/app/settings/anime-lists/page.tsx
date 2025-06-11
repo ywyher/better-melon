@@ -29,7 +29,7 @@ export default function AnimeLists() {
     }
 
     return (
-        <div className="flex flex-col gap-6 pt-4">
+        <div className="flex flex-col gap-6">
             <Card className="border-0 p-0 shadow-md">
                 <CardHeader className="p-0">
                     <div className="flex flex-row gap-2 items-start">

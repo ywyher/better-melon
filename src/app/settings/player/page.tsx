@@ -21,20 +21,18 @@ export default function PlayerSettingsPage() {
   }
   
   return (
-    <div className='pt-4'>
-        <div className="flex flex-col gap-10">
-          <AutoPlay value={playerSettings.autoPlay} />
-          <AutoNext value={playerSettings.autoNext} />
-          <AutoSkip value={playerSettings.autoSkip} />
-          <Separator />
-          <PauseOnCue value={playerSettings.pauseOnCue} />
-          <CuePauseDuration value={playerSettings.cuePauseDuration} />
-          <Separator />
-          <EnabledTranscriptionsSettings playerSettings={playerSettings} />
-          <Separator />
-          <AutoScrollToCue value={playerSettings.autoScrollToCue} />
-          <AutoScrollToCueDuration value={playerSettings.autoScrollResumeDelay} />
-        </div>
+    <div className="flex flex-col gap-10">
+      <AutoPlay value={playerSettings.autoPlay} />
+      <AutoNext value={playerSettings.autoNext} />
+      <AutoSkip value={playerSettings.autoSkip} />
+      <Separator />
+      <PauseOnCue value={playerSettings.pauseOnCue} />
+      <CuePauseDuration value={playerSettings.cuePauseDuration} />
+      <Separator />
+      <EnabledTranscriptionsSettings playerSettings={playerSettings} />
+      <Separator />
+      <AutoScrollToCue value={playerSettings.autoScrollToCue} />
+      <AutoScrollToCueDuration value={playerSettings.autoScrollResumeDelay} />
     </div>
   )
 }

@@ -30,7 +30,7 @@ export default function RootLayout({
                 </div>
             </div>
         </div>
-        <div className="mt-[calc(15vh+2rem)]">
+        <div className="mt-[calc(15vh+2rem)] pt-5">
             {children}
         </div>
     </>

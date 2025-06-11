@@ -18,7 +18,7 @@ export default function AnkiSettingsPage() {
   }
 
   return (
-    <div className='pt-4'>
+    <div>
       {(error?.message || !data?.data) ? (
         <AnkiError />
       ) : (

@@ -12,9 +12,9 @@ import { toast } from "sonner";
 import { isJapanese } from "wanakana";
 
 export default function AddKnownWords() {
-  const [words, setWords] = useState<string>("学校女妹見ろ")
+  const [words, setWords] = useState<string>("")
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [open, setOpen] = useState<boolean>(true)
+  const [open, setOpen] = useState<boolean>(false)
   const { initalize } = useInitializeTokenizer()
 
   const handleChange = async () => {
@@ -29,11 +29,9 @@ export default function AddKnownWords() {
           validWords.push(t.surface_form)
         }
       })
-      
       if(!validWords.length) throw new Error("Hmm, no valid words were found in your input")
-
+        
       const result = await addWordsBulk({ words: validWords, status: 'known' })
-      
       if (result.error) throw new Error(result.error)
       
       toast.success(`${result.added} words added${result.skipped > 0 ? `, ${result.skipped} already existed` : ''}.`)
@@ -46,7 +44,7 @@ export default function AddKnownWords() {
   }
 
   const trigger = (
-    <Button>
+    <Button className="w-full" variant='secondary'>
       Add words
     </Button>
   )
