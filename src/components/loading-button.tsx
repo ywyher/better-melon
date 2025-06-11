@@ -1,4 +1,4 @@
-import React from "react";
+import React, { MouseEventHandler } from "react";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 
@@ -15,7 +15,7 @@ export default function LoadingButton({
   isLoading: boolean;
   size?: "default" | "sm" | "lg" | "icon";
   variant?: "default" | "destructive" | "outline" | "secondary";
-  onClick?: () => void;
+  onClick?: MouseEventHandler<HTMLButtonElement> | undefined;
   children: React.ReactNode;
   disabled?: boolean;
   className?: string;

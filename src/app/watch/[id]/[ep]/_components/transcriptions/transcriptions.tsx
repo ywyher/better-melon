@@ -122,6 +122,10 @@ export default function SubtitleTranscriptions({
 
   const activeSubtitleSets = useMemo(() => getActiveSubtitleSets(), [getActiveSubtitleSets, transcriptions]);
 
+  useEffect(() => {
+    console.log(`transcriptions`, transcriptions)
+  }, [transcriptions])
+
   const { mutate } = useMutation({
     mutationFn: async () => {
       let resolvedStrategy = syncPlayerSettings as SyncStrategy;

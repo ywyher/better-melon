@@ -41,6 +41,7 @@ we should have these types
 2. tracking/learning -> purple
 3. known -> green
 4. ignore -> gray
+if a word is unknown or tracker => show furigana
 each should have its own styling
 should have hotkeys: 
 1. 1 mark as unknwn

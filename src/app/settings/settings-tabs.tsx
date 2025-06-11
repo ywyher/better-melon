@@ -13,6 +13,7 @@ export default function SettingsTabs() {
     { label: "Subtitle", href: '/settings/subtitle' },
     { label: "Anki", href: '/settings/anki' },
     { label: "Anime Lists", href: '/settings/anime-lists' },
+    { label: "Words", href: '/settings/words' },
   ]
 
   const isLinkActive = (href: string) => {

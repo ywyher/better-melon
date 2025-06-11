@@ -53,7 +53,7 @@ export async function ensurePlayerSettingsExists() {
         });
 
         return {
-            message: "Subtitle settings created successfully",
+            message: "Player settings created successfully",
             error: null,
             playerSettingsId: newSettingsId,
             userId
@@ -61,7 +61,7 @@ export async function ensurePlayerSettingsExists() {
     } catch (error: unknown) {
         return {
             message: null,
-            error: error instanceof Error ? error.message : "Failed to update subtitle styles",
+            error: error instanceof Error ? error.message : "Failed to update player styles",
             playerSettingsId: null,
             userId: null
         }

@@ -214,6 +214,29 @@ export const playerSettingsRelations = relations(subtitleStyles, ({ one }) => ({
   })
 }))
 
+export const wordStatusEnum = pgEnum('word_enum', [
+  'known',
+  'tracking',
+  'unknown',
+  'ignore'
+])
+
+export const word = pgTable("word", {
+  id: text("id").primaryKey(),
+  word: text("word").notNull(),
+  status: wordStatusEnum('word_status').default('unknown'),
+  userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at").notNull(),
+  updatedAt: timestamp("updated_at").notNull()
+});
+
+export const wordRelations = relations(subtitleStyles, ({ one }) => ({
+  user: one(user, {
+    fields: [subtitleStyles.userId],
+    references: [user.id]
+  })
+}))
+
 export const session = pgTable("session", {
   id: text("id").primaryKey(),
   expiresAt: timestamp('expires_at').notNull(),
@@ -254,6 +277,7 @@ export type User = InferSelectModel<typeof user>;
 export type AnkiPreset = Omit<InferSelectModel<typeof ankiPreset>, 'fields'> & {
   fields: Partial<Record<AnkiFieldKey, string>>;
 };
+export type Word = InferSelectModel<typeof word>
 export type SubtitleStyles = InferSelectModel<typeof subtitleStyles>
 export type SubtitleSettings = InferSelectModel<typeof subtitleSettings>
 export type PlayerSettings = InferSelectModel<typeof playerSettings>

@@ -11,7 +11,7 @@ interface TextareaInputProps extends Omit<React.TextareaHTMLAttributes<HTMLTextA
 
 export const TextareaInput = ({ 
     placeholder = "",
-    maxLength = 250,
+    maxLength,
     value = "",
     onChange,
     ...props
@@ -26,7 +26,7 @@ export const TextareaInput = ({
       <div className="w-full">
         <Textarea
           placeholder={placeholder}
-          maxLength={maxLength}
+          maxLength={maxLength || undefined}
           value={value || ""}
           onChange={handleChange}
           {...props}

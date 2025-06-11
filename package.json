@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "push": "npx drizzle-kit push"
   },
   "dependencies": {
     "@apollo/client": "^3.13.8",

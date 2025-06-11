@@ -25,7 +25,7 @@ export default function AnonymousLinkAccountAlert({ userId }: { userId: User['id
         }
 
         queryClient.invalidateQueries({ queryKey: userQueries.session._def })
-        toast.message(message)
+        toast.success(message)
         setIsLoading(false)
     }
 

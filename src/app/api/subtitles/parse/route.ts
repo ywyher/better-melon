@@ -32,8 +32,6 @@ const parsingInProgress = new Map<string, Promise<SubtitleCue[]>>();
 const tokenizationInProgress = new Map<string, Promise<SubtitleCue[]>>();
 
 // Tokenizer caching
-const TOKENIZER_CACHE_KEY = 'tokenizer';
-const TOKENIZER_CACHE_TTL = 86400; // 24 hours
 let tokenizer: Tokenizer | null = null;
 let tokenizerInitPromise: Promise<Tokenizer> | null = null;
 
@@ -78,35 +76,6 @@ async function deleteCacheFromRedis(key: string): Promise<void> {
   }
 }
 
-async function getTokenizerFromRedis(): Promise<boolean> {
-  try {
-    const cached = await redis.get(TOKENIZER_CACHE_KEY);
-    if (cached) {
-      console.info('Tokenizer found in Redis cache');
-      // For tokenizer, we just check if it exists - the actual initialization
-      // still needs to happen in memory, but we can skip re-downloading dictionary
-      return true;
-    }
-    return false;
-  } catch (error) {
-    console.error('Redis tokenizer get error:', error);
-    return false;
-  }
-}
-
-async function setTokenizerToRedis(): Promise<void> {
-  try {
-    // We store a simple flag that tokenizer dictionary is cached
-    await redis.setex(TOKENIZER_CACHE_KEY, TOKENIZER_CACHE_TTL, JSON.stringify({
-      cached: true,
-      timestamp: Date.now()
-    }));
-    console.info('Tokenizer cache flag set in Redis');
-  } catch (error) {
-    console.error('Redis tokenizer set error:', error);
-  }
-}
-
 export async function initializeTokenizer(name?: string): Promise<Tokenizer> {
   if (tokenizer) {
     console.info(`~${name} Tokenizer already exists in memory`);
@@ -121,22 +90,8 @@ export async function initializeTokenizer(name?: string): Promise<Tokenizer> {
   const tokenizerStart = performance.now();
   
   tokenizerInitPromise = (async () => {
-    // Check if tokenizer dictionary is cached in Redis
-    const isCached = await getTokenizerFromRedis();
-    
-    if (isCached) {
-      console.info(`~${name} Using cached tokenizer dictionary`);
-    } else {
-      console.info(`~${name} Initializing fresh tokenizer (will cache)`);
-    }
-
     const filePath = path.join(process.cwd(), 'public', 'dict');
     const newTokenizer = await getTokenizerKuromojin({ dicPath: filePath });
-    
-    // Cache the tokenizer flag in Redis after successful initialization
-    if (!isCached) {
-      await setTokenizerToRedis();
-    }
     
     tokenizer = newTokenizer;
     const tokenizerEnd = performance.now();
@@ -152,10 +107,7 @@ export async function initializeTokenizer(name?: string): Promise<Tokenizer> {
 }
 
 export async function isTokenizerInitialized() {
-  if (tokenizer) return true
-  const cachedTokenizer = await getTokenizerFromRedis()
-  if(cachedTokenizer) return true
-  return false
+  return !!tokenizer
 }
 
 async function tokenizeJapaneseSubtitles(subs: SubtitleCue[], transcription: SubtitleTranscription): Promise<SubtitleCue[]> {
@@ -404,12 +356,10 @@ export async function POST(request: NextRequest) {
     }
     
     // Check Redis cache for tokenized subtitles
-    const isTokenizerCached = await getTokenizerFromRedis()
     const updatedCachedData = await getCacheFromRedis(cacheKey);
     if (
       updatedCachedData 
       && (updatedCachedData.tokenizedSubtitles.find(t => t.transcription == transcription)?.cues || []).length > 0
-      && isTokenizerCached
     ) {
       console.info(`~${transcription} Using cached tokenized subtitles`);
       const tokenizedSubs = updatedCachedData.tokenizedSubtitles.find(t => t.transcription == transcription)?.cues || [];
@@ -535,10 +485,7 @@ export async function DELETE(request: NextRequest) {
       if (keys.length > 0) {
         await redis.del(...keys);
       }
-      
-      // Clear tokenizer cache
-      await redis.del(TOKENIZER_CACHE_KEY);
-      
+          
       // Clear in-memory caches
       fetchingInProgress.clear();
       parsingInProgress.clear();

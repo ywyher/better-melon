@@ -1,3 +1,5 @@
+'use client'
+
 import React, { Dispatch, SetStateAction, useState } from "react";
 import {
   Dialog,
@@ -23,6 +25,7 @@ type DialogWrapperProps = {
   description?: React.ReactNode
   children: React.ReactNode;
   className?: string;
+  headerClassName?: string;
   open?: boolean;
   setOpen?: Dispatch<SetStateAction<boolean>>;
   trigger?: React.ReactNode;
@@ -35,6 +38,7 @@ export default function DialogWrapper({
   description,
   children, 
   className = "", 
+  headerClassName,
   open,
   setOpen,
   trigger,
@@ -79,7 +83,8 @@ export default function DialogWrapper({
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
       <DialogContent className={className}>
         <DialogHeader className={cn(
-          (title || description) && "px-6 py-4 border-b bg-background/95 backdrop-blur h-fit",
+          (title || description) && "px-4 py-4 border-b bg-background/95 backdrop-blur h-fit",
+          headerClassName
         )}>
           <DialogTitle className="text-xl font-semibold">{title}</DialogTitle>
           <DialogDescription className="text-sm text-muted-foreground mt-1">

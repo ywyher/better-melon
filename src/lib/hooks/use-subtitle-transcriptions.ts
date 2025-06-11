@@ -24,7 +24,13 @@ export const useSubtitleTranscriptions = () => {
     return uniqueTranscriptions;
   }, [storeActiveTranscriptions]);
 
-  const { isInitialized: isTokenizerInitialized, isLoading: isTokenizerLoading, error: tokenizerError } = useInitializeTokenizer();
+  const { initalize, isInitialized: isTokenizerInitialized, isLoading: isTokenizerLoading, error: tokenizerError } = useInitializeTokenizer();
+
+  useEffect(() => {
+    (async () => {
+      await initalize()
+    })()
+  }, [initalize])
 
   useEffect(() => {
     console.debug(`debug isTokenizerInitialized ${isTokenizerInitialized}`)
