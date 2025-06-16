@@ -1,6 +1,6 @@
 "use client";
 
-import { MediaPlayer, type MediaPlayerInstance, MediaProvider, Poster, useMediaState } from '@vidstack/react';
+import { MediaPlayer, type MediaPlayerInstance, MediaProvider, Poster } from '@vidstack/react';
 import { DefaultAudioLayout, defaultLayoutIcons, DefaultVideoLayout } from '@vidstack/react/player/layouts/default';
 import { Track } from "@vidstack/react";
 import '@vidstack/react/player/styles/default/theme.css';
@@ -17,8 +17,8 @@ import { toast } from 'sonner';
 import { generateWebVTTFromSkipTimes } from '@/lib/subtitle/utils';
 import SubtitleTranscriptions from '@/app/watch/[id]/[ep]/_components/transcriptions/transcriptions';
 import { env } from '@/lib/env/client';
-import { TranscriptionQuery, TranscriptionsLookup, TranscriptionStyles } from '@/app/watch/[id]/[ep]/types';
-import { GeneralSettings, PlayerSettings, SubtitleSettings } from '@/lib/db/schema';
+import { PitchLookup, Subtitle, TranscriptionQuery, TranscriptionsLookup, TranscriptionStyles, WordsLookup } from '@/app/watch/[id]/[ep]/types';
+import { GeneralSettings, PlayerSettings, SubtitleSettings, WordSettings } from '@/lib/db/schema';
 import DefinitionCard from '@/components/definition-card/definition-card';
 
 type PlayerProps = {
@@ -27,12 +27,16 @@ type PlayerProps = {
   metadata: AnimeEpisodeMetadata;
   streamingLinks: AnimeStreamingLinks;
   episodesLength: number;
-  transcriptions: TranscriptionQuery[]
+  activeSubtitles: Subtitle
   transcriptionsStyles: TranscriptionStyles
   syncPlayerSettings: GeneralSettings['syncPlayerSettings']
   cuePauseDuration: PlayerSettings['cuePauseDuration']
   definitionTrigger: SubtitleSettings['definitionTrigger']
   transcriptionsLookup: TranscriptionsLookup
+  pitchColoring: WordSettings['pitchColoring']
+  learningStatus: WordSettings['learningStatus']
+  wordsLookup: WordsLookup
+  pitchLookup: PitchLookup
 }
 
 const MemoizedPlayerSkeleton = memo(PlayerSkeleton);
@@ -45,12 +49,16 @@ export default function Player({
   streamingLinks,
   metadata,
   episodesLength,
-  transcriptions,
+  activeSubtitles,
   transcriptionsStyles,
   syncPlayerSettings,
   cuePauseDuration,
   definitionTrigger,
-  transcriptionsLookup
+  transcriptionsLookup,
+  pitchColoring,
+  learningStatus,
+  wordsLookup,
+  pitchLookup
 }: PlayerProps) {
     const router = useRouter()
     
@@ -248,12 +256,16 @@ export default function Player({
                         skipTimes={skipTimes}
                     />
                     <SubtitleTranscriptions
-                      transcriptions={transcriptions}
+                      activeSubtitles={activeSubtitles}
                       styles={transcriptionsStyles}
                       syncPlayerSettings={syncPlayerSettings}
                       cuePauseDuration={cuePauseDuration}
                       definitionTrigger={definitionTrigger}
                       transcriptionsLookup={transcriptionsLookup}
+                      wordsLookup={wordsLookup}
+                      pitchLookup={pitchLookup}
+                      pitchColoring={pitchColoring}
+                      learningStatus={learningStatus}
                     />
                     <MemoizedDefinitionCard />
                 </MediaPlayer>

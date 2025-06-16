@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { DialogClose } from "@/components/ui/dialog"
 import { useState, useEffect } from "react";
 import { Check, FileText, Loader2 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { toast } from "sonner";
 import DialogWrapper from "@/components/dialog-wrapper";

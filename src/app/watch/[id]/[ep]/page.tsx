@@ -19,6 +19,10 @@ import { SubtitlesNotAvailableError } from '@/lib/errors/player';
 import MissingSubtitlesDialog from '@/app/watch/[id]/[ep]/_components/missing-subtitles-dialog';
 import { useSetSubtitles } from '@/lib/hooks/use-set-subtitles';
 import { useSession } from '@/lib/queries/user';
+import { useSubtitles } from '@/lib/hooks/use-subtitles';
+import { useSubtitlesPitchAccent } from '@/lib/hooks/use-subtitles-pitch-accent';
+import { useWords } from '@/lib/hooks/use-words';
+import { useActiveSubtitles } from '@/lib/hooks/use-active-subtitles';
 
 export default function WatchPage() {
   const params = useParams();
@@ -71,6 +75,21 @@ export default function WatchPage() {
     loadingDuration: stylesLoadingDuration 
   } = useSubtitleStyles();
 
+  const { activeSubtitles, upcomingSubtitles } = useSubtitles(transcriptions)
+  const { 
+    pitchLookup, 
+    isLoading: isPitchAccentLoading,
+    error: pitchAccentError,
+    loadingDuration: pitchAccentLoadingDuration
+  } = useSubtitlesPitchAccent(upcomingSubtitles)
+  
+  const { 
+    wordsLookup,
+    isLoading: isWordsLoading,
+    error: wordsError,
+    loadingDuration: wordsLoadingDuration
+  } = useWords('known')
+
   const {
     subtitleError,
     subtitlesErrorDialog,
@@ -78,8 +97,17 @@ export default function WatchPage() {
     resetSubtitleErrors
   } = useSetSubtitles(episodeData, settings, episodeNumber);
 
+
   const isLoading = useMemo(() => {
-    return (isEpisodeDataLoading || isTranscriptionsLoading || isStylesLoading || isSettingsLoading || isUserLoading) && !isVideoReady;
+    return (
+      isEpisodeDataLoading 
+      || isTranscriptionsLoading 
+      || isStylesLoading 
+      || isSettingsLoading 
+      || isUserLoading
+      || isWordsLoading
+      || isPitchAccentLoading
+    ) && !isVideoReady;
   }, [isEpisodeDataLoading, isTranscriptionsLoading, isStylesLoading, isSettingsLoading, isVideoReady]);
 
   useEffect(() => {
@@ -88,7 +116,10 @@ export default function WatchPage() {
       episodeDataLoadingDuration >= 0 &&
       transcriptionsLoadingDuration >= 0 &&
       settingsLoadingDuration >= 0 &&
-      stylesLoadingDuration >= 0) {
+      stylesLoadingDuration >= 0 && 
+      wordsLoadingDuration >= 0 &&
+      pitchAccentLoadingDuration >=0 
+    ) {
       const loadEndTime = performance.now();
       const elapsed = loadEndTime - loadStartTimeRef.current;
       console.debug('Calculating loading duration:', {
@@ -154,7 +185,9 @@ export default function WatchPage() {
       transcriptionsError,
       settingsError,
       stylesError,
-      subtitleError
+      subtitleError,
+      wordsError,
+      pitchAccentError
     ].filter(Boolean)
   }, [episodeDataError, transcriptionsError, settingsError, stylesError, subtitleError]);
 
@@ -197,6 +230,9 @@ export default function WatchPage() {
           transcriptionsStyles={styles}
           settings={settings}
           transcriptionsLookup={transcriptionsLookup}
+          pitchLookup={pitchLookup}
+          wordsLookup={wordsLookup}
+          activeSubtitles={activeSubtitles}
         />
         {/* Settings below player */}
         <ControlsSection

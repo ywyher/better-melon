@@ -5,7 +5,7 @@ import { auth } from "@/lib/auth";
 import db from "@/lib/db";
 import { ensureAuthenticated } from "@/lib/db/mutations";
 import { SubtitleStyles, subtitleStyles } from "@/lib/db/schema";
-import { camelCaseToTitleCase } from "@/lib/utils";
+import { camelCaseToTitleCase } from "@/lib/utils/utils";
 import { SubtitleTranscription } from "@/types/subtitle";
 import { generateId } from "better-auth";
 import { and, eq, inArray } from "drizzle-orm";

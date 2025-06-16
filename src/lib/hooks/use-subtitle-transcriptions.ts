@@ -12,7 +12,7 @@ export const useSubtitleTranscriptions = () => {
   const activeSubtitleFile = usePlayerStore((state) => state.activeSubtitleFile);
   const storeActiveTranscriptions = usePlayerStore((state) => state.activeTranscriptions) || [];
   
-  // Ensure 'japanese', 'english', and 'hiragana' are always included in the active transcriptions
+// Ensure 'japanese', 'english', and 'hiragana' are always included in the active transcriptions
   const activeTranscriptions: SubtitleTranscription[] = useMemo(() => {
     const requiredTranscriptions: SubtitleTranscription[] = ['japanese', 'english', 'hiragana'];
     
@@ -27,10 +27,11 @@ export const useSubtitleTranscriptions = () => {
   const { initalize, isInitialized: isTokenizerInitialized, isLoading: isTokenizerLoading, error: tokenizerError } = useInitializeTokenizer();
 
   useEffect(() => {
+    if(isTokenizerInitialized) return; 
     (async () => {
       await initalize()
     })()
-  }, [initalize])
+  }, [initalize, isTokenizerInitialized])
 
   useEffect(() => {
     console.debug(`debug isTokenizerInitialized ${isTokenizerInitialized}`)
@@ -62,7 +63,6 @@ export const useSubtitleTranscriptions = () => {
 
   const queries = useQueries(queryConfig);
 
-  // Calculate total execution time when all queries are done
   useEffect(() => {
     const allQueriesFinished = queries.every(
       query => !query.isLoading && (query.isSuccess || query.isError)

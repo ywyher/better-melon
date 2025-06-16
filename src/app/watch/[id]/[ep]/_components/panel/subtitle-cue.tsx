@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils";
 import type { SubtitleCue as TSubtitleCue, SubtitleToken } from "@/types/subtitle";
 import { Button } from "@/components/ui/button";
 import { Clipboard, Play } from "lucide-react";

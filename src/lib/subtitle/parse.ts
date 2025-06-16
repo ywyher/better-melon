@@ -4,7 +4,7 @@ import CustomKuromojiAnalyzer from "./custom-kuromoji-analyzer";
 import { removeHtmlTags, removeTags, timestampToSeconds } from "@/lib/subtitle/utils";
 import nlp from 'compromise';
 import { SubtitleRequestBody } from "@/app/api/subtitles/parse/route";
-import { readFileContent } from "@/lib/utils";
+import { readFileContent } from "@/lib/utils/utils";
 import { Tokenizer } from "kuromojin";
 
 export async function parseSubtitleToJson({
@@ -102,7 +102,7 @@ export async function convertSubtitlesForNonJapaneseTranscription(
   }
 
   const kuroshiroOptions = {
-    to: transcription != 'furigana' ? transcription : 'hiragana',
+    to: transcription,
     mode: transcription === 'romaji' 
     ? 'spaced' 
     : transcription == 'furigana' 

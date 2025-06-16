@@ -5,7 +5,7 @@ import { SkipBack, SkipForward } from "lucide-react";
 import { usePlayerStore } from "@/lib/stores/player-store";
 import { SubtitleCue, SubtitleFormat } from "@/types/subtitle";
 import { useCallback, useEffect, useMemo, useRef } from "react";
-import { getExtension } from "@/lib/utils";
+import { getExtension } from "@/lib/utils/utils";
 import {  } from "@/lib/subtitle/utils";
 import { useDelayStore } from "@/lib/stores/delay-store";
 

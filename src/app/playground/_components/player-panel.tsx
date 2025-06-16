@@ -75,6 +75,8 @@ export default function PlayerPanelPlayground() {
             cuePauseDuration={0}
             definitionTrigger={'click'}
             transcriptionsLookup={transcriptionsLookup}
+            learningStatus={true}
+            pitchColoring={true}
           />
       </MediaPlayer>
         {shouldShowPanel && (

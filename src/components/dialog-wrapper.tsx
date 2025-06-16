@@ -18,7 +18,7 @@ import {
   DrawerTrigger
 } from "@/components/ui/drawer";
 import useMediaQuery, { breakpoints } from "@/lib/hooks/use-media-query";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils";
 
 type DialogWrapperProps = {
   title?: React.ReactNode;

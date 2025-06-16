@@ -9,11 +9,8 @@ export const subtitleFormats = [
   'srt',
   'ass'
 ]
-
 export const subitlteStylesState: SubtitleStyles['state'][] = ['default', 'active']
-
 export const definitionTrigger = ['click', 'hover']
-
 export const textShadowTypes = [
   "none",
   "drop-shadow",
@@ -21,14 +18,12 @@ export const textShadowTypes = [
   "depressed",
   "outline"
 ] as const;
-
 export const fontWeights = [
   "normal",
   "bold",
   "bolder",
   "lighter",
 ];
-
 export const fontFamilies = [
   "Arial",
   "Helvetica",

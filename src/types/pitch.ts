@@ -1,0 +1,1 @@
+export type Pitch = "heiban" | "atamadaka" | "nakadaka" | "odaka"

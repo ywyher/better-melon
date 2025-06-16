@@ -2,15 +2,15 @@
 
 import { TranscriptionItem } from "@/app/watch/[id]/[ep]/_components/transcriptions/transcription-item";
 import { usePlayerStore } from "@/lib/stores/player-store";
-import type { SubtitleCue, SubtitleTranscription } from "@/types/subtitle";
+import type { SubtitleTranscription } from "@/types/subtitle";
 import { closestCenter, DndContext, type DragEndEvent, KeyboardSensor, PointerSensor, useDraggable, useSensor, useSensors } from "@dnd-kit/core";
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { TranscriptionQuery, TranscriptionsLookup, TranscriptionStyles } from "@/app/watch/[id]/[ep]/types";
+import { PitchLookup, Subtitle, TranscriptionsLookup, TranscriptionStyles, WordsLookup } from "@/app/watch/[id]/[ep]/types";
 import { useDebounce } from "@/components/multiple-selector";
 import { handleTranscriptionOrder } from "@/app/settings/subtitle/_transcription-order/actions";
 import { toast } from "sonner";
-import { GeneralSettings, PlayerSettings, SubtitleSettings } from "@/lib/db/schema";
+import { GeneralSettings, PlayerSettings, SubtitleSettings, Word, WordSettings } from "@/lib/db/schema";
 import { useMutation } from "@tanstack/react-query";
 import { SyncStrategy } from "@/types";
 import { showSyncSettingsToast } from "@/components/sync-settings-toast";
@@ -19,21 +19,29 @@ import { useDelayStore } from "@/lib/stores/delay-store";
 import { useMediaState } from "@vidstack/react";
 
 type SubtitleTranscriptionsProps = {
-  transcriptions: TranscriptionQuery[];
+  activeSubtitles: Subtitle;
   styles: TranscriptionStyles;
   syncPlayerSettings: GeneralSettings['syncPlayerSettings']
   cuePauseDuration: PlayerSettings['cuePauseDuration']
   definitionTrigger: SubtitleSettings['definitionTrigger']
-  transcriptionsLookup: TranscriptionsLookup
+  transcriptionsLookup: TranscriptionsLookup;
+  learningStatus: WordSettings['learningStatus']
+  pitchColoring: WordSettings['pitchColoring']
+  wordsLookup: WordsLookup
+  pitchLookup: PitchLookup
 }
 
 export default function SubtitleTranscriptions({ 
-  transcriptions,
+  activeSubtitles,
   styles,
   syncPlayerSettings,
   cuePauseDuration,
   definitionTrigger,
-  transcriptionsLookup 
+  transcriptionsLookup,
+  learningStatus,
+  pitchColoring,
+  wordsLookup,
+  pitchLookup
 }: SubtitleTranscriptionsProps) {
   const player = usePlayerStore((state) => state.player);
   const activeTranscriptions = usePlayerStore((state) => state.activeTranscriptions);
@@ -73,58 +81,6 @@ export default function SubtitleTranscriptions({
   useMemo(() => {
     setOrder([...activeTranscriptions]);
   }, [activeTranscriptions]);
-
-  const getActiveSubtitleSets = useCallback(() => {
-      if (!currentTime || !transcriptions.length) {
-          return {
-              japanese: [],
-              hiragana: [],
-              katakana: [],
-              romaji: [],
-              english: [],
-              furigana: []
-          };
-      };
-      
-      const result: Record<SubtitleTranscription, SubtitleCue[]> = {
-          japanese: [],
-          hiragana: [],
-          katakana: [],
-          romaji: [],
-          english: [],
-          furigana: []
-      };
-
-      transcriptions.forEach(t => {
-          if (t.cues) {
-              const { transcription, cues } = t;
-              const subtitleTranscription = transcription as SubtitleTranscription;
-              
-              const transcriptionDelay = ['hiragana', 'katakana', 'romaji', 'japanese', 'furigana'].includes(subtitleTranscription) 
-                  ? delay.japanese 
-                  : delay.english;
-              
-              const currentTimePlusBuffer = currentTime;
-              
-              const activeCues = cues.filter(cue => {
-                  const startTime = cue.from + transcriptionDelay
-                  const endTime = cue.to + transcriptionDelay
-                  
-                  return currentTimePlusBuffer >= startTime && currentTimePlusBuffer <= endTime;
-              });
-              
-              result[transcription] = activeCues;
-          }
-      });
-
-      return result;
-  }, [transcriptions,  currentTime, delay]);
-
-  const activeSubtitleSets = useMemo(() => getActiveSubtitleSets(), [getActiveSubtitleSets, transcriptions]);
-
-  useEffect(() => {
-    console.log(`transcriptions`, transcriptions)
-  }, [transcriptions])
 
   const { mutate } = useMutation({
     mutationFn: async () => {
@@ -184,7 +140,7 @@ export default function SubtitleTranscriptions({
     const handleCueFeatures = () => {
       if (!player.current) return;
 
-      const allActiveCues = Object.entries(activeSubtitleSets)
+      const allActiveCues = Object.entries(activeSubtitles)
         .filter(([transcription]) => transcription !== 'english')
         .flatMap(([_, cues]) => cues);
       
@@ -205,7 +161,7 @@ export default function SubtitleTranscriptions({
     };
     
     handleCueFeatures();
-  }, [activeSubtitleSets, player, delay.japanese]);
+  }, [activeSubtitles, player, delay.japanese]);
 
   // Replace the existing useEffect for pausing/unpausing with this one
   useEffect(() => {
@@ -304,7 +260,7 @@ export default function SubtitleTranscriptions({
               strategy={verticalListSortingStrategy}
           >
               {order.map(transcription => {
-                  if (!activeSubtitleSets[transcription]?.length) return null;
+                  if (!activeSubtitles[transcription]?.length) return null;
 
                   const tokenStyles =
                     styles[transcription]?.tokenStyles
@@ -316,23 +272,27 @@ export default function SubtitleTranscriptions({
 
                   // Get Japanese styles for furigana base text
                   const japaneseStyles = {
-                      tokenStyles: styles['japanese']?.tokenStyles || styles['all'].tokenStyles,
-                      containerStyle: styles['japanese']?.containerStyle || styles['all'].containerStyle
+                    tokenStyles: styles['japanese']?.tokenStyles || styles['all'].tokenStyles,
+                    containerStyle: styles['japanese']?.containerStyle || styles['all'].containerStyle
                   }
 
                   return (
-                      <TranscriptionItem
-                          key={transcription}
-                          transcription={transcription}
-                          activeSubtitleSets={activeSubtitleSets}
-                          japaneseStyles={japaneseStyles}
-                          styles={{
-                            tokenStyles: tokenStyles,
-                            containerStyle: containerStyle
-                          }}
-                          definitionTrigger={definitionTrigger}
-                          transcriptionsLookup={transcriptionsLookup}
-                      />
+                    <TranscriptionItem
+                      key={transcription}
+                      activeSubtitles={activeSubtitles}
+                      transcription={transcription}
+                      japaneseStyles={japaneseStyles}
+                      styles={{
+                        tokenStyles,
+                        containerStyle: containerStyle
+                      }}
+                      definitionTrigger={definitionTrigger}
+                      transcriptionsLookup={transcriptionsLookup}
+                      learningStatus={learningStatus}
+                      pitchColoring={pitchColoring}
+                      wordsLookup={wordsLookup}
+                      pitchLookup={pitchLookup}
+                    />
                   );
               })}
           </SortableContext>

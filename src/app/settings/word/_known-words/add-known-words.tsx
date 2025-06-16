@@ -1,6 +1,6 @@
 'use client'
 
-import { addWordsBulk } from "@/app/settings/words/actions";
+import { addWordsBulk } from "@/app/settings/word/_known-words/actions";
 import DialogWrapper from "@/components/dialog-wrapper";
 import { TextareaInput } from "@/components/form/textarea-input";
 import LoadingButton from "@/components/loading-button";

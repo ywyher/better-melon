@@ -4,7 +4,7 @@ import PlayerSkeleton from "../player/player-skeleton";
 import { usePlayerStore } from '@/lib/stores/player-store';
 import { TopControls } from '@/app/watch/[id]/[ep]/_components/sections/top-controls';
 import { AnimeEpisodeData } from '@/types/anime';
-import { TranscriptionQuery, TranscriptionsLookup, TranscriptionStyles } from '@/app/watch/[id]/[ep]/types';
+import { PitchLookup, Subtitle, TranscriptionQuery, TranscriptionsLookup, TranscriptionStyles, WordsLookup } from '@/app/watch/[id]/[ep]/types';
 import { SubtitleCue } from '@/types/subtitle';
 import { SettingsForEpisode } from '@/types/settings';
 
@@ -20,6 +20,9 @@ interface PlayerSectionProps {
   transcriptionsStyles: TranscriptionStyles;
   settings: SettingsForEpisode
   transcriptionsLookup: TranscriptionsLookup
+  wordsLookup: WordsLookup
+  pitchLookup: PitchLookup
+  activeSubtitles: Subtitle
 }
 
 export default function PlayerSection({
@@ -33,7 +36,10 @@ export default function PlayerSection({
   transcriptions,
   transcriptionsStyles,
   settings,
-  transcriptionsLookup
+  transcriptionsLookup,
+  wordsLookup,
+  pitchLookup,
+  activeSubtitles
 }: PlayerSectionProps) {
   const panelState = usePlayerStore((state) => state.panelState);
   const setPanelState = usePlayerStore((state) => state.setPanelState);
@@ -69,11 +75,15 @@ export default function PlayerSection({
                   streamingLinks={episodeData.streamingLinks}
                   episodesLength={episodeData.details.episodes} 
                   syncPlayerSettings={settings.generalSettings.syncPlayerSettings}
-                  transcriptions={transcriptions}
+                  activeSubtitles={activeSubtitles}
                   transcriptionsStyles={transcriptionsStyles}
                   cuePauseDuration={settings.playerSettings.cuePauseDuration}
                   definitionTrigger={settings.subtitleSettings.definitionTrigger}
                   transcriptionsLookup={transcriptionsLookup}
+                  wordsLookup={wordsLookup}
+                  pitchLookup={pitchLookup}
+                  pitchColoring={settings.wordSettings.pitchColoring}
+                  learningStatus={settings.wordSettings.learningStatus}
                 />
               </>
             )}

@@ -2,7 +2,7 @@
 
 import { subtitleFormats } from "@/lib/constants/subtitle";
 import { usePlayerStore } from "@/lib/stores/player-store";
-import { cn, getExtension } from "@/lib/utils";
+import { cn, getExtension } from "@/lib/utils/utils";
 import { Check, Loader2, Upload, X } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";

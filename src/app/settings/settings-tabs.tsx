@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -13,7 +13,7 @@ export default function SettingsTabs() {
     { label: "Subtitle", href: '/settings/subtitle' },
     { label: "Anki", href: '/settings/anki' },
     { label: "Anime Lists", href: '/settings/anime-lists' },
-    { label: "Words", href: '/settings/words' },
+    { label: "Word", href: '/settings/word' },
   ]
 
   const isLinkActive = (href: string) => {
