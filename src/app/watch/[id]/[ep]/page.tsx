@@ -62,7 +62,7 @@ export default function WatchPage() {
 
   const { 
     transcriptions, 
-    isLoading: isTranscriptionsLoading, 
+    isLoading: isTranscriptionsLoading,
     transcriptionsLookup,
     error: transcriptionsError,
     loadingDuration: transcriptionsLoadingDuration,
@@ -88,7 +88,7 @@ export default function WatchPage() {
     isLoading: isWordsLoading,
     error: wordsError,
     loadingDuration: wordsLoadingDuration
-  } = useWords('known')
+  } = useWords()
 
   const {
     subtitleError,

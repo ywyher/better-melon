@@ -17,6 +17,8 @@ import '@vidstack/react/player/styles/default/layouts/video.css';
 import { useSubtitles } from "@/lib/hooks/use-subtitles";
 import { useSubtitlesPitchAccent } from "@/lib/hooks/use-subtitles-pitch-accent";
 import { useWords } from "@/lib/hooks/use-words";
+import PanelSection from "@/app/watch/[id]/[ep]/_components/sections/panel-section";
+import { AnimeEpisodeMetadata } from "@/types/anime";
 
 export default function TranscriptionsWordsPlayground() {
   const player = useRef<MediaPlayerInstance>(null);
@@ -41,21 +43,21 @@ export default function TranscriptionsWordsPlayground() {
     });
   }, [setActiveTranscriptions, setActiveSubtitleFile]);
 
-  const { transcriptions, transcriptionsLookup } = useSubtitleTranscriptions()
+  const { transcriptions, transcriptionsLookup, isLoading } = useSubtitleTranscriptions()
   const { styles } = useSubtitleStyles();
-  const { settings } = useSettingsForEpisode()
   const { activeSubtitles, upcomingSubtitles } = useSubtitles(transcriptions)
   const { pitchLookup } = useSubtitlesPitchAccent(upcomingSubtitles)
-  const { wordsLookup } = useWords('known')
+  const { wordsLookup } = useWords()
 
-  useEffect(() => {
-    console.log(`wordsLookup`, wordsLookup)
-  }, [wordsLookup])
+  const shouldShowPanel = useMemo(() => {
+    return transcriptions 
+    && transcriptions.find(t => t?.transcription === 'japanese') ? true : false
+  }, [transcriptions]);
 
   const url = `https://www.youtube.com/watch?v=LF7AezBpqzg`
 
   return (
-    <div>
+    <div className="flex flex-row justify-between gap-10">
       <MediaPlayer
           title={""}
           ref={player}
@@ -80,12 +82,42 @@ export default function TranscriptionsWordsPlayground() {
           cuePauseDuration={0}
           definitionTrigger={'click'}
           transcriptionsLookup={transcriptionsLookup}
-          learningStatus={settings?.wordSettings?.learningStatus}
-          pitchColoring={settings?.wordSettings?.pitchColoring}
+          learningStatus={true}
+          pitchColoring={true}
           pitchLookup={pitchLookup}
           wordsLookup={wordsLookup}
         />
       </MediaPlayer>
+      {shouldShowPanel && (
+        <PanelSection
+          isLoading={isLoading}
+          autoScrollResumeDelay={3}
+          autoScrollToCue={true}
+          animeMetadata={{
+            image: ''
+          } as AnimeEpisodeMetadata}
+          transcriptions={transcriptions}
+          transcriptionsLookup={transcriptionsLookup}
+          pitchLookup={pitchLookup}
+          wordsLookup={wordsLookup}
+          learningStatus={true}
+          pitchColoring={true}
+          subtitleFiles={[
+            {
+              "url": "https://jimaku.cc/entry/1323/download/%5BMoozzi2%5D%20Made%20in%20Abyss%20-%2009%20(BD%201920x1080%20x.264%20Flac).ass",
+              "name": "[Moozzi2] Made in Abyss - 09 (BD 1920x1080 x.264 Flac).ass",
+              "size": 21020,
+              "last_modified": "2024-03-03T14:05:00Z"
+            },
+            {
+              "url": "https://jimaku.cc/entry/1323/download/%E3%83%A1%E3%82%A4%E3%83%89%E3%82%A4%E3%83%B3%E3%82%A2%E3%83%93%E3%82%B9.S01E09.%E5%A4%A7%E6%96%AD%E5%B1%A4.WEBRip.Netflix.ja%5Bcc%5D.srt",
+              "name": "メイドインアビス.S01E09.大断層.WEBRip.Netflix.ja[cc].srt",
+              "size": 24331,
+              "last_modified": "2024-11-25T19:50:45.147895847Z"
+            }
+          ]}  
+        />
+      )}
     </div>
   );
 }

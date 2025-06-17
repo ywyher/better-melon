@@ -41,7 +41,7 @@ export const settingsQueries = createQueryKeys('settings', {
       queryKey: ['pitch-accent', query],
       queryFn: async () => await getPitchAccent(query)
     }),
-    words: ({ status }: { status: Word['status'] }) => ({
+    words: ({ status }: { status?: Word['status'] }) => ({
       queryKey: ['words', status],
       queryFn: async () => {
         const { words } = await getWords({ status })

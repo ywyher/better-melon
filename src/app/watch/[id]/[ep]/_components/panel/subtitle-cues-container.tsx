@@ -6,19 +6,28 @@ import { usePlayerStore } from "@/lib/stores/player-store";
 import { useDefinitionStore } from "@/lib/stores/definition-store";
 import { getSentencesForCue, isTokenExcluded } from "@/lib/utils/subtitle";
 import { toast } from "sonner";
-import { TranscriptionsLookup } from "@/app/watch/[id]/[ep]/types";
+import { PitchLookup, TranscriptionsLookup, WordsLookup } from "@/app/watch/[id]/[ep]/types";
 import { useDelayStore } from "@/lib/stores/delay-store";
+import { WordSettings } from "@/lib/db/schema";
 
 export default function SubtitleCuesContainer({
   items,
   cues,
   activeCueIdRef,
-  transcriptionsLookup
+  transcriptionsLookup,
+  pitchLookup,
+  wordsLookup,
+  learningStatus,
+  pitchColoring
 }: {
   items: Virtualizer<HTMLDivElement, Element>
   cues: TSubtitleCue[];
   activeCueIdRef: RefObject<number>
-  transcriptionsLookup: TranscriptionsLookup
+  transcriptionsLookup: TranscriptionsLookup;
+  pitchLookup: PitchLookup
+  wordsLookup: WordsLookup
+  learningStatus: WordSettings['learningStatus']
+  pitchColoring: WordSettings['pitchColoring']
 }) {
   const player = usePlayerStore((state) => state.player)
   const delay = useDelayStore((state) => state.delay);
@@ -82,6 +91,10 @@ export default function SubtitleCuesContainer({
               size={row.size}
               start={row.start}
               activeToken={activeToken}
+              pitchLookup={pitchLookup}
+              wordsLookup={wordsLookup}
+              learningStatus={learningStatus}
+              pitchColoring={pitchColoring}
               handleSeek={handleSeek}
               handleCopy={handleCopy}
               handleClick={handleClick}

@@ -6,16 +6,18 @@ import { word, Word, word as wordTable } from "@/lib/db/schema"
 import { generateId } from "better-auth"
 import { and, eq, inArray } from "drizzle-orm"
 
-export async function getWords({ status }: { status: Word['status'] }) {
+export async function getWords({ status }: { status?: Word['status'] }) {
   try {
     const { userId, error } = await ensureAuthenticated()
     if(error || !userId) throw new Error(error || "Must be authenticated")
     
+    const conditions = [
+      eq(wordTable.userId, userId),
+      status !== undefined ? eq(wordTable.status, status) : undefined
+    ].filter(Boolean)
+
     const words = await db.select().from(wordTable)
-      .where(and(
-        eq(wordTable.userId, userId),
-        eq(wordTable.status, status)
-      ))
+      .where(and(...conditions))
 
     return {
       message: "Words",

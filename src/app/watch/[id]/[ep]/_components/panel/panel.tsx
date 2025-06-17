@@ -12,21 +12,29 @@ import PanelHeader from "@/app/watch/[id]/[ep]/_components/panel/panel-header";
 import SubtitleCuesList from "@/app/watch/[id]/[ep]/_components/panel/subtitles-cues-list";
 import PanelSkeleton from "@/app/watch/[id]/[ep]/_components/panel/panel-skeleton";
 import { subtitleQueries } from "@/lib/queries/subtitle";
-import { TranscriptionQuery, TranscriptionsLookup } from "@/app/watch/[id]/[ep]/types";
-import { PlayerSettings } from "@/lib/db/schema";
+import { PitchLookup, TranscriptionQuery, TranscriptionsLookup, WordsLookup } from "@/app/watch/[id]/[ep]/types";
+import { PlayerSettings, WordSettings } from "@/lib/db/schema";
 
 export default function SubtitlePanel({ 
   subtitleFiles,
   transcriptions,
   transcriptionsLookup,
   autoScrollToCue,
-  autoScrollResumeDelay
+  autoScrollResumeDelay,
+  pitchLookup,
+  wordsLookup,
+  learningStatus,
+  pitchColoring
 }: { 
   subtitleFiles: SubtitleFile[],
   transcriptions: TranscriptionQuery[]
   transcriptionsLookup: TranscriptionsLookup
   autoScrollToCue: PlayerSettings['autoScrollToCue']
   autoScrollResumeDelay: PlayerSettings['autoScrollResumeDelay']
+  pitchLookup: PitchLookup
+  wordsLookup: WordsLookup
+  learningStatus: WordSettings['learningStatus']
+  pitchColoring: WordSettings['pitchColoring']
 }) {
     const [selectedTranscription, setSelectedTranscription] = useState<SubtitleTranscription>('japanese')
     const [previousCues, setPreviousCues] = useState<TSubtitleCue[] | undefined>();
@@ -82,6 +90,10 @@ export default function SubtitlePanel({
                         transcriptionsLookup={transcriptionsLookup}
                         autoScrollToCue={autoScrollToCue}
                         autoScrollResumeDelay={autoScrollResumeDelay}
+                        pitchLookup={pitchLookup}
+                        wordsLookup={wordsLookup}
+                        learningStatus={learningStatus}
+                        pitchColoring={pitchColoring}
                       />
                   ): (
                     <Card className="w-full p-4 bg-yellow-50 border-yellow-200">

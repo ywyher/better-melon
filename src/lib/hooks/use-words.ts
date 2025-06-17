@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { settingsQueries } from '@/lib/queries/settings';
 import { Word } from '@/lib/db/schema';
 
-export function useWords(status: Word['status']) {
+export function useWords(status?: Word['status']) {
   const loadingStartTime = useRef<number>(0);
   const [loadingDuration, setLoadingDuration] = useState<number>(0);
   
@@ -14,7 +14,6 @@ export function useWords(status: Word['status']) {
   } = useQuery({
     ...settingsQueries.words({ status }),
     staleTime: 1000 * 60 * 5,
-    enabled: !!status,
   });
 
   useEffect(() => {

@@ -1,4 +1,4 @@
-PITCH ACCENT SHOULD APPLY TO THE CONVERTED FROM JAPANESE TO HIRAGANA OR WHATEVER ELSE
+we should be able to add/import `learning`/`ignored` words too, not only known, i guess at least
 
 # Features
 1. add a button on the panel to take you to the current active cue

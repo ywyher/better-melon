@@ -15,7 +15,7 @@ import { GripVertical } from 'lucide-react';
 import { getPitchAccentType } from '@/lib/utils/pitch';
 import { pitchAccentsStyles } from '@/lib/constants/pitch';
 import { PitchAccents } from '@/types/pitch';
-import { learningStatusesStyles } from '@/lib/constants/subtitle';
+import { excludedPos, learningStatusesStyles } from '@/lib/constants/subtitle';
 
 type TranscriptionItemProps = {
   transcription: SubtitleTranscription;
@@ -125,7 +125,6 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
                     reading: token.original_form
                 })
             }
-
             const word = wordsLookup.get(token.original_form)
             const status = word?.status
             
@@ -136,7 +135,11 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
             const tokenStyle = {
                 ...(isActive ? styles.tokenStyles.active : styles.tokenStyles.default),
                 ...(pitchColoring && !isActive && accent ? pitchAccentsStyles[accent] : undefined),
-                ...(learningStatus && status ? learningStatusesStyles[status] : learningStatusesStyles['unknown'])
+                ...(
+                    learningStatus && !excludedPos.some(p => p == token.pos) && status 
+                        ? learningStatusesStyles[status] 
+                        : !excludedPos.some(p => p == token.pos) && learningStatusesStyles['unknown']
+                )
             };
             const activeContainerStyles = isActive ? styles.containerStyle.active : undefined;
             

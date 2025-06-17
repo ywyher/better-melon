@@ -4,9 +4,9 @@ import PanelSkeleton from '../panel/panel-skeleton';
 import { AnimeEpisodeMetadata } from '@/types/anime';
 import { SubtitleFile } from '@/types/subtitle';
 import EpisodesList from '@/app/watch/[id]/[ep]/_components/episodes/episodes-list';
-import { TranscriptionQuery, TranscriptionsLookup } from '@/app/watch/[id]/[ep]/types';
+import { PitchLookup, TranscriptionQuery, TranscriptionsLookup, WordsLookup } from '@/app/watch/[id]/[ep]/types';
 import { useEffect } from 'react';
-import { PlayerSettings } from '@/lib/db/schema';
+import { PlayerSettings, WordSettings } from '@/lib/db/schema';
 
 interface PanelSectionProps {
   isLoading: boolean;
@@ -16,6 +16,10 @@ interface PanelSectionProps {
   transcriptionsLookup?: TranscriptionsLookup
   autoScrollToCue: PlayerSettings['autoScrollToCue']
   autoScrollResumeDelay: PlayerSettings['autoScrollResumeDelay']
+  pitchLookup: PitchLookup
+  wordsLookup: WordsLookup
+  learningStatus: WordSettings['learningStatus']
+  pitchColoring: WordSettings['pitchColoring']
 }
 
 export default function PanelSection({
@@ -25,7 +29,11 @@ export default function PanelSection({
   transcriptions,
   transcriptionsLookup,
   autoScrollToCue,
-  autoScrollResumeDelay
+  autoScrollResumeDelay,
+  pitchLookup,
+  wordsLookup,
+  learningStatus,
+  pitchColoring,
 }: PanelSectionProps) {
   return (
     <div className="flex flex-col gap-5 w-full md:w-auto">
@@ -40,6 +48,10 @@ export default function PanelSection({
               transcriptionsLookup={transcriptionsLookup}
               autoScrollToCue={autoScrollToCue}
               autoScrollResumeDelay={autoScrollResumeDelay}
+              pitchLookup={pitchLookup}
+              wordsLookup={wordsLookup}
+              learningStatus={learningStatus}
+              pitchColoring={pitchColoring}
             />
           )}
         </>

@@ -4,9 +4,9 @@ import { SubtitleCue as TSubtitleCue, SubtitleTranscription, SubtitleFormat } fr
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { usePlayerStore } from "@/lib/stores/player-store";
 import SubtitleCuesContainer from "@/app/watch/[id]/[ep]/_components/panel/subtitle-cues-container";
-import { TranscriptionsLookup } from "@/app/watch/[id]/[ep]/types";
+import { PitchLookup, TranscriptionsLookup, WordsLookup } from "@/app/watch/[id]/[ep]/types";
 import { useDelayStore } from "@/lib/stores/delay-store";
-import { PlayerSettings } from "@/lib/db/schema";
+import { PlayerSettings, WordSettings } from "@/lib/db/schema";
 
 type SubtitleCuesListProps = {
   isLoading: boolean;
@@ -15,6 +15,10 @@ type SubtitleCuesListProps = {
   transcriptionsLookup: TranscriptionsLookup
   autoScrollToCue: PlayerSettings['autoScrollToCue']
   autoScrollResumeDelay: PlayerSettings['autoScrollResumeDelay'] // Updated name
+  pitchLookup: PitchLookup
+  wordsLookup: WordsLookup
+  learningStatus: WordSettings['learningStatus']
+  pitchColoring: WordSettings['pitchColoring']
 }
 
 export default function SubtitleCuesList({
@@ -23,7 +27,11 @@ export default function SubtitleCuesList({
   cues,
   transcriptionsLookup,
   autoScrollToCue,
-  autoScrollResumeDelay
+  autoScrollResumeDelay,
+  pitchLookup,
+  wordsLookup,
+  learningStatus,
+  pitchColoring
 }: SubtitleCuesListProps) {
   const [activeIndex, setActiveIndex] = useState<number>(-1);
   const [autoScroll, setAutoScroll] = useState<boolean>(autoScrollToCue); // Use setting
@@ -162,6 +170,10 @@ export default function SubtitleCuesList({
               activeCueIdRef={activeCueIdRef}
               cues={cues}
               transcriptionsLookup={transcriptionsLookup}
+              pitchLookup={pitchLookup}
+              wordsLookup={wordsLookup}
+              learningStatus={learningStatus}
+              pitchColoring={pitchColoring}
             />
           </TabsContent>
       </div>
