@@ -1,4 +1,4 @@
-for getting the pitch accent just query the next transcription pitch accent before it appearsss
+PITCH ACCENT SHOULD APPLY TO THE CONVERTED FROM JAPANESE TO HIRAGANA OR WHATEVER ELSE
 
 # Features
 1. add a button on the panel to take you to the current active cue

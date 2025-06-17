@@ -48,6 +48,10 @@ export default function TranscriptionsWordsPlayground() {
   const { pitchLookup } = useSubtitlesPitchAccent(upcomingSubtitles)
   const { wordsLookup } = useWords('known')
 
+  useEffect(() => {
+    console.log(`transcriptions`, transcriptions)
+  }, [transcriptions])
+
   const url = `https://www.youtube.com/watch?v=LF7AezBpqzg`
 
   return (

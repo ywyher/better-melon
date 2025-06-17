@@ -36,6 +36,7 @@ export type SubtitleToken = {
     basic_form: string;
     reading?: string | undefined;
     pronunciation?: string | undefined;
+    original_form?: string; // preserve original form before converting using kuroshiro
 
     // Extras
     word_type: string;

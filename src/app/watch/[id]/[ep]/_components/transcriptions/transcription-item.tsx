@@ -112,7 +112,11 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
         }
         
         return cue.tokens.map((token, tokenIdx) => {
-            const pitch = pitchLookup.get(token.surface_form)
+            const pitch = pitchLookup.get(
+                cue.transcription != 'japanese' && cue.transcription != 'english'
+                ? token.original_form!
+                : token.surface_form
+            )
             let type: Pitch | null = null;
             if(pitch) {
                 type = getPitchAccentType({
@@ -267,10 +271,6 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
     
     // Get only the cues we need for this transcription
     const activeCues = activeSubtitles[transcription] || [];
-
-    useEffect(() => {
-        console.log(activeCues)
-    }, [activeCues])
 
     return (
         <div

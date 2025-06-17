@@ -126,6 +126,7 @@ export async function convertSubtitlesForNonJapaneseTranscription(
                 const convertedToken = await kuroshiro.convert(token.surface_form, kuroshiroOptions);
                 return {
                   ...token,
+                  original_form: token.surface_form,
                   surface_form: convertedToken
                 };
               })
