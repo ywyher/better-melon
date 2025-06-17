@@ -3,7 +3,7 @@ import type { SubtitleCue as TSubtitleCue, SubtitleToken } from "@/types/subtitl
 import { Button } from "@/components/ui/button";
 import { Clipboard, Play } from "lucide-react";
 import DOMPurify from 'dompurify';
-import { parseFuriganaToken } from '@/lib/subtitle/utils';
+import { parseFuriganaToken } from '@/lib/utils/subtitle';
 
 type SubtitleCueProps = { 
     index: number;

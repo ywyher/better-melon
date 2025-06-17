@@ -1,7 +1,7 @@
 import Kuroshiro from "@sglkc/kuroshiro";
 import type { SubtitleCue, SubtitleTranscription, SubtitleToken, SubtitleFormat } from "@/types/subtitle";
 import CustomKuromojiAnalyzer from "./custom-kuromoji-analyzer";
-import { removeHtmlTags, removeTags, timestampToSeconds } from "@/lib/subtitle/utils";
+import { removeHtmlTags, removeTags, timestampToSeconds } from "@/lib/utils/subtitle";
 import nlp from 'compromise';
 import { SubtitleRequestBody } from "@/app/api/subtitles/parse/route";
 import { readFileContent } from "@/lib/utils/utils";

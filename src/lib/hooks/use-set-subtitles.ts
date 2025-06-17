@@ -1,6 +1,6 @@
 import { SubtitlesNotAvailableError } from "@/lib/errors/player";
 import { usePlayerStore } from "@/lib/stores/player-store";
-import { getActiveSubtitleFile } from "@/lib/subtitle/utils";
+import { getActiveSubtitleFile } from "@/lib/utils/subtitle";
 import { AnimeEpisodeData, AnimeStreamingLinks } from "@/types/anime";
 import { SettingsForEpisode } from "@/types/settings";
 import { useEffect, useState } from "react";

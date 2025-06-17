@@ -14,7 +14,7 @@ import PlayerSkeleton from '@/app/watch/[id]/[ep]/_components/player/player-skel
 import { useThrottledCallback } from 'use-debounce';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { generateWebVTTFromSkipTimes } from '@/lib/subtitle/utils';
+import { generateWebVTTFromSkipTimes } from '@/lib/utils/subtitle';
 import SubtitleTranscriptions from '@/app/watch/[id]/[ep]/_components/transcriptions/transcriptions';
 import { env } from '@/lib/env/client';
 import { PitchLookup, Subtitle, TranscriptionQuery, TranscriptionsLookup, TranscriptionStyles, WordsLookup } from '@/app/watch/[id]/[ep]/types';

@@ -1,20 +1,21 @@
 "use client"
 
-import React, { Fragment, useCallback, useState, useMemo, useEffect } from 'react';
+import React, { Fragment, useCallback, useState, useMemo } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { useDefinitionStore } from '@/lib/stores/definition-store';
 import { SubtitleCue, SubtitleToken, SubtitleTranscription } from '@/types/subtitle';
 import { cn } from '@/lib/utils/utils';
-import { PitchLookup, Subtitle, TranscriptionsLookup, TranscriptionStyles, TranscriptionStyleSet, WordsLookup } from '@/app/watch/[id]/[ep]/types';
-import { SubtitleSettings, Word, WordSettings } from '@/lib/db/schema';
-import { getSentencesForCue, isTokenExcluded, parseFuriganaToken } from '@/lib/subtitle/utils';
+import { PitchLookup, Subtitle, TranscriptionsLookup, TranscriptionStyleSet, WordsLookup } from '@/app/watch/[id]/[ep]/types';
+import { SubtitleSettings, WordSettings } from '@/lib/db/schema';
+import { getSentencesForCue, isTokenExcluded, parseFuriganaToken } from '@/lib/utils/subtitle';
 import { useDelayStore } from '@/lib/stores/delay-store';
 import DOMPurify from 'dompurify';
 import { GripVertical } from 'lucide-react';
 import { getPitchAccentType } from '@/lib/utils/pitch';
-import { pitchStyles } from '@/lib/constants/pitch';
-import { Pitch } from '@/types/pitch';
+import { pitchAccentsStyles } from '@/lib/constants/pitch';
+import { PitchAccents } from '@/types/pitch';
+import { learningStatusesStyles } from '@/lib/constants/subtitle';
 
 type TranscriptionItemProps = {
   transcription: SubtitleTranscription;
@@ -117,21 +118,25 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
                 ? token.original_form!
                 : token.surface_form
             )
-            let type: Pitch | null = null;
+            let accent: PitchAccents | null = null;
             if(pitch) {
-                type = getPitchAccentType({
+                accent = getPitchAccentType({
                     position: pitch.pitches[0].position,
-                    reading: token.surface_form
+                    reading: token.original_form
                 })
             }
 
+            const word = wordsLookup.get(token.original_form)
+            const status = word?.status
+            
             const isActive = 
                 (hoveredCueId === cue.id && hoveredTokenId === token.id && transcription !== 'english')
                 || token.id === activeToken?.id;
             
             const tokenStyle = {
                 ...(isActive ? styles.tokenStyles.active : styles.tokenStyles.default),
-                ...(pitchColoring && !isActive && type ? pitchStyles[type] : undefined)
+                ...(pitchColoring && !isActive && accent ? pitchAccentsStyles[accent] : undefined),
+                ...(learningStatus && status ? learningStatusesStyles[status] : learningStatusesStyles['unknown'])
             };
             const activeContainerStyles = isActive ? styles.containerStyle.active : undefined;
             

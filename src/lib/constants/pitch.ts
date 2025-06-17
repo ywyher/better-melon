@@ -1,8 +1,8 @@
 import { CSSProperties } from "react"
 
-export const pitch = ['heiban', 'atamadaka', 'nakadaka', 'odaka']
+export const pitchAccents = ['heiban', 'atamadaka', 'nakadaka', 'odaka']
 
-export const pitchStyles: {
+export const pitchAccentsStyles: {
   heiban: CSSProperties
   atamadaka: CSSProperties
   nakadaka: CSSProperties

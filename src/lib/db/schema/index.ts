@@ -220,7 +220,7 @@ export const playerSettingsRelations = relations(playerSettings, ({ one }) => ({
 
 export const wordStatusEnum = pgEnum('word_enum', [
   'known',
-  'tracking',
+  'learning',
   'unknown',
   'ignore'
 ])

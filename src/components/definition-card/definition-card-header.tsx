@@ -64,7 +64,7 @@ export default function DefinitionCardHeader({ entries }: DefinitionCardHeaderPr
 
   return (
     <CardHeader className="flex flex-row justify-between items-center p-0">
-      <CardTitle>{token?.surface_form}</CardTitle>
+      <CardTitle>{token?.original_form}</CardTitle>
       <div className='flex flex-row gap-2'>
         {isAddToAnki && (
           <Button

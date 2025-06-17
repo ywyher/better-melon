@@ -6,7 +6,7 @@ import { usePlayerStore } from "@/lib/stores/player-store";
 import { SubtitleCue, SubtitleFormat } from "@/types/subtitle";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { getExtension } from "@/lib/utils/utils";
-import {  } from "@/lib/subtitle/utils";
+import {  } from "@/lib/utils/subtitle";
 import { useDelayStore } from "@/lib/stores/delay-store";
 
 interface CueNavigationProps {

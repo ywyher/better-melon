@@ -2,7 +2,7 @@ import { TranscriptionQuery } from "@/app/watch/[id]/[ep]/types";
 import { useInitializeTokenizer } from "@/lib/hooks/use-initialize-tokenizer";
 import { subtitleQueries } from "@/lib/queries/subtitle";
 import { usePlayerStore } from "@/lib/stores/player-store";
-import { getTranscriptionsLookupKey } from "@/lib/subtitle/utils";
+import { getTranscriptionsLookupKey } from "@/lib/utils/subtitle";
 import { SubtitleCue, SubtitleTranscription } from "@/types/subtitle";
 import { useQueries } from "@tanstack/react-query";
 import { useEffect, useMemo, useRef, useState } from "react";

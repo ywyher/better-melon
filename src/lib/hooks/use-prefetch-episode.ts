@@ -5,7 +5,7 @@ import { useQueries, useQuery } from '@tanstack/react-query';
 import { playerQueries } from '@/lib/queries/player';
 import { usePlayerStore } from '@/lib/stores/player-store';
 import { ActiveSubtitleFile, SubtitleTranscription } from '@/types/subtitle';
-import { getActiveSubtitleFile, getEnglishSubtitleUrl } from '@/lib/subtitle/utils';
+import { getActiveSubtitleFile, getEnglishSubtitleUrl } from '@/lib/utils/subtitle';
 import { subtitleQueries } from '@/lib/queries/subtitle';
 import { useSubtitleStylesStore } from '@/lib/stores/subtitle-styles-store';
 import { SubtitleSettings } from '@/lib/db/schema';

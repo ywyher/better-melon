@@ -1,1 +1,1 @@
-export type Pitch = "heiban" | "atamadaka" | "nakadaka" | "odaka"
+export type PitchAccents = "heiban" | "atamadaka" | "nakadaka" | "odaka"

@@ -49,8 +49,8 @@ export default function TranscriptionsWordsPlayground() {
   const { wordsLookup } = useWords('known')
 
   useEffect(() => {
-    console.log(`transcriptions`, transcriptions)
-  }, [transcriptions])
+    console.log(`wordsLookup`, wordsLookup)
+  }, [wordsLookup])
 
   const url = `https://www.youtube.com/watch?v=LF7AezBpqzg`
 

@@ -26,11 +26,11 @@ export function usePitchAccent(query: string) {
     }
   }, [isLoading, pitch, loadingDuration]);
 
+  const pitchLookupRef = useRef(new Map<string, NHKEntry>());
   const pitchLookup = useMemo(() => {
-    if (!pitch) return new Map<string, NHKEntry>();
-    const lookup = new Map<string, NHKEntry>();
-    pitch.forEach((pitchData) => lookup.set(pitchData.word, pitchData));
-    return lookup;
+    if (!pitch) return pitchLookupRef.current;
+    pitch.forEach((pitchData) => pitchLookupRef.current.set(pitchData.word, pitchData));
+    return pitchLookupRef.current;
   }, [pitch]);
 
   return {

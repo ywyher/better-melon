@@ -44,7 +44,7 @@ or only the words that he have in his anki deck !!!
 prob manually as well as the ability to import from an anki deck ?
 we should have these types (add an option for the user to disable this)
 1. unknown -> red
-2. tracking/learning -> purple
+2. tracking/learning -> orange
 3. known -> green => only on hover
 4. ignore -> gray => only on hover
 if a word is unknown or tracker => show furigana
