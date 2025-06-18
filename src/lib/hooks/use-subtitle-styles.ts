@@ -8,10 +8,12 @@ import { useQuery } from "@tanstack/react-query";
 import { useMediaState } from "@vidstack/react";
 import { useMemo, useRef, useState } from "react";
 import { getContainerStyles, getTokenStyles } from "@/lib/utils/styles";
+import { useSubtitleStore } from "@/lib/stores/subtitle-store";
+import { useUIStateStore } from "@/lib/stores/ui-state-store";
 
 export const useSubtitleStyles = () => {
-  const activeTranscriptions = usePlayerStore((state) => state.activeTranscriptions);
-  const panelState = usePlayerStore((state) => state.panelState)
+  const activeTranscriptions = useSubtitleStore((state) => state.activeTranscriptions);
+  const panelState = useUIStateStore((state) => state.panelState)
   const isFullscreen = useMediaState('fullscreen', usePlayerStore((state) => state.player));
   
   const storeStyles = useSubtitleStylesStore((state) => state.styles);

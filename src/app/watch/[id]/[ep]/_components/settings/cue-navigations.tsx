@@ -8,6 +8,7 @@ import { useCallback, useEffect, useMemo, useRef } from "react";
 import { getExtension } from "@/lib/utils/utils";
 import {  } from "@/lib/utils/subtitle";
 import { useDelayStore } from "@/lib/stores/delay-store";
+import { useSubtitleStore } from "@/lib/stores/subtitle-store";
 
 interface CueNavigationProps {
   direction: 'next' | 'previous';
@@ -16,8 +17,8 @@ interface CueNavigationProps {
 export default function CueNavigations({ direction }: CueNavigationProps) {
   const player = usePlayerStore((state) => state.player);
   const delay = useDelayStore((state) => state.delay);;
-  const subtitleCues = usePlayerStore((state) => state.subtitleCues);
-  const activeSubtitleFile = usePlayerStore((state) => state.activeSubtitleFile);
+  const subtitleCues = useSubtitleStore((state) => state.subtitleCues);
+  const activeSubtitleFile = useSubtitleStore((state) => state.activeSubtitleFile);
   
   const isNext = direction === 'next';
   const currentTimeRef = useRef<number>(0);

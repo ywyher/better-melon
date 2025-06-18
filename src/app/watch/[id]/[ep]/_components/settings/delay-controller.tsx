@@ -1,6 +1,5 @@
 "use client"
 
-import { usePlayerStore } from "@/lib/stores/player-store";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";

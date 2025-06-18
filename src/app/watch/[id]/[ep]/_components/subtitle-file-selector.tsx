@@ -8,18 +8,18 @@ import { cn } from "@/lib/utils/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { toast } from "sonner";
 import DialogWrapper from "@/components/dialog-wrapper";
-import { usePlayerStore } from "@/lib/stores/player-store";
 import { SubtitleFile } from "@/types/subtitle";
 import { subtitleFormats } from "@/lib/constants/subtitle";
 import LocalFileSelector from "@/components/local-file-selector";
+import { useSubtitleStore } from "@/lib/stores/subtitle-store";
 
 export default function SubtitleFileSelector({ subtitleFiles }: { 
     subtitleFiles: SubtitleFile[];
 }) {
     const [loading, setLoading] = useState<string | null>(null);
     const [open, setOpen] = useState(false);
-    const activeSubtitleFile = usePlayerStore((state) => state.activeSubtitleFile)
-    const setActiveSubtitleFile = usePlayerStore((state) => state.setActiveSubtitleFile)
+    const activeSubtitleFile = useSubtitleStore((state) => state.activeSubtitleFile)
+    const setActiveSubtitleFile = useSubtitleStore((state) => state.setActiveSubtitleFile)
 
     const handleSelectFile = (file: SubtitleFile) => {
         if (file.name === activeSubtitleFile?.file.name) return;

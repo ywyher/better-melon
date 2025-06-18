@@ -3,7 +3,8 @@ import SettingsDialog from "@/app/watch/[id]/[ep]/_components/settings/settings-
 import { TranscriptionQuery, TranscriptionsLookup } from "@/app/watch/[id]/[ep]/types";
 import DialogWrapper from "@/components/dialog-wrapper";
 import { Button } from "@/components/ui/button";
-import { PlayerStore, usePlayerStore } from "@/lib/stores/player-store";
+import { usePlayerStore } from "@/lib/stores/player-store";
+import { UIStateStore } from "@/lib/stores/ui-state-store";
 import { AnimeEpisodeData } from "@/types/anime";
 import { SettingsForEpisode } from "@/types/settings";
 import { SubtitleCue } from "@/types/subtitle";
@@ -14,8 +15,8 @@ type TopControlsProps = {
   loadingDuration: number;
   episodeData?: AnimeEpisodeData;
   isMedium: boolean;
-  panelState: PlayerStore['panelState'];
-  setPanelState: (state: PlayerStore['panelState']) => void;
+  panelState: UIStateStore['panelState'];
+  setPanelState: (state: UIStateStore['panelState']) => void;
   transcriptions: TranscriptionQuery[];
   transcriptionsLookup: TranscriptionsLookup
   settings: SettingsForEpisode

@@ -5,19 +5,18 @@ import DefinitionCard from "@/components/definition-card/definition-card";
 import { useSubtitleStyles } from "@/lib/hooks/use-subtitle-styles";
 import { useSubtitleTranscriptions } from "@/lib/hooks/use-subtitle-transcriptions";
 import { useDefinitionStore } from "@/lib/stores/definition-store";
-import { usePlayerStore } from "@/lib/stores/player-store";
 import { useEffect } from "react";
 
-import { MediaPlayer, type MediaPlayerInstance, MediaProvider, Poster, useMediaState } from '@vidstack/react';
+import { MediaPlayer, MediaProvider } from '@vidstack/react';
 import { DefaultAudioLayout, defaultLayoutIcons, DefaultVideoLayout } from '@vidstack/react/player/layouts/default';
-import { Track } from "@vidstack/react";
 import '@vidstack/react/player/styles/default/theme.css';
 import '@vidstack/react/player/styles/default/layouts/video.css';
+import { useSubtitleStore } from "@/lib/stores/subtitle-store";
 
 export default function DefinitionPlayground() {
-  const setActiveSubtitleFile = usePlayerStore((state) => state.setActiveSubtitleFile);
-  const setActiveTranscriptions = usePlayerStore((state) => state.setActiveTranscriptions);
-  const setEnglishSubtitleUrl = usePlayerStore((state) => state.setEnglishSubtitleUrl);
+  const setActiveSubtitleFile = useSubtitleStore((state) => state.setActiveSubtitleFile);
+  const setActiveTranscriptions = useSubtitleStore((state) => state.setActiveTranscriptions);
+  const setEnglishSubtitleUrl = useSubtitleStore((state) => state.setEnglishSubtitleUrl);
   const sentences = useDefinitionStore((state) => state.sentences)
   
   useEffect(() => {

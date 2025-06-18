@@ -88,6 +88,17 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
             || isTokenExcluded(token)
         ) return;
 
+        const pitch = pitchLookup.get(token.original_form)
+        let accent;
+        if (pitch) {
+            accent = getPitchAccentType({
+                position: pitch?.pitches[0].position,
+                reading: token.original_form
+            })
+        }
+        console.log('test accent', accent)
+        console.log('test pitch', pitch)
+
         await navigator.clipboard.writeText(token.surface_form);
 
         if (storeToken && storeToken.id === token.id) {
@@ -113,11 +124,7 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
         }
         
         return cue.tokens.map((token, tokenIdx) => {
-            const pitch = pitchLookup.get(
-                cue.transcription != 'japanese' && cue.transcription != 'english'
-                ? token.original_form!
-                : token.surface_form
-            )
+            const pitch = pitchLookup.get(token.original_form)
             let accent: PitchAccents | null = null;
             if(pitch) {
                 accent = getPitchAccentType({

@@ -1,3 +1,6 @@
+check https://github.com/Doublevil/JmdictFurigana
+pitch coloring is kinda broken, rn
+also as for pitch coloring for the subitlte cue list in the panel doesn't work since we only query the accent when the time for that cue come, gotta change the way we do it bruh
 we should be able to add/import `learning`/`ignored` words too, not only known, i guess at least
 
 # Features

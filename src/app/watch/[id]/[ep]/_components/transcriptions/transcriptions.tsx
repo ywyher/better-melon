@@ -17,6 +17,8 @@ import { showSyncSettingsToast } from "@/components/sync-settings-toast";
 import { Button } from "@/components/ui/button";
 import { useDelayStore } from "@/lib/stores/delay-store";
 import { useMediaState } from "@vidstack/react";
+import { useSubtitleStore } from "@/lib/stores/subtitle-store";
+import { usePlaybackSettingsStore } from "@/lib/stores/playback-settings-store";
 
 type SubtitleTranscriptionsProps = {
   activeSubtitles: Subtitle;
@@ -44,9 +46,9 @@ export default function SubtitleTranscriptions({
   pitchLookup
 }: SubtitleTranscriptionsProps) {
   const player = usePlayerStore((state) => state.player);
-  const activeTranscriptions = usePlayerStore((state) => state.activeTranscriptions);
+  const activeTranscriptions = useSubtitleStore((state) => state.activeTranscriptions);
   const delay = useDelayStore((state) => state.delay);;
-  const pauseOnCue = usePlayerStore((state) => state.pauseOnCue);
+  const pauseOnCue = usePlaybackSettingsStore((state) => state.pauseOnCue);
 
   const [order, setOrder] = useState<SubtitleTranscription[]>(() => [...activeTranscriptions]);
   const debouncedOrder = useDebounce<SubtitleTranscription[]>(order, 1500);

@@ -9,16 +9,16 @@ import LocalFileSelector from "@/components/local-file-selector";
 import { Button } from "@/components/ui/button";
 import { useSubtitleStyles } from "@/lib/hooks/use-subtitle-styles";
 import { useSubtitleTranscriptions } from "@/lib/hooks/use-subtitle-transcriptions";
-import { usePlayerStore } from "@/lib/stores/player-store";
+import { useSubtitleStore } from "@/lib/stores/subtitle-store";
 import { AnimeEpisodeMetadata } from "@/types/anime";
 import { useMutation } from "@tanstack/react-query";
 import { useEffect, useMemo } from "react";
 
 export default function TranscriptionsPlayground() {
-  const setActiveSubtitleFile = usePlayerStore((state) => state.setActiveSubtitleFile);
-  const setActiveTranscriptions = usePlayerStore((state) => state.setActiveTranscriptions);
-  const activeSubtitleFile = usePlayerStore((state) => state.activeSubtitleFile);
-  const setEnglishSubtitleUrl = usePlayerStore((state) => state.setEnglishSubtitleUrl);
+  const setActiveSubtitleFile = useSubtitleStore((state) => state.setActiveSubtitleFile);
+  const setActiveTranscriptions = useSubtitleStore((state) => state.setActiveTranscriptions);
+  const activeSubtitleFile = useSubtitleStore((state) => state.activeSubtitleFile);
+  const setEnglishSubtitleUrl = useSubtitleStore((state) => state.setEnglishSubtitleUrl);
   
   useEffect(() => {
     setEnglishSubtitleUrl("https://s.megastatics.com/subtitle/92580649ff01096b4a0de6428f58bedb/eng-0.vtt");

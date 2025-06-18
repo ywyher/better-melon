@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { PitchLookup, TranscriptionsLookup, WordsLookup } from "@/app/watch/[id]/[ep]/types";
 import { useDelayStore } from "@/lib/stores/delay-store";
 import { WordSettings } from "@/lib/db/schema";
+import { useSubtitleStore } from "@/lib/stores/subtitle-store";
 
 export default function SubtitleCuesContainer({
   items,
@@ -31,7 +32,7 @@ export default function SubtitleCuesContainer({
 }) {
   const player = usePlayerStore((state) => state.player)
   const delay = useDelayStore((state) => state.delay);
-  const activeSubtitleFile = usePlayerStore((state) => state.activeSubtitleFile)
+  const activeSubtitleFile = useSubtitleStore((state) => state.activeSubtitleFile)
   
   const activeToken = useDefinitionStore((state) => state.token)
   const setSentences = useDefinitionStore((state) => state.setSentences)

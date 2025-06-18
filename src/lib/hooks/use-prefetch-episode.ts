@@ -9,6 +9,7 @@ import { getActiveSubtitleFile, getEnglishSubtitleUrl } from '@/lib/utils/subtit
 import { subtitleQueries } from '@/lib/queries/subtitle';
 import { useSubtitleStylesStore } from '@/lib/stores/subtitle-styles-store';
 import { SubtitleSettings } from '@/lib/db/schema';
+import { useSubtitleStore } from '@/lib/stores/subtitle-store';
 
 export function usePrefetchEpisode(
   animeId: string,
@@ -18,7 +19,7 @@ export function usePrefetchEpisode(
   isReady: boolean
 ) {
   const [networkCondition, setNetworkCondition] = useState<'good'|'poor'|'n'>('n');
-  const storeActiveTranscriptions = usePlayerStore((state) => state.activeTranscriptions) || [];
+  const storeActiveTranscriptions = useSubtitleStore((state) => state.activeTranscriptions) || [];
   const isLastEpisode = episodesLength > 0 && episodeNumber >= episodesLength;
   const handleSubtitleStylesInStore = useSubtitleStylesStore((state) => state.handleStyles);
   const getStylesFromStore = useSubtitleStylesStore((state) => state.getStyles);

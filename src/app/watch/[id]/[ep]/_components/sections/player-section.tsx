@@ -5,8 +5,8 @@ import { usePlayerStore } from '@/lib/stores/player-store';
 import { TopControls } from '@/app/watch/[id]/[ep]/_components/sections/top-controls';
 import { AnimeEpisodeData } from '@/types/anime';
 import { PitchLookup, Subtitle, TranscriptionQuery, TranscriptionsLookup, TranscriptionStyles, WordsLookup } from '@/app/watch/[id]/[ep]/types';
-import { SubtitleCue } from '@/types/subtitle';
 import { SettingsForEpisode } from '@/types/settings';
+import { useUIStateStore } from '@/lib/stores/ui-state-store';
 
 interface PlayerSectionProps {
   animeId: string;
@@ -41,8 +41,8 @@ export default function PlayerSection({
   pitchLookup,
   activeSubtitles
 }: PlayerSectionProps) {
-  const panelState = usePlayerStore((state) => state.panelState);
-  const setPanelState = usePlayerStore((state) => state.setPanelState);
+  const panelState = useUIStateStore((state) => state.panelState);
+  const setPanelState = useUIStateStore((state) => state.setPanelState);
 
   return (
     <>

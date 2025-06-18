@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import { usePitchAccent } from '@/lib/hooks/use-pitch-accent';
 import { SubtitleCue } from '@/types/subtitle';
 import { NHKEntry } from '@/types/nhk';

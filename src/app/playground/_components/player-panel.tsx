@@ -13,12 +13,13 @@ import '@vidstack/react/player/styles/default/layouts/video.css';
 import PanelSection from "@/app/watch/[id]/[ep]/_components/sections/panel-section";
 import { AnimeEpisodeMetadata } from "@/types/anime";
 import { useSettingsForEpisode } from "@/lib/hooks/use-settings-for-episode";
+import { useSubtitleStore } from "@/lib/stores/subtitle-store";
 
 export default function PlayerPanelPlayground() {
   const player = useRef<MediaPlayerInstance>(null);
-  const setActiveSubtitleFile = usePlayerStore((state) => state.setActiveSubtitleFile);
-  const setActiveTranscriptions = usePlayerStore((state) => state.setActiveTranscriptions);
-  const setEnglishSubtitleUrl = usePlayerStore((state) => state.setEnglishSubtitleUrl);
+  const setActiveSubtitleFile = useSubtitleStore((state) => state.setActiveSubtitleFile);
+  const setActiveTranscriptions = useSubtitleStore((state) => state.setActiveTranscriptions);
+  const setEnglishSubtitleUrl = useSubtitleStore((state) => state.setEnglishSubtitleUrl);
   const setPlayer = usePlayerStore((state) => state.setPlayer)
 
   useEffect(() => {

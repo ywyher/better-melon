@@ -20,6 +20,7 @@ import { env } from '@/lib/env/client';
 import { PitchLookup, Subtitle, TranscriptionQuery, TranscriptionsLookup, TranscriptionStyles, WordsLookup } from '@/app/watch/[id]/[ep]/types';
 import { GeneralSettings, PlayerSettings, SubtitleSettings, WordSettings } from '@/lib/db/schema';
 import DefinitionCard from '@/components/definition-card/definition-card';
+import { usePlaybackSettingsStore } from '@/lib/stores/playback-settings-store';
 
 type PlayerProps = {
   animeId: string;
@@ -73,9 +74,9 @@ export default function Player({
     const setPlayer = usePlayerStore((state) => state.setPlayer);
     const isVideoReady = usePlayerStore((state) => state.isVideoReady);
     const setIsVideoReady = usePlayerStore((state) => state.setIsVideoReady);
-    const autoSkip = usePlayerStore((state) => state.autoSkip);
-    const autoNext = usePlayerStore((state) => state.autoNext);
-    const autoPlay = usePlayerStore((state) => state.autoPlay);
+    const autoSkip = usePlaybackSettingsStore((state) => state.autoSkip);
+    const autoNext = usePlaybackSettingsStore((state) => state.autoNext);
+    const autoPlay = usePlaybackSettingsStore((state) => state.autoPlay);
 
     const [loadingDuration, setLoadingDuration] = useState<{
       start: Date | undefined,

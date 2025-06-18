@@ -1,13 +1,9 @@
 'use client'
 
-import { getWords } from "@/app/settings/word/_known-words/actions";
 import SubtitleTranscriptions from "@/app/watch/[id]/[ep]/_components/transcriptions/transcriptions";
 import DefinitionCard from "@/components/definition-card/definition-card";
-import { useSettingsForEpisode } from "@/lib/hooks/use-settings-for-episode";
 import { useSubtitleStyles } from "@/lib/hooks/use-subtitle-styles";
 import { useSubtitleTranscriptions } from "@/lib/hooks/use-subtitle-transcriptions";
-import { usePlayerStore } from "@/lib/stores/player-store";
-import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useRef } from "react";
 import { MediaPlayer, MediaPlayerInstance, MediaProvider } from '@vidstack/react';
 import { DefaultAudioLayout, defaultLayoutIcons, DefaultVideoLayout } from '@vidstack/react/player/layouts/default';
@@ -19,12 +15,18 @@ import { useSubtitlesPitchAccent } from "@/lib/hooks/use-subtitles-pitch-accent"
 import { useWords } from "@/lib/hooks/use-words";
 import PanelSection from "@/app/watch/[id]/[ep]/_components/sections/panel-section";
 import { AnimeEpisodeMetadata } from "@/types/anime";
+import { useProgressivePitchAccent } from "@/lib/hooks/use-progressive-pitch-accent";
+import PitchLoadingIndicator from "@/app/playground/_components/pitch-loading";
+import { Loader2 } from "lucide-react";
+import { useActiveSubtitles } from "@/lib/hooks/use-active-subtitles";
+import { useSubtitleStore } from "@/lib/stores/subtitle-store";
+import { usePlayerStore } from "@/lib/stores/player-store";
 
 export default function TranscriptionsWordsPlayground() {
   const player = useRef<MediaPlayerInstance>(null);
   const setPlayer = usePlayerStore((state) => state.setPlayer)
-  const setActiveSubtitleFile = usePlayerStore((state) => state.setActiveSubtitleFile);
-  const setActiveTranscriptions = usePlayerStore((state) => state.setActiveTranscriptions);
+  const setActiveSubtitleFile = useSubtitleStore((state) => state.setActiveSubtitleFile);
+  const setActiveTranscriptions = useSubtitleStore((state) => state.setActiveTranscriptions);
 
   useEffect(() => {
     setPlayer(player)
@@ -43,11 +45,11 @@ export default function TranscriptionsWordsPlayground() {
     });
   }, [setActiveTranscriptions, setActiveSubtitleFile]);
 
-  const { transcriptions, transcriptionsLookup, isLoading } = useSubtitleTranscriptions()
+  const { transcriptions, transcriptionsLookup, isLoading: isTranscriptionsLoading } = useSubtitleTranscriptions()
   const { styles } = useSubtitleStyles();
-  const { activeSubtitles, upcomingSubtitles } = useSubtitles(transcriptions)
-  const { pitchLookup } = useSubtitlesPitchAccent(upcomingSubtitles)
+  const { activeSubtitles } = useActiveSubtitles(transcriptions)
   const { wordsLookup } = useWords()
+  const { pitchLookup, isLoading: isPitchLoading, loadingDuration } = useProgressivePitchAccent(transcriptions?.find(t => t.transcription == 'japanese')?.cues || [])
 
   const shouldShowPanel = useMemo(() => {
     return transcriptions 
@@ -57,7 +59,22 @@ export default function TranscriptionsWordsPlayground() {
   const url = `https://www.youtube.com/watch?v=LF7AezBpqzg`
 
   return (
-    <div className="flex flex-row justify-between gap-10">
+    <div className="flex flex-col justify-between gap-10">
+      <div className="flex flex-row gap-5">
+        {isTranscriptionsLoading && (
+          <div className="flex flex-row gap-2">
+            <Loader2 className="animate-spin" />
+            <p>Transcriptions Loading</p>
+          </div>
+        )}
+        {isPitchLoading && (
+          <div className="flex flex-row gap-2">
+          <Loader2 className="animate-spin" />
+            <p>Pitch Loading</p>
+          </div>
+        )}
+        {loadingDuration && <>Loading duration: {loadingDuration}</>}
+      </div>
       <MediaPlayer
           title={""}
           ref={player}
@@ -90,7 +107,7 @@ export default function TranscriptionsWordsPlayground() {
       </MediaPlayer>
       {shouldShowPanel && (
         <PanelSection
-          isLoading={isLoading}
+          isLoading={isTranscriptionsLoading}
           autoScrollResumeDelay={3}
           autoScrollToCue={true}
           animeMetadata={{

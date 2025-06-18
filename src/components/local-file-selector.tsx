@@ -1,7 +1,7 @@
 'use client'
 
 import { subtitleFormats } from "@/lib/constants/subtitle";
-import { usePlayerStore } from "@/lib/stores/player-store";
+import { useSubtitleStore } from "@/lib/stores/subtitle-store";
 import { cn, getExtension } from "@/lib/utils/utils";
 import { Check, Loader2, Upload, X } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -25,8 +25,8 @@ export default function LocalFileSelector({ onSelect }: LocalFileSelectorProps) 
   });
   
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const activeSubtitleFile = usePlayerStore((state) => state.activeSubtitleFile);
-  const setActiveSubtitleFile = usePlayerStore((state) => state.setActiveSubtitleFile);
+  const activeSubtitleFile = useSubtitleStore((state) => state.activeSubtitleFile);
+  const setActiveSubtitleFile = useSubtitleStore((state) => state.setActiveSubtitleFile);
 
   useEffect(() => {
     if (activeSubtitleFile?.source === "local" && activeSubtitleFile.file) {
