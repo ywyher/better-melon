@@ -1,40 +1,28 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { TabsContent } from "@/components/ui/tabs";
 import { SubtitleCue as TSubtitleCue, SubtitleTranscription, SubtitleFormat } from "@/types/subtitle";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { usePlayerStore } from "@/lib/stores/player-store";
 import SubtitleCuesContainer from "@/app/watch/[id]/[ep]/_components/panel/subtitle-cues-container";
-import { PitchLookup, TranscriptionsLookup, WordsLookup } from "@/app/watch/[id]/[ep]/types";
 import { useDelayStore } from "@/lib/stores/delay-store";
-import { PlayerSettings, WordSettings } from "@/lib/db/schema";
+import { useWatchDataStore } from "@/lib/stores/watch-store";
 
 type SubtitleCuesListProps = {
   isLoading: boolean;
   selectedTranscription: SubtitleTranscription;
   cues: TSubtitleCue[];
-  transcriptionsLookup: TranscriptionsLookup
-  autoScrollToCue: PlayerSettings['autoScrollToCue']
-  autoScrollResumeDelay: PlayerSettings['autoScrollResumeDelay'] // Updated name
-  pitchLookup: PitchLookup
-  wordsLookup: WordsLookup
-  learningStatus: WordSettings['learningStatus']
-  pitchColoring: WordSettings['pitchColoring']
 }
 
 export default function SubtitleCuesList({
   selectedTranscription,
   isLoading,
   cues,
-  transcriptionsLookup,
-  autoScrollToCue,
-  autoScrollResumeDelay,
-  pitchLookup,
-  wordsLookup,
-  learningStatus,
-  pitchColoring
 }: SubtitleCuesListProps) {
+
+  const playerSettings = useWatchDataStore((state) => state.settings.playerSettings)
+
   const [activeIndex, setActiveIndex] = useState<number>(-1);
-  const [autoScroll, setAutoScroll] = useState<boolean>(autoScrollToCue); // Use setting
+  const [autoScroll, setAutoScroll] = useState<boolean>(playerSettings.autoScrollToCue); // Use setting
   
   const activeCueIdRef = useRef<number>(-1);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
@@ -45,8 +33,8 @@ export default function SubtitleCuesList({
   const delay = useDelayStore((state) => state.delay);
 
   useEffect(() => {
-    setAutoScroll(autoScrollToCue);
-  }, [autoScrollToCue]);
+    setAutoScroll(playerSettings.autoScrollToCue);
+  }, [playerSettings.autoScrollToCue]);
 
   useEffect(() => {
     rowVirtualizer.measure()
@@ -82,7 +70,7 @@ export default function SubtitleCuesList({
   });
 
   const findActiveCue = useCallback((currentTime: number) => {
-      if (!cues?.length || !autoScrollToCue) return; // Check setting
+      if (!cues?.length || !playerSettings.autoScrollToCue) return; // Check setting
       
       const activeCueIndex = cues.findIndex(cue => 
         currentTime >= (cue.from + delay.japanese) && currentTime <= (cue.to + delay.japanese)
@@ -109,7 +97,7 @@ export default function SubtitleCuesList({
           activeCueIdRef.current = -1;
           setActiveIndex(-1);
       }
-  }, [cues, delay.japanese, activeIndex, activeCueIdRef, autoScroll, rowVirtualizer, autoScrollToCue]);
+  }, [cues, delay.japanese, activeIndex, activeCueIdRef, autoScroll, rowVirtualizer, playerSettings.autoScrollToCue]);
 
   useEffect(() => {
     if(!player.current || !cues?.length) return;
@@ -124,7 +112,7 @@ export default function SubtitleCuesList({
   }, [player, cues, findActiveCue]);
 
   const handleManualScroll = useCallback(() => {
-    if (!autoScrollToCue) return
+    if (!playerSettings.autoScrollToCue) return
     
     setAutoScroll(false);
     
@@ -133,12 +121,12 @@ export default function SubtitleCuesList({
     }
     
     // Use the setting value or fallback to 5000ms
-    const delayMs = (autoScrollResumeDelay || 5) * 1000;
+    const delayMs = (playerSettings.autoScrollResumeDelay || 5) * 1000;
     
     autoScrollTimerRef.current = setTimeout(() => {
         setAutoScroll(true);
     }, delayMs);
-  }, [autoScrollToCue, autoScrollResumeDelay]);
+  }, [playerSettings.autoScrollToCue, playerSettings.autoScrollResumeDelay]);
 
   useEffect(() => {
     return () => {
@@ -169,11 +157,6 @@ export default function SubtitleCuesList({
               items={rowVirtualizer}
               activeCueIdRef={activeCueIdRef}
               cues={cues}
-              transcriptionsLookup={transcriptionsLookup}
-              pitchLookup={pitchLookup}
-              wordsLookup={wordsLookup}
-              learningStatus={learningStatus}
-              pitchColoring={pitchColoring}
             />
           </TabsContent>
       </div>

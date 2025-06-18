@@ -19,32 +19,9 @@ import { useDelayStore } from "@/lib/stores/delay-store";
 import { useMediaState } from "@vidstack/react";
 import { useSubtitleStore } from "@/lib/stores/subtitle-store";
 import { usePlaybackSettingsStore } from "@/lib/stores/playback-settings-store";
+import { useWatchDataStore } from "@/lib/stores/watch-store";
 
-type SubtitleTranscriptionsProps = {
-  activeSubtitles: Subtitle;
-  styles: TranscriptionStyles;
-  syncPlayerSettings: GeneralSettings['syncPlayerSettings']
-  cuePauseDuration: PlayerSettings['cuePauseDuration']
-  definitionTrigger: SubtitleSettings['definitionTrigger']
-  transcriptionsLookup: TranscriptionsLookup;
-  learningStatus: WordSettings['learningStatus']
-  pitchColoring: WordSettings['pitchColoring']
-  wordsLookup: WordsLookup
-  pitchLookup: PitchLookup
-}
-
-export default function SubtitleTranscriptions({ 
-  activeSubtitles,
-  styles,
-  syncPlayerSettings,
-  cuePauseDuration,
-  definitionTrigger,
-  transcriptionsLookup,
-  learningStatus,
-  pitchColoring,
-  wordsLookup,
-  pitchLookup
-}: SubtitleTranscriptionsProps) {
+export default function SubtitleTranscriptions() {
   const player = usePlayerStore((state) => state.player);
   const activeTranscriptions = useSubtitleStore((state) => state.activeTranscriptions);
   const delay = useDelayStore((state) => state.delay);;
@@ -58,6 +35,11 @@ export default function SubtitleTranscriptions({
   const copyButtonRef = useRef<HTMLButtonElement | null>(null);
   const [currentCueText, setCurrentCueText] = useState('');
   const handleActiveCuesIdsRef = useRef('');
+
+  const cuePauseDuration = useWatchDataStore((state) => state.settings.playerSettings.cuePauseDuration)
+  const syncPlayerSettings = useWatchDataStore((state) => state.settings.generalSettings.syncPlayerSettings)
+  const activeSubtitles = useWatchDataStore((state) => state.activeSubtitles)
+  const styles = useWatchDataStore((state) => state.styles)
 
   // This would stop the player from repausing it self if we are still in the small time window
   const lastPauseTime = useRef<number>(0);
@@ -140,7 +122,7 @@ export default function SubtitleTranscriptions({
 
   useEffect(() => {
     const handleCueFeatures = () => {
-      if (!player.current) return;
+      if (!player.current || !activeSubtitles) return;
 
       const allActiveCues = Object.entries(activeSubtitles)
         .filter(([transcription]) => transcription !== 'english')
@@ -262,7 +244,7 @@ export default function SubtitleTranscriptions({
               strategy={verticalListSortingStrategy}
           >
               {order.map(transcription => {
-                  if (!activeSubtitles[transcription]?.length) return null;
+                  if (!activeSubtitles?.[transcription]?.length) return null;
 
                   const tokenStyles =
                     styles[transcription]?.tokenStyles
@@ -281,19 +263,12 @@ export default function SubtitleTranscriptions({
                   return (
                     <TranscriptionItem
                       key={transcription}
-                      activeSubtitles={activeSubtitles}
                       transcription={transcription}
                       japaneseStyles={japaneseStyles}
                       styles={{
                         tokenStyles,
                         containerStyle: containerStyle
                       }}
-                      definitionTrigger={definitionTrigger}
-                      transcriptionsLookup={transcriptionsLookup}
-                      learningStatus={learningStatus}
-                      pitchColoring={pitchColoring}
-                      wordsLookup={wordsLookup}
-                      pitchLookup={pitchLookup}
                     />
                   );
               })}

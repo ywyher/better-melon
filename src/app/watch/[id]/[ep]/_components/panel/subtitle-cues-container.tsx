@@ -6,33 +6,24 @@ import { usePlayerStore } from "@/lib/stores/player-store";
 import { useDefinitionStore } from "@/lib/stores/definition-store";
 import { getSentencesForCue, isTokenExcluded } from "@/lib/utils/subtitle";
 import { toast } from "sonner";
-import { PitchLookup, TranscriptionsLookup, WordsLookup } from "@/app/watch/[id]/[ep]/types";
 import { useDelayStore } from "@/lib/stores/delay-store";
-import { WordSettings } from "@/lib/db/schema";
 import { useSubtitleStore } from "@/lib/stores/subtitle-store";
+import { useWatchDataStore } from "@/lib/stores/watch-store";
 
 export default function SubtitleCuesContainer({
   items,
   cues,
   activeCueIdRef,
-  transcriptionsLookup,
-  pitchLookup,
-  wordsLookup,
-  learningStatus,
-  pitchColoring
 }: {
   items: Virtualizer<HTMLDivElement, Element>
   cues: TSubtitleCue[];
   activeCueIdRef: RefObject<number>
-  transcriptionsLookup: TranscriptionsLookup;
-  pitchLookup: PitchLookup
-  wordsLookup: WordsLookup
-  learningStatus: WordSettings['learningStatus']
-  pitchColoring: WordSettings['pitchColoring']
 }) {
   const player = usePlayerStore((state) => state.player)
   const delay = useDelayStore((state) => state.delay);
   const activeSubtitleFile = useSubtitleStore((state) => state.activeSubtitleFile)
+
+  const transcriptionsLookup = useWatchDataStore((state) => state.transcriptionsLookup)
   
   const activeToken = useDefinitionStore((state) => state.token)
   const setSentences = useDefinitionStore((state) => state.setSentences)
@@ -46,6 +37,7 @@ export default function SubtitleCuesContainer({
   const handleClick = useCallback((token: SubtitleToken, from: number, to: number) => {
     if (
       !token
+      || !transcriptionsLookup
       || isTokenExcluded(token)
     ) return;
     
@@ -92,10 +84,6 @@ export default function SubtitleCuesContainer({
               size={row.size}
               start={row.start}
               activeToken={activeToken}
-              pitchLookup={pitchLookup}
-              wordsLookup={wordsLookup}
-              learningStatus={learningStatus}
-              pitchColoring={pitchColoring}
               handleSeek={handleSeek}
               handleCopy={handleCopy}
               handleClick={handleClick}

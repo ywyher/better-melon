@@ -121,10 +121,8 @@ export type EpisodesListViewMode = "grid" | "list" | "image"
 export type AnimeProvider = 'hianime' 
 
 export type SubtitleTrack = {
-  file: string;
-  label?: string;
-  kind: 'captions' | 'thumbnails' | 'chapters';
-  default?: boolean
+  url: string;
+  lang: string;
 };
 
 export type AnimeStreamingLinks = {

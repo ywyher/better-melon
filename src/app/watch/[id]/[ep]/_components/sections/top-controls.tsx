@@ -4,36 +4,26 @@ import { TranscriptionQuery, TranscriptionsLookup } from "@/app/watch/[id]/[ep]/
 import DialogWrapper from "@/components/dialog-wrapper";
 import { Button } from "@/components/ui/button";
 import { usePlayerStore } from "@/lib/stores/player-store";
-import { UIStateStore } from "@/lib/stores/ui-state-store";
+import { UIStateStore, useUIStateStore } from "@/lib/stores/ui-state-store";
+import { useWatchDataStore } from "@/lib/stores/watch-store";
 import { AnimeEpisodeData } from "@/types/anime";
 import { SettingsForEpisode } from "@/types/settings";
 import { SubtitleCue } from "@/types/subtitle";
 import { Captions, Loader2, PanelLeftClose, PanelLeftOpen, Search } from "lucide-react";
 
 type TopControlsProps = {
-  isLoading: boolean;
-  loadingDuration: number;
-  episodeData?: AnimeEpisodeData;
   isMedium: boolean;
-  panelState: UIStateStore['panelState'];
-  setPanelState: (state: UIStateStore['panelState']) => void;
-  transcriptions: TranscriptionQuery[];
-  transcriptionsLookup: TranscriptionsLookup
-  settings: SettingsForEpisode
 }
 
 export function TopControls({ 
-  isLoading,
-  loadingDuration,
-  episodeData,
   isMedium,
-  panelState,
-  setPanelState,
-  transcriptions,
-  transcriptionsLookup,
-  settings
 }: TopControlsProps) {
-  const player = usePlayerStore((state) => state.player)
+  const isLoading = useWatchDataStore((state) => state.isLoading)
+  const loadingDuration = useWatchDataStore((state) => state.loadingDuration)
+
+  const panelState = useUIStateStore((state) => state.panelState)
+  const setPanelState = useUIStateStore((state) => state.setPanelState)
+
   return (
     <div className="flex flex-row gap-3 items-center">
       {loadingDuration > 0 && (
@@ -41,17 +31,7 @@ export function TopControls({
           Loaded in {(loadingDuration / 1000).toFixed(2)}s
         </div>
       )}
-      {/* <Button
-        variant='outline'
-        onClick={() => {
-          player.current?.remoteControl.seek(427)
-        }}
-      >
-        <Search 
-          className='animate-spin'
-        />
-      </Button> */}
-      {(isLoading || !episodeData || !transcriptions) ? (
+      {(isLoading) ? (
         <div className="flex flex-row gap-2">
           <Button variant='outline'>
             <Loader2 className='animate-spin' />
@@ -69,9 +49,7 @@ export function TopControls({
         </div>
       ) : (
         <div className='flex flex-row gap-2'>
-          <SettingsDialog 
-            generalSettings={settings.generalSettings}
-          />
+          <SettingsDialog  />
           {isMedium ? (
             <DialogWrapper
               trigger={<Button variant='outline'>
@@ -80,11 +58,7 @@ export function TopControls({
               className="overflow-y-auto w-full flex flex-col"
               breakpoint='medium'
             >
-              <SubtitlePanel
-                subtitleFiles={episodeData.subtitles}
-                transcriptions={transcriptions}
-                transcriptionsLookup={transcriptionsLookup}
-              />
+              <SubtitlePanel />
             </DialogWrapper>
           ) : (
             <Button 

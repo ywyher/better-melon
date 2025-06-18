@@ -5,47 +5,28 @@ import { useEffect, useMemo, useState } from "react"
 import { Card, CardContent } from "@/components/ui/card";
 import { Indicator } from "@/components/indicator";
 import { Tabs } from "@/components/ui/tabs";
-import type { SubtitleCue as TSubtitleCue, SubtitleTranscription, SubtitleFile, SubtitleCue } from "@/types/subtitle";
+import type { SubtitleCue as TSubtitleCue, SubtitleTranscription } from "@/types/subtitle";
 import { subtitleTranscriptions } from "@/lib/constants/subtitle";
 import PanelHeader from "@/app/watch/[id]/[ep]/_components/panel/panel-header";
 import SubtitleCuesList from "@/app/watch/[id]/[ep]/_components/panel/subtitles-cues-list";
 import PanelSkeleton from "@/app/watch/[id]/[ep]/_components/panel/panel-skeleton";
 import { subtitleQueries } from "@/lib/queries/subtitle";
-import { PitchLookup, TranscriptionQuery, TranscriptionsLookup, WordsLookup } from "@/app/watch/[id]/[ep]/types";
-import { PlayerSettings, WordSettings } from "@/lib/db/schema";
 import { useSubtitleStore } from "@/lib/stores/subtitle-store";
+import { useWatchDataStore } from "@/lib/stores/watch-store";
 
-export default function SubtitlePanel({ 
-  subtitleFiles,
-  transcriptions,
-  transcriptionsLookup,
-  autoScrollToCue,
-  autoScrollResumeDelay,
-  pitchLookup,
-  wordsLookup,
-  learningStatus,
-  pitchColoring
-}: { 
-  subtitleFiles: SubtitleFile[],
-  transcriptions: TranscriptionQuery[]
-  transcriptionsLookup: TranscriptionsLookup
-  autoScrollToCue: PlayerSettings['autoScrollToCue']
-  autoScrollResumeDelay: PlayerSettings['autoScrollResumeDelay']
-  pitchLookup: PitchLookup
-  wordsLookup: WordsLookup
-  learningStatus: WordSettings['learningStatus']
-  pitchColoring: WordSettings['pitchColoring']
-}) {
+export default function SubtitlePanel() { 
     const [selectedTranscription, setSelectedTranscription] = useState<SubtitleTranscription>('japanese')
     const [previousCues, setPreviousCues] = useState<TSubtitleCue[] | undefined>();
 
     const activeSubtitleFile = useSubtitleStore((state) => state.activeSubtitleFile);
     const setSubtitleCues = useSubtitleStore((state) => state.setSubtitleCues);
+
+    const transcriptions = useWatchDataStore((state) => state.transcriptions)
     
     const { data: subtitleCues, isLoading: isCuesLoading, error: cuesError } = useQuery({
       ...subtitleQueries.cues(activeSubtitleFile!, selectedTranscription),
-      placeholderData: transcriptions.find(t => t.transcription == 'japanese')!.cues,
-      enabled: !!activeSubtitleFile
+      placeholderData: transcriptions?.find(t => t.transcription == 'japanese')!.cues,
+      enabled: !!activeSubtitleFile && !!transcriptions
     })
 
     const cues = useMemo(() => {
@@ -78,7 +59,6 @@ export default function SubtitlePanel({
                 <PanelHeader 
                   isLoading={isCuesLoading}
                   activeSubtitleFile={activeSubtitleFile}
-                  subtitleFiles={subtitleFiles}
                   setSelectedTranscription={setSelectedTranscription}
                 />
                 <CardContent className="h-full flex justify-center items-center w-full">
@@ -87,13 +67,6 @@ export default function SubtitlePanel({
                         isLoading={isCuesLoading}
                         selectedTranscription={selectedTranscription}
                         cues={cues}
-                        transcriptionsLookup={transcriptionsLookup}
-                        autoScrollToCue={autoScrollToCue}
-                        autoScrollResumeDelay={autoScrollResumeDelay}
-                        pitchLookup={pitchLookup}
-                        wordsLookup={wordsLookup}
-                        learningStatus={learningStatus}
-                        pitchColoring={pitchColoring}
                       />
                   ): (
                     <Card className="w-full p-4 bg-yellow-50 border-yellow-200">

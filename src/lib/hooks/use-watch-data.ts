@@ -8,12 +8,35 @@ import { useSubtitleTranscriptions } from "@/lib/hooks/use-subtitle-transcriptio
 import { useWords } from "@/lib/hooks/use-words";
 import { useSession } from "@/lib/queries/user";
 import { usePlayerStore } from "@/lib/stores/player-store";
+import { useWatchDataStore } from "@/lib/stores/watch-store";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 export const useWatchData = (animeId: string, episodeNumber: number) => {
   const isVideoReady = usePlayerStore((state) => state.isVideoReady);
   const loadStartTimeRef = useRef<number>(performance.now());
   const [totalDuration, setTotalDuration] = useState<number>(0);
+
+  // Get store actions
+  const {
+    setAnimeId,
+    setEpisodeNumber,
+    setEpisodeData,
+    setEpisodesLength,
+    setSettings,
+    setTranscriptions,
+    setTranscriptionsLookup,
+    setStyles,
+    setActiveSubtitles,
+    setPitchLookup,
+    setWordsLookup,
+    setIsLoading,
+    setLoadingDuration
+  } = useWatchDataStore();
+
+  const store = useWatchDataStore.getState(); // use this to read current store values (won't trigger re-renders)
+
+  // Helper function to compare objects (you can replace this with a proper deep equality lib if needed)
+  const hasChanged = (a: any, b: any) => JSON.stringify(a) !== JSON.stringify(b);
 
   const { data: user, isLoading: isUserLoading } = useSession()
 
@@ -75,7 +98,7 @@ export const useWatchData = (animeId: string, episodeNumber: number) => {
 
   const isLoading = useMemo(() => {
     return (
-      isEpisodeDataLoading 
+      isEpisodeDataLoading
       || isTranscriptionsLoading 
       || isStylesLoading 
       || isSettingsLoading 
@@ -84,6 +107,28 @@ export const useWatchData = (animeId: string, episodeNumber: number) => {
       || isPitchAccentLoading
     ) && !isVideoReady;
   }, [isEpisodeDataLoading, isTranscriptionsLoading, isStylesLoading, isSettingsLoading, isVideoReady]);
+
+  useEffect(() => {
+    console.log(`please`, {
+      isEpisodeDataLoading,
+      isTranscriptionsLoading,
+      isStylesLoading,
+      isSettingsLoading,
+      isUserLoading,
+      isWordsLoading,
+      isPitchAccentLoading,
+      isVideoReady
+    })
+  }, [
+    isEpisodeDataLoading,
+    isTranscriptionsLoading,
+    isStylesLoading,
+    isSettingsLoading,
+    isUserLoading,
+    isWordsLoading,
+    isPitchAccentLoading,
+    isVideoReady
+  ])
 
   const errors = useMemo(() => {
     return [
@@ -96,6 +141,74 @@ export const useWatchData = (animeId: string, episodeNumber: number) => {
       pitchAccentError
     ].filter(Boolean)
   }, [episodeDataError, transcriptionsError, settingsError, stylesError, subtitlesError]);
+
+
+  // Sync episode data
+  useEffect(() => {
+    if (episodeData && hasChanged(episodeData, store.episodeData)) {
+      setEpisodeData(episodeData);
+    }
+  }, [episodeData]);
+
+  useEffect(() => {
+    if (episodesLength !== store.episodesLength) {
+      setEpisodesLength(episodesLength);
+    }
+  }, [episodesLength]);
+
+  useEffect(() => {
+    if (settings && hasChanged(settings, store.settings)) {
+      setSettings(settings);
+    }
+  }, [settings]);
+
+  useEffect(() => {
+    if (transcriptions && hasChanged(transcriptions, store.transcriptions)) {
+      setTranscriptions(transcriptions);
+    }
+  }, [transcriptions]);
+
+  useEffect(() => {
+    if (transcriptionsLookup && hasChanged(transcriptionsLookup, store.transcriptionsLookup)) {
+      setTranscriptionsLookup(transcriptionsLookup);
+    }
+  }, [transcriptionsLookup]);
+
+  useEffect(() => {
+    if (styles && hasChanged(styles, store.styles)) {
+      setStyles(styles);
+    }
+  }, [styles]);
+
+  useEffect(() => {
+    if (activeSubtitles && hasChanged(activeSubtitles, store.activeSubtitles)) {
+      setActiveSubtitles(activeSubtitles);
+    }
+  }, [activeSubtitles]);
+
+  useEffect(() => {
+    if (pitchLookup && hasChanged(pitchLookup, store.pitchLookup)) {
+      setPitchLookup(pitchLookup);
+    }
+  }, [pitchLookup]);
+
+  useEffect(() => {
+    if (wordsLookup && hasChanged(wordsLookup, store.wordsLookup)) {
+      setWordsLookup(wordsLookup);
+    }
+  }, [wordsLookup]);
+
+  useEffect(() => {
+    if (isLoading !== store.isLoading) {
+      setIsLoading(isLoading);
+    }
+  }, [isLoading]);
+
+  useEffect(() => {
+    if (totalDuration !== store.loadingDuration) {
+      setLoadingDuration(totalDuration);
+    }
+  }, [totalDuration]);
 
   useEffect(() => {
     if (!isLoading &&
@@ -116,6 +229,7 @@ export const useWatchData = (animeId: string, episodeNumber: number) => {
         episodeNumber
       });
       setTotalDuration(elapsed);
+      setLoadingDuration(elapsed);
     }
   }, [
     isLoading,
@@ -124,7 +238,8 @@ export const useWatchData = (animeId: string, episodeNumber: number) => {
     transcriptionsLoadingDuration,
     settingsLoadingDuration,
     stylesLoadingDuration,
-    episodeNumber
+    episodeNumber,
+    setLoadingDuration
   ]);
 
   return {
@@ -180,5 +295,6 @@ export const useWatchData = (animeId: string, episodeNumber: number) => {
     },
     isLoading,
     errors,
+    loadStartTimeRef
   }
 };

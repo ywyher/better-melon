@@ -7,34 +7,14 @@ import EpisodesList from '@/app/watch/[id]/[ep]/_components/episodes/episodes-li
 import { PitchLookup, TranscriptionQuery, TranscriptionsLookup, WordsLookup } from '@/app/watch/[id]/[ep]/types';
 import { useEffect } from 'react';
 import { PlayerSettings, WordSettings } from '@/lib/db/schema';
+import { useWatchDataStore } from '@/lib/stores/watch-store';
 
-interface PanelSectionProps {
-  isLoading: boolean;
-  animeMetadata: AnimeEpisodeMetadata;
-  subtitleFiles?: SubtitleFile[];
-  transcriptions?: TranscriptionQuery[];
-  transcriptionsLookup?: TranscriptionsLookup
-  autoScrollToCue: PlayerSettings['autoScrollToCue']
-  autoScrollResumeDelay: PlayerSettings['autoScrollResumeDelay']
-  pitchLookup: PitchLookup
-  wordsLookup: WordsLookup
-  learningStatus: WordSettings['learningStatus']
-  pitchColoring: WordSettings['pitchColoring']
-}
+export default function PanelSection() {
+  const isLoading = useWatchDataStore((state) => state.isLoading)
+  const subtitleFiles = useWatchDataStore((state) => state.episodeData?.subtitles)
+  const transcriptions = useWatchDataStore((state) => state.transcriptions)
+  const transcriptionsLookup = useWatchDataStore((state) => state.transcriptionsLookup)
 
-export default function PanelSection({
-  isLoading,
-  animeMetadata,
-  subtitleFiles,
-  transcriptions,
-  transcriptionsLookup,
-  autoScrollToCue,
-  autoScrollResumeDelay,
-  pitchLookup,
-  wordsLookup,
-  learningStatus,
-  pitchColoring,
-}: PanelSectionProps) {
   return (
     <div className="flex flex-col gap-5 w-full md:w-auto">
       {isLoading ? (
@@ -42,17 +22,7 @@ export default function PanelSection({
       ) : (
         <>
           {(transcriptions && subtitleFiles && transcriptionsLookup) && (
-            <SubtitlePanel
-              subtitleFiles={subtitleFiles}
-              transcriptions={transcriptions}
-              transcriptionsLookup={transcriptionsLookup}
-              autoScrollToCue={autoScrollToCue}
-              autoScrollResumeDelay={autoScrollResumeDelay}
-              pitchLookup={pitchLookup}
-              wordsLookup={wordsLookup}
-              learningStatus={learningStatus}
-              pitchColoring={pitchColoring}
-            />
+            <SubtitlePanel />
           )}
         </>
       )}

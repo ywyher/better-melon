@@ -7,32 +7,44 @@ import { defaultPlayerSettings } from '@/app/settings/player/constants';
 import { defaultSubtitleSettings } from '@/app/settings/subtitle/_subtitle-settings/constants';
 import { defaultWordSettings } from '@/app/settings/word/constants';
 import { defaultSubtitleStyles } from '@/components/subtitle/styles/constants';
+import { getContainerStyles, getTokenStyles } from '@/lib/utils/styles';
 
 // Define the types for our store data
 interface WatchDataState {
+  // Essentials
+  animeId: number;
+  episodeNumber: number;
+
   // Episode data
   episodeData: AnimeEpisodeData | null;
   episodesLength: number;
   
   // Settings
-  settings: SettingsForEpisode | null;
+  settings: SettingsForEpisode;
   
   // Transcriptions
   transcriptions: TranscriptionQuery[] | null;
-  transcriptionsLookup: TranscriptionsLookup | null;
+  transcriptionsLookup: TranscriptionsLookup;
 
-  styles: TranscriptionStyles | null;
+  styles: TranscriptionStyles;
 
   // Subtitles
   activeSubtitles: Subtitle | null;
   
   // Pitch accent
-  pitchLookup: PitchLookup | null;
+  pitchLookup: PitchLookup;
   
   // Words
-  wordsLookup: WordsLookup | null;
+  wordsLookup: WordsLookup;
+
+  // Stats
+  isLoading: boolean;
+  loadingDuration: number;
   
   // Actions
+  setAnimeId: (animeId: WatchDataState['animeId']) => void;
+  setEpisodeNumber: (episodeNumber: WatchDataState['episodeNumber']) => void;
+
   setEpisodeData: (data: WatchDataState['episodeData']) => void;
   setEpisodesLength: (length: WatchDataState['episodesLength']) => void;
 
@@ -46,11 +58,17 @@ interface WatchDataState {
   setPitchLookup: (lookup: WatchDataState['pitchLookup']) => void;
   setWordsLookup: (lookup: WatchDataState['wordsLookup']) => void;
 
+  setIsLoading: (isLoading: WatchDataState['isLoading']) => void;
+  setLoadingDuration: (duration: WatchDataState['loadingDuration']) => void;
+
   // Reset function for episode changes
   resetWatchData: () => void;
 }
 
 const initialState = {
+  animeId: 0,
+  episodeNumber: 0,
+
   episodeData: null,
   episodesLength: 0,
 
@@ -62,30 +80,36 @@ const initialState = {
   },
 
   transcriptions: null,
-  transcriptionsLookup: null,
+  transcriptionsLookup: new Map(),
   styles: {
     all: {
-      tokenStyles: {
-        default: defaultSubtitleStyles.default,
+      tokenStyles: getTokenStyles(false, {
         active: defaultSubtitleStyles.active,
-      },
-      containerStyles: {
-        default: null,
-        active: null
-      }
+        default: defaultSubtitleStyles.default
+      }),
+      containerStyle: getContainerStyles({
+        active: defaultSubtitleStyles.active,
+        default: defaultSubtitleStyles.default
+      })
     }
   },
 
   activeSubtitles: null,
 
-  pitchLookup: null,
-  wordsLookup: null,
+  pitchLookup: new Map(),
+  wordsLookup: new Map(),
+  
+  isLoading: true,
+  loadingDuration: 0
 };
 
 export const useWatchDataStore = create<WatchDataState>((set, get) => ({
   ...initialState,
-  
+
   // Actions
+  setAnimeId: (animeId) => set({ animeId }),
+  setEpisodeNumber: (episodeNumber) => set({ episodeNumber }),
+  
   setEpisodeData: (episodeData) => set({ episodeData }),
   setEpisodesLength: (episodesLength) => set({ episodesLength }),
 
@@ -97,6 +121,9 @@ export const useWatchDataStore = create<WatchDataState>((set, get) => ({
   
   setPitchLookup: (pitchLookup) => set({ pitchLookup }),
   setWordsLookup: (wordsLookup) => set({ wordsLookup }),
+  
+  setIsLoading: (isLoading) => set({ isLoading }),
+  setLoadingDuration: (loadingDuration) => set({ loadingDuration }),
 
   resetWatchData: () => set({
     ...initialState,

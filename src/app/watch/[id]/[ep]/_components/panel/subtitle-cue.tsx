@@ -10,6 +10,7 @@ import { getPitchAccentType } from "@/lib/utils/pitch";
 import { excludedPos, learningStatusesStyles } from "@/lib/constants/subtitle";
 import { pitchAccentsStyles } from "@/lib/constants/pitch";
 import { PitchAccents } from "@/types/pitch";
+import { useWatchDataStore } from "@/lib/stores/watch-store";
 
 type SubtitleCueProps = { 
     index: number;
@@ -19,10 +20,6 @@ type SubtitleCueProps = {
     size: number;
     start: number;
     activeToken: SubtitleToken | null;
-    pitchLookup: PitchLookup
-    wordsLookup: WordsLookup
-    learningStatus: WordSettings['learningStatus']
-    pitchColoring: WordSettings['pitchColoring']
     handleSeek: (from: TSubtitleCue["from"]) => void
     handleClick: (token: SubtitleToken, from: number, to: number) => void
     handleCopy: (sentence: string) => void
@@ -35,14 +32,14 @@ function SubtitleCueBase({
   size,
   start,
   activeToken,
-  pitchLookup,
-  wordsLookup,
-  learningStatus,
-  pitchColoring,
   handleSeek,
   handleClick,
   handleCopy,
 }: SubtitleCueProps) {
+    const wordsLookup = useWatchDataStore((state) => state.wordsLookup)
+    const pitchLookup = useWatchDataStore((state) => state.pitchLookup)
+    const wordSettings = useWatchDataStore((state) => state.settings.wordSettings)
+    
     return (
         <div 
             style={{
@@ -79,7 +76,7 @@ function SubtitleCueBase({
                 <div className="flex flex-wrap gap-1 items-end">
                     {cue.tokens?.length ? cue.tokens.map((token, idx) => {
                         // Check if this is furigana transcription
-                        const pitch = pitchLookup.get(
+                        const pitch = pitchLookup?.get(
                             cue.transcription != 'japanese' && cue.transcription != 'english'
                             ? token.original_form!
                             : token.surface_form
@@ -91,13 +88,13 @@ function SubtitleCueBase({
                                 reading: token.original_form
                             })
                         }
-                        const word = wordsLookup.get(token.original_form)
+                        const word = wordsLookup?.get(token.original_form)
                         const status = word?.status
 
                         const style = {
-                            ...(pitchColoring && accent ? pitchAccentsStyles[accent] : undefined),
+                            ...(wordSettings.pitchColoring && accent ? pitchAccentsStyles[accent] : undefined),
                             ...(
-                                learningStatus && !excludedPos.some(p => p == token.pos) && status 
+                                wordSettings.learningStatus && !excludedPos.some(p => p == token.pos) && status 
                                     ? learningStatusesStyles[status] 
                                     : !excludedPos.some(p => p == token.pos) && learningStatusesStyles['unknown']
                             )

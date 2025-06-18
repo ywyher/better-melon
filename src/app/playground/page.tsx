@@ -11,12 +11,12 @@ export default function Playground() {
   return (
     <>
       {/* <ProgressivePitch /> */}
-      <TranscriptionsWordsPlayground />
+      {/* <TranscriptionsWordsPlayground /> */}
       {/* <TranscriptionsPlayground /> */}
       {/* <DefinitionPlayground /> */}
       {/* <DelayPlayground /> */}
       {/* <SettingsDialogPlayground /> */}
-      {/* <PlayerPanelPlayground /> */}
+      <PlayerPanelPlayground />
     </>
   );
 }

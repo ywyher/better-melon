@@ -10,7 +10,6 @@ import PlayerSection from '@/app/watch/[id]/[ep]/_components/sections/player-sec
 import ControlsSection from '@/app/watch/[id]/[ep]/_components/sections/controls-section';
 import PanelSection from '@/app/watch/[id]/[ep]/_components/sections/panel-section';
 import { useDefinitionStore } from '@/lib/stores/definition-store';
-import { AnimeEpisodeData } from '@/types/anime';
 import { SubtitlesNotAvailableError } from '@/lib/errors/player';
 import MissingSubtitlesDialog from '@/app/watch/[id]/[ep]/_components/missing-subtitles-dialog';
 import { useSubtitleStore } from '@/lib/stores/subtitle-store';
@@ -35,19 +34,16 @@ export default function WatchPage() {
   const {
     episode,
     errors,
-    isLoading,
-    pitchAccent,
     settings,
-    styles,
     duration,
     transcriptions,
-    words,
-    subtitles
+    subtitles,
+    loadStartTimeRef
   } = useWatchData(animeId, episodeNumber)
 
   useLayoutEffect(() => {
     console.debug('Resetting load timer for episode:', episodeNumber);
-    // loadStartTimeRef.current = performance.now();
+    loadStartTimeRef.current = performance.now();
     duration.set(0);
     setIsVideoReady(false);
     setActiveSubtitleFile(null)
@@ -62,17 +58,17 @@ export default function WatchPage() {
 
   const shouldPrefetch = useMemo(() => {
     if(episode?.data?.details.nextAiringEpisode) {
-      return isVideoReady && episode?.data?.details.nextAiringEpisode?.episode != episodeNumber + 1
+      return isVideoReady && settings?.data && episode?.data?.details.nextAiringEpisode?.episode != episodeNumber + 1
     }else {
-      return isVideoReady && episode?.data?.details.episodes != episodeNumber
+      return isVideoReady && settings?.data && episode?.data?.details.episodes != episodeNumber
     };
-  }, [isVideoReady, episode?.data])
+  }, [isVideoReady, episode?.data, settings?.data])
 
   usePrefetchEpisode(
     animeId,
     episodeNumber + 1,
-    episode.episodesLength, 
-    settings?.data.subtitleSettings.preferredFormat || 'srt',
+    episode.episodesLength,
+    settings?.data?.subtitleSettings.preferredFormat,
     shouldPrefetch
   );
 
@@ -111,45 +107,13 @@ export default function WatchPage() {
     <div className="flex flex-col md:flex-row w-full md:gap-10">
       <div className="flex flex-col gap-3 w-full">
         {/* Top controls and player area */}
-        <PlayerSection
-          animeId={animeId}
-          episodeNumber={episodeNumber}
-          isLoading={isLoading}
-          loadingDuration={duration.total}
-          episodeData={episode.data}
-          episodesLength={episode.episodesLength}
-          isMedium={isMedium}
-          transcriptions={transcriptions.data}
-          transcriptionsStyles={styles.data}
-          settings={settings.data}
-          transcriptionsLookup={transcriptions.lookup}
-          pitchLookup={pitchAccent.lookup}
-          wordsLookup={words.lookup}
-          activeSubtitles={subtitles.active}
-        />
+        <PlayerSection isMedium={isMedium} />
         {/* Settings below player */}
-        <ControlsSection
-          isLoading={isLoading}
-          episodeData={episode.data}
-          episodesLength={episode.episodesLength}
-          settings={settings.data}
-        />
+        <ControlsSection />
       </div>
       {/* Side panel (visible based on state) */}
       {shouldShowPanel && (
-        <PanelSection
-          isLoading={isLoading}
-          animeMetadata={episode?.data?.metadata as AnimeEpisodeData['metadata']}
-          subtitleFiles={episode?.data?.subtitles as AnimeEpisodeData['subtitles']}
-          transcriptions={transcriptions.data}
-          transcriptionsLookup={transcriptions.lookup}
-          autoScrollToCue={settings.data.playerSettings.autoScrollToCue}
-          autoScrollResumeDelay={settings.data.playerSettings.autoScrollResumeDelay}
-          pitchLookup={pitchAccent.lookup}
-          wordsLookup={words.lookup}
-          learningStatus={settings.data.wordSettings.learningStatus}
-          pitchColoring={settings.data.wordSettings.pitchColoring}
-        />
+        <PanelSection />
       )}
     </div>
   );

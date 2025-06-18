@@ -16,31 +16,18 @@ import { getPitchAccentType } from '@/lib/utils/pitch';
 import { pitchAccentsStyles } from '@/lib/constants/pitch';
 import { PitchAccents } from '@/types/pitch';
 import { excludedPos, learningStatusesStyles } from '@/lib/constants/subtitle';
+import { useWatchDataStore } from '@/lib/stores/watch-store';
 
 type TranscriptionItemProps = {
   transcription: SubtitleTranscription;
-  activeSubtitles: Subtitle;
-  styles: TranscriptionStyleSet;
-  definitionTrigger: SubtitleSettings['definitionTrigger']
-  transcriptionsLookup: TranscriptionsLookup;
   japaneseStyles: TranscriptionStyleSet;
-  learningStatus: WordSettings['learningStatus']
-  pitchColoring: WordSettings['pitchColoring']
-  wordsLookup: WordsLookup
-  pitchLookup: PitchLookup
+  styles: TranscriptionStyleSet;
 }
 
 export const TranscriptionItem = React.memo(function TranscriptionItem({ 
     transcription,
-    activeSubtitles,
-    styles,
-    definitionTrigger,
-    transcriptionsLookup,
     japaneseStyles,
-    learningStatus,
-    pitchColoring,
-    wordsLookup,
-    pitchLookup
+    styles,
 }: TranscriptionItemProps) {
     const {
         attributes,
@@ -64,6 +51,14 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
     const storeSentences = useDefinitionStore((state) => state.sentences)
     const setToken = useDefinitionStore((state) => state.setToken);
     const storeToken = useDefinitionStore((state) => state.token)
+
+    const learningStatus = useWatchDataStore((state) => state.settings.wordSettings.learningStatus)
+    const pitchColoring = useWatchDataStore((state) => state.settings.wordSettings.pitchColoring)
+    const definitionTrigger = useWatchDataStore((state) => state.settings.subtitleSettings.definitionTrigger)
+    const pitchLookup = useWatchDataStore((state) => state.pitchLookup)
+    const wordsLookup = useWatchDataStore((state) => state.wordsLookup)
+    const transcriptionsLookup = useWatchDataStore((state) => state.transcriptionsLookup)
+    const activeSubtitles = useWatchDataStore((state) => state.activeSubtitles)
     
     const [hoveredTokenId, setHoveredTokenId] = useState<string | number | null>(null);
     const [hoveredCueId, setHoveredCueId] = useState<number | null>(null);
@@ -285,7 +280,7 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
     );
     
     // Get only the cues we need for this transcription
-    const activeCues = activeSubtitles[transcription] || [];
+    const activeCues = activeSubtitles?.[transcription] || [];
 
     return (
         <div
