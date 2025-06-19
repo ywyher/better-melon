@@ -9,6 +9,7 @@ import { useWords } from "@/lib/hooks/use-words";
 import { useSession } from "@/lib/queries/user";
 import { usePlayerStore } from "@/lib/stores/player-store";
 import { useWatchDataStore } from "@/lib/stores/watch-store";
+import { hasChanged } from "@/lib/utils/utils";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 export const useWatchData = (animeId: string, episodeNumber: number) => {
@@ -34,11 +35,6 @@ export const useWatchData = (animeId: string, episodeNumber: number) => {
   } = useWatchDataStore();
 
   const store = useWatchDataStore.getState(); // use this to read current store values (won't trigger re-renders)
-
-  // Helper function to compare objects (you can replace this with a proper deep equality lib if needed)
-  const hasChanged = (a: any, b: any) => JSON.stringify(a) !== JSON.stringify(b);
-
-  const { data: user, isLoading: isUserLoading } = useSession()
 
   const {
     episodeData,
@@ -80,7 +76,7 @@ export const useWatchData = (animeId: string, episodeNumber: number) => {
     isLoading: isPitchAccentLoading,
     loadingDuration: pitchAccentLoadingDuration,
     error: pitchAccentError
-  } = useProgressivePitchAccent(transcriptions?.find(t => t.transcription == 'japanese')?.cues || [])
+  } = useProgressivePitchAccent(transcriptions?.find(t => t.transcription == 'japanese')?.cues)
   
   const { 
     wordsLookup,
@@ -102,11 +98,11 @@ export const useWatchData = (animeId: string, episodeNumber: number) => {
       || isTranscriptionsLoading 
       || isStylesLoading 
       || isSettingsLoading 
-      || isUserLoading
       || isWordsLoading
       || isPitchAccentLoading
-    ) && !isVideoReady;
-  }, [isEpisodeDataLoading, isTranscriptionsLoading, isStylesLoading, isSettingsLoading, isVideoReady]);
+      // || !isVideoReady
+    );
+  }, [isEpisodeDataLoading, isTranscriptionsLoading, isStylesLoading, isSettingsLoading, isWordsLoading]);
 
   useEffect(() => {
     console.log(`please`, {
@@ -114,7 +110,6 @@ export const useWatchData = (animeId: string, episodeNumber: number) => {
       isTranscriptionsLoading,
       isStylesLoading,
       isSettingsLoading,
-      isUserLoading,
       isWordsLoading,
       isPitchAccentLoading,
       isVideoReady
@@ -124,7 +119,6 @@ export const useWatchData = (animeId: string, episodeNumber: number) => {
     isTranscriptionsLoading,
     isStylesLoading,
     isSettingsLoading,
-    isUserLoading,
     isWordsLoading,
     isPitchAccentLoading,
     isVideoReady
@@ -142,70 +136,90 @@ export const useWatchData = (animeId: string, episodeNumber: number) => {
     ].filter(Boolean)
   }, [episodeDataError, transcriptionsError, settingsError, stylesError, subtitlesError]);
 
-
-  // Sync episode data
   useEffect(() => {
+    console.log(`episodeData waiting`)
     if (episodeData && hasChanged(episodeData, store.episodeData)) {
+      console.log(`episodeData passed`)
       setEpisodeData(episodeData);
     }
   }, [episodeData]);
 
   useEffect(() => {
+    console.log(`episodesLength waiting`)
     if (episodesLength !== store.episodesLength) {
+      console.log(`episodesLength passed`)
       setEpisodesLength(episodesLength);
     }
   }, [episodesLength]);
 
   useEffect(() => {
+    console.log(`settings waiting`)
     if (settings && hasChanged(settings, store.settings)) {
+      console.log(`settings passed`)
       setSettings(settings);
     }
   }, [settings]);
 
   useEffect(() => {
+    console.log(`transcriptions waiting`)
     if (transcriptions && hasChanged(transcriptions, store.transcriptions)) {
+      console.log(`transcriptions passed`)
       setTranscriptions(transcriptions);
     }
   }, [transcriptions]);
 
   useEffect(() => {
+    console.log(`transcriptinsLookup waiting`)
     if (transcriptionsLookup && hasChanged(transcriptionsLookup, store.transcriptionsLookup)) {
+      console.log(`transcriptinsLookup passed`)
       setTranscriptionsLookup(transcriptionsLookup);
     }
   }, [transcriptionsLookup]);
 
   useEffect(() => {
+    console.log(`styles waiting`)
     if (styles && hasChanged(styles, store.styles)) {
+      console.log(`styles passed`)
       setStyles(styles);
     }
   }, [styles]);
 
   useEffect(() => {
+    console.log(`activeSubtitles waiting`)
     if (activeSubtitles && hasChanged(activeSubtitles, store.activeSubtitles)) {
+      console.log(`activeSubtitles passed`)
       setActiveSubtitles(activeSubtitles);
     }
   }, [activeSubtitles]);
 
   useEffect(() => {
+    console.log(`pitchLookup waiting`)
     if (pitchLookup && hasChanged(pitchLookup, store.pitchLookup)) {
+      console.log(`pitchLookup passed`)
       setPitchLookup(pitchLookup);
     }
   }, [pitchLookup]);
 
   useEffect(() => {
+    console.log(`wordsLookup waiting`)
     if (wordsLookup && hasChanged(wordsLookup, store.wordsLookup)) {
+      console.log(`wordsLookup passed`)
       setWordsLookup(wordsLookup);
     }
   }, [wordsLookup]);
 
   useEffect(() => {
+    console.log(`isLoading waiting`)
     if (isLoading !== store.isLoading) {
+      console.log(`isLoading passed`)
       setIsLoading(isLoading);
     }
   }, [isLoading]);
 
   useEffect(() => {
+    console.log(`loadingDuratin waiting`)
     if (totalDuration !== store.loadingDuration) {
+      console.log(`loadingDuratin passed`)
       setLoadingDuration(totalDuration);
     }
   }, [totalDuration]);
@@ -243,7 +257,6 @@ export const useWatchData = (animeId: string, episodeNumber: number) => {
   ]);
 
   return {
-    user,
     episode: {
       data: episodeData,
       isLoading: isEpisodeDataLoading,

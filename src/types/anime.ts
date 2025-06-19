@@ -125,7 +125,7 @@ export type SubtitleTrack = {
   lang: string;
 };
 
-export type AnimeStreamingLinks = {
+export type AnimeEpisodeSources = {
   headers: {
     Referer: string
   };
@@ -158,6 +158,6 @@ export type AnimeEpisodeData = {
   provider: AnimeProvider;
   details: Anime;
   metadata: AnimeEpisodeMetadata;
-  streamingLinks: AnimeStreamingLinks;
+  sources: AnimeEpisodeSources;
   subtitles: SubtitleFile[]
 }

@@ -122,7 +122,7 @@ export function usePrefetchEpisode(
       
       try {
         englishSubtitleUrl = episodeData ? 
-          getEnglishSubtitleUrl(episodeData.streamingLinks?.tracks ?? []) : 
+          getEnglishSubtitleUrl(episodeData.sources?.tracks ?? []) : 
           '';
       } catch (error) {
         console.debug(`Skipping English subtitle prefetch for episode ${episodeNumber}: no English track available`);

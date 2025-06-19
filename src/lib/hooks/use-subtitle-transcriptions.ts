@@ -5,14 +5,14 @@ import { useSubtitleStore } from "@/lib/stores/subtitle-store";
 import { getTranscriptionsLookupKey } from "@/lib/utils/subtitle";
 import { SubtitleCue, SubtitleTranscription } from "@/types/subtitle";
 import { useQueries } from "@tanstack/react-query";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 export const useSubtitleTranscriptions = () => {
   const englishSubtitleUrl = useSubtitleStore((state) => state.englishSubtitleUrl) || "";
   const activeSubtitleFile = useSubtitleStore((state) => state.activeSubtitleFile);
   const storeActiveTranscriptions = useSubtitleStore((state) => state.activeTranscriptions) || [];
   
-// Ensure 'japanese', 'english', and 'hiragana' are always included in the active transcriptions
+  // Ensure 'japanese', 'english', and 'hiragana' are always included in the active transcriptions
   const activeTranscriptions: SubtitleTranscription[] = useMemo(() => {
     const requiredTranscriptions: SubtitleTranscription[] = ['japanese'];
     
@@ -75,26 +75,26 @@ export const useSubtitleTranscriptions = () => {
       console.debug(`~Total hook execution time: ${executionTime.toFixed(2)}ms`);
     }
   }, [queries, loadingDuration]);
-
-  // Combine the tokenizer and subtitle loading states
-  const transcriptions = queries.map((q) => {
+  
+  const transcriptions = useMemo(() => {
+    const result = queries.map((q) => {
       if(!q.data) return;
       return {
         transcription: q.data.transcription,
         format: q.data.format,
         cues: q.data.cues,
       }
-  }).filter(q => q != undefined) as TranscriptionQuery[]
+    }).filter(q => q != undefined) as TranscriptionQuery[]
+    
+    return result;
+  }, [queries.map(q => q.data).join(',')]); // More stable dependency
 
   const transcriptionsLookup = useMemo(() => {
     const lookup = new Map<SubtitleTranscription, Map<string, SubtitleCue>>();
 
     transcriptions.forEach(transcription => {
-      console.log(`transcription`, transcription)
       if(!transcription) return
       const cueMap = new Map<string, SubtitleCue>();
-      console.log(transcription.cues)
-      console.log(typeof transcription.cues)
       transcription.cues.forEach(cue => {
         if(cue.transcription == 'english') {
           // Apply English delay when storing
@@ -115,12 +115,12 @@ export const useSubtitleTranscriptions = () => {
     
     return lookup;
   }, [transcriptions]);
-  
-  const refetchAll = () => {
+
+  const refetchAll = useCallback(() => {
     queries.forEach((query) => {
       if (query.refetch) query.refetch();
     });
-  };
+  }, [queries]);
 
   const isLoading = isTokenizerLoading || queries.some(q => q.isLoading);
   const error = queries.find(q => q.error)?.error;

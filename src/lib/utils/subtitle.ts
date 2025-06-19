@@ -5,7 +5,7 @@ import { FileSelectionError } from "@/lib/errors/player";
 import { DelayStore } from "@/lib/stores/delay-store";
 import { parseAss, parseSrt, parseVtt } from "@/lib/subtitle/parse";
 import { getExtension } from "@/lib/utils/utils";
-import { AnimeStreamingLinks, SkipTime } from "@/types/anime";
+import { AnimeEpisodeSources, SkipTime } from "@/types/anime";
 import { ActiveSubtitleFile, SubtitleFile, SubtitleFormat, SubtitleToken } from "@/types/subtitle";
 import {franc} from 'franc-min'
 import Kuroshiro from "@sglkc/kuroshiro";
@@ -32,10 +32,10 @@ export const getActiveSubtitleFile = (subtitleFiles: SubtitleFile[], preferredFo
   } as ActiveSubtitleFile
 }
 
-export const getEnglishSubtitleUrl = (tracks: AnimeStreamingLinks['tracks']) => {
+export const getEnglishSubtitleUrl = (tracks: AnimeEpisodeSources['tracks']) => {
   return tracks.find(
-    (s: AnimeStreamingLinks['tracks'][0]) => s.label === 'English'
-  )?.file || "";
+    (s: AnimeEpisodeSources['tracks'][0]) => s.lang === 'English'
+  )?.url || "";
 }
 
 export function removeTags(content: string) {

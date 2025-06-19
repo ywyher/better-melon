@@ -4,7 +4,10 @@ import DefinitionPlayground from "@/app/playground/_components/defintion";
 import PlayerPanelPlayground from "@/app/playground/_components/player-panel";
 import ProgressivePitch from "@/app/playground/_components/progressive-pitch";
 import SettingsDialogPlayground from "@/app/playground/_components/settings-dialog";
-import TranscriptionsPlayground from "@/app/playground/_components/transcriptions-cache";
+import TestPlayground from "@/app/playground/_components/test";
+import TokenizerPlayground from "@/app/playground/_components/tokenizer";
+import TranscriptionsPlayground from "@/app/playground/_components/transcriptions";
+import TranscriptionsCachePlayground from "@/app/playground/_components/transcriptions-cache";
 import TranscriptionsWordsPlayground from "@/app/playground/_components/transcriptions-words";
 
 export default function Playground() {
@@ -16,7 +19,10 @@ export default function Playground() {
       {/* <DefinitionPlayground /> */}
       {/* <DelayPlayground /> */}
       {/* <SettingsDialogPlayground /> */}
-      <PlayerPanelPlayground />
+      {/* <PlayerPanelPlayground /> */}
+      {/* <TestPlayground /> */}
+      <TranscriptionsPlayground />
+      <TokenizerPlayground />
     </>
   );
 }

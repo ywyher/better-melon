@@ -24,6 +24,7 @@ import { useWatchDataStore } from '@/lib/stores/watch-store';
 const MemoizedPlayerSkeleton = memo(PlayerSkeleton);
 const MemoizedSkipButton = memo(SkipButton);
 const MemoizedDefinitionCard = memo(DefinitionCard);
+const MemoizedSubtitleTranscriptions = memo(SubtitleTranscriptions);
 
 export default function Player() {
     const router = useRouter()
@@ -43,7 +44,7 @@ export default function Player() {
     const autoNext = usePlaybackSettingsStore((state) => state.autoNext);
     const autoPlay = usePlaybackSettingsStore((state) => state.autoPlay);
 
-    const streamingLinks = useWatchDataStore((state) => state.episodeData?.streamingLinks)
+    const sources = useWatchDataStore((state) => state.episodeData?.sources)
     const metadata = useWatchDataStore((state) => state.episodeData?.metadata)
     const episodeNumber = useWatchDataStore((state) => state.episodeNumber)
     const episodesLength = useWatchDataStore((state) => state.episodesLength)
@@ -62,29 +63,29 @@ export default function Player() {
     }, [setPlayer]);
 
     useEffect(() => {
-      if(!streamingLinks || !streamingLinks.sources[0]) return;
+      if(!sources || !sources.sources[0]) return;
 
-      const url = `${env.NEXT_PUBLIC_PROXY_URL}?url=${streamingLinks.sources[0].url}`
+      const url = `${env.NEXT_PUBLIC_PROXY_URL}?url=${sources.sources[0].url}`
       setVideoSrc(url)
       setIsInitialized(true);
       setLoadingDuration({ start: new Date(), end: undefined })
-    }, [streamingLinks, isInitialized]);
+    }, [sources]);
 
     useEffect(() => {
-        if (!streamingLinks || !player.current) return;
+        if (!sources || !player.current) return;
 
         const skipTimesData = [
             {
                 interval: {
-                    startTime: streamingLinks.intro.start,
-                    endTime: streamingLinks.intro.end,
+                    startTime: sources.intro.start,
+                    endTime: sources.intro.end,
                 },
                 skipType: 'OP' as SkipTime['skipType']
             },
             {
                 interval: {
-                    startTime: streamingLinks.outro.start,
-                    endTime: streamingLinks.outro.end,
+                    startTime: sources.outro.start,
+                    endTime: sources.outro.end,
                 },
                 skipType: 'OT' as SkipTime['skipType']
             }
@@ -109,7 +110,7 @@ export default function Player() {
         return () => {
             if (blobUrl) URL.revokeObjectURL(blobUrl);
         };
-    }, [metadata, streamingLinks, player.current?.duration, episodeNumber]);
+    }, [metadata, sources, player.current?.duration, episodeNumber]);
 
     const handleCanPlay = useCallback(() => {
         console.log(`can play ?`)
@@ -227,7 +228,7 @@ export default function Player() {
                         currentTime={player.current?.currentTime || 0}
                         skipTimes={skipTimes}
                     />
-                    <SubtitleTranscriptions />
+                    {/* <MemoizedSubtitleTranscriptions /> */}
                     <MemoizedDefinitionCard />
                 </MediaPlayer>
             </div>

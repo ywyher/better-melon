@@ -1,7 +1,7 @@
 import { SubtitlesNotAvailableError } from "@/lib/errors/player";
 import { useSubtitleStore } from "@/lib/stores/subtitle-store";
 import { getActiveSubtitleFile } from "@/lib/utils/subtitle";
-import { AnimeEpisodeData, AnimeStreamingLinks } from "@/types/anime";
+import { AnimeEpisodeData, AnimeEpisodeSources } from "@/types/anime";
 import { SettingsForEpisode } from "@/types/settings";
 import { useEffect, useState } from "react";
 
@@ -27,7 +27,7 @@ export const useSetSubtitles = (
   useEffect(() => {
     if (
       !episodeData ||
-      !episodeData?.streamingLinks ||
+      !episodeData?.sources ||
       !settings ||
       !settings?.subtitleSettings
     ) return;
@@ -36,10 +36,10 @@ export const useSetSubtitles = (
     setSubtitlesError(null);
 
     // Set English subtitle URL if available and not already set
-    if (episodeData.streamingLinks.tracks && !englishSubtitleUrl) {
-      const englishSub = episodeData.streamingLinks.tracks.find(
-        (s: AnimeStreamingLinks['tracks'][0]) => s.label === 'English'
-      )?.file || "";
+    if (episodeData.sources.tracks && !englishSubtitleUrl) {
+      const englishSub = episodeData.sources.tracks.find(
+        (s: AnimeEpisodeSources['tracks'][0]) => s.lang === 'English'
+      )?.url || "";
       setEnglishSubtitleUrl(englishSub);
     }
 

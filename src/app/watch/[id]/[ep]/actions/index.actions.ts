@@ -34,7 +34,7 @@ export async function getEpisodeData(animeId: string, episodeNumber: number, pro
         title: data.details.title.english,
         image: data.details.coverImage.large,
         description: data.details.description,
-        thumbnails: data.streamingLinks.tracks.find(t => t.lang == 'thumbnails')
+        thumbnails: data.sources.tracks.find(t => t.lang == 'thumbnails')
       }
     };
   } catch (error) {

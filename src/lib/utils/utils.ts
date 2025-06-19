@@ -18,6 +18,8 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+export const hasChanged = (a: any, b: any) => JSON.stringify(a) !== JSON.stringify(b);
+
 export async function readFileContent(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();

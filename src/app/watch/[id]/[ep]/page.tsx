@@ -5,7 +5,7 @@ import { Indicator } from '@/components/indicator';
 import { usePlayerStore } from '@/lib/stores/player-store';
 import { useIsMedium } from '@/lib/hooks/use-media-query';
 import { usePrefetchEpisode } from '@/lib/hooks/use-prefetch-episode';
-import { useLayoutEffect, useMemo } from 'react';
+import { useEffect, useLayoutEffect, useMemo } from 'react';
 import PlayerSection from '@/app/watch/[id]/[ep]/_components/sections/player-section';
 import ControlsSection from '@/app/watch/[id]/[ep]/_components/sections/controls-section';
 import PanelSection from '@/app/watch/[id]/[ep]/_components/sections/panel-section';
@@ -38,7 +38,8 @@ export default function WatchPage() {
     duration,
     transcriptions,
     subtitles,
-    loadStartTimeRef
+    loadStartTimeRef,
+    isLoading
   } = useWatchData(animeId, episodeNumber)
 
   useLayoutEffect(() => {
@@ -72,13 +73,13 @@ export default function WatchPage() {
     shouldPrefetch
   );
 
-  const shouldShowPanel = useMemo(() => {
-    return (!isMedium && 
-      panelState === 'visible' && 
-      episode?.data?.metadata && 
-      transcriptions && 
-      transcriptions.data.find(t => t.transcription === 'japanese')) ? true : false
-  }, [isMedium, panelState, episode?.data?.metadata, transcriptions]);
+  // const shouldShowPanel = useMemo(() => {
+  //   return (!isMedium && 
+  //     panelState === 'visible' && 
+  //     episode?.data?.metadata && 
+  //     transcriptions && 
+  //     transcriptions?.data?.find(t => t.transcription === 'japanese')) ? true : false
+  // }, [isMedium, panelState, episode?.data?.metadata, transcriptions]);
 
   if (errors.length > 0) {
     const subtitlesError = errors.find(error => error instanceof SubtitlesNotAvailableError);
@@ -112,9 +113,9 @@ export default function WatchPage() {
         <ControlsSection />
       </div>
       {/* Side panel (visible based on state) */}
-      {shouldShowPanel && (
+      {/* {shouldShowPanel && (
         <PanelSection />
-      )}
+      )} */}
     </div>
   );
 }
