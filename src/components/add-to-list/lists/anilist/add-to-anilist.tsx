@@ -21,7 +21,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { GET_ANIME_FROM_LIST } from "@/lib/graphql/queries";
 import { ADD_ANIME_TO_LIST, DELETE_ANIME_FROM_LIST } from "@/lib/graphql/mutations";
-import { convertFuzzyDateToDate } from "@/lib/utils";
+import { convertFuzzyDateToDate } from "@/lib/utils/utils";
 
 type AnilistListOptionsProps = {
   provider: AnimeListProivder;

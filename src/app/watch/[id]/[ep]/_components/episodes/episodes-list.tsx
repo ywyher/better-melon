@@ -8,11 +8,11 @@ import { useParams, useRouter } from "next/navigation";
 import GridView from "@/app/watch/[id]/[ep]/_components/episodes/grid-view";
 import ListView from "@/app/watch/[id]/[ep]/_components/episodes/list-view";
 import ImageView from "@/app/watch/[id]/[ep]/_components/episodes/image-view";
-import { usePlayerStore } from "@/lib/stores/player-store";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState, useMemo, useCallback, useRef } from "react";
 import { useVirtualizer } from "@tanstack/react-virtual";
+import { useUIStateStore } from "@/lib/stores/ui-state-store";
 
 export default function EpisodesList({ 
     episodesMetadata
@@ -20,10 +20,10 @@ export default function EpisodesList({
     episodesMetadata: AnimeEpisodeMetadata[]
   }) {
   const params = useParams<{ id: string, ep: string }>();
-  const episodesListViewMode = usePlayerStore((state) => state.episodesListViewMode);
-  const setEpisodesListViewMode = usePlayerStore((state) => state.setEpisodesListViewMode);
-  const episodesListSpoilerMode = usePlayerStore((state) => state.episodesListSpoilerMode);
-  const setEpisodesListSpoilerMode = usePlayerStore((state) => state.setEpisodesListSpoilerMode);
+  const episodesListViewMode = useUIStateStore((state) => state.episodesListViewMode);
+  const setEpisodesListViewMode = useUIStateStore((state) => state.setEpisodesListViewMode);
+  const episodesListSpoilerMode = useUIStateStore((state) => state.episodesListSpoilerMode);
+  const setEpisodesListSpoilerMode = useUIStateStore((state) => state.setEpisodesListSpoilerMode);
   const router = useRouter();
   const currentEpisode = Number(params.ep);
   const [filterText, setFilterText] = useState("");

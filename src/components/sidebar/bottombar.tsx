@@ -1,5 +1,5 @@
 import BottombarLinks from "@/components/sidebar/bottombar-links"
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils/utils"
 
 type SidebarProps = {
   className?: string

@@ -3,22 +3,14 @@ import EpisodeNavigations from "@/app/watch/[id]/[ep]/_components/settings/episo
 import PlayerSettings from "@/app/watch/[id]/[ep]/_components/settings/player-settings";
 import SettingsSkeleton from "@/app/watch/[id]/[ep]/_components/settings/settings-skeleton";
 import { Separator } from "@/components/ui/separator";
-import { AnimeEpisodeData } from "@/types/anime";
-import { SettingsForEpisode } from "@/types/settings";
+import { useWatchDataStore } from "@/lib/stores/watch-store";
 
-interface ControlsSectionProps {
-  isLoading: boolean;
-  episodeData?: AnimeEpisodeData;
-  episodesLength: number;
-  settings: SettingsForEpisode;
-}
+export default function ControlsSection() {
+  const isLoading = useWatchDataStore((state) => state.isLoading)
+  const settings = useWatchDataStore((state) => state.settings)
+  const episodeData = useWatchDataStore((state) => state.episodeData)
+  const episodesLength = useWatchDataStore((state) => state.episodesLength)
 
-export default function ControlsSection({
-  isLoading,
-  episodeData,
-  episodesLength,
-  settings
-}: ControlsSectionProps) {
   if (isLoading) {
     return (
       <div className="w-full">

@@ -2,9 +2,36 @@
 
 import db from "@/lib/db"
 import { ensureAuthenticated } from "@/lib/db/mutations"
-import { Word, word as wordTable } from "@/lib/db/schema"
+import { word, Word, word as wordTable } from "@/lib/db/schema"
 import { generateId } from "better-auth"
-import { eq, inArray } from "drizzle-orm"
+import { and, eq, inArray } from "drizzle-orm"
+
+export async function getWords({ status }: { status?: Word['status'] }) {
+  try {
+    const { userId, error } = await ensureAuthenticated()
+    if(error || !userId) throw new Error(error || "Must be authenticated")
+    
+    const conditions = [
+      eq(wordTable.userId, userId),
+      status !== undefined ? eq(wordTable.status, status) : undefined
+    ].filter(Boolean)
+
+    const words = await db.select().from(wordTable)
+      .where(and(...conditions))
+
+    return {
+      message: "Words",
+      words,
+      error: null
+    }
+  } catch (error: unknown) {
+    return {
+      message: null,
+      words: [],
+      error: error instanceof Error ? error.message : "Failed to get words",
+    }
+  }
+}
 
 export async function addWordsBulk({ words, status }: { words: string[], status: Word['status'] }) {
   try {

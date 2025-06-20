@@ -1,7 +1,6 @@
 "use client"
 
 import ToggleButton from "@/components/toggle-button";
-import { usePlayerStore } from "@/lib/stores/player-store";
 import { useEffect, useState } from "react";
 import { GeneralSettings, PlayerSettings } from "@/lib/db/schema";
 import { useQueryClient } from "@tanstack/react-query";
@@ -10,6 +9,7 @@ import { showSyncSettingsToast } from "@/components/sync-settings-toast";
 import { settingsQueries } from "@/lib/queries/settings";
 import { SyncStrategy } from "@/types";
 import { handlePlayerSettings } from "@/app/settings/player/actions";
+import { usePlaybackSettingsStore } from "@/lib/stores/playback-settings-store";
 
 type TogglesProps = { 
     playerSettings: PlayerSettings
@@ -21,14 +21,14 @@ type PlaybackSetting = 'autoPlay' | 'autoNext' | 'autoSkip' | 'pauseOnCue';
 export default function PlaybackToggles({ playerSettings, syncPlayerSettings }: TogglesProps) {
     const [isLoading, setIsLoading] = useState<boolean>(false)
     
-    const autoPlay = usePlayerStore((state) => state.autoPlay)
-    const setAutoPlay = usePlayerStore((state) => state.setAutoPlay)
-    const autoNext = usePlayerStore((state) => state.autoNext)
-    const setAutoNext = usePlayerStore((state) => state.setAutoNext)
-    const autoSkip = usePlayerStore((state) => state.autoSkip)
-    const setAutoSkip = usePlayerStore((state) => state.setAutoSkip)
-    const pauseOnCue = usePlayerStore((state) => state.pauseOnCue)
-    const setPauseOnCue = usePlayerStore((state) => state.setPauseOnCue)
+    const autoPlay = usePlaybackSettingsStore((state) => state.autoPlay)
+    const setAutoPlay = usePlaybackSettingsStore((state) => state.setAutoPlay)
+    const autoNext = usePlaybackSettingsStore((state) => state.autoNext)
+    const setAutoNext = usePlaybackSettingsStore((state) => state.setAutoNext)
+    const autoSkip = usePlaybackSettingsStore((state) => state.autoSkip)
+    const setAutoSkip = usePlaybackSettingsStore((state) => state.setAutoSkip)
+    const pauseOnCue = usePlaybackSettingsStore((state) => state.pauseOnCue)
+    const setPauseOnCue = usePlaybackSettingsStore((state) => state.setPauseOnCue)
 
     useEffect(() => {
         if (playerSettings) {

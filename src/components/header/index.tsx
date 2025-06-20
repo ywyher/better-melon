@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { useIsSmall } from '@/lib/hooks/use-media-query';
 import { useSession } from '@/lib/queries/user';
 import { useAuthStore } from '@/lib/stores/auth-store';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils/utils';
 import React, { useState, useEffect } from 'react';
 
 export default function Header() {

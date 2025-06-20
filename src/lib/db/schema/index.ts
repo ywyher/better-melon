@@ -31,6 +31,10 @@ export const userRelations = relations(user, ({ many, one }) => ({
     fields: [user.id],
     references: [generalSettings.userId]
   }),
+  wordSettings: one(wordSettings, {
+    fields: [user.id],
+    references: [wordSettings.userId]
+  }),
 }));
 
 export const ankiPreset = pgTable('anki_preset', {
@@ -207,32 +211,50 @@ export const playerSettings = pgTable("player_settings", {
   updatedAt: timestamp("updated_at").notNull()
 });
 
-export const playerSettingsRelations = relations(subtitleStyles, ({ one }) => ({
+export const playerSettingsRelations = relations(playerSettings, ({ one }) => ({
   user: one(user, {
-    fields: [subtitleStyles.userId],
+    fields: [playerSettings.userId],
     references: [user.id]
   })
 }))
 
 export const wordStatusEnum = pgEnum('word_enum', [
   'known',
-  'tracking',
+  'learning',
   'unknown',
   'ignore'
 ])
 
-export const word = pgTable("word", {
+export const wordSettings = pgTable("word_settings", {
   id: text("id").primaryKey(),
-  word: text("word").notNull(),
-  status: wordStatusEnum('word_status').default('unknown'),
+  
+  learningStatus: boolean("learning_status").default(true).notNull(),
+  pitchColoring: boolean("pitch_coloring").default(true).notNull(),
+
   userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }),
   createdAt: timestamp("created_at").notNull(),
   updatedAt: timestamp("updated_at").notNull()
 });
 
-export const wordRelations = relations(subtitleStyles, ({ one }) => ({
+export const wordSettingsRelations = relations(wordSettings, ({ one }) => ({
   user: one(user, {
-    fields: [subtitleStyles.userId],
+    fields: [wordSettings.userId],
+    references: [user.id]
+  })
+}))
+
+export const word = pgTable("word", {
+  id: text("id").primaryKey(),
+  word: text("word").notNull(),
+  status: wordStatusEnum('word_status').default('unknown').notNull(),
+  userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at").notNull(),
+  updatedAt: timestamp("updated_at").notNull()
+});
+
+export const wordRelations = relations(word, ({ one }) => ({
+  user: one(user, {
+    fields: [word.userId],
     references: [user.id]
   })
 }))
@@ -278,6 +300,7 @@ export type AnkiPreset = Omit<InferSelectModel<typeof ankiPreset>, 'fields'> & {
   fields: Partial<Record<AnkiFieldKey, string>>;
 };
 export type Word = InferSelectModel<typeof word>
+export type WordSettings = InferSelectModel<typeof wordSettings>
 export type SubtitleStyles = InferSelectModel<typeof subtitleStyles>
 export type SubtitleSettings = InferSelectModel<typeof subtitleSettings>
 export type PlayerSettings = InferSelectModel<typeof playerSettings>

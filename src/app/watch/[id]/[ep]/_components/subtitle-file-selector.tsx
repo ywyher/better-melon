@@ -4,22 +4,23 @@ import { Button } from "@/components/ui/button";
 import { DialogClose } from "@/components/ui/dialog"
 import { useState, useEffect } from "react";
 import { Check, FileText, Loader2 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { toast } from "sonner";
 import DialogWrapper from "@/components/dialog-wrapper";
-import { usePlayerStore } from "@/lib/stores/player-store";
 import { SubtitleFile } from "@/types/subtitle";
 import { subtitleFormats } from "@/lib/constants/subtitle";
 import LocalFileSelector from "@/components/local-file-selector";
+import { useSubtitleStore } from "@/lib/stores/subtitle-store";
+import { useWatchDataStore } from "@/lib/stores/watch-store";
 
-export default function SubtitleFileSelector({ subtitleFiles }: { 
-    subtitleFiles: SubtitleFile[];
-}) {
+export default function SubtitleFileSelector() {
     const [loading, setLoading] = useState<string | null>(null);
     const [open, setOpen] = useState(false);
-    const activeSubtitleFile = usePlayerStore((state) => state.activeSubtitleFile)
-    const setActiveSubtitleFile = usePlayerStore((state) => state.setActiveSubtitleFile)
+    const activeSubtitleFile = useSubtitleStore((state) => state.activeSubtitleFile)
+    const setActiveSubtitleFile = useSubtitleStore((state) => state.setActiveSubtitleFile)
+
+    const subtitleFiles = useWatchDataStore((state) => state.episodeData?.subtitles)
 
     const handleSelectFile = (file: SubtitleFile) => {
         if (file.name === activeSubtitleFile?.file.name) return;
@@ -50,12 +51,12 @@ export default function SubtitleFileSelector({ subtitleFiles }: {
             >
                 <LocalFileSelector />
                 <ScrollArea className="max-h-72 pr-1">
-                    {subtitleFiles.length > 0 && (
+                    {subtitleFiles && subtitleFiles.length > 0 && (
                         <div className="text-sm font-medium mb-2 text-muted-foreground">
                             Available subtitles
                         </div>
                     )}  
-                    {subtitleFiles.filter(f => subtitleFormats.includes(f.name.split('.').pop() || "")).map((file) => {
+                    {subtitleFiles?.filter(f => subtitleFormats.includes(f.name.split('.').pop() || "")).map((file) => {
                         const isSelected = file.name === activeSubtitleFile?.file.name;
                         const isLoading = loading === file.name;
                         
@@ -93,7 +94,7 @@ export default function SubtitleFileSelector({ subtitleFiles }: {
                             </div>
                         );
                     })}
-                    {subtitleFiles.length === 0 && (
+                    {subtitleFiles?.length === 0 && (
                         <div className="py-8 text-center text-muted-foreground">
                             No subtitle files available
                         </div>

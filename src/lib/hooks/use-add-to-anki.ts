@@ -1,7 +1,7 @@
 import { invokeAnkiConnect } from "@/lib/anki"
 import { ankiQueries } from "@/lib/queries/anki"
 import { usePlayerStore } from "@/lib/stores/player-store"
-import { takeSnapshot } from "@/lib/utils"
+import { takeSnapshot } from "@/lib/utils/utils"
 import { AnkiFieldKey } from "@/types/anki"
 import { useQuery } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"

@@ -1,7 +1,7 @@
 "use client"
 
 import { User } from "@/lib/db/schema";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils";
 import { Camera } from "lucide-react";
 import { useRef, useState } from "react";
 import { toast } from "sonner";

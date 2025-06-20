@@ -1,7 +1,7 @@
 import { getMultipleTranscriptionsStyles } from "@/components/subtitle/styles/actions";
 import { SubtitleStylesStore } from "@/lib/stores/subtitle-styles-store";
 import { parseSubtitleToJson } from "@/lib/subtitle/parse";
-import { convertToKana, getSubtitleFormat, getSubtitleSource } from "@/lib/subtitle/utils";
+import { convertToKana, getSubtitleFormat, getSubtitleSource } from "@/lib/utils/subtitle";
 import type { ActiveSubtitleFile, SubtitleTranscription } from "@/types/subtitle";
 import { createQueryKeys } from "@lukemorales/query-key-factory";
 import { Dispatch, RefObject, SetStateAction } from "react";

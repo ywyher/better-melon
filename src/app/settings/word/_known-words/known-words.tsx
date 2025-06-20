@@ -1,5 +1,5 @@
-import AddKnownWords from "@/app/settings/words/_known-words/add-known-words";
-import ImportKnownWordsFromAnki from "@/app/settings/words/_known-words/import-known-words-from-anki";
+import AddKnownWords from "@/app/settings/word/_known-words/add-known-words";
+import ImportKnownWordsFromAnki from "@/app/settings/word/_known-words/import-known-words-from-anki";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { PlusCircle, Download } from "lucide-react";
 

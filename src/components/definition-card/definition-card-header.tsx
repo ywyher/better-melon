@@ -5,11 +5,8 @@ import { CardHeader, CardTitle } from "@/components/ui/card";
 import { jmdictTags } from "@/lib/constants/jmdict";
 import useAddToAnki from "@/lib/hooks/use-add-to-anki";
 import { useDefinitionStore } from "@/lib/stores/definition-store";
-import { usePlayerStore } from "@/lib/stores/player-store";
 import { JMdictPos, JMdictWord } from "@/types/jmdict";
 import { Expand, Plus, Shrink, X } from "lucide-react";
-import { useEffect } from "react";
-import { toHiragana, toKana, toKatakana, tokenize, toRomaji } from "wanakana";
 
 type DefinitionCardHeaderProps = {
   entries?: JMdictWord[] | null
@@ -26,7 +23,6 @@ export default function DefinitionCardHeader({ entries }: DefinitionCardHeaderPr
     setIsExpanded,
     setPosition
   } = useDefinitionStore()
-  const setActiveTokenId = usePlayerStore((state) => state.setActiveTokenId)
 
   const { addToAnki } = useAddToAnki({ 
     fields: {
@@ -59,12 +55,11 @@ export default function DefinitionCardHeader({ entries }: DefinitionCardHeaderPr
     })
     setIsExpanded(false)
     setToken(null)
-    setActiveTokenId(null)
   }
 
   return (
     <CardHeader className="flex flex-row justify-between items-center p-0">
-      <CardTitle>{token?.surface_form}</CardTitle>
+      <CardTitle>{token?.original_form}</CardTitle>
       <div className='flex flex-row gap-2'>
         {isAddToAnki && (
           <Button

@@ -1,9 +1,14 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils";
 import type { SubtitleCue as TSubtitleCue, SubtitleToken } from "@/types/subtitle";
 import { Button } from "@/components/ui/button";
 import { Clipboard, Play } from "lucide-react";
 import DOMPurify from 'dompurify';
-import { parseFuriganaToken } from '@/lib/subtitle/utils';
+import { parseFuriganaToken } from '@/lib/utils/subtitle';
+import { getPitchAccentType } from "@/lib/utils/pitch";
+import { excludedPos, learningStatusesStyles } from "@/lib/constants/subtitle";
+import { pitchAccentsStyles } from "@/lib/constants/pitch";
+import { PitchAccents } from "@/types/pitch";
+import { useWatchDataStore } from "@/lib/stores/watch-store";
 
 type SubtitleCueProps = { 
     index: number;
@@ -29,6 +34,10 @@ function SubtitleCueBase({
   handleClick,
   handleCopy,
 }: SubtitleCueProps) {
+    const wordsLookup = useWatchDataStore((state) => state.wordsLookup)
+    const pitchLookup = useWatchDataStore((state) => state.pitchLookup)
+    const wordSettings = useWatchDataStore((state) => state.settings.wordSettings)
+    
     return (
         <div 
             style={{
@@ -65,6 +74,30 @@ function SubtitleCueBase({
                 <div className="flex flex-wrap gap-1 items-end">
                     {cue.tokens?.length ? cue.tokens.map((token, idx) => {
                         // Check if this is furigana transcription
+                        const pitch = pitchLookup?.get(
+                            cue.transcription != 'japanese' && cue.transcription != 'english'
+                            ? token.original_form!
+                            : token.surface_form
+                        )
+                        let accent: PitchAccents | null = null;
+                        if(pitch) {
+                            accent = getPitchAccentType({
+                                position: pitch.pitches[0].position,
+                                reading: token.original_form
+                            })
+                        }
+                        const word = wordsLookup?.get(token.original_form)
+                        const status = word?.status
+
+                        const style = {
+                            ...(wordSettings.pitchColoring && accent ? pitchAccentsStyles[accent] : undefined),
+                            ...(
+                                wordSettings.learningStatus && !excludedPos.some(p => p == token.pos) && status 
+                                    ? learningStatusesStyles[status] 
+                                    : !excludedPos.some(p => p == token.pos) && learningStatusesStyles['unknown']
+                            )
+                        };
+
                         if (cue.transcription === 'furigana') {
                             const { baseText, rubyText } = parseFuriganaToken(token.surface_form);
                             
@@ -83,6 +116,7 @@ function SubtitleCueBase({
                                         cue.from,
                                         cue.to
                                     )}
+                                    style={style}
                                 >
                                     <div className='flex flex-col items-center'>
                                         {/* Ruby text (furigana) - positioned above */}
@@ -110,6 +144,7 @@ function SubtitleCueBase({
                                     activeToken?.id === token.id && "bg-primary/20"
                                 )}
                                 onClick={() => handleClick(token, cue.from, cue.to)}
+                                style={style}
                                 dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(token.surface_form) }}
                             />
                         );

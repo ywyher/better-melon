@@ -126,6 +126,7 @@ async function tokenizeJapaneseSubtitles(subs: SubtitleCue[], transcription: Sub
       .filter(token => token.surface_form !== ' ' && token.surface_form !== '　')
       .map((token, index) => ({
         ...token,
+        original_form: token.surface_form,
         id: `${sub.id}-${index}`
       })) as SubtitleToken[];
     

@@ -1,0 +1,1 @@
+export type PitchAccents = "heiban" | "atamadaka" | "nakadaka" | "odaka"

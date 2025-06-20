@@ -5,10 +5,11 @@ import { useQueries, useQuery } from '@tanstack/react-query';
 import { playerQueries } from '@/lib/queries/player';
 import { usePlayerStore } from '@/lib/stores/player-store';
 import { ActiveSubtitleFile, SubtitleTranscription } from '@/types/subtitle';
-import { getActiveSubtitleFile, getEnglishSubtitleUrl } from '@/lib/subtitle/utils';
+import { getActiveSubtitleFile, getEnglishSubtitleUrl } from '@/lib/utils/subtitle';
 import { subtitleQueries } from '@/lib/queries/subtitle';
 import { useSubtitleStylesStore } from '@/lib/stores/subtitle-styles-store';
 import { SubtitleSettings } from '@/lib/db/schema';
+import { useSubtitleStore } from '@/lib/stores/subtitle-store';
 
 export function usePrefetchEpisode(
   animeId: string,
@@ -18,7 +19,7 @@ export function usePrefetchEpisode(
   isReady: boolean
 ) {
   const [networkCondition, setNetworkCondition] = useState<'good'|'poor'|'n'>('n');
-  const storeActiveTranscriptions = usePlayerStore((state) => state.activeTranscriptions) || [];
+  const storeActiveTranscriptions = useSubtitleStore((state) => state.activeTranscriptions) || [];
   const isLastEpisode = episodesLength > 0 && episodeNumber >= episodesLength;
   const handleSubtitleStylesInStore = useSubtitleStylesStore((state) => state.handleStyles);
   const getStylesFromStore = useSubtitleStylesStore((state) => state.getStyles);
@@ -121,7 +122,7 @@ export function usePrefetchEpisode(
       
       try {
         englishSubtitleUrl = episodeData ? 
-          getEnglishSubtitleUrl(episodeData.streamingLinks?.tracks ?? []) : 
+          getEnglishSubtitleUrl(episodeData.sources?.tracks ?? []) : 
           '';
       } catch (error) {
         console.debug(`Skipping English subtitle prefetch for episode ${episodeNumber}: no English track available`);

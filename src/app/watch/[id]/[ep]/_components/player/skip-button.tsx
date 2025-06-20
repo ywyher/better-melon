@@ -5,7 +5,7 @@ import { usePlayerStore } from "@/lib/stores/player-store";
 import { SkipTime } from "@/types/anime";
 import { Dispatch, SetStateAction, useMemo } from "react";
 import { useMediaState } from "@vidstack/react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils";
 
 export default function SkipButton({ 
     canSkip,

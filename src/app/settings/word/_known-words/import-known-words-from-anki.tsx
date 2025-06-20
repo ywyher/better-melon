@@ -10,14 +10,17 @@ import { Button } from "@/components/ui/button";
 import { invokeAnkiConnect } from "@/lib/anki";
 import { toast } from "sonner";
 import { AnkiNote } from "@/types/anki";
-import { addWordsBulk } from "@/app/settings/words/actions";
+import { addWordsBulk } from "@/app/settings/word/_known-words/actions";
 import LoadingButton from "@/components/loading-button";
 
 export default function ImportKnownWordsFromAnki() {
   const [open, setOpen] = useState<boolean>(false)
   const [selectedDeck, setSelectedDeck] = useState<string>("")
   
-  const { data: deckNames, isLoading, error } = useQuery(ankiQueries.deckNames())
+  const { data: deckNames, isLoading, error } = useQuery({
+    ...ankiQueries.deckNames(),
+    refetchOnWindowFocus: true
+  })
 
   const importMutation = useMutation({
     mutationFn: async (deckName: string) => {

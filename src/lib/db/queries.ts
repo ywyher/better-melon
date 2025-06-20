@@ -2,10 +2,13 @@
 
 import { defaultPlayerSettings } from "@/app/settings/player/constants"
 import { defaultSubtitleSettings } from "@/app/settings/subtitle/_subtitle-settings/constants"
+import { defaultWordSettings } from "@/app/settings/word/constants"
 import { auth } from "@/lib/auth"
 import { defaultGeneralSettings } from "@/lib/constants/settings"
 import db from "@/lib/db"
-import { account, GeneralSettings, generalSettings, PlayerSettings, playerSettings, SubtitleSettings, subtitleSettings, User } from "@/lib/db/schema"
+import { account, GeneralSettings, generalSettings, PlayerSettings, playerSettings, SubtitleSettings, subtitleSettings, User, word, wordSettings } from "@/lib/db/schema"
+import { env } from "@/lib/env/server"
+import { NHKEntry } from "@/types/nhk"
 import { and, eq } from "drizzle-orm"
 import { headers } from "next/headers"
 
@@ -34,6 +37,7 @@ export async function getSettingsForEpisode() {
       subtitleSettings: defaultSubtitleSettings,
       generalSettings: defaultGeneralSettings,
       playerSettings: defaultPlayerSettings,
+      wordSettings: defaultWordSettings,
     };
         
     const [subtitle] = await db.select().from(subtitleSettings)
@@ -45,10 +49,14 @@ export async function getSettingsForEpisode() {
     const [player] = await db.select().from(playerSettings)
         .where(eq(playerSettings.userId, session.user.id))
 
+    const [word] = await db.select().from(wordSettings)
+        .where(eq(wordSettings.userId, session.user.id))
+
     return {
       subtitleSettings: subtitle || defaultSubtitleSettings,
       generalSettings: general || defaultGeneralSettings,
       playerSettings: player || defaultPlayerSettings,
+      wordSettings: word || defaultWordSettings,
     }
 }
 
@@ -57,4 +65,10 @@ export async function getAccountProvider(userId: string) {
     .where(eq(account.userId, userId))
 
   return data.providerId
+}
+
+export async function getPitchAccent(query: string) {
+  const res = await fetch(`${env.API_URL}/pitch/search/${query}`)
+  const pitch = await res.json()
+  return pitch.data.entries as NHKEntry[]
 }
