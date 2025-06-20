@@ -15,6 +15,7 @@ import MissingSubtitlesDialog from '@/app/watch/[id]/[ep]/_components/missing-su
 import { useSubtitleStore } from '@/lib/stores/subtitle-store';
 import { useUIStateStore } from '@/lib/stores/ui-state-store';
 import { useWatchData } from '@/lib/hooks/use-watch-data';
+import { useWatchDataStore } from '@/lib/stores/watch-store';
 
 export default function WatchPage() {
   const params = useParams();
@@ -31,6 +32,9 @@ export default function WatchPage() {
   const setActiveSubtitleFile = useSubtitleStore((state) => state.setActiveSubtitleFile);
   const setEnglishSubtitleUrl = useSubtitleStore((state) => state.setEnglishSubtitleUrl);
 
+  const isLoading = useWatchDataStore((state) => state.isLoading)
+  const pitchLookup = useWatchDataStore((state) => state.pitchLookup)
+
   const {
     episode,
     errors,
@@ -39,8 +43,24 @@ export default function WatchPage() {
     transcriptions,
     subtitles,
     loadStartTimeRef,
-    isLoading
+    pitchAccent: {
+      lookup
+    },
+    isLoading: isLoadingLocal
   } = useWatchData(animeId, episodeNumber)
+
+  useEffect(() => {
+    console.log(`pitchLookup`, pitchLookup)
+  }, [pitchLookup])
+  useEffect(() => {
+    console.log(`pitchLookup local`, lookup)
+  }, [lookup])
+  useEffect(() => {
+    console.log(`isLoading`, isLoading)
+  }, [isLoading])
+  useEffect(() => {
+    console.log(`isLoading local`, isLoadingLocal)
+  }, [isLoadingLocal])
 
   useLayoutEffect(() => {
     console.debug('Resetting load timer for episode:', episodeNumber);
@@ -73,13 +93,13 @@ export default function WatchPage() {
     shouldPrefetch
   );
 
-  // const shouldShowPanel = useMemo(() => {
-  //   return (!isMedium && 
-  //     panelState === 'visible' && 
-  //     episode?.data?.metadata && 
-  //     transcriptions && 
-  //     transcriptions?.data?.find(t => t.transcription === 'japanese')) ? true : false
-  // }, [isMedium, panelState, episode?.data?.metadata, transcriptions]);
+  const shouldShowPanel = useMemo(() => {
+    return (!isMedium && 
+      panelState === 'visible' && 
+      episode?.data?.metadata && 
+      transcriptions && 
+      transcriptions?.data?.find(t => t.transcription === 'japanese')) ? true : false
+  }, [isMedium, panelState, episode?.data?.metadata, transcriptions]);
 
   if (errors.length > 0) {
     const subtitlesError = errors.find(error => error instanceof SubtitlesNotAvailableError);
@@ -113,9 +133,9 @@ export default function WatchPage() {
         <ControlsSection />
       </div>
       {/* Side panel (visible based on state) */}
-      {/* {shouldShowPanel && (
+      {shouldShowPanel && (
         <PanelSection />
-      )} */}
+      )}
     </div>
   );
 }

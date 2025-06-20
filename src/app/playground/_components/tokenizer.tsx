@@ -12,16 +12,15 @@ export default function TokenizerPlayground() {
   } = useInitializeTokenizer();
 
   useEffect(() => {
-    if(isInitialized) return; 
-    (async () => {
-      await initalize()
+    if(isInitialized) return
+    (() => {
+      initalize()
     })()
   }, [initalize, isInitialized])
 
   return (
     <div className="flex flex-col gap-6 p-6 max-w-xl mx-auto">
       <h1 className="text-2xl font-bold">Tokenizer Playground</h1>
-
       <div className="bg-gray-100 dark:bg-gray-800 rounded-xl shadow p-4">
         <div className="flex flex-col gap-2">
           <div className="flex justify-between">
@@ -39,8 +38,12 @@ export default function TokenizerPlayground() {
           </div>
 
           <div className="flex justify-between">
-            <span className="font-medium">Initialization Time:</span>
-            <span>{initializationTime ? `${initializationTime} ms` : "N/A"}</span>
+            <span className="font-medium">Initiali</span>
+
+            <div className="flex justify-between">
+              <span className="font-medium">Initializationzation Time:</span>
+              <span>{initializationTime ? `${initializationTime} ms` : "N/A"}</span>
+            </div>
           </div>
         </div>
       </div>

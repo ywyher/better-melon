@@ -1,13 +1,13 @@
 "use client"
 
-import React, { Fragment, useCallback, useState, useMemo } from 'react';
+import React, { Fragment, useCallback, useState, useMemo, useEffect } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { useDefinitionStore } from '@/lib/stores/definition-store';
 import { SubtitleCue, SubtitleToken, SubtitleTranscription } from '@/types/subtitle';
 import { cn } from '@/lib/utils/utils';
-import { PitchLookup, Subtitle, TranscriptionsLookup, TranscriptionStyleSet, WordsLookup } from '@/app/watch/[id]/[ep]/types';
-import { SubtitleSettings, WordSettings } from '@/lib/db/schema';
+import { Subtitle, TranscriptionStyleSet } from '@/app/watch/[id]/[ep]/types';
+import { SubtitleSettings } from '@/lib/db/schema';
 import { getSentencesForCue, isTokenExcluded, parseFuriganaToken } from '@/lib/utils/subtitle';
 import { useDelayStore } from '@/lib/stores/delay-store';
 import DOMPurify from 'dompurify';
@@ -22,12 +22,14 @@ type TranscriptionItemProps = {
   transcription: SubtitleTranscription;
   japaneseStyles: TranscriptionStyleSet;
   styles: TranscriptionStyleSet;
+  activeSubtitles: Subtitle
 }
 
 export const TranscriptionItem = React.memo(function TranscriptionItem({ 
     transcription,
     japaneseStyles,
     styles,
+    activeSubtitles
 }: TranscriptionItemProps) {
     const {
         attributes,
@@ -58,7 +60,6 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
     const pitchLookup = useWatchDataStore((state) => state.pitchLookup)
     const wordsLookup = useWatchDataStore((state) => state.wordsLookup)
     const transcriptionsLookup = useWatchDataStore((state) => state.transcriptionsLookup)
-    const activeSubtitles = useWatchDataStore((state) => state.activeSubtitles)
     
     const [hoveredTokenId, setHoveredTokenId] = useState<string | number | null>(null);
     const [hoveredCueId, setHoveredCueId] = useState<number | null>(null);
@@ -280,7 +281,13 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
     );
     
     // Get only the cues we need for this transcription
-    const activeCues = activeSubtitles?.[transcription] || [];
+    const activeCues = useMemo(() => {
+        return activeSubtitles?.[transcription] || []
+    }, [activeSubtitles, transcription]);
+
+    useEffect(() => {
+        console.log(`activeCues ${transcription}`, activeCues)
+    }, [activeCues])
 
     return (
         <div

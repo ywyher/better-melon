@@ -4,8 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Clipboard, Play } from "lucide-react";
 import DOMPurify from 'dompurify';
 import { parseFuriganaToken } from '@/lib/utils/subtitle';
-import { PitchLookup, WordsLookup } from "@/app/watch/[id]/[ep]/types";
-import { WordSettings } from "@/lib/db/schema";
 import { getPitchAccentType } from "@/lib/utils/pitch";
 import { excludedPos, learningStatusesStyles } from "@/lib/constants/subtitle";
 import { pitchAccentsStyles } from "@/lib/constants/pitch";

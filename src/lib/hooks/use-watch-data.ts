@@ -27,7 +27,6 @@ export const useWatchData = (animeId: string, episodeNumber: number) => {
     setTranscriptions,
     setTranscriptionsLookup,
     setStyles,
-    setActiveSubtitles,
     setPitchLookup,
     setWordsLookup,
     setIsLoading,
@@ -68,10 +67,6 @@ export const useWatchData = (animeId: string, episodeNumber: number) => {
   } = useSubtitleStyles();
 
   const { 
-    activeSubtitles
-  } = useActiveSubtitles(transcriptions)
-
-  const { 
     pitchLookup,
     isLoading: isPitchAccentLoading,
     loadingDuration: pitchAccentLoadingDuration,
@@ -102,7 +97,7 @@ export const useWatchData = (animeId: string, episodeNumber: number) => {
       || isPitchAccentLoading
       // || !isVideoReady
     );
-  }, [isEpisodeDataLoading, isTranscriptionsLoading, isStylesLoading, isSettingsLoading, isWordsLoading]);
+  }, [isEpisodeDataLoading, isTranscriptionsLoading, isStylesLoading, isPitchAccentLoading, isSettingsLoading, isWordsLoading]);
 
   useEffect(() => {
     console.log(`please`, {
@@ -135,6 +130,22 @@ export const useWatchData = (animeId: string, episodeNumber: number) => {
       pitchAccentError
     ].filter(Boolean)
   }, [episodeDataError, transcriptionsError, settingsError, stylesError, subtitlesError]);
+
+  useEffect(() => {
+    console.log(`animeId waiting`)
+    if (animeId && hasChanged(animeId, store.animeId)) {
+      console.log(`animeId passed`)
+      setAnimeId(animeId);
+    }
+  }, [episodeData]);
+
+  useEffect(() => {
+    console.log(`episodeNumber waiting`)
+    if (episodeNumber && hasChanged(episodeNumber, store.episodeNumber)) {
+      console.log(`episodeNumber passed`)
+      setEpisodeNumber(episodeNumber);
+    }
+  }, [episodeData]);
 
   useEffect(() => {
     console.log(`episodeData waiting`)
@@ -184,13 +195,6 @@ export const useWatchData = (animeId: string, episodeNumber: number) => {
     }
   }, [styles]);
 
-  useEffect(() => {
-    console.log(`activeSubtitles waiting`)
-    if (activeSubtitles && hasChanged(activeSubtitles, store.activeSubtitles)) {
-      console.log(`activeSubtitles passed`)
-      setActiveSubtitles(activeSubtitles);
-    }
-  }, [activeSubtitles]);
 
   useEffect(() => {
     console.log(`pitchLookup waiting`)

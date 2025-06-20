@@ -1,3 +1,5 @@
+currently the issue we have is with the transcriptions hook since the tokenization process doesn't work well, gotta solve it maybe try server actions instead of API routes idk clueless
+
 check https://github.com/Doublevil/JmdictFurigana
 pitch coloring is kinda broken, rn
 also as for pitch coloring for the subitlte cue list in the panel doesn't work since we only query the accent when the time for that cue come, gotta change the way we do it bruh

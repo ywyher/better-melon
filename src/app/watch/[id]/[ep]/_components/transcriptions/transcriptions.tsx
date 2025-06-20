@@ -3,14 +3,12 @@
 import { TranscriptionItem } from "@/app/watch/[id]/[ep]/_components/transcriptions/transcription-item";
 import { usePlayerStore } from "@/lib/stores/player-store";
 import type { SubtitleTranscription } from "@/types/subtitle";
-import { closestCenter, DndContext, type DragEndEvent, KeyboardSensor, PointerSensor, useDraggable, useSensor, useSensors } from "@dnd-kit/core";
+import { closestCenter, DndContext, type DragEndEvent, KeyboardSensor, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { PitchLookup, Subtitle, TranscriptionsLookup, TranscriptionStyles, WordsLookup } from "@/app/watch/[id]/[ep]/types";
 import { useDebounce } from "@/components/multiple-selector";
 import { handleTranscriptionOrder } from "@/app/settings/subtitle/_transcription-order/actions";
 import { toast } from "sonner";
-import { GeneralSettings, PlayerSettings, SubtitleSettings, Word, WordSettings } from "@/lib/db/schema";
 import { useMutation } from "@tanstack/react-query";
 import { SyncStrategy } from "@/types";
 import { showSyncSettingsToast } from "@/components/sync-settings-toast";
@@ -20,6 +18,7 @@ import { useMediaState } from "@vidstack/react";
 import { useSubtitleStore } from "@/lib/stores/subtitle-store";
 import { usePlaybackSettingsStore } from "@/lib/stores/playback-settings-store";
 import { useWatchDataStore } from "@/lib/stores/watch-store";
+import { useActiveSubtitles } from "@/lib/hooks/use-active-subtitles";
 
 export default function SubtitleTranscriptions() {
   const player = usePlayerStore((state) => state.player);
@@ -38,8 +37,16 @@ export default function SubtitleTranscriptions() {
 
   const cuePauseDuration = useWatchDataStore((state) => state.settings.playerSettings.cuePauseDuration)
   const syncPlayerSettings = useWatchDataStore((state) => state.settings.generalSettings.syncPlayerSettings)
-  const activeSubtitles = useWatchDataStore((state) => state.activeSubtitles)
   const styles = useWatchDataStore((state) => state.styles)
+  const transcriptions = useWatchDataStore((state) => state.transcriptions)
+  const {
+    activeSubtitles
+  } = useActiveSubtitles(transcriptions || [])
+
+  useEffect(() => {
+    console.log(`test activeSubtitles`, activeSubtitles?.['japanese'])
+  }, [activeSubtitles])
+
 
   // This would stop the player from repausing it self if we are still in the small time window
   const lastPauseTime = useRef<number>(0);
@@ -265,6 +272,7 @@ export default function SubtitleTranscriptions() {
                       key={transcription}
                       transcription={transcription}
                       japaneseStyles={japaneseStyles}
+                      activeSubtitles={activeSubtitles}
                       styles={{
                         tokenStyles,
                         containerStyle: containerStyle

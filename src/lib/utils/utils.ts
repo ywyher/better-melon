@@ -4,6 +4,7 @@ import { S3Client } from "@aws-sdk/client-s3";
 import { Anime, AnimeEpisodeMetadata } from "@/types/anime";
 import { MediaPlayerInstance } from "@vidstack/react";
 import { defaultGeneralSettings } from "@/lib/constants/settings";
+import _ from 'lodash';
 
 export const s3 = new S3Client({
   region: "auto",
@@ -18,7 +19,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export const hasChanged = (a: any, b: any) => JSON.stringify(a) !== JSON.stringify(b);
+export const hasChanged = (a: any, b: any) => !_.isEqual(a, b);
 
 export async function readFileContent(file: File): Promise<string> {
   return new Promise((resolve, reject) => {

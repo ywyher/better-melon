@@ -228,7 +228,7 @@ export default function Player() {
                         currentTime={player.current?.currentTime || 0}
                         skipTimes={skipTimes}
                     />
-                    {/* <MemoizedSubtitleTranscriptions /> */}
+                    <MemoizedSubtitleTranscriptions />
                     <MemoizedDefinitionCard />
                 </MediaPlayer>
             </div>

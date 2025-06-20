@@ -12,7 +12,7 @@ import { getContainerStyles, getTokenStyles } from '@/lib/utils/styles';
 // Define the types for our store data
 interface WatchDataState {
   // Essentials
-  animeId: number;
+  animeId: string;
   episodeNumber: number;
 
   // Episode data
@@ -28,9 +28,6 @@ interface WatchDataState {
 
   styles: TranscriptionStyles;
 
-  // Subtitles
-  activeSubtitles: Subtitle | null;
-  
   // Pitch accent
   pitchLookup: PitchLookup;
   
@@ -52,7 +49,6 @@ interface WatchDataState {
 
   setTranscriptions: (transcriptions: WatchDataState['transcriptions']) => void;
   setTranscriptionsLookup: (lookup: WatchDataState['transcriptionsLookup']) => void;
-  setActiveSubtitles: (subtitles: WatchDataState['activeSubtitles']) => void;
   setStyles: (transcriptionsStyles: WatchDataState['styles']) => void;
 
   setPitchLookup: (lookup: WatchDataState['pitchLookup']) => void;
@@ -94,8 +90,6 @@ const initialState = {
     }
   },
 
-  activeSubtitles: null,
-
   pitchLookup: new Map(),
   wordsLookup: new Map(),
   
@@ -117,7 +111,6 @@ export const useWatchDataStore = create<WatchDataState>((set, get) => ({
   setTranscriptions: (transcriptions) => set({ transcriptions }),
   setTranscriptionsLookup: (transcriptionsLookup) => set({ transcriptionsLookup }),
   setStyles: (styles) => set({ styles }),
-  setActiveSubtitles: (activeSubtitles) => set({ activeSubtitles }),
   
   setPitchLookup: (pitchLookup) => set({ pitchLookup }),
   setWordsLookup: (wordsLookup) => set({ wordsLookup }),
