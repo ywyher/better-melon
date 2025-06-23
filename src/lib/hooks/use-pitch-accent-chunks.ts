@@ -6,7 +6,7 @@ import { useSubtitleStore } from '@/lib/stores/subtitle-store';
 import { useQueries } from '@tanstack/react-query';
 import { pitchQueries } from '@/lib/queries/pitch';
 
-const config = {
+export const pitchAccentConfig = {
   chunkSize: 200,
   delayBetweenRequests: 100,
 };
@@ -26,7 +26,7 @@ export function usePitchAccentChunks(japaneseCues: SubtitleCue[] = [], animeId: 
     
     console.log("pitch tokens", tokens);
     const deduplicatedTokens = Array.from(new Set(tokens));
-    const chunkedTokens = chunkArray(deduplicatedTokens, config.chunkSize);
+    const chunkedTokens = chunkArray(deduplicatedTokens, pitchAccentConfig.chunkSize);
     console.log("pitch chunks", chunkedTokens.length);
     
     return chunkedTokens;
@@ -40,7 +40,7 @@ export function usePitchAccentChunks(japaneseCues: SubtitleCue[] = [], animeId: 
           index,
           animeId, 
           activeSubtitleFile?.file.name || "",
-          config.delayBetweenRequests
+          pitchAccentConfig.delayBetweenRequests
         ),
         staleTime: 1000 * 60 * 60,
         enabled: !!activeSubtitleFile && !!animeId && !!chunk.length,

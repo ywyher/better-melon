@@ -4,3 +4,5 @@ export type Option = {
 };
 
 export type SyncStrategy = 'always' | 'ask' | 'never' | 'once'
+
+export type NetworkCondition = 'good'|'poor'|'n'

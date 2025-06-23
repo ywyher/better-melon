@@ -46,7 +46,7 @@ export const useSetSubtitles = (
     // Handle subtitle files
     if (episodeData.subtitles?.length > 0) {
       const file = getActiveSubtitleFile(
-        episodeData.subtitles, 
+        episodeData.subtitles,
         settings.subtitleSettings.preferredFormat
       );
       if (file && file !== activeSubtitleFile) { // Only update if different

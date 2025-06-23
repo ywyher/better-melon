@@ -86,13 +86,17 @@ export default function WatchPage() {
     };
   }, [isVideoReady, episode, settings])
 
-  usePrefetchEpisode(
+  useEffect(() => {
+    console.log(`pitch shouldPrefetch`, shouldPrefetch)
+  }, [shouldPrefetch])
+
+  usePrefetchEpisode({
     animeId,
-    episodeNumber + 1,
-    episode.episodesLength,
-    settings?.data?.subtitleSettings.preferredFormat,
-    shouldPrefetch
-  );
+    episodeNumber: episodeNumber + 1,
+    episodesLength: episode.episodesLength,
+    isReady: shouldPrefetch || false,
+    preferredFormat: settings?.data?.subtitleSettings.preferredFormat
+  });
 
   const shouldShowPanel = useMemo(() => {
     return (!isMedium && 

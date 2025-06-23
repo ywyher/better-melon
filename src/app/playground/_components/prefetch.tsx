@@ -1,7 +1,13 @@
 import { usePrefetchEpisode } from "@/lib/hooks/use-prefetch-episode"
 
 export default function PrefetchPlayground() {
-  usePrefetchEpisode('9253', 1, 23, 'srt', true)
+  usePrefetchEpisode({
+    animeId: '9253',
+    episodeNumber: 1,
+    episodesLength: 23,
+    isReady: true,
+    preferredFormat: 'srt'
+  })
   
   return (
     <>
