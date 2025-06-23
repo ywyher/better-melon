@@ -28,6 +28,15 @@ export const GET_ANIME = gql`
   }
 `;
 
+export const GET_ANIME_DYNAMIC_DATA = gql`
+  query($id: Int!) {
+    Media(id: $id) {
+      status
+      episodes
+    } 
+  }
+`
+
 export const GET_ANIME_FROM_LIST = gql`
   query GetAnimeList (
     $mediaId: Int!,

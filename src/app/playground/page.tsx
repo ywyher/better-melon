@@ -1,5 +1,6 @@
 'use client'
 
+import AnimeDataPlayground from "@/app/playground/_components/anime-data";
 import DefinitionPlayground from "@/app/playground/_components/defintion";
 import PlayerPanelPlayground from "@/app/playground/_components/player-panel";
 import ProgressivePitch from "@/app/playground/_components/progressive-pitch";
@@ -24,7 +25,8 @@ export default function Playground() {
       {/* <TestPlayground /> */}
       {/* <TranscriptionsPlayground /> */}
       {/* <TokenizerPlayground /> */}
-      <TransHook />
+      {/* <TransHook /> */}
+      <AnimeDataPlayground />
     </>
   );
 }

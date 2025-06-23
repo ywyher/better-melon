@@ -8,6 +8,7 @@ import { defaultGeneralSettings } from "@/lib/constants/settings"
 import db from "@/lib/db"
 import { account, GeneralSettings, generalSettings, PlayerSettings, playerSettings, SubtitleSettings, subtitleSettings, User, word, wordSettings } from "@/lib/db/schema"
 import { env } from "@/lib/env/server"
+import { redis } from "@/lib/redis"
 import { NHKEntry } from "@/types/nhk"
 import { and, eq } from "drizzle-orm"
 import { headers } from "next/headers"
@@ -71,4 +72,8 @@ export async function getPitchAccent(query: string) {
   const res = await fetch(`${env.API_URL}/pitch/search/${query}`)
   const pitch = await res.json()
   return pitch.data.entries as NHKEntry[]
+}
+
+export async function getCache(key: string) {
+  return await redis.get(key)
 }

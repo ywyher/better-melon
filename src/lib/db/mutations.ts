@@ -3,10 +3,9 @@
 import { auth } from "@/lib/auth";
 import db from "@/lib/db";
 import { user, User } from "@/lib/db/schema";
-import { env } from "@/lib/env/server";
+import { redis } from "@/lib/redis";
 import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
-import { redirect } from "next/navigation";
 
 export async function ensureAuthenticated() {
     const headersList = await headers();
@@ -49,5 +48,12 @@ export async function deleteUser({ userId }: { userId: User['id'] }) {
     return {
         message: "Account deleted successfully",
         error: null
+    }
+}
+
+export async function setCache(key: string, value: string) {
+    const results = await redis.set(`${key}`, JSON.stringify(value));
+    return {
+        success: results ? true : false
     }
 }

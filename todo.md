@@ -1,3 +1,11 @@
+the home page should be introduction to the site and add an option to redirect to the animes page right away in the settings
+
+the definition card we should use furigana !! 
+
+the prevois use-anime-data code but make is existsInCache null instead of false so it cant skip till there is true or false ? prob not fuck
+
+use-prefetch-tokenizer instaed of the useEffect mess we got in the info.tsx
+
 currently the issue we have is with the transcriptions hook since the tokenization process doesn't work well, gotta solve it maybe try server actions instead of API routes idk clueless
 
 check https://github.com/Doublevil/JmdictFurigana

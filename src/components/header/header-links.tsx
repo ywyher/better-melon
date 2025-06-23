@@ -53,7 +53,6 @@ export default function HeaderLinks() {
                     Erased
                 </Button>
             </Link>
-
         </div>
     )
 }

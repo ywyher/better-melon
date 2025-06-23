@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 import { SubtitleCue, SubtitleTranscription } from '@/types/subtitle';
 import { useMediaState } from '@vidstack/react';
 import { useDelayStore } from '@/lib/stores/delay-store';
@@ -55,7 +55,7 @@ export function useActiveSubtitles(transcriptions: TranscriptionQuery[]) {
     return result;
   }, [transcriptions, currentTime, delay]);
 
-  const activeSubtitles = useMemo(() => getActiveSubtitleSets(), [getActiveSubtitleSets, transcriptions]);
+  const activeSubtitles = useMemo(() => getActiveSubtitleSets(), [getActiveSubtitleSets, transcriptions, currentTime]);
 
   return {
     activeSubtitles,

@@ -1,40 +1,33 @@
+import { GET_ANIME_DYNAMIC_DATA } from "@/lib/graphql/queries";
 import { Anime } from "@/types/anime";
-import { gql, useQuery } from "@apollo/client";
-
-const GET_ANIME_DATA = gql`
-  query($id: Int!) {
-    Media(id: $id) {
-      id
-      idMal
-      bannerImage
-      coverImage {
-        large
-        medium
-      }
-      title {
-        romaji
-        english
-      }  
-      format
-      episodes
-      description
-      genres
-      status
-      season
-      seasonYear
-    } 
-  }
-`;
+import { useQuery } from "@tanstack/react-query";
+import { useQuery as useApolloQuery } from "@apollo/client";
+import { animeQueries } from "@/lib/queries/anime";
 
 export function useAnimeData(animeId: string) {
-  const {
-    loading: isLoadingAnime, 
-    error: animeError, 
-    data: animeData 
-  } = useQuery(GET_ANIME_DATA, { 
-    variables: { id: Number(animeId) },
-    fetchPolicy: 'cache-first',
+  const { 
+    data: staticData, 
+    isLoading: isStaticLoading, 
+    error: staticError 
+  } = useQuery({
+    ...animeQueries.data(animeId),
+    staleTime: 24 * 60 * 60 * 1000,
+    gcTime: 48 * 60 * 60 * 1000,
+    retry: 3,
   });
 
-  return { animeData: animeData?.Media as Anime, isLoadingAnime, animeError };
+  const {
+    loading: isDynamicLoading, 
+    error: dynamicError,
+    data: dynamicData
+  } = useApolloQuery(GET_ANIME_DYNAMIC_DATA, { variables: { id: Number(animeId) }, fetchPolicy: 'cache-first', });
+
+  return {
+    animeData: {
+      ...staticData?.Media,
+      ...dynamicData?.Media,
+    } as Anime,
+    isLoading: isStaticLoading || isDynamicLoading,
+    error: staticError || dynamicError,
+  };
 }

@@ -43,11 +43,6 @@ export default function SubtitleTranscriptions() {
     activeSubtitles
   } = useActiveSubtitles(transcriptions || [])
 
-  useEffect(() => {
-    console.log(`test activeSubtitles`, activeSubtitles?.['japanese'])
-  }, [activeSubtitles])
-
-
   // This would stop the player from repausing it self if we are still in the small time window
   const lastPauseTime = useRef<number>(0);
     

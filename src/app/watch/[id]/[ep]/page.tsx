@@ -78,12 +78,13 @@ export default function WatchPage() {
   }, [animeId, episodeNumber, setIsVideoReady]);
 
   const shouldPrefetch = useMemo(() => {
-    if(episode?.data?.details.nextAiringEpisode) {
-      return isVideoReady && settings?.data && episode?.data?.details.nextAiringEpisode?.episode != episodeNumber + 1
+    if(!episode.data || !settings.data) return false;
+    if(episode.data.details.nextAiringEpisode) {
+      return isVideoReady && settings.data && episode.data.details.nextAiringEpisode?.episode != episodeNumber + 1
     }else {
-      return isVideoReady && settings?.data && episode?.data?.details.episodes != episodeNumber
+      return isVideoReady && settings.data && episode.data.details.episodes != episodeNumber
     };
-  }, [isVideoReady, episode?.data, settings?.data])
+  }, [isVideoReady, episode, settings])
 
   usePrefetchEpisode(
     animeId,
