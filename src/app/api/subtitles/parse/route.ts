@@ -37,7 +37,7 @@ let tokenizerInitPromise: Promise<Tokenizer> | null = null;
 
 async function getCacheFromRedis(key: string): Promise<SubtitleCache | null> {
   try {
-    const cached = await redis.get(`${cacheKeys.subtitle}${key}`);
+    const cached = await redis.get(`${cacheKeys.subtitle()}${key}`);
     if (cached) {
       return JSON.parse(cached);
     }
@@ -50,7 +50,7 @@ async function getCacheFromRedis(key: string): Promise<SubtitleCache | null> {
 
 async function setCacheToRedis(key: string, data: SubtitleCache, ttl: number = 3600): Promise<void> {
   try {
-    await redis.setex(`${cacheKeys.subtitle}${key}`, ttl, JSON.stringify(data));
+    await redis.setex(`${cacheKeys.subtitle()}${key}`, ttl, JSON.stringify(data));
   } catch (error) {
     console.error('Redis set error:', error);
   }
@@ -70,7 +70,7 @@ async function updateCacheInRedis(key: string, updates: Partial<SubtitleCache>):
 
 async function deleteCacheFromRedis(key: string): Promise<void> {
   try {
-    await redis.del(`${cacheKeys.subtitle}${key}`);
+    await redis.del(`${cacheKeys.subtitle()}${key}`);
   } catch (error) {
     console.error('Redis delete error:', error);
   }
@@ -482,7 +482,7 @@ export async function DELETE(request: NextRequest) {
   try {
     // Clear all subtitle caches AND tokenizer cache
     try {
-      const keys = await redis.keys(`${cacheKeys.subtitle}*`);
+      const keys = await redis.keys(`${cacheKeys.subtitle()}*`);
       if (keys.length > 0) {
         await redis.del(...keys);
       }

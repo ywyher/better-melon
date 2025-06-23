@@ -2,10 +2,15 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { SubtitleCue } from '@/types/subtitle';
 import { NHKEntry } from '@/types/nhk';
 import { chunkArray } from '@/lib/utils/utils';
-import { getPitchAccent } from '@/lib/db/queries';
+import { getCache, getPitchAccent } from '@/lib/db/queries';
+import { cacheKeys } from '@/lib/constants/cache';
+import { setCache } from '@/lib/db/mutations';
+import { useWatchData } from '@/lib/hooks/use-watch-data';
+import { useWatchDataStore } from '@/lib/stores/watch-store';
+import { useSubtitleStore } from '@/lib/stores/subtitle-store';
 
 const config = {
-  chunkSize: 400,
+  chunkSize: 200,
   delayBetweenRequests: 100,
 };
 
@@ -17,7 +22,8 @@ interface PitchLoadingState {
   error?: Error;
 }
 
-export function useProgressivePitchAccent(japaneseCues: SubtitleCue[] = []) {
+export function useProgressivePitchAccent(japaneseCues: SubtitleCue[] = [], animeId: string) {
+  const activeSubtitleFile = useSubtitleStore((state) => state.activeSubtitleFile)
   const [pitchLookup, setPitchLookup] = useState<Map<string, NHKEntry>>(new Map());
   const [loadingState, setLoadingState] = useState<PitchLoadingState>({
     totalSubtitles: 0,
@@ -60,7 +66,8 @@ export function useProgressivePitchAccent(japaneseCues: SubtitleCue[] = []) {
     try {
       for (let i = 0; i < chunks.length; i++) {
         // Check if operation was aborted
-        if (abortController.signal.aborted) {
+        if (abortController.signal.aborted || !activeSubtitleFile) {
+          console.log('out')
           return;
         }
 
@@ -68,22 +75,54 @@ export function useProgressivePitchAccent(japaneseCues: SubtitleCue[] = []) {
         const query = chunk.join(',');
         
         try {
+          const cache = await getCache(cacheKeys.pitch.accent(animeId, activeSubtitleFile.file.name, i))
+          if(cache) {
+            try {
+              // needs to be parsed twice
+              const cachedEntries = JSON.parse(JSON.parse(cache));
+              console.log('~Pitch Corrected cache:', cachedEntries);
+              console.log('~Pitch Corrected cache length:', cachedEntries.length);
+              console.log('~Pitch First entry:', cachedEntries[0]);
+
+              if (Array.isArray(cachedEntries)) {
+                setPitchLookup(prev => {
+                  const newMap = new Map(prev);
+                  cachedEntries.forEach(entry => {
+                    if (entry.word) {
+                      newMap.set(entry.word, entry);
+                    }
+                  });
+                  return newMap;
+                });
+                
+                setLoadingState(prev => ({
+                  ...prev,
+                  processedSubtitles: i + 1,
+                }));
+                
+                continue; // Skip API call but progress is updated
+              } else {
+                console.warn('Cached data is not an array, fetching fresh data');
+              }
+            } catch (parseError) {
+              console.error('Error parsing cached data:', parseError);
+            }
+          }
+
           const entries = await getPitchAccent(query);
-          
+          console.log(`~Pitch entries`, entries)
           // Update the lookup map
           setPitchLookup(prev => {
             const newMap = new Map(prev);
             entries.forEach(entry => {
-              // Assuming NHKEntry has a 'word' or 'text' property to use as key
-              // Adjust this based on your NHKEntry structure
               if (entry.word) {
                 newMap.set(entry.word, entry);
               }
             });
             return newMap;
           });
+          await setCache(cacheKeys.pitch.accent(animeId, activeSubtitleFile.file.name, i), JSON.stringify(entries))
 
-          // Update progress
           setLoadingState(prev => ({
             ...prev,
             processedSubtitles: i + 1,
@@ -122,7 +161,7 @@ export function useProgressivePitchAccent(japaneseCues: SubtitleCue[] = []) {
         }));
       }
     }
-  }, []);
+  }, [activeSubtitleFile]);
 
   const startProcessing = useCallback(() => {
     if (!japaneseCues.length) return;
@@ -133,11 +172,12 @@ export function useProgressivePitchAccent(japaneseCues: SubtitleCue[] = []) {
       hookStartTime.current = performance.now();
       processChunksSequentially(chunks);
     }
-  }, [japaneseCues, createChunks, processChunksSequentially]);
+  }, [japaneseCues, activeSubtitleFile, createChunks, processChunksSequentially]);
 
   useEffect(() => {
+    if (!animeId || !activeSubtitleFile) return;
     startProcessing();
-  }, [startProcessing]);
+  }, [startProcessing, animeId, activeSubtitleFile]);
 
   useEffect(() => {
     return () => {
@@ -148,7 +188,7 @@ export function useProgressivePitchAccent(japaneseCues: SubtitleCue[] = []) {
   }, []);
 
   const { isComplete, isLoading, processedSubtitles, totalSubtitles, error } = loadingState;
-  
+
   return {
     pitchLookup,
     isComplete,

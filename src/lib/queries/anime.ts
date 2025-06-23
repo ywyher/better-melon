@@ -9,7 +9,7 @@ export const animeQueries = createQueryKeys('anime', {
     data: (animeId: string) => ({
         queryKey: ['data', animeId],
         queryFn: async () => {
-          const cached = await getCache(`${cacheKeys.anime.info}${animeId}`);
+          const cached = await getCache(`${cacheKeys.anime.info(animeId)}`);
           if (cached) {
             return JSON.parse(cached);
           }
@@ -28,7 +28,7 @@ export const animeQueries = createQueryKeys('anime', {
             })
           });
           const data = await raw.json()
-          await setCache(`${cacheKeys.anime.info}${animeId}`, data);
+          await setCache(`${cacheKeys.anime.info(animeId)}`, data);
           return data;
         },
     }),

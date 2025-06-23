@@ -1,3 +1,5 @@
+episode 11 of made in abyss is broken (special case)
+
 the home page should be introduction to the site and add an option to redirect to the animes page right away in the settings
 
 the definition card we should use furigana !! 

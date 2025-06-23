@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { useProgressivePitchAccent } from "@/lib/hooks/use-progressive-pitch-accent";
 import { Loader2 } from "lucide-react";
 import { useSubtitleStore } from "@/lib/stores/subtitle-store";
+import SubtitleFileSelector from "@/app/watch/[id]/[ep]/_components/subtitle-file-selector";
 
 export default function ProgressivePitch() {
   const setActiveSubtitleFile = useSubtitleStore((state) => state.setActiveSubtitleFile);
@@ -26,16 +27,16 @@ export default function ProgressivePitch() {
   const { transcriptions, isLoading: isTranscriptionsLoading } = useSubtitleTranscriptions()
   const {
     pitchLookup,
-  } = useProgressivePitchAccent(transcriptions?.find(t => t.transcription == 'japanese')?.cues) 
+    isLoading
+  } = useProgressivePitchAccent(transcriptions?.find(t => t.transcription == 'japanese')?.cues, '9253') 
 
-  // useEffect(() => {
-  //   console.log(`pitchLookup`, pitchLookup)
-  // }, [pitchLookup])
-
-  const url = `https://www.youtube.com/watch?v=LF7AezBpqzg`
+  useEffect(() => {
+    console.log(`pitchLookup`, pitchLookup)
+  }, [pitchLookup])
 
   return (
     <div className="flex flex-col justify-between gap-10">
+      <SubtitleFileSelector />
       {isTranscriptionsLoading && (
         <div className="flex flex-row gap-2">
           <Loader2 className="animate-spin" />

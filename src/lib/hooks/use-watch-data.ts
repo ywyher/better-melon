@@ -71,7 +71,10 @@ export const useWatchData = (animeId: string, episodeNumber: number) => {
     isLoading: isPitchAccentLoading,
     loadingDuration: pitchAccentLoadingDuration,
     error: pitchAccentError
-  } = useProgressivePitchAccent(transcriptions?.find(t => t.transcription == 'japanese')?.cues)
+  } = useProgressivePitchAccent(
+    transcriptions?.find(t => t.transcription == 'japanese')?.cues,
+    animeId,
+  )
   
   const { 
     wordsLookup,

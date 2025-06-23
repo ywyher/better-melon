@@ -285,10 +285,6 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
         return activeSubtitles?.[transcription] || []
     }, [activeSubtitles, transcription]);
 
-    useEffect(() => {
-        console.log(`activeCues ${transcription}`, activeCues)
-    }, [activeCues])
-
     return (
         <div
             ref={setNodeRef}

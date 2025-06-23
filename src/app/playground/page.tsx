@@ -15,7 +15,7 @@ import TranscriptionsWordsPlayground from "@/app/playground/_components/transcri
 export default function Playground() {
   return (
     <>
-      {/* <ProgressivePitch /> */}
+      <ProgressivePitch />
       {/* <TranscriptionsWordsPlayground /> */}
       {/* <TranscriptionsPlayground /> */}
       {/* <DefinitionPlayground /> */}
@@ -26,7 +26,7 @@ export default function Playground() {
       {/* <TranscriptionsPlayground /> */}
       {/* <TokenizerPlayground /> */}
       {/* <TransHook /> */}
-      <AnimeDataPlayground />
+      {/* <AnimeDataPlayground /> */}
     </>
   );
 }
