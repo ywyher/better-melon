@@ -78,7 +78,7 @@ export function usePrefetchEpisode(
   }, [isReady, isLastEpisode, networkCondition]);
   
   const { 
-    data: episodeData, 
+    data: episodeData,
     isSuccess: episodeDataFetched,
     isFetching: isEpisodeDataFetching
   } = useQuery({

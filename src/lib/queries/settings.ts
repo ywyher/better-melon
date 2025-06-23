@@ -37,10 +37,6 @@ export const settingsQueries = createQueryKeys('settings', {
         return await getSettingsForEpisode()
       }
     }),
-    pitchAccent: ({ query }: { query: string }) => ({
-      queryKey: ['pitch-accent', query],
-      queryFn: async () => await getPitchAccent(query)
-    }),
     words: ({ status }: { status?: Word['status'] }) => ({
       queryKey: ['words', status],
       queryFn: async () => {

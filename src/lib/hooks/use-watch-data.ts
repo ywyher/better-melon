@@ -1,6 +1,6 @@
 import { useActiveSubtitles } from "@/lib/hooks/use-active-subtitles";
 import { useEpisodeData } from "@/lib/hooks/use-episode-data";
-import { useProgressivePitchAccent } from "@/lib/hooks/use-progressive-pitch-accent";
+import { usePitchAccentChunks } from "@/lib/hooks/use-pitch-accent-chunks";
 import { useSetSubtitles } from "@/lib/hooks/use-set-subtitles";
 import { useSettingsForEpisode } from "@/lib/hooks/use-settings-for-episode";
 import { useSubtitleStyles } from "@/lib/hooks/use-subtitle-styles";
@@ -71,7 +71,7 @@ export const useWatchData = (animeId: string, episodeNumber: number) => {
     isLoading: isPitchAccentLoading,
     loadingDuration: pitchAccentLoadingDuration,
     error: pitchAccentError
-  } = useProgressivePitchAccent(
+  } = usePitchAccentChunks(
     transcriptions?.find(t => t.transcription == 'japanese')?.cues,
     animeId,
   )

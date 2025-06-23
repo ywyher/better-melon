@@ -17,7 +17,7 @@ import { useSubtitleStore } from "@/lib/stores/subtitle-store";
 import { useWatchDataStore } from "@/lib/stores/watch-store";
 import { useActiveSubtitles } from "@/lib/hooks/use-active-subtitles";
 import { hasChanged } from "@/lib/utils/utils";
-import { useProgressivePitchAccent } from "@/lib/hooks/use-progressive-pitch-accent";
+import { usePitchAccentChunks } from "@/lib/hooks/use-pitch-accent-chunks";
 import { useWords } from "@/lib/hooks/use-words";
 
 export default function TranscriptionsPlayground() {
@@ -47,7 +47,7 @@ export default function TranscriptionsPlayground() {
   const { transcriptions, transcriptionsLookup } = useSubtitleTranscriptions()
   const { activeSubtitles } = useActiveSubtitles(transcriptions)
   const { styles } = useSubtitleStyles();
-  const { pitchLookup } = useProgressivePitchAccent()
+  const { pitchLookup } = usePitchAccentChunks()
   const { wordsLookup } = useWords()
   
   const store = useWatchDataStore.getState(); // use this to read current store values (won't trigger re-renders)

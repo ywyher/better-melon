@@ -1,3 +1,5 @@
+when the time comes to refactor the parsing logic i think we gotta cache the converted and tokenized stuff as well ? currently we only caching the file
+
 episode 11 of made in abyss is broken (special case)
 
 the home page should be introduction to the site and add an option to redirect to the animes page right away in the settings

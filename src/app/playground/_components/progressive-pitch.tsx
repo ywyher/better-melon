@@ -2,7 +2,7 @@
 
 import { useSubtitleTranscriptions } from "@/lib/hooks/use-subtitle-transcriptions";
 import { useEffect } from "react";
-import { useProgressivePitchAccent } from "@/lib/hooks/use-progressive-pitch-accent";
+import { usePitchAccentChunks } from "@/lib/hooks/use-pitch-accent-chunks";
 import { Loader2 } from "lucide-react";
 import { useSubtitleStore } from "@/lib/stores/subtitle-store";
 import SubtitleFileSelector from "@/app/watch/[id]/[ep]/_components/subtitle-file-selector";
@@ -25,10 +25,7 @@ export default function ProgressivePitch() {
   }, [setActiveTranscriptions, setActiveSubtitleFile]);
 
   const { transcriptions, isLoading: isTranscriptionsLoading } = useSubtitleTranscriptions()
-  const {
-    pitchLookup,
-    isLoading
-  } = useProgressivePitchAccent(transcriptions?.find(t => t.transcription == 'japanese')?.cues, '9253') 
+  const { pitchLookup } = usePitchAccentChunks(transcriptions?.find(t => t.transcription == 'japanese')?.cues, '9253') 
 
   useEffect(() => {
     console.log(`pitchLookup`, pitchLookup)

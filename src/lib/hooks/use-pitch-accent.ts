@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { settingsQueries } from '@/lib/queries/settings';
 import { NHKEntry } from '@/types/nhk';
+import { pitchQueries } from '@/lib/queries/pitch';
 
 export function usePitchAccent(query: string) {
   const loadingStartTime = useRef<number>(0);
@@ -12,7 +12,7 @@ export function usePitchAccent(query: string) {
     isLoading,
     error,
   } = useQuery({
-    ...settingsQueries.pitchAccent({ query }),
+    ...pitchQueries.accent({ query }),
     staleTime: 1000 * 60 * 5,
     enabled: !!query,
   });

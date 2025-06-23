@@ -15,7 +15,7 @@ import { useSubtitlesPitchAccent } from "@/lib/hooks/use-subtitles-pitch-accent"
 import { useWords } from "@/lib/hooks/use-words";
 import PanelSection from "@/app/watch/[id]/[ep]/_components/sections/panel-section";
 import { AnimeEpisodeMetadata } from "@/types/anime";
-import { useProgressivePitchAccent } from "@/lib/hooks/use-progressive-pitch-accent";
+import { usePitchAccentChunks } from "@/lib/hooks/use-pitch-accent-chunks";
 import PitchLoadingIndicator from "@/app/playground/_components/pitch-loading";
 import { Loader2 } from "lucide-react";
 import { useActiveSubtitles } from "@/lib/hooks/use-active-subtitles";
@@ -49,7 +49,7 @@ export default function TranscriptionsWordsPlayground() {
   const { styles } = useSubtitleStyles();
   const { activeSubtitles } = useActiveSubtitles(transcriptions)
   const { wordsLookup } = useWords()
-  const { pitchLookup, isLoading: isPitchLoading, loadingDuration } = useProgressivePitchAccent(transcriptions?.find(t => t.transcription == 'japanese')?.cues || [])
+  const { pitchLookup, isLoading: isPitchLoading, loadingDuration } = usePitchAccentChunks(transcriptions?.find(t => t.transcription == 'japanese')?.cues || [])
 
   const shouldShowPanel = useMemo(() => {
     return transcriptions 
