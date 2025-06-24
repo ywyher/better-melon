@@ -107,11 +107,11 @@ NEXT_PUBLIC_BETTER_AUTH_URL=http://localhost:3000
 BETTER_AUTH_SECRET=your_secret_key_here
 
 API_URL=http://localhost:6969/api
+REDIS_PORT=6379
 
+NEXT_PUBLIC_ANILIST_URL=https://graphql.anilist.co
 NEXT_PUBLIC_PROXY_URL=http://localhost:8080/proxy
 NEXT_PUBLIC_ANKI_CONNECT_URL=http://localhost:8765
-
-REDIS_PORT=6379
 
 ANILIST_ID=your_anilist_id
 ANILIST_SECRET=your_anilist_secret

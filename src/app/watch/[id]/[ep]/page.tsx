@@ -16,6 +16,7 @@ import { useSubtitleStore } from '@/lib/stores/subtitle-store';
 import { useUIStateStore } from '@/lib/stores/ui-state-store';
 import { useWatchData } from '@/lib/hooks/use-watch-data';
 import { useWatchDataStore } from '@/lib/stores/watch-store';
+import { defaultSubtitleSettings } from '@/app/settings/subtitle/_subtitle-settings/constants';
 
 export default function WatchPage() {
   const params = useParams();
@@ -71,7 +72,7 @@ export default function WatchPage() {
     episodeNumber: episodeNumber + 1,
     episodesLength: episode.episodesLength,
     isReady: shouldPrefetch || false,
-    preferredFormat: settings?.data?.subtitleSettings.preferredFormat
+    preferredFormat: settings?.data?.subtitleSettings.preferredFormat || defaultSubtitleSettings.preferredFormat
   });
   
   const shouldShowPanel = useMemo(() => {
