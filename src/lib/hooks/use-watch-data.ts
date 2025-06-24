@@ -6,7 +6,6 @@ import { useSettingsForEpisode } from "@/lib/hooks/use-settings-for-episode";
 import { useSubtitleStyles } from "@/lib/hooks/use-subtitle-styles";
 import { useSubtitleTranscriptions } from "@/lib/hooks/use-subtitle-transcriptions";
 import { useWords } from "@/lib/hooks/use-words";
-import { useSession } from "@/lib/queries/user";
 import { usePlayerStore } from "@/lib/stores/player-store";
 import { useWatchDataStore } from "@/lib/stores/watch-store";
 import { hasChanged } from "@/lib/utils/utils";
@@ -71,17 +70,20 @@ export const useWatchData = (animeId: string, episodeNumber: number) => {
     isLoading: isPitchAccentLoading,
     loadingDuration: pitchAccentLoadingDuration,
     error: pitchAccentError
-  } = usePitchAccentChunks(
-    transcriptions?.find(t => t.transcription == 'japanese')?.cues,
+  } = usePitchAccentChunks({
     animeId,
-  )
+    japaneseCues: transcriptions?.find(t => t.transcription == 'japanese')?.cues || [],
+    shouldFetch: settings?.wordSettings.pitchColoring || false
+  })
   
   const { 
     wordsLookup,
     isLoading: isWordsLoading,
     error: wordsError,
     loadingDuration: wordsLoadingDuration
-  } = useWords()
+  } = useWords({
+    shouldFetch: settings?.wordSettings.learningStatus || false
+  })
 
   const {
     subtitlesError,

@@ -1,6 +1,6 @@
-import { JMdictSkeleton } from "@/components/definition-card/sections/jmdict/skeleton";
-import { JMnedictSkeleton } from "@/components/definition-card/sections/jmnedict/skeleton";
-import { Kanjidic2Skeleton } from "@/components/definition-card/sections/kanjidic2/skeleton";
+import { JMdictSkeleton } from "@/components/definition-card/_sections/jmdict/skeleton";
+import { JMnedictSkeleton } from "@/components/definition-card/_sections/jmnedict/skeleton";
+import { Kanjidic2Skeleton } from "@/components/definition-card/_sections/kanjidic2/skeleton";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 

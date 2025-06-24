@@ -2,6 +2,7 @@
 
 import AnimeDataPlayground from "@/app/playground/_components/anime-data";
 import DefinitionPlayground from "@/app/playground/_components/defintion";
+import DefinitionPlayerPlayground from "@/app/playground/_components/defintion-player";
 import PlayerPanelPlayground from "@/app/playground/_components/player-panel";
 import PrefetchPlayground from "@/app/playground/_components/prefetch";
 import ProgressivePitch from "@/app/playground/_components/progressive-pitch";
@@ -16,11 +17,12 @@ import TranscriptionsWordsPlayground from "@/app/playground/_components/transcri
 export default function Playground() {
   return (
     <>
-      <PrefetchPlayground />
-      {/* <ProgressivePitch /> */}
+      {/* <DefinitionPlayerPlayground /> */}
+      {/* <DefinitionPlayground /> */}
+      {/* <PrefetchPlayground /> */}
+      <ProgressivePitch />
       {/* <TranscriptionsWordsPlayground /> */}
       {/* <TranscriptionsPlayground /> */}
-      {/* <DefinitionPlayground /> */}
       {/* <DelayPlayground /> */}
       {/* <SettingsDialogPlayground /> */}
       {/* <PlayerPanelPlayground /> */}

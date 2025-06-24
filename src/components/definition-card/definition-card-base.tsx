@@ -1,7 +1,7 @@
 'use client'
 
 import DefinitionCardContent from "@/components/definition-card/definition-card-content";
-import DefinitionCardHeader from "@/components/definition-card/definition-card-header";
+import DefinitionCardHeader from "@/components/definition-card/_header/definition-card-header";
 import { Card } from "@/components/ui/card";
 import { useDefinition } from "@/lib/hooks/use-definition";
 import { useDefinitionStore } from "@/lib/stores/definition-store";

@@ -32,9 +32,6 @@ export default function WatchPage() {
   const setActiveSubtitleFile = useSubtitleStore((state) => state.setActiveSubtitleFile);
   const setEnglishSubtitleUrl = useSubtitleStore((state) => state.setEnglishSubtitleUrl);
 
-  const isLoading = useWatchDataStore((state) => state.isLoading)
-  const pitchLookup = useWatchDataStore((state) => state.pitchLookup)
-
   const {
     episode,
     errors,
@@ -42,25 +39,8 @@ export default function WatchPage() {
     duration,
     transcriptions,
     subtitles,
-    loadStartTimeRef,
-    pitchAccent: {
-      lookup
-    },
-    isLoading: isLoadingLocal
+    loadStartTimeRef
   } = useWatchData(animeId, episodeNumber)
-
-  useEffect(() => {
-    console.log(`pitchLookup`, pitchLookup)
-  }, [pitchLookup])
-  useEffect(() => {
-    console.log(`pitchLookup local`, lookup)
-  }, [lookup])
-  useEffect(() => {
-    console.log(`isLoading`, isLoading)
-  }, [isLoading])
-  useEffect(() => {
-    console.log(`isLoading local`, isLoadingLocal)
-  }, [isLoadingLocal])
 
   useLayoutEffect(() => {
     console.debug('Resetting load timer for episode:', episodeNumber);
@@ -86,10 +66,6 @@ export default function WatchPage() {
     };
   }, [isVideoReady, episode, settings])
 
-  useEffect(() => {
-    console.log(`pitch shouldPrefetch`, shouldPrefetch)
-  }, [shouldPrefetch])
-
   usePrefetchEpisode({
     animeId,
     episodeNumber: episodeNumber + 1,
@@ -97,7 +73,7 @@ export default function WatchPage() {
     isReady: shouldPrefetch || false,
     preferredFormat: settings?.data?.subtitleSettings.preferredFormat
   });
-
+  
   const shouldShowPanel = useMemo(() => {
     return (!isMedium && 
       panelState === 'visible' && 

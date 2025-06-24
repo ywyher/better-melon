@@ -1,3 +1,4 @@
+import AddToAnki from "@/components/add-to-anki"
 import { Badge } from "@/components/ui/badge"
 import useAddToAnki from "@/lib/hooks/use-add-to-anki"
 import { subtitleQueries } from "@/lib/queries/subtitle"
@@ -18,16 +19,6 @@ export default function Kanjidic2Literal({ literal, definition, sentences }: Kan
     ...subtitleQueries.toKana(sentences.kanji || ""),
   })
 
-  const { addToAnki } = useAddToAnki({
-    fields: {
-      kanji: literal,
-      definition: definition,
-      "sentence-kanji": sentences.kanji,
-      "sentence-english": sentences.english,
-      "sentence-kana": kanaSentence,
-    },
-  })
-
   return (
     <div
       className="flex flex-col gap-2 items-center"
@@ -37,18 +28,18 @@ export default function Kanjidic2Literal({ literal, definition, sentences }: Kan
       >
         {literal}
       </div>
-      <Badge
-        onClick={() => {
-          if(!isLoading) {
-            addToAnki()
-          }else {
-            toast.warning(`Still converting kanji sentence to kana please, again later`)
-          }
-        }}
-        className="cursor-pointer"
+      <AddToAnki
+        kanji={literal}
+        definition={definition}
+        sentenceKanji={sentences.kanji}
+        sentenceEnglish={sentences.english}
+        sentenceKana={kanaSentence ?? ''}
+        disabled={isLoading}
       >
-        Add to anki
-      </Badge>
+        <Badge className="cursor-pointer">
+          Add to anki
+        </Badge>
+      </AddToAnki>
     </div>
   )
 }

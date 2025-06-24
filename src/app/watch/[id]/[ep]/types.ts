@@ -13,7 +13,7 @@ export type TranscriptionQuery = {
 }
 
 export type TranscriptionsLookup = Map<SubtitleTranscription, Map<string, SubtitleCue>>
-export type WordsLookup = Map<string, Word>
+export type WordsLookup = Map<string, { word: Word['word'], status: Word['status'] }>
 export type PitchLookup = Map<string, NHKEntry>
 
 export type SubtitleQuery = UseQueryResult<{

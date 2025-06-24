@@ -34,7 +34,7 @@ export function useSettingsForEpisode() {
   }, [isLoading, settings, loadingDuration]);
 
   return {
-    settings: settings as SettingsForEpisode,
+    settings,
     isLoading,
     error,
     loadingDuration,

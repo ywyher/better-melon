@@ -1,3 +1,7 @@
+check your words list button ?
+
+for the words part we are creating an entry for each word i think that is a bit expensive mayube try one entry with one field having all the word if that is better
+
 when the time comes to refactor the parsing logic i think we gotta cache the converted and tokenized stuff as well ? currently we only caching the file
 
 episode 11 of made in abyss is broken (special case)
@@ -13,9 +17,6 @@ use-prefetch-tokenizer instaed of the useEffect mess we got in the info.tsx
 currently the issue we have is with the transcriptions hook since the tokenization process doesn't work well, gotta solve it maybe try server actions instead of API routes idk clueless
 
 check https://github.com/Doublevil/JmdictFurigana
-pitch coloring is kinda broken, rn
-also as for pitch coloring for the subitlte cue list in the panel doesn't work since we only query the accent when the time for that cue come, gotta change the way we do it bruh
-we should be able to add/import `learning`/`ignored` words too, not only known, i guess at least
 
 # Features
 1. add a button on the panel to take you to the current active cue

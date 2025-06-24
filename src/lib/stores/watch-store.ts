@@ -62,7 +62,7 @@ interface WatchDataState {
 }
 
 const initialState = {
-  animeId: 0,
+  animeId: '0',
   episodeNumber: 0,
 
   episodeData: null,

@@ -3,7 +3,15 @@ import { useQuery } from '@tanstack/react-query';
 import { settingsQueries } from '@/lib/queries/settings';
 import { Word } from '@/lib/db/schema';
 
-export function useWords(status?: Word['status']) {
+type UseWordsProps = {
+  status?: Word['status']
+  shouldFetch: boolean
+}
+
+export function useWords({
+  status,
+  shouldFetch
+}: UseWordsProps) {
   const loadingStartTime = useRef<number>(0);
   const [loadingDuration, setLoadingDuration] = useState<number>(0);
   
@@ -14,6 +22,7 @@ export function useWords(status?: Word['status']) {
   } = useQuery({
     ...settingsQueries.words({ status }),
     staleTime: 1000 * 60 * 5,
+    enabled: !!shouldFetch
   });
 
   useEffect(() => {
@@ -27,9 +36,12 @@ export function useWords(status?: Word['status']) {
 
 
   const wordsLookup = useMemo(() => {
-    if (!words) return new Map<string, Word>();
-    const lookup = new Map<string, Word>();
-    words.forEach((wordsData) => lookup.set(wordsData.word, wordsData));
+    if (!words) return new Map<string, { word: Word['word'], status: Word['status'] }>();
+    const lookup = new Map<string, { word: Word['word'], status: Word['status'] }>();
+    words.forEach((wordsData) => lookup.set(wordsData.word, {
+      word: wordsData.word,
+      status: wordsData.status
+    }));
     return lookup;
   }, [words]);
 

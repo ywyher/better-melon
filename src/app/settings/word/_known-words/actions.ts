@@ -2,9 +2,34 @@
 
 import db from "@/lib/db"
 import { ensureAuthenticated } from "@/lib/db/mutations"
-import { word, Word, word as wordTable } from "@/lib/db/schema"
+import { Word, word as wordTable } from "@/lib/db/schema"
 import { generateId } from "better-auth"
 import { and, eq, inArray } from "drizzle-orm"
+
+export async function getWord(word: string) {
+  try {
+    const { userId, error } = await ensureAuthenticated()
+    if(error || !userId) throw new Error(error || "Must be authenticated")
+    
+    const [wordData] = await db.select().from(wordTable)
+      .where(and(
+        eq(wordTable.word, word),
+        eq(wordTable.userId, userId)
+      ))
+
+    return {
+      word: wordData,
+      message: "Word",
+      error: null
+    }
+  } catch (error: unknown) {
+    return {
+      message: null,
+      word: null,
+      error: error instanceof Error ? error.message : "Failed to get word",
+    }
+  }
+}
 
 export async function getWords({ status }: { status?: Word['status'] }) {
   try {
@@ -80,15 +105,26 @@ export async function addWordsBulk({ words, status }: { words: string[], status:
   }
 }
 
-export async function addWord({ word, status }: { word: Word['word'], status: Word['status'] }) {
+export async function handleWord({ word, status }: { word: Word['word'], status: Word['status'] }) {
   try {
     const { userId, error } = await ensureAuthenticated()
     if(error || !userId) throw new Error(error || "Must be authenticated")
 
     const [entry] = await db.select().from(wordTable)
       .where(eq(wordTable.word, word))
-    if(entry) throw new Error("Word already exists")
 
+    if(entry) {
+      await db.update(wordTable).set({
+        status,
+        updatedAt: new Date()
+      })
+      
+      return {
+        message: `Word set as ${status}.`,
+        error: null
+      }
+    }
+    
     const id = generateId()
     await db.insert(wordTable).values({
       id,
@@ -100,7 +136,7 @@ export async function addWord({ word, status }: { word: Word['word'], status: Wo
     })
 
     return {
-      message: "Word added.",
+      message: `Word set as ${status}.`,
       error: null
     }
   } catch (error: unknown) {

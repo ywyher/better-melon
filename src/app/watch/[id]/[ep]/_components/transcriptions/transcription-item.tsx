@@ -139,9 +139,9 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
                 ...(isActive ? styles.tokenStyles.active : styles.tokenStyles.default),
                 ...(pitchColoring && !isActive && accent ? pitchAccentsStyles[accent] : undefined),
                 ...(
-                    learningStatus && !excludedPos.some(p => p == token.pos) && status 
+                    learningStatus && cue.transcription != 'english' && !excludedPos.some(p => p == token.pos) && status 
                         ? learningStatusesStyles[status] 
-                        : !excludedPos.some(p => p == token.pos) && learningStatusesStyles['unknown']
+                        : !excludedPos.some(p => p == token.pos) && cue.transcription != 'english' && learningStatusesStyles['unknown']
                 )
             };
             const activeContainerStyles = isActive ? styles.containerStyle.active : undefined;

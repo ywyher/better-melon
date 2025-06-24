@@ -6,15 +6,25 @@ import { useSubtitleStore } from '@/lib/stores/subtitle-store';
 import { useQueries } from '@tanstack/react-query';
 import { pitchQueries } from '@/lib/queries/pitch';
 
+type PitchAccentChunksProps = {
+  japaneseCues: SubtitleCue[];
+  animeId: string;
+  shouldFetch: boolean
+}
+
 export const pitchAccentConfig = {
   chunkSize: 200,
   delayBetweenRequests: 100,
 };
 
-export function usePitchAccentChunks(japaneseCues: SubtitleCue[] = [], animeId: string) {
+export function usePitchAccentChunks({
+  animeId,
+  japaneseCues = [],
+  shouldFetch
+}: PitchAccentChunksProps) {
   const activeSubtitleFile = useSubtitleStore((state) => state.activeSubtitleFile)
-  const [pitchLookup, setPitchLookup] = useState<Map<string, NHKEntry>>(new Map());
   const hookStartTime = useRef<number>(performance.now());
+  const [pitchLookup, setPitchLookup] = useState<Map<string, NHKEntry>>(new Map());
   const [loadingDuration, setLoadingDuration] = useState<number>(0);
 
   const chunks = useMemo(() => {
@@ -43,7 +53,7 @@ export function usePitchAccentChunks(japaneseCues: SubtitleCue[] = [], animeId: 
           pitchAccentConfig.delayBetweenRequests
         ),
         staleTime: 1000 * 60 * 60,
-        enabled: !!activeSubtitleFile && !!animeId && !!chunk.length,
+        enabled: !!activeSubtitleFile && !!animeId && !!chunk.length && !!shouldFetch,
       }
     })
   }), [chunks, activeSubtitleFile, animeId]);

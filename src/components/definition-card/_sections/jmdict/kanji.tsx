@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge"
 import { useQuery } from "@tanstack/react-query"
 import { subtitleQueries } from "@/lib/queries/subtitle"
 import { toast } from "sonner"
+import AddToAnki from "@/components/add-to-anki"
 
 type JMdictKanjiProps = {
   kanji: JMdictKanji
@@ -20,37 +21,27 @@ export default function JMdictKanji({ kanji, kana, pos, definition, sentenceEngl
     ...subtitleQueries.toKana(sentenceKanji?.text || ""),
   })
   
-  const { addToAnki } = useAddToAnki({
-    fields: {
-      kanji: kanji.text || "",
-      kana: kana.text || "",
-      definition: definition.text || "",
-      "sentence-kanji": sentenceKanji?.text || "",
-      "sentence-english": sentenceEnglish?.text || "",
-      "sentence-kana": kanaSentence || "",
-      "part-of-speech": pos
-        ?.map(p => jmdictTags[p] || p)
-        .join(', ')
-    },
-  })
-
   return (
     <div className="flex flex-col gap-4">
       <p className="text-2xl">{kanji.text || kana.text}</p>
       <div className="flex flex-col gap-3">
         {(kanji.common || kana.common) && <Badge variant="secondary" className="min-w-[100px]">common kanji</Badge>}
-        <Badge
-          onClick={() => {
-            if(!isLoading) {
-              addToAnki()
-            }else {
-              toast.warning(`Still converting kanji sentence to kana please, again later`)
-            }
-          }}
-          className="cursor-pointer min-w-[100px]"
+        <AddToAnki
+          kanji={kanji.text || ""}
+          kana={kana.text || ""}
+          definition={definition.text || ""}
+          sentenceKanji={sentenceKanji?.text || ""}
+          sentenceEnglish={sentenceEnglish?.text || ""}
+          sentenceKana={kanaSentence || ""}
+          partOfSpeech={pos
+            ?.map(p => jmdictTags[p] || p)
+            .join(', ')}
+          disabled={isLoading}
         >
-          Add to anki
-        </Badge>
+          <Badge className="cursor-pointer min-w-[100px]">
+            Add to anki
+          </Badge>
+        </AddToAnki>
       </div>
     </div>
   )
