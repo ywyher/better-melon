@@ -3,7 +3,7 @@
 import { User } from "@/lib/db/schema";
 import { format } from "date-fns";
 import Image from "next/image";
-import { getFileUrl } from "@/lib/utils";
+import { getFileUrl } from "@/lib/utils/utils";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { CalendarIcon } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";

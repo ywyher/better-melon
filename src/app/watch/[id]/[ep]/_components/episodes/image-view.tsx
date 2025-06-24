@@ -1,5 +1,5 @@
 import { ImageSkeleton } from "@/components/image-skeleton";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils";
 import { Anime, AnimeEpisodeMetadata } from "@/types/anime";
 import { Play } from "lucide-react";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";

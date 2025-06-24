@@ -9,7 +9,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { usePlayerStore } from "@/lib/stores/player-store";
 import { Anime, AnimeEpisodeData } from "@/types/anime";
 import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";

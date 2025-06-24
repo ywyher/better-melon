@@ -1,10 +1,10 @@
 import Kuroshiro from "@sglkc/kuroshiro";
 import type { SubtitleCue, SubtitleTranscription, SubtitleToken, SubtitleFormat } from "@/types/subtitle";
 import CustomKuromojiAnalyzer from "./custom-kuromoji-analyzer";
-import { removeHtmlTags, removeTags, timestampToSeconds } from "@/lib/subtitle/utils";
+import { removeHtmlTags, removeTags, timestampToSeconds } from "@/lib/utils/subtitle";
 import nlp from 'compromise';
 import { SubtitleRequestBody } from "@/app/api/subtitles/parse/route";
-import { readFileContent } from "@/lib/utils";
+import { readFileContent } from "@/lib/utils/utils";
 import { Tokenizer } from "kuromojin";
 
 export async function parseSubtitleToJson({
@@ -102,7 +102,7 @@ export async function convertSubtitlesForNonJapaneseTranscription(
   }
 
   const kuroshiroOptions = {
-    to: transcription != 'furigana' ? transcription : 'hiragana',
+    to: transcription,
     mode: transcription === 'romaji' 
     ? 'spaced' 
     : transcription == 'furigana' 
@@ -126,6 +126,7 @@ export async function convertSubtitlesForNonJapaneseTranscription(
                 const convertedToken = await kuroshiro.convert(token.surface_form, kuroshiroOptions);
                 return {
                   ...token,
+                  original_form: token.surface_form,
                   surface_form: convertedToken
                 };
               })

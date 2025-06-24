@@ -32,6 +32,7 @@ export type SubtitleToken = {
     id: string;
     word_id: number;
     surface_form: string; // most important
+    original_form: string; // preserve original form before converting using kuroshiro
     pos: string;
     basic_form: string;
     reading?: string | undefined;

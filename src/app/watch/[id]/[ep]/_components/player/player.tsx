@@ -1,6 +1,6 @@
 "use client";
 
-import { MediaPlayer, type MediaPlayerInstance, MediaProvider, Poster, useMediaState } from '@vidstack/react';
+import { MediaPlayer, type MediaPlayerInstance, MediaProvider, Poster } from '@vidstack/react';
 import { DefaultAudioLayout, defaultLayoutIcons, DefaultVideoLayout } from '@vidstack/react/player/layouts/default';
 import { Track } from "@vidstack/react";
 import '@vidstack/react/player/styles/default/theme.css';
@@ -8,50 +8,25 @@ import '@vidstack/react/player/styles/default/layouts/video.css';
 
 import { useCallback, useEffect, useRef, useState, useMemo, memo } from "react";
 import { usePlayerStore } from "@/lib/stores/player-store";
-import type { AnimeEpisodeMetadata, AnimeStreamingLinks, SkipTime } from '@/types/anime';
+import type { SkipTime } from '@/types/anime';
 import SkipButton from '@/app/watch/[id]/[ep]/_components/player/skip-button';
 import PlayerSkeleton from '@/app/watch/[id]/[ep]/_components/player/player-skeleton';
 import { useThrottledCallback } from 'use-debounce';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { generateWebVTTFromSkipTimes } from '@/lib/subtitle/utils';
+import { generateWebVTTFromSkipTimes } from '@/lib/utils/subtitle';
 import SubtitleTranscriptions from '@/app/watch/[id]/[ep]/_components/transcriptions/transcriptions';
 import { env } from '@/lib/env/client';
-import { TranscriptionQuery, TranscriptionsLookup, TranscriptionStyles } from '@/app/watch/[id]/[ep]/types';
-import { GeneralSettings, PlayerSettings, SubtitleSettings } from '@/lib/db/schema';
 import DefinitionCard from '@/components/definition-card/definition-card';
-
-type PlayerProps = {
-  animeId: string;
-  episodeNumber: number;
-  metadata: AnimeEpisodeMetadata;
-  streamingLinks: AnimeStreamingLinks;
-  episodesLength: number;
-  transcriptions: TranscriptionQuery[]
-  transcriptionsStyles: TranscriptionStyles
-  syncPlayerSettings: GeneralSettings['syncPlayerSettings']
-  cuePauseDuration: PlayerSettings['cuePauseDuration']
-  definitionTrigger: SubtitleSettings['definitionTrigger']
-  transcriptionsLookup: TranscriptionsLookup
-}
+import { usePlaybackSettingsStore } from '@/lib/stores/playback-settings-store';
+import { useWatchDataStore } from '@/lib/stores/watch-store';
 
 const MemoizedPlayerSkeleton = memo(PlayerSkeleton);
 const MemoizedSkipButton = memo(SkipButton);
 const MemoizedDefinitionCard = memo(DefinitionCard);
+const MemoizedSubtitleTranscriptions = memo(SubtitleTranscriptions);
 
-export default function Player({ 
-  animeId,
-  episodeNumber,
-  streamingLinks,
-  metadata,
-  episodesLength,
-  transcriptions,
-  transcriptionsStyles,
-  syncPlayerSettings,
-  cuePauseDuration,
-  definitionTrigger,
-  transcriptionsLookup
-}: PlayerProps) {
+export default function Player() {
     const router = useRouter()
     
     const player = useRef<MediaPlayerInstance>(null);
@@ -65,9 +40,15 @@ export default function Player({
     const setPlayer = usePlayerStore((state) => state.setPlayer);
     const isVideoReady = usePlayerStore((state) => state.isVideoReady);
     const setIsVideoReady = usePlayerStore((state) => state.setIsVideoReady);
-    const autoSkip = usePlayerStore((state) => state.autoSkip);
-    const autoNext = usePlayerStore((state) => state.autoNext);
-    const autoPlay = usePlayerStore((state) => state.autoPlay);
+    const autoSkip = usePlaybackSettingsStore((state) => state.autoSkip);
+    const autoNext = usePlaybackSettingsStore((state) => state.autoNext);
+    const autoPlay = usePlaybackSettingsStore((state) => state.autoPlay);
+
+    const sources = useWatchDataStore((state) => state.episodeData?.sources)
+    const metadata = useWatchDataStore((state) => state.episodeData?.metadata)
+    const episodeNumber = useWatchDataStore((state) => state.episodeNumber)
+    const episodesLength = useWatchDataStore((state) => state.episodesLength)
+    const animeId = useWatchDataStore((state) => state.animeId)
 
     const [loadingDuration, setLoadingDuration] = useState<{
       start: Date | undefined,
@@ -82,30 +63,29 @@ export default function Player({
     }, [setPlayer]);
 
     useEffect(() => {
-      if(!streamingLinks || !streamingLinks.sources[0]) return;
+      if(!sources || !sources.sources[0]) return;
 
-    //   const url = `${env.NEXT_PUBLIC_PROXY_URL}?url=${streamingLinks.sources[0].url}`
-      const url = `http://localhost:8080/proxy?url=https://frostywinds57.live/_v7/af9590f35dc83df1743cb7a42fb27e1d774d69d735058842262eaa1a8448ee6af7ae3b241bcdc0fc8fd10155d82c5fcfa232daf76ee0a09aca6a64dfd264b7d9fa2517256de0b588c790ece83c7d98040c9b1b333bbd82044ca5bcc4b6140661a653aaeac58ca922caf3a87efc10d31729f04a8135742dac190b80c13050b903/master.m3u8`
+      const url = `${env.NEXT_PUBLIC_PROXY_URL}?url=${sources.sources[0].url}`
       setVideoSrc(url)
       setIsInitialized(true);
       setLoadingDuration({ start: new Date(), end: undefined })
-    }, [streamingLinks, isInitialized]);
+    }, [sources]);
 
     useEffect(() => {
-        if (!streamingLinks || !player.current) return;
+        if (!sources || !player.current) return;
 
         const skipTimesData = [
             {
                 interval: {
-                    startTime: streamingLinks.intro.start,
-                    endTime: streamingLinks.intro.end,
+                    startTime: sources.intro.start,
+                    endTime: sources.intro.end,
                 },
                 skipType: 'OP' as SkipTime['skipType']
             },
             {
                 interval: {
-                    startTime: streamingLinks.outro.start,
-                    endTime: streamingLinks.outro.end,
+                    startTime: sources.outro.start,
+                    endTime: sources.outro.end,
                 },
                 skipType: 'OT' as SkipTime['skipType']
             }
@@ -117,8 +97,8 @@ export default function Player({
             skipTimes: skipTimesData,
             totalDuration: player.current?.duration || 0,
             episode: {
-                title: metadata.title || "",
-                number: metadata.number || episodeNumber
+                title: metadata?.title || "",
+                number: metadata?.number || episodeNumber
             }
         });
         
@@ -130,9 +110,10 @@ export default function Player({
         return () => {
             if (blobUrl) URL.revokeObjectURL(blobUrl);
         };
-    }, [metadata, streamingLinks, player.current?.duration, episodeNumber]);
+    }, [metadata, sources, player.current?.duration, episodeNumber]);
 
     const handleCanPlay = useCallback(() => {
+        console.log(`can play ?`)
         setIsVideoReady(true);
         setLoadingDuration(prev => ({
           ...prev,
@@ -213,7 +194,7 @@ export default function Player({
                   }s</p>
                 )}
                 <MediaPlayer
-                    title={metadata.title || ""}
+                    title={metadata?.title || ""}
                     src={videoSrc}
                     ref={player}
                     onCanPlay={handleCanPlay}
@@ -229,8 +210,8 @@ export default function Player({
                     <MediaProvider>
                         <Poster
                             className="vds-poster"
-                            src={metadata.image}
-                            alt={metadata.title}
+                            src={metadata?.image}
+                            alt={metadata?.title}
                         />
                         {vttUrl && (
                             <Track kind='chapters' src={vttUrl} default label='Skip Times' />
@@ -238,7 +219,7 @@ export default function Player({
                     </MediaProvider>
                     <DefaultAudioLayout icons={defaultLayoutIcons} />
                     <DefaultVideoLayout
-                        thumbnails={`${env.NEXT_PUBLIC_PROXY_URL}?url=${metadata.thumbnails?.file}`}
+                        thumbnails={`${env.NEXT_PUBLIC_PROXY_URL}?url=${metadata?.thumbnails?.url}`}
                         icons={defaultLayoutIcons} 
                     />
                     <MemoizedSkipButton
@@ -247,14 +228,7 @@ export default function Player({
                         currentTime={player.current?.currentTime || 0}
                         skipTimes={skipTimes}
                     />
-                    <SubtitleTranscriptions
-                      transcriptions={transcriptions}
-                      styles={transcriptionsStyles}
-                      syncPlayerSettings={syncPlayerSettings}
-                      cuePauseDuration={cuePauseDuration}
-                      definitionTrigger={definitionTrigger}
-                      transcriptionsLookup={transcriptionsLookup}
-                    />
+                    <MemoizedSubtitleTranscriptions />
                     <MemoizedDefinitionCard />
                 </MediaPlayer>
             </div>

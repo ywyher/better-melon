@@ -13,14 +13,12 @@ import { Dispatch, SetStateAction, useCallback, useTransition } from "react";
 type PanelHeaderProps = {
     isLoading: boolean;
     activeSubtitleFile: ActiveSubtitleFile | null;
-    subtitleFiles: SubtitleFile[];
     setSelectedTranscription: Dispatch<SetStateAction<SubtitleTranscription>>
 }
 
 export default function PanelHeader({
     isLoading,
     activeSubtitleFile,
-    subtitleFiles,
     setSelectedTranscription
 }: PanelHeaderProps) {
     const router = useRouter();
@@ -47,9 +45,7 @@ export default function PanelHeader({
                                 Download Subtitle
                             </Button>
                         )}
-                        <SubtitleFileSelector
-                            subtitleFiles={subtitleFiles}
-                        />
+                        <SubtitleFileSelector />
                     </div>
                 )}
             </div>

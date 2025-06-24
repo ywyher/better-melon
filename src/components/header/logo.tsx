@@ -4,16 +4,10 @@ import Link from "next/link";
 export default function Logo() {
     return (
         <Link
-            className="font-bold text-xl cursor-pointer max-w-full"
+            className="font-bold text-xl cursor-pointer w-fit h-fit px-2 rounded-md bg-primary"
             href="/"
         >
-            <Image
-                src="/images/logo.png"
-                alt="logo"
-                width="120"
-                height="120"
-                className="object-cover"
-            />
+            <p className="text-black">Better Melon</p>
         </Link>
     )
 }

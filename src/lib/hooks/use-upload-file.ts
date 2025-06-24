@@ -1,5 +1,5 @@
 import { env } from "@/lib/env/client";
-import { getFileUrl } from "@/lib/utils";
+import { getFileUrl } from "@/lib/utils/utils";
 import { useState, useRef } from "react";
 import { toast } from "sonner";
 

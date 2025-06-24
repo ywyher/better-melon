@@ -4,14 +4,14 @@ import SubtitleTranscriptions from "@/app/watch/[id]/[ep]/_components/transcript
 import SubtitleStyles from "@/components/subtitle/styles/subtitle-styles"
 import { useSubtitleStyles } from "@/lib/hooks/use-subtitle-styles"
 import { useSubtitleTranscriptions } from "@/lib/hooks/use-subtitle-transcriptions"
-import { usePlayerStore } from "@/lib/stores/player-store"
+import { useSubtitleStore } from "@/lib/stores/subtitle-store"
 import { useSubtitleStylesStore } from "@/lib/stores/subtitle-styles-store"
 import { useEffect } from "react"
 
 export default function StylesHook() {
-  const setEnglishSubtitleUrl = usePlayerStore((state) => state.setEnglishSubtitleUrl) || "";
-  const setActiveSubtitleFile = usePlayerStore((state) => state.setActiveSubtitleFile);
-  const setActiveTranscriptions = usePlayerStore((state) => state.setActiveTranscriptions) || [];
+  const setEnglishSubtitleUrl = useSubtitleStore((state) => state.setEnglishSubtitleUrl) || "";
+  const setActiveSubtitleFile = useSubtitleStore((state) => state.setActiveSubtitleFile);
+  const setActiveTranscriptions = useSubtitleStore((state) => state.setActiveTranscriptions) || [];
 
   useEffect(() => {
     setActiveSubtitleFile({

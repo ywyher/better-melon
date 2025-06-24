@@ -13,7 +13,7 @@ export const defaultPlayerSettings: PlayerSettings =  {
     cuePauseDuration: null,
 
     autoScrollToCue: true,
-    autoScrollToCueDuration: 3,
+    autoScrollResumeDelay: 3,
 
     userId: "",
     createdAt: new Date(),

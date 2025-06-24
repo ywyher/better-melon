@@ -34,15 +34,6 @@ export default function HeaderLinks() {
                     Playground
                 </Button>
             </Link>
-            <Link href={'/playground/hope'}>
-                <Button
-                    variant="ghost"
-                    className="flex flex-row gap-2 text-md"
-                >
-                    <Play className="h-4 w-4" />
-                    HOPE
-                </Button>
-            </Link>
             <Link href={'/watch/97986/9'}>
                 <Button
                     variant="ghost"
@@ -62,7 +53,6 @@ export default function HeaderLinks() {
                     Erased
                 </Button>
             </Link>
-
         </div>
     )
 }

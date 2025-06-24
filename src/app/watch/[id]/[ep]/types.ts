@@ -1,7 +1,10 @@
-import { SubtitleStyles } from "@/lib/db/schema";
+import { SubtitleStyles, Word } from "@/lib/db/schema";
+import { NHKEntry } from "@/types/nhk";
 import { SubtitleCue, SubtitleFormat, SubtitleTranscription } from "@/types/subtitle";
 import { UseQueryResult } from "@tanstack/react-query";
 import { CSSProperties } from "react";
+
+export type Subtitle = Record<SubtitleTranscription, SubtitleCue[]>
 
 export type TranscriptionQuery = {
   transcription: SubtitleTranscription;
@@ -10,6 +13,8 @@ export type TranscriptionQuery = {
 }
 
 export type TranscriptionsLookup = Map<SubtitleTranscription, Map<string, SubtitleCue>>
+export type WordsLookup = Map<string, { word: Word['word'], status: Word['status'] }>
+export type PitchLookup = Map<string, NHKEntry>
 
 export type SubtitleQuery = UseQueryResult<{
     transcription: SubtitleTranscription;

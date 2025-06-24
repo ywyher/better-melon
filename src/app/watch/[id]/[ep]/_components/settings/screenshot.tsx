@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { GeneralSettings } from "@/lib/db/schema";
 import { usePlayerStore } from "@/lib/stores/player-store";
-import { downloadBase64Image, mapScreenshotNamingPatternValues, takeSnapshot } from "@/lib/utils";
+import { downloadBase64Image, mapScreenshotNamingPatternValues, takeSnapshot } from "@/lib/utils/utils";
 import { AnimeEpisodeMetadata } from "@/types/anime";
 import { Camera } from "lucide-react";
 import { toast } from "sonner";

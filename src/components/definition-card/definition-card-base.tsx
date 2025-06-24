@@ -1,13 +1,12 @@
 'use client'
 
 import DefinitionCardContent from "@/components/definition-card/definition-card-content";
-import DefinitionCardHeader from "@/components/definition-card/definition-card-header";
+import DefinitionCardHeader from "@/components/definition-card/_header/definition-card-header";
 import { Card } from "@/components/ui/card";
 import { useDefinition } from "@/lib/hooks/use-definition";
 import { useDefinitionStore } from "@/lib/stores/definition-store";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils";
 import { useDraggable } from "@dnd-kit/core";
-import { useEffect } from "react";
 import { createPortal } from "react-dom";
 
 export default function DefinitionCardBase() {
@@ -25,7 +24,7 @@ export default function DefinitionCardBase() {
     transform: `translate3d(${position.x}px, ${position.y}px, 0)`,
   };
 
-  const { dictionary, entries, isLoading, error } = useDefinition({ query: token?.surface_form, isExpanded })
+  const { dictionary, entries, isLoading, error } = useDefinition({ query: token?.original_form ,isExpanded })
 
   const cardContent = (
     <Card

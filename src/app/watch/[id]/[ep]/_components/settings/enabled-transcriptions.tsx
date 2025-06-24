@@ -6,7 +6,7 @@ import TooltipWrapper from "@/components/tooltip-wrapper"
 import { subtitleTranscriptions } from "@/lib/constants/subtitle";
 import { GeneralSettings, PlayerSettings } from "@/lib/db/schema"
 import { settingsQueries } from "@/lib/queries/settings"
-import { usePlayerStore } from "@/lib/stores/player-store"
+import { useSubtitleStore } from "@/lib/stores/subtitle-store"
 import { SyncStrategy } from "@/types"
 import { SubtitleTranscription } from "@/types/subtitle"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
@@ -20,8 +20,8 @@ type EnabledTranscriptionsSettingProps = {
 }
 
 export default function EnabledTranscriptions({ playerSettings, syncPlayerSettings }: EnabledTranscriptionsSettingProps) {
-  const activeTranscriptions = usePlayerStore((state) => state.activeTranscriptions)
-  const setActiveTranscriptions = usePlayerStore((state) => state.setActiveTranscriptions)
+  const activeTranscriptions = useSubtitleStore((state) => state.activeTranscriptions)
+  const setActiveTranscriptions = useSubtitleStore((state) => state.setActiveTranscriptions)
   const [selectedTranscriptions, setSelectedTranscriptions] = useState<SubtitleTranscription[]>([])
   const [debouncedTranscriptions] = useDebounce(selectedTranscriptions, 1000) // 1000ms debounce
 

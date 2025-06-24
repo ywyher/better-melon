@@ -1,3 +1,23 @@
+check your words list button ?
+
+for the words part we are creating an entry for each word i think that is a bit expensive mayube try one entry with one field having all the word if that is better
+
+when the time comes to refactor the parsing logic i think we gotta cache the converted and tokenized stuff as well ? currently we only caching the file
+
+episode 11 of made in abyss is broken (special case)
+
+the home page should be introduction to the site and add an option to redirect to the animes page right away in the settings
+
+the definition card we should use furigana !! 
+
+the prevois use-anime-data code but make is existsInCache null instead of false so it cant skip till there is true or false ? prob not fuck
+
+use-prefetch-tokenizer instaed of the useEffect mess we got in the info.tsx
+
+currently the issue we have is with the transcriptions hook since the tokenization process doesn't work well, gotta solve it maybe try server actions instead of API routes idk clueless
+
+check https://github.com/Doublevil/JmdictFurigana
+
 # Features
 1. add a button on the panel to take you to the current active cue
 5. puase player on definition trigger or hover or click or none !!!!
@@ -12,6 +32,9 @@
 12. input validation/sanitization for login/register
 13. episodes metadata for the episode selector
 14. preview subtitle for when the settings change (not important)
+15. add extra option for the compact mode for the definition-card like sentences and such
+16. maybe add furigana for definition card (prob not)
+17. google text-to-speech in the defintion-card (prob not)
 
 # Migaku features i wanna add (why am i torturing my self)
 1. if clicking shift and hover over a word show the definition card
@@ -32,15 +55,16 @@
 - the benift from this is that the user can have a dictionary opened at the same time in case he want to look something up
 10. if a word is not parsed correctly you should be able to click a button or shortcut that will search the longest word first from the kanji we have in the current subtitle
 11. mass export cards that will check the whole subtitle file and add cards for unknown words (hard, later ig)
+12. instead of having a furigana transcription on its own, add the option to show it based on the word status and do it just in the japanese transcription
 
 as for known words should we allow user to manually add to the database,
 or only the words that he have in his anki deck !!!
 prob manually as well as the ability to import from an anki deck ?
-we should have these types
+we should have these types (add an option for the user to disable this)
 1. unknown -> red
-2. tracking/learning -> purple
-3. known -> green
-4. ignore -> gray
+2. tracking/learning -> orange
+3. known -> green => only on hover
+4. ignore -> gray => only on hover
 if a word is unknown or tracker => show furigana
 each should have its own styling
 should have hotkeys: 
@@ -67,6 +91,8 @@ should have hotkeys:
 8. for schedules dont use anilist its based on japanese tv
 9. some settings that uses onBlur to update, make sure to only update if value changed
 10. check https://www.anthropic.com/jobs?team=4002061008 smooth logo effect when scrolling
+11. check this proxy https://github.com/titaniumnetwork-dev/Ultraviolet
+12. check this proxy https://github.com/MercuryWorkshop/scramjet/
 
 # Checkout
 
@@ -90,3 +116,52 @@ https://receive-smss.com/
 check out
 1- https://github.com/shaka-project/shaka-player
 2- https://github.com/zhw2590582/ArtPlayer
+
+[frontend](https://github.com/ywyher/better-melon)
+```bash
+Language                     files          blank        comment           code
+-------------------------------------------------------------------------------
+SUM:                           312           2470           1101          20599
+```
+
+[api](https://github.com/ywyher/better-melon-api)
+```bash
+-------------------------------------------------------------------------------
+Language                     files          blank        comment           code
+-------------------------------------------------------------------------------
+SUM:                            26            179             76           1340
+-------------------------------------------------------------------------------
+```
+
+[dictionary indexer](https://github.com/ywyher/better-melon-dictionary-indexer)
+```bash
+-------------------------------------------------------------------------------
+Language                     files          blank        comment           code
+-------------------------------------------------------------------------------
+SUM:                            12             68              2            483
+-------------------------------------------------------------------------------
+```
+
+Heiban
+Atamadaka
+Nakadaka
+Odaka
+Color words to show their respective pitch patterns:
+
+Heiban “flat board” (blue)
+Rises after first mora*; pitch stays high and doesn’t drop
+
+*A mora is a single unit of sound in the Japanese language
+
+あ - 1 mora
+おう - 2 moras
+せんせい - 4 moras
+
+Atamadaka “head high” (red)
+Pitch starts high but drops after the first mora
+
+Nakadaka “middle high” (orange)
+Pitch drops somewhere in the center of the word and ends low
+
+Odaka “tail high” (green)
+Pitch drops after the last mora at the beginning of the next word

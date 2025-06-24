@@ -1,6 +1,5 @@
 "use client"
 
-import type { GeneralSettings } from "@/lib/db/schema"
 import DialogWrapper from "@/components/dialog-wrapper"
 import { Button } from "@/components/ui/button"
 import { Settings } from "lucide-react"
@@ -10,12 +9,13 @@ import DelayController from "@/app/watch/[id]/[ep]/_components/settings/delay-co
 import { Separator } from "@/components/ui/separator"
 import { useIsLarge } from "@/lib/hooks/use-media-query"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useWatchDataStore } from "@/lib/stores/watch-store"
   
-export default function SettingsDialog({ generalSettings }: { 
-    generalSettings: GeneralSettings
-  }) {
+export default function SettingsDialog() {
     const [open, setOpen] = useState<boolean>(false)
     const isLarge = useIsLarge()
+
+    const generalSettings = useWatchDataStore((state) => state.settings.generalSettings)
 
     return (
       <DialogWrapper

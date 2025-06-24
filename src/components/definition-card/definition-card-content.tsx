@@ -1,11 +1,11 @@
 'use client'
 
 import { DefinitionCardContentSkeleton } from "@/components/definition-card/defintion-card-content-skeleton"
-import JMdictSection from "@/components/definition-card/sections/jmdict/section"
-import JMnedictSection from "@/components/definition-card/sections/jmnedict/seciton"
-import Kanjidic2Section from "@/components/definition-card/sections/kanjidic2/section"
+import JMdictSection from "@/components/definition-card/_sections/jmdict/section"
+import JMnedictSection from "@/components/definition-card/_sections/jmnedict/seciton"
+import Kanjidic2Section from "@/components/definition-card/_sections/kanjidic2/section"
 import { Separator } from "@/components/ui/separator"
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils/utils"
 import { Index } from "@/types/dictionary"
 import { JMdictWord } from "@/types/jmdict"
 import { JMnedictWord } from "@/types/jmnedict"

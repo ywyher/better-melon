@@ -49,6 +49,8 @@ Animelon doesn’t provide all animes, and its entries are rarely updated, makin
 - Definition on select or hover setting
 - .ass/.srt/.vtt subtitle support
 - Definition-on-select functionality
+- Pitch coloring
+- Learning status
 - Caching through redis
 
 ## Planned Features

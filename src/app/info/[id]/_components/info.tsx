@@ -12,8 +12,9 @@ import { Anime } from "@/types/anime"
 import { useRouter, useSearchParams } from "next/navigation"
 import AddToList from "@/components/add-to-list/add-to-list"
 import { useQueryClient } from "@tanstack/react-query"
-import { initializeTokenizer } from "@/lib/subtitle/parse"
 import { GET_ANIME } from "@/lib/graphql/queries"
+import { initializeTokenizerAction } from "@/lib/subtitle/actions"
+import { useInitializeTokenizer } from "@/lib/hooks/use-initialize-tokenizer"
 
 type AnimeInfoProps = {
   animeId: Anime['id']
@@ -38,8 +39,12 @@ export default function AnimeData({
     fetchPolicy: 'cache-first',
   });
 
+  const {
+    initalize,
+    isInitialized
+  } = useInitializeTokenizer()
+
   useEffect(() =>{ 
-    console.debug(`debug ${animeData}`)
     if(animeData) {
       setAnime(animeData.Media)
     }
@@ -50,12 +55,9 @@ export default function AnimeData({
       queryClient.prefetchQuery({
         queryKey: ['prefetch-tokenizer'],
         queryFn: async () => {
-          console.debug(`debug we fina start prefetching`)
-          const start = performance.now()
-          const tokenizer = await initializeTokenizer('prefetch')
-          const end = performance.now()
-          console.debug(`debug ${(end - start).toFixed(2)}ms`)
-          return tokenizer
+          if(isInitialized) return;
+          await initalize()
+          return ""
         },
         staleTime: Infinity, // Keep result forever once fetched
         gcTime: 24 * 60 * 60 * 1000, // 24 hours garbage collection time

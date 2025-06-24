@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Anime } from "@/types/anime";
-import { formatDescription, getTitle } from "@/lib/utils";
+import { formatDescription, getTitle } from "@/lib/utils/utils";
 import AnimeStatusIndicator from "@/components/anime/anime-status-indicator";
 import { useState } from "react";
 import { ImageSkeleton } from "@/components/image-skeleton";
