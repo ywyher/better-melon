@@ -5,7 +5,7 @@ import DialogWrapper from "@/components/dialog-wrapper";
 import { TextareaInput } from "@/components/form/textarea-input";
 import LoadingButton from "@/components/loading-button";
 import { Button } from "@/components/ui/button";
-import { useInitializeTokenizer } from "@/lib/hooks/use-initialize-tokenizer";
+import { useTokenizer } from "@/lib/hooks/use-tokenizer";
 import { tokenizeText } from "@/lib/subtitle/actions";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -15,7 +15,7 @@ export default function AddKnownWords() {
   const [words, setWords] = useState<string>("")
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [open, setOpen] = useState<boolean>(false)
-  const { initalize } = useInitializeTokenizer()
+  const { initalize } = useTokenizer()
 
   const handleChange = async () => {
     setIsLoading(true)

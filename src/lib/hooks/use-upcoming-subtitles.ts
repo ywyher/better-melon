@@ -43,7 +43,6 @@ export function useUpcomingSubtitles(transcriptions: TranscriptionQuery[], activ
 
     setUpcomingSubtitles(upcomingSubtitles.flat());
     lastFetchedTime.current = currentTime;
-    console.log(`Fetched upcoming upcomingSubtitles at time ${currentTime}:`, upcomingSubtitles);
   }, [currentTime, transcriptions, delay.japanese]);
 
   const shouldFetchUpcomingUpcomingSubtitles = useCallback(() => {

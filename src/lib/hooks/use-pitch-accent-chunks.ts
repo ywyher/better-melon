@@ -34,10 +34,8 @@ export function usePitchAccentChunks({
       c.tokens?.flatMap((t) => t.original_form ?? []) ?? []
     ).filter(Boolean);
     
-    console.log("pitch tokens", tokens);
     const deduplicatedTokens = Array.from(new Set(tokens));
     const chunkedTokens = chunkArray(deduplicatedTokens, pitchAccentConfig.chunkSize);
-    console.log("pitch chunks", chunkedTokens.length);
     
     return chunkedTokens;
   }, [japaneseCues]);

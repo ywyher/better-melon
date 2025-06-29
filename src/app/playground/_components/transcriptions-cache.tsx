@@ -53,18 +53,10 @@ export default function TranscriptionsPlayground() {
   const { transcriptions, transcriptionsLookup, refetch, isLoading } = useSubtitleTranscriptions()
   const { styles } = useSubtitleStyles();
 
-  useEffect(() => {
-    console.log(`transcriptions`, transcriptions)
-  }, [transcriptions])
-
   const shouldShowPanel = useMemo(() => {
     return transcriptions && 
       transcriptions.find(t => t?.transcription === 'japanese') ? true : false
   }, [transcriptions]);
-
-  useEffect(() => {
-    console.log(`activeSubtitleFile`, activeSubtitleFile)
-  }, [activeSubtitleFile])
 
   return (
     <div>

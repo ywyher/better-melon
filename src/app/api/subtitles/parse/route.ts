@@ -203,7 +203,6 @@ export async function fetchSubtitleContent({
   fetchPromise = fetchPromise
     .then(async text => {
       const existingCache = await getCacheFromRedis(cacheKey);
-      console.log(`settings`, cacheKey)
       if (!existingCache) {
         await setCacheToRedis(cacheKey, {
           content: text,
@@ -256,9 +255,6 @@ export async function POST(request: NextRequest) {
     });
     
     const cachedData = await getCacheFromRedis(cacheKey);
-    console.log(`###############################CACHE`)
-    console.log(cachedData ? true : false)
-    console.log(`###############################CACHE`)
 
     const fetchStart = performance.now();
     const content = await fetchSubtitleContent({
@@ -435,7 +431,6 @@ export async function POST(request: NextRequest) {
           lastAccessed: Date.now()
         });
         
-        console.log(`~${transcription} subtitles tokenized and cached`)
         tokenizationInProgress.delete(cacheKey);
         return subs;
       })

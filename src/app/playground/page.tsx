@@ -20,9 +20,9 @@ export default function Playground() {
       {/* <DefinitionPlayerPlayground /> */}
       {/* <DefinitionPlayground /> */}
       {/* <PrefetchPlayground /> */}
-      <ProgressivePitch />
+      {/* <ProgressivePitch /> */}
       {/* <TranscriptionsWordsPlayground /> */}
-      {/* <TranscriptionsPlayground /> */}
+      <TranscriptionsPlayground />
       {/* <DelayPlayground /> */}
       {/* <SettingsDialogPlayground /> */}
       {/* <PlayerPanelPlayground /> */}

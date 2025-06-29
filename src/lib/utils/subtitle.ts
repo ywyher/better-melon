@@ -359,9 +359,6 @@ export const getSentencesForCue = (transcriptionLookup: TranscriptionsLookup, fr
   const jpnKey = getTranscriptionsLookupKey(from, to)
   const engKey = getTranscriptionsLookupKey(from, to, delay.english)
 
-  console.log(`sentences jpnKey`, jpnKey)
-  console.log(`sentences engKey`, engKey)
-
   // Get Japanese (kanji) sentence
   const japaneseCue = transcriptionLookup.get('japanese')?.get(jpnKey);
   if (japaneseCue) {

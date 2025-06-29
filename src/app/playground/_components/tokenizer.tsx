@@ -1,6 +1,6 @@
 'use client'
 
-import { useInitializeTokenizer } from "@/lib/hooks/use-initialize-tokenizer";
+import { useTokenizer } from "@/lib/hooks/use-tokenizer";
 import { useEffect } from "react";
 
 export default function TokenizerPlayground() {
@@ -9,7 +9,7 @@ export default function TokenizerPlayground() {
     isLoading,
     initializationTime,
     initalize
-  } = useInitializeTokenizer();
+  } = useTokenizer();
 
   useEffect(() => {
     if(isInitialized) return

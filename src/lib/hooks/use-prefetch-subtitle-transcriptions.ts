@@ -89,13 +89,6 @@ export function usePrefetchSubtitleTranscriptions({
     return queries.every(query => query.isSuccess);
   }, [queries]);
 
-  useEffect(() => {
-    if (subtitlesPrefetched) {
-      console.log(`Subtitle`, queries.find(q => q.data?.transcription == 'japanese')?.data?.cues)
-      console.info(`debug Successfully prefetched all subtitle transcriptions for episode ${episodeNumber}`);
-    }
-  }, [subtitlesPrefetched, episodeNumber]);
-
   return {
     subtitlesPrefetched,
     activeTranscriptions,

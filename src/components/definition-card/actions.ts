@@ -75,8 +75,6 @@ export async function getDictionaryEntries(query?: string) {
       throw new Error('Invalid entries structure returned from API');
     }
 
-    console.log(data)
-
     return data.map(result => {
       return {
         entries: result.entries,

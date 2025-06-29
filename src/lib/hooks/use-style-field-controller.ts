@@ -61,7 +61,6 @@ export function useStyleFieldController({
         queryClient.invalidateQueries({ queryKey: settingsQueries.subtitleStyles._def });
         toast.success(message || successMessage || `${field} updated successfully`);
       } else {
-        console.log('~source -> store')
         handleStyles(transcription, { [field]: value }, state);
         
         let resolvedStrategy = syncPlayerSettings as SyncStrategy;

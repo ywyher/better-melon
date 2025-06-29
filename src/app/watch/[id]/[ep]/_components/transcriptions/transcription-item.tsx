@@ -92,8 +92,6 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
                 reading: token.original_form
             })
         }
-        console.log('test accent', accent)
-        console.log('test pitch', pitch)
 
         await navigator.clipboard.writeText(token.surface_form);
 

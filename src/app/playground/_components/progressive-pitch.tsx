@@ -33,13 +33,6 @@ export default function ProgressivePitch() {
     shouldFetch: settings?.wordSettings.pitchColoring || false
   })
 
-  useEffect(() => {
-    console.log(`settings`, settings?.wordSettings)
-  }, [settings])
-  useEffect(() => {
-    console.log(`pitchLookup`, pitchLookup)
-  }, [pitchLookup])
-
   return (
     <div className="flex flex-col justify-between gap-10">
       <SubtitleFileSelector />

@@ -1,5 +1,5 @@
 import { TranscriptionQuery } from "@/app/watch/[id]/[ep]/types";
-import { useInitializeTokenizer } from "@/lib/hooks/use-initialize-tokenizer";
+import { useTokenizer } from "@/lib/hooks/use-tokenizer";
 import { subtitleQueries } from "@/lib/queries/subtitle";
 import { useSubtitleStore } from "@/lib/stores/subtitle-store";
 import { getTranscriptionsLookupKey } from "@/lib/utils/subtitle";
@@ -24,7 +24,7 @@ export const useSubtitleTranscriptions = () => {
     return uniqueTranscriptions;
   }, [storeActiveTranscriptions]);
 
-  const { initalize, isInitialized: isTokenizerInitialized, isLoading: isTokenizerLoading, error: tokenizerError } = useInitializeTokenizer();
+  const { initalize, isInitialized: isTokenizerInitialized, isLoading: isTokenizerLoading, error: tokenizerError } = useTokenizer();
 
   useEffect(() => {
     if(isTokenizerInitialized) return; 

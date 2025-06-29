@@ -145,7 +145,6 @@ export async function convertSubtitlesForNonJapaneseTranscription(
 }
 
 export function parseSrt(content: string, transcription: SubtitleTranscription): SubtitleCue[] {
-  console.log('Parsing SRT content...');
   const lines = content.split('\n');
   const result = [];
 
@@ -192,12 +191,10 @@ export function parseSrt(content: string, transcription: SubtitleTranscription):
     result.push(currentEntry);
   }
 
-  console.log('Finished parsing. Total entries:', result.length);
   return result as SubtitleCue[];
 }
 
 export function parseVtt(content: string, transcription: SubtitleTranscription): SubtitleCue[] {
-  console.log('Parsing VTT content...');
   const lines = content.split('\n');
   const result = [];
 
@@ -251,12 +248,10 @@ export function parseVtt(content: string, transcription: SubtitleTranscription):
     result.push(currentEntry);
   }
 
-  console.log('Finished parsing. Total entries:', result.length);
   return result as SubtitleCue[];
 }
 
 export function parseAss(content: string, transcription: SubtitleTranscription): SubtitleCue[] {
-  console.log('Parsing ASS content...');
   const lines = content.split('\n');
   const result = [];
   let idCounter = 1;
@@ -305,6 +300,5 @@ export function parseAss(content: string, transcription: SubtitleTranscription):
     }
   }
 
-  console.log('Finished parsing. Total entries:', result.length);
   return result as SubtitleCue[];
 }

@@ -104,26 +104,6 @@ export const useWatchData = (animeId: string, episodeNumber: number) => {
     );
   }, [isEpisodeDataLoading, isTranscriptionsLoading, isStylesLoading, isPitchAccentLoading, isSettingsLoading, isWordsLoading]);
 
-  useEffect(() => {
-    console.log(`please`, {
-      isEpisodeDataLoading,
-      isTranscriptionsLoading,
-      isStylesLoading,
-      isSettingsLoading,
-      isWordsLoading,
-      isPitchAccentLoading,
-      isVideoReady
-    })
-  }, [
-    isEpisodeDataLoading,
-    isTranscriptionsLoading,
-    isStylesLoading,
-    isSettingsLoading,
-    isWordsLoading,
-    isPitchAccentLoading,
-    isVideoReady
-  ])
-
   const errors = useMemo(() => {
     return [
       episodeDataError,
@@ -137,98 +117,74 @@ export const useWatchData = (animeId: string, episodeNumber: number) => {
   }, [episodeDataError, transcriptionsError, settingsError, stylesError, subtitlesError]);
 
   useEffect(() => {
-    console.log(`animeId waiting`)
     if (animeId && hasChanged(animeId, store.animeId)) {
-      console.log(`animeId passed`)
       setAnimeId(animeId);
     }
   }, [episodeData]);
 
   useEffect(() => {
-    console.log(`episodeNumber waiting`)
     if (episodeNumber && hasChanged(episodeNumber, store.episodeNumber)) {
-      console.log(`episodeNumber passed`)
       setEpisodeNumber(episodeNumber);
     }
   }, [episodeData]);
 
   useEffect(() => {
-    console.log(`episodeData waiting`)
     if (episodeData && hasChanged(episodeData, store.episodeData)) {
-      console.log(`episodeData passed`)
       setEpisodeData(episodeData);
     }
   }, [episodeData]);
 
   useEffect(() => {
-    console.log(`episodesLength waiting`)
     if (episodesLength !== store.episodesLength) {
-      console.log(`episodesLength passed`)
       setEpisodesLength(episodesLength);
     }
   }, [episodesLength]);
 
   useEffect(() => {
-    console.log(`settings waiting`)
     if (settings && hasChanged(settings, store.settings)) {
-      console.log(`settings passed`)
       setSettings(settings);
     }
   }, [settings]);
 
   useEffect(() => {
-    console.log(`transcriptions waiting`)
     if (transcriptions && hasChanged(transcriptions, store.transcriptions)) {
-      console.log(`transcriptions passed`)
       setTranscriptions(transcriptions);
     }
   }, [transcriptions]);
 
   useEffect(() => {
-    console.log(`transcriptinsLookup waiting`)
     if (transcriptionsLookup && hasChanged(transcriptionsLookup, store.transcriptionsLookup)) {
-      console.log(`transcriptinsLookup passed`)
       setTranscriptionsLookup(transcriptionsLookup);
     }
   }, [transcriptionsLookup]);
 
   useEffect(() => {
-    console.log(`styles waiting`)
     if (styles && hasChanged(styles, store.styles)) {
-      console.log(`styles passed`)
       setStyles(styles);
     }
   }, [styles]);
 
 
   useEffect(() => {
-    console.log(`pitchLookup waiting`)
     if (pitchLookup && hasChanged(pitchLookup, store.pitchLookup)) {
-      console.log(`pitchLookup passed`)
       setPitchLookup(pitchLookup);
     }
   }, [pitchLookup]);
 
   useEffect(() => {
-    console.log(`wordsLookup waiting`)
     if (wordsLookup && hasChanged(wordsLookup, store.wordsLookup)) {
-      console.log(`wordsLookup passed`)
       setWordsLookup(wordsLookup);
     }
   }, [wordsLookup]);
 
   useEffect(() => {
-    console.log(`isLoading waiting`)
     if (isLoading !== store.isLoading) {
-      console.log(`isLoading passed`)
       setIsLoading(isLoading);
     }
   }, [isLoading]);
 
   useEffect(() => {
-    console.log(`loadingDuratin waiting`)
     if (totalDuration !== store.loadingDuration) {
-      console.log(`loadingDuratin passed`)
       setLoadingDuration(totalDuration);
     }
   }, [totalDuration]);

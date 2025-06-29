@@ -108,10 +108,6 @@ export function usePrefetchEpisode({
     preferredFormat,
   })
 
-  useEffect(() => {
-    console.log(`prefetch isReady`, isReady)
-  }, [isReady]);
-
   return {
     isLastEpisode,
     episodeDataPrefetched,

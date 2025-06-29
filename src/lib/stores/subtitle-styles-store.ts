@@ -35,10 +35,7 @@ export const useSubtitleStylesStore = create<SubtitleStylesStore>()((set, get) =
   ensureStylesExists: (transcription: SubtitleStyles['transcription'], state: SubtitleStyles['state']) => {
     const internalState = get();
 
-    console.log(`transcription`, transcription)
-    
     if (internalState.styles?.[transcription]?.[state]) {
-      console.log('cached')
       return internalState.styles[transcription][state] as SubtitleStyles;
     }
     

@@ -16,10 +16,6 @@ export default function autoScrollResumeDelay({ value }: {
         initialValue: value,
     })
 
-    useEffect(() => {
-        console.log(`test`, value)
-    }, [value])
-
     // we use these here since with display value we get some bugs !
     const [inputValue, setInputValue] = useState<number | null>(value !== undefined ? value : null)
 

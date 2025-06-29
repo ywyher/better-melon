@@ -12,9 +12,8 @@ import { Anime } from "@/types/anime"
 import { useRouter, useSearchParams } from "next/navigation"
 import AddToList from "@/components/add-to-list/add-to-list"
 import { useQueryClient } from "@tanstack/react-query"
-import { GET_ANIME } from "@/lib/graphql/queries"
-import { initializeTokenizerAction } from "@/lib/subtitle/actions"
-import { useInitializeTokenizer } from "@/lib/hooks/use-initialize-tokenizer"
+import { useTokenizer } from "@/lib/hooks/use-tokenizer"
+import { useAnimeData } from "@/lib/hooks/use-anime-data"
 
 type AnimeInfoProps = {
   animeId: Anime['id']
@@ -24,31 +23,25 @@ export default function AnimeData({
   animeId
 }: AnimeInfoProps) {
   const [isAddToList, setIsAddToList] = useState<boolean>(false);
-  const [anime, setAnime] = useState<Anime | null>(null)
   const router = useRouter();
   const searchParams = useSearchParams();
   const queryClient = useQueryClient()
+  const {
+    animeData,
+    isLoading,
+    error,
+    refetch
+  } = useAnimeData(String(animeId))
   
   useEffect(() => {
     const addToList = searchParams.get('addToList');
     setIsAddToList(addToList === 'true');
   }, [searchParams]);
 
-  const { data: animeData, loading: isAnimeDataLoading, error: animeError, refetch: animeRefetch } = useQuery(GET_ANIME, { 
-    variables: { id: Number(animeId) },
-    fetchPolicy: 'cache-first',
-  });
-
   const {
     initalize,
     isInitialized
-  } = useInitializeTokenizer()
-
-  useEffect(() =>{ 
-    if(animeData) {
-      setAnime(animeData.Media)
-    }
-  }, [animeData])
+  } = useTokenizer()
 
   useEffect(() => {
     const prefetch = async () => {
@@ -64,7 +57,7 @@ export default function AnimeData({
       })
     }
 
-    if(anime) {
+    if(animeData) {
       // Use a timeout to delay prefetch and allow images to load first
       const timeoutId = setTimeout(() => {
         prefetch();
@@ -72,28 +65,27 @@ export default function AnimeData({
       
       return () => clearTimeout(timeoutId);
     }
-  }, [queryClient, anime])
+  }, [queryClient, animeData])
   
-  if (isAnimeDataLoading || !anime) return <AnimeDataSkeleton />
-  if (animeError) return <Indicator onRetry={() => animeRefetch()} type="error" message={animeError.message} />
-
+  if (isLoading || !animeData) return <AnimeDataSkeleton />
+  if (error) return <Indicator onRetry={() => refetch()} type="error" message={error.message} />
 
   return (
     <AnimeLayout
-      bannerImage={anime.bannerImage} 
-      title={anime.title}
+      bannerImage={animeData.bannerImage} 
+      title={animeData.title}
       router={router}
     >
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="md:col-span-1">
                 <AnimeCard 
-                    coverImage={anime.coverImage} 
-                    title={anime.title}
-                    format={anime.format}
-                    status={anime.status}
-                    season={anime.season}
-                    seasonYear={anime.seasonYear}
-                    genres={anime.genres}
+                    coverImage={animeData.coverImage} 
+                    title={animeData.title}
+                    format={animeData.format}
+                    status={animeData.status}
+                    season={animeData.season}
+                    seasonYear={animeData.seasonYear}
+                    genres={animeData.genres}
                 />
             </div>
             <div className="flex flex-col gap-6 md:col-span-2">
@@ -104,14 +96,14 @@ export default function AnimeData({
 
               <AnimeEpisodes 
                   id={animeId}
-                  episodes={anime.episodes}
-                  nextAiringEpisode={anime.nextAiringEpisode}
+                  episodes={animeData.episodes}
+                  nextAiringEpisode={animeData.nextAiringEpisode}
                   router={router}
               />
 
               <AnimeDescription 
-                  title={anime.title}
-                  description={anime.description}
+                  title={animeData.title}
+                  description={animeData.description}
               />
             </div>
         </div>

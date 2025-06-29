@@ -39,10 +39,6 @@ export default function SubtitleStyles({ syncPlayerSettings: propSyncStrategy, s
     source === 'store' ? state.getStyles(selectedTranscription, selectedState) : (selectedState == 'default' ? defaultSubtitleStyles.default : defaultSubtitleStyles.active)
   );
 
-  useEffect(() => {
-    console.log(storeStyles)
-  }, [storeStyles])
-
   const styles = useMemo(() => {
     return source === 'database' ? remoteStyles : storeStyles
   }, [source, remoteStyles, storeStyles]);
@@ -70,13 +66,6 @@ export default function SubtitleStyles({ syncPlayerSettings: propSyncStrategy, s
     
     return currentStyles && JSON.stringify(currentStyles) !== JSON.stringify(defaultStyles);
   }, [source, remoteStyles, storeStyles, selectedState]);
-
-  useEffect(() => {
-    console.log({
-      state: selectedState,
-      test: JSON.stringify(remoteStyles) != JSON.stringify(defaultSubtitleStyles.default)
-    })
-  }, [remoteStyles, selectedState])
 
   if (!styles || isLoading) return <SubtitleStylesSkeleton />;
   

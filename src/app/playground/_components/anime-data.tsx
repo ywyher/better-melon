@@ -3,16 +3,14 @@ import { useAnimeData } from "@/lib/hooks/use-anime-data";
 import { useEffect } from "react";
 
 export default function AnimeDataPlayground() {
-  const { animeData, isLoading, error, debug } = useAnimeData('97986');
+  const { animeData, isLoading, error } = useAnimeData('97986');
 
   useEffect(() => {
     console.log('=== ANIME DATA DEBUG ===');
     console.log('animeData:', animeData);
     console.log('isLoading:', isLoading);
     console.log('error:', error);
-    console.log('debug:', debug);
-    console.log('========================');
-  }, [animeData, isLoading, error, debug]);
+  }, [animeData, isLoading, error]);
 
   if (isLoading) {
     return (

@@ -27,7 +27,7 @@ export const animeQueries = createQueryKeys('anime', {
               }
             })
           });
-          const data = await raw.json()
+          const { data } = await raw.json()
           await setCache(`${cacheKeys.anime.info(animeId)}`, data);
           return data;
         },

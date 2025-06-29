@@ -79,8 +79,6 @@ export default function AnimeFilters({ refetch }: AnimeFiltersProps) {
         setQuerySource(source ? source : null)
         setQueryCountry(country ? country : null)
         setQueryScore(score ? score : null)
-        console.log(queryScore)
-        console.log(query)
 
         // multiple selector
         setQueryGenres(genres?.length ? genres : null)

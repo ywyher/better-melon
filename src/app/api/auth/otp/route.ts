@@ -8,7 +8,6 @@ const resend = new Resend(env.RESEND_API_KEY);
 export async function POST(req: Request) {
   try {
     const { email, otp } = await req.json(); // Get the email address from the request body
-    console.log(email, otp)
 
     const { data, error } = await resend.emails.send({
         from: `Acme <${env.RESEND_FROM_EMAIL}>`, // Use your verified domain
@@ -18,10 +17,8 @@ export async function POST(req: Request) {
     });
 
     if (error) {
-        console.error("Resend Error:", error);
-        return NextResponse.json({ error }, { status: 500 });
-    } else {
-        console.log('send successfully');
+      console.error("Resend Error:", error);
+      return NextResponse.json({ error }, { status: 500 });
     }
 
     return NextResponse.json(data);

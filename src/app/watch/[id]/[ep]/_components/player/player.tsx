@@ -113,7 +113,6 @@ export default function Player() {
     }, [metadata, sources, player.current?.duration, episodeNumber]);
 
     const handleCanPlay = useCallback(() => {
-        console.log(`can play ?`)
         setIsVideoReady(true);
         setLoadingDuration(prev => ({
           ...prev,
@@ -133,7 +132,6 @@ export default function Player() {
             if (episodeNumber < episodesLength) {
                 router.push(`/watch/${animeId}/${episodeNumber + 1}`);
             } else {
-                console.log('No more episodes');
                 toast.message("No more episodes to watch :(");
                 isTransitioning.current = false;
             }

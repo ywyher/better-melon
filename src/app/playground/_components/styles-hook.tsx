@@ -40,23 +40,6 @@ export default function StylesHook() {
      loadingDuration
   } = useSubtitleStyles()
 
-  useEffect(() => {
-    console.log(`styles`, {
-      styles,
-      isLoading,
-      loadingDuration,
-      stylesStore
-    })
-  }, [styles, isLoading, loadingDuration, stylesStore])
-
-  useEffect(() => {
-    console.log(`transcriptions`, {
-      transcriptions,
-      isTranscriptionsLoading,
-      transcriptionsLoadingDuration,
-    })
-  }, [isTranscriptionsLoading, transcriptionsLoadingDuration, transcriptions])
-
   return (
     <div className="relative h-screen w-screen flex justify-center items-center">
       <SubtitleStyles source='store' />

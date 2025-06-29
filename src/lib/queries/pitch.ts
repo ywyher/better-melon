@@ -24,7 +24,6 @@ export const pitchQueries = createQueryKeys('anime', {
             const cache = await getCache(cacheKeys.pitch.accent(animeId, subtitleFileName, chunkIndex));
             if (cache) {
               const cachedEntries = JSON.parse(JSON.parse(cache));
-              console.log('~Pitch cache hit:', cachedEntries.length);
               if (Array.isArray(cachedEntries)) {
                 return cachedEntries;
               }

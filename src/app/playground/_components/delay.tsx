@@ -7,10 +7,6 @@ import { useEffect } from "react";
 export default function DelayPlayground() {
   const delay = useDelayStore((state) => state.delay); 
 
-  useEffect(() => {
-    console.log(delay)
-  }, [delay])
-
   return (
     <>
       <DelayController />

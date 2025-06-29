@@ -46,25 +46,19 @@ export default function DefinitionPlayerPlayground() {
   const store = useWatchDataStore.getState()
 
   useEffect(() => {
-    console.log(`transcriptions waiting`)
     if (transcriptions && hasChanged(transcriptions, store.transcriptions)) {
-      console.log(`transcriptions passed`)
       setTranscriptions(transcriptions);
     }
   }, [transcriptions]);
 
   useEffect(() => {
-    console.log(`transcriptinsLookup waiting`)
     if (transcriptionsLookup && hasChanged(transcriptionsLookup, store.transcriptionsLookup)) {
-      console.log(`transcriptinsLookup passed`)
       setTranscriptionsLookup(transcriptionsLookup);
     }
   }, [transcriptionsLookup]);
 
   useEffect(() => {
-    console.log(`styles waiting`)
     if (styles && hasChanged(styles, store.styles)) {
-      console.log(`styles passed`)
       setStyles(styles);
     }
   }, [styles]);

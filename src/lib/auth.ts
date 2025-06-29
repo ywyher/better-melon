@@ -96,10 +96,6 @@ export const auth = betterAuth({
               
               // Insert new settings
               await dbInstance.insert(table).values(newSettings);
-              
-              console.log(`Migrated ${tableName} from anonymous user ${anonymousUser.user.id} to new user ${newUser.user.id}`);
-            } else {
-              console.log(`New user ${newUser.user.id} already has ${tableName}, skipping migration`);
             }
           }
         };
@@ -127,9 +123,9 @@ export const auth = betterAuth({
             await dbInstance.insert(table).values(newRecord);
           }
           
-          if (anonymousRecords.length > 0) {
-            console.log(`Migrated ${anonymousRecords.length} ${tableName} from anonymous user ${anonymousUser.user.id} to new user ${newUser.user.id}`);
-          }
+          // if (anonymousRecords.length > 0) {
+          //   console.log(`Migrated ${anonymousRecords.length} ${tableName} from anonymous user ${anonymousUser.user.id} to new user ${newUser.user.id}`);
+          // }
         };
     
         // Migrate all tables
@@ -146,7 +142,6 @@ export const auth = betterAuth({
             await migrateNonUniqueUserTable(schema.ankiPreset, 'anki presets', tx);
           });
           
-          console.log(`Successfully migrated all settings from anonymous user ${anonymousUser.user.id} to new user ${newUser.user.id}`);
         } catch (error) {
           console.error(`Error migrating settings: ${error instanceof Error ? error.message : "Failed to migrate tables"}`);
         }

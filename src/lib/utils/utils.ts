@@ -138,9 +138,6 @@ export const downloadBase64Image = (base64Data: string, fileName: string, fileTy
  * @returns The pattern with placeholders replaced by actual values
  */
 export const mapScreenshotNamingPatternValues = (pattern: string, animeMetadata: AnimeEpisodeMetadata): string => {
-  console.log(`pattern`, pattern);
-  console.log(`metadata`, animeMetadata);
-
   const randomString = Math.random().toString(36).substring(2, 6);
   const timestamp = Date.now();
   

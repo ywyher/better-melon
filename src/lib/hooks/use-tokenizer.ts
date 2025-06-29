@@ -1,7 +1,7 @@
 import { checkTokenizerStatus, initializeTokenizerAction, tokenizeText } from "@/lib/subtitle/actions";
 import { useState } from "react";
 
-export function useInitializeTokenizer() {
+export function useTokenizer() {
   const [isInitialized, setIsInitialized] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
@@ -43,7 +43,6 @@ export function useInitializeTokenizer() {
     }
   }
 
-  // Add tokenization function
   const tokenize = async (text: string) => {
     if (!isInitialized) {
       await initalize();

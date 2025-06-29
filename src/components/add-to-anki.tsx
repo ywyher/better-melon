@@ -40,7 +40,7 @@ export default function AddToAnki({
 
   return (
     <Button
-      className="cursor-pointer z-20 rounded-full p-1 w-7 h-7"
+      className="cursor-pointer z-20 rounded-sm p-1 w-fit h-7"
       onClick={() => {
         if(!disabled) {
           addToAnki()
