@@ -5,7 +5,7 @@ import { Indicator } from '@/components/indicator';
 import { usePlayerStore } from '@/lib/stores/player-store';
 import { useIsMedium } from '@/lib/hooks/use-media-query';
 import { usePrefetchEpisode } from '@/lib/hooks/use-prefetch-episode';
-import { useEffect, useLayoutEffect, useMemo } from 'react';
+import { useLayoutEffect, useMemo } from 'react';
 import PlayerSection from '@/app/watch/[id]/[ep]/_components/sections/player-section';
 import ControlsSection from '@/app/watch/[id]/[ep]/_components/sections/controls-section';
 import PanelSection from '@/app/watch/[id]/[ep]/_components/sections/panel-section';
@@ -15,7 +15,6 @@ import MissingSubtitlesDialog from '@/app/watch/[id]/[ep]/_components/missing-su
 import { useSubtitleStore } from '@/lib/stores/subtitle-store';
 import { useUIStateStore } from '@/lib/stores/ui-state-store';
 import { useWatchData } from '@/lib/hooks/use-watch-data';
-import { useWatchDataStore } from '@/lib/stores/watch-store';
 import { defaultSubtitleSettings } from '@/app/settings/subtitle/_subtitle-settings/constants';
 
 export default function WatchPage() {
@@ -24,7 +23,6 @@ export default function WatchPage() {
   const episodeNumber = Number(params.ep as string);
   const isMedium = useIsMedium();
 
-  const isVideoReady = usePlayerStore((state) => state.isVideoReady);
   const setIsVideoReady = usePlayerStore((state) => state.setIsVideoReady);
   const panelState = useUIStateStore((state) => state.panelState);
   
@@ -58,20 +56,11 @@ export default function WatchPage() {
     })
   }, [animeId, episodeNumber, setIsVideoReady]);
 
-  const shouldPrefetch = useMemo(() => {
-    if(!episode.data || !settings.data) return false;
-    if(episode.data.details.nextAiringEpisode) {
-      return isVideoReady && settings.data && episode.data.details.nextAiringEpisode?.episode != episodeNumber + 1
-    }else {
-      return isVideoReady && settings.data && episode.data.details.episodes != episodeNumber
-    };
-  }, [isVideoReady, episode, settings])
-
   usePrefetchEpisode({
     animeId,
     episodeNumber: episodeNumber + 1,
+    episodeData: episode.data,
     episodesLength: episode.episodesLength,
-    isReady: shouldPrefetch || false,
     preferredFormat: settings?.data?.subtitleSettings.preferredFormat || defaultSubtitleSettings.preferredFormat
   });
   

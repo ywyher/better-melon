@@ -38,14 +38,6 @@ export function usePrefetchSubtitleStyles({
            networkCondition !== 'poor' &&
            transcriptionsToFetch.length > 0;
     
-    console.log(`prefetch shouldFetchStyles conditions:`, {
-      isReady,
-      isLastEpisode,
-      networkCondition,
-      transcriptionsToFetchLength: transcriptionsToFetch.length,
-      result
-    });
-    
     return result;
   }, [isReady, isLastEpisode, networkCondition, transcriptionsToFetch]);
 
