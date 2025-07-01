@@ -1,6 +1,3 @@
-> [!note]
-> the hosted vercel instance won't always be up-to-date as long as we are in development, Therefore we recommend self-hosting for up-to-date experience
-
 # What is it ?
 An [Animleon](https://www.animelon.com/) alternative that aims to overcome all animelon's inconvenients
 
@@ -61,9 +58,6 @@ Animelon doesn’t provide all animes, and its entries are rarely updated, makin
 # Better Melon Self-Hosting Guide
 > [!warning]
 > This project is still in beta
-
-> [!note]
-> You can access this app without self-hosting via https://better-melon.vercel.app
 
 ## Quick Start
 
