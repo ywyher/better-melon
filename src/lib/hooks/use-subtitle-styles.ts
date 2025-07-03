@@ -113,7 +113,6 @@ export const useSubtitleStyles = () => {
     });
     
     const end = performance.now();
-    console.info(`~Subtitle styles processed in ${(end - start).toFixed(2)}ms`);
     return result;
   }, [activeTranscriptions, isFullscreen, storeStyles, getStylesFromStore, shouldScaleFontDown]);
 

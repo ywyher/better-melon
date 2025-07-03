@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import type { SubtitleCue, SubtitleTranscription, SubtitleFormat, SubtitleToken } from "@/types/subtitle";
-import { convertSubtitlesForNonJapaneseTranscription, parseAss, parseSrt, parseVtt, processEnglishSubtitles } from '@/lib/subtitle/parse';
+import { convertSubtitlesForNonJapaneseTranscription, parseAss, parseSrt, parseVtt, processEnglishSubtitles } from '@/lib/subtitle/parse.utils';
 import { redis } from '@/lib/redis';
 import { getTokenizer as getTokenizerKuromojin, type Tokenizer } from "kuromojin";
 import path from "path";

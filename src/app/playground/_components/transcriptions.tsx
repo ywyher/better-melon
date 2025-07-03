@@ -3,6 +3,7 @@
 import { useSubtitleTranscriptions } from "@/lib/hooks/use-subtitle-transcriptions";
 import { useEffect } from "react";
 import { useSubtitleStore } from "@/lib/stores/subtitle-store";
+import { useTokenizer } from "@/lib/hooks/use-tokenizer";
 
 export default function TranscriptionsPlayground() {
   const setActiveSubtitleFile = useSubtitleStore((state) => state.setActiveSubtitleFile);
@@ -22,10 +23,14 @@ export default function TranscriptionsPlayground() {
     });
   }, [setEnglishSubtitleUrl, setActiveTranscriptions, setActiveSubtitleFile]);
   
-  const { 
-    transcriptions,
-    transcriptionsLookup
-  } = useSubtitleTranscriptions()
+  const { initalize, isInitialized } = useTokenizer();
+
+  useEffect(() => {
+    if(isInitialized) return; 
+    (async () => {
+      await initalize()
+    })()
+  }, [initalize, isInitialized])
 
   return (
     <div className="flex flex-row gap-10">

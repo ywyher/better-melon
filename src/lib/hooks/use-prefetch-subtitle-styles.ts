@@ -70,17 +70,17 @@ export function usePrefetchSubtitleStyles({
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
-  useEffect(() => {
-    if (!queryEnabled) return;
+  // useEffect(() => {
+  //   if (!queryEnabled) return;
     
-    if (isStylesQueryLoading) {
-      console.info(`debug Started prefetching styles for episode ${episodeNumber}`);
-    } else if (stylesQuery && !isStylesQueryError) {
-      console.info(`debug Successfully prefetched styles for episode ${episodeNumber}`);
-    } else if (isStylesQueryError) {
-      console.warn(`debug Failed to prefetch styles for episode ${episodeNumber}`);
-    }
-  }, [isStylesQueryLoading, stylesQuery, episodeNumber, isStylesQueryError, queryEnabled]);
+  //   if (isStylesQueryLoading) {
+  //     console.info(`debug Started prefetching styles for episode ${episodeNumber}`);
+  //   } else if (stylesQuery && !isStylesQueryError) {
+  //     console.info(`debug Successfully prefetched styles for episode ${episodeNumber}`);
+  //   } else if (isStylesQueryError) {
+  //     console.warn(`debug Failed to prefetch styles for episode ${episodeNumber}`);
+  //   }
+  // }, [isStylesQueryLoading, stylesQuery, episodeNumber, isStylesQueryError, queryEnabled]);
 
   return {
     stylesPrefetched: !!(stylesQuery && !isStylesQueryError),

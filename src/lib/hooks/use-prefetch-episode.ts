@@ -77,7 +77,6 @@ export function usePrefetchEpisode({
     activeTranscriptions,
     subtitleQueries
   } = usePrefetchSubtitleTranscriptions({
-    episodeNumber,
     episodeData: prefetchedEpisodeData,
     preferredFormat,
     isReady,

@@ -7,6 +7,21 @@ import { SubtitleRequestBody } from "@/app/api/subtitles/parse/route";
 import { readFileContent } from "@/lib/utils/utils";
 import { Tokenizer } from "kuromojin";
 
+export function getSubtitleCacheKey({
+  source, 
+  isFile,
+  lastModified
+}: {
+  source: string, 
+  isFile: boolean,
+  lastModified?: number
+}): string {
+  if (isFile && lastModified) {
+    return `file-${source}-${lastModified}`;
+  }
+  return source;
+}
+
 export async function parseSubtitleToJson({
   source,
   format,
