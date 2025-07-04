@@ -85,7 +85,7 @@ docker compose -f docker.yaml up -d
 ### 4. Register for External Services
 - Setup better-melon-api by following the steps shown [here](https://github.com/ywyher/better-melon-api)
 - Setup better-melon-dictionary-indexer by following the steps shown [here](https://github.com/ywyher/better-melon-dictionary-indexer)
-- Setup shinra proxy by following the steps shown [here](https://github.com/xciphertv/shrina-proxy)
+- Setup shrina proxy by following the steps shown [here](https://github.com/xciphertv/shrina-proxy)
 - Set up AniList API credentials at [anilist.co/settings/developer](https://anilist.co/settings/developer)
 - Register for [Resend](https://resend.com/) for email functionality (Optional)
 
