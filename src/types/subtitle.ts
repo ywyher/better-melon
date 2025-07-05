@@ -1,19 +1,19 @@
 import { GeneralSettings, SubtitleStyles } from "@/lib/db/schema";
 
 export type SubtitleEntry = {
-    id: number;
-    name: string;
-    flags: {
-        anime: boolean;
-        unverified: boolean;
-        external: boolean;
-        movie: boolean;
-        adult: boolean;
-    };
-    last_modified: string | Date;
-    anilist_id: number;
-    english_name: string;
-    japanese_name: string;
+  id: number;
+  name: string;
+  flags: {
+      anime: boolean;
+      unverified: boolean;
+      external: boolean;
+      movie: boolean;
+      adult: boolean;
+  };
+  last_modified: string | Date;
+  anilist_id: number;
+  english_name: string;
+  japanese_name: string;
 }
 
 export type SubtitleFile = {
@@ -65,10 +65,29 @@ export type SubtitleDelay = {
   english: number
 }
 
-export type FieldControllerProps = { 
+export type SubtitleStylesControllerProps = { 
   value: string | number
   transcription: SubtitleStyles['transcription'] 
   source: 'store' | 'database'
   syncPlayerSettings: GeneralSettings['syncPlayerSettings']
   state: SubtitleStyles['state']
+}
+
+export interface ParseSubtitleBody {
+  source: string;
+  format: SubtitleFormat;
+  transcription: SubtitleTranscription;
+  isFile?: boolean;
+  fileContent?: string;
+  lastModified?: number;
+}
+
+export interface SubtitleCache {
+  content: string;
+  // Japanese only
+  parsedSubtitles: SubtitleCue[];
+  // Japanese only
+  tokenizedSubtitles?: SubtitleCue[];
+  convertedSubtitles?: Partial<Record<Exclude<SubtitleTranscription, 'english' | 'japanese'>, SubtitleCue[]>>
+  lastAccessed: number;
 }

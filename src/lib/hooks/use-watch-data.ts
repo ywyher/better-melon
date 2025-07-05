@@ -201,12 +201,6 @@ export const useWatchData = (animeId: string, episodeNumber: number) => {
     ) {
       const loadEndTime = performance.now();
       const elapsed = loadEndTime - loadStartTimeRef.current;
-      console.debug('Calculating loading duration:', {
-        start: loadStartTimeRef.current,
-        end: loadEndTime,
-        elapsed,
-        episodeNumber
-      });
       setTotalDuration(elapsed);
       setLoadingDuration(elapsed);
     }

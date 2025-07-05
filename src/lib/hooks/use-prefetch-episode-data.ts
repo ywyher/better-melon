@@ -33,13 +33,13 @@ export function usePrefetchEpisodeData({
     enabled: !!shouldFetchEpisodeData
   });
 
-  useEffect(() => {
-    if (isEpisodeDataFetching) {
-      console.info(`debug Started prefetching episode ${episodeNumber} data`);
-    } else if (episodeDataFetched) {
-      console.info(`debug Successfully prefetched episode ${episodeNumber} data`);
-    }
-  }, [isEpisodeDataFetching, episodeDataFetched, episodeNumber]);
+  // useEffect(() => {
+  //   if (isEpisodeDataFetching) {
+  //     console.info(`debug Started prefetching episode ${episodeNumber} data`);
+  //   } else if (episodeDataFetched) {
+  //     console.info(`debug Successfully prefetched episode ${episodeNumber} data`);
+  //   }
+  // }, [isEpisodeDataFetching, episodeDataFetched, episodeNumber]);
 
   return {
     episodeData,

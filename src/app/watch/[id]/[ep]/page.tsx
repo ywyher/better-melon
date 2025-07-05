@@ -42,7 +42,6 @@ export default function WatchPage() {
   } = useWatchData(animeId, episodeNumber)
 
   useLayoutEffect(() => {
-    console.debug('Resetting load timer for episode:', episodeNumber);
     loadStartTimeRef.current = performance.now();
     duration.set(0);
     setIsVideoReady(false);
