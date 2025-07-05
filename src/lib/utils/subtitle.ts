@@ -3,13 +3,10 @@ import { excludedPos, subtitleFormats } from "@/lib/constants/subtitle";
 import { SubtitleSettings } from "@/lib/db/schema";
 import { FileSelectionError } from "@/lib/errors/player";
 import { DelayStore } from "@/lib/stores/delay-store";
-import { parseAss, parseSrt, parseVtt } from "@/lib/subtitle/parse.utils";
 import { getExtension } from "@/lib/utils/utils";
 import { AnimeEpisodeSources, SkipTime } from "@/types/anime";
 import { ActiveSubtitleFile, SubtitleFile, SubtitleFormat, SubtitleToken } from "@/types/subtitle";
-import {franc} from 'franc-min'
 import Kuroshiro from "@sglkc/kuroshiro";
-import KuromojiAnalyzer from "@sglkc/kuroshiro-analyzer-kuromoji";
 import CustomKuromojiAnalyzer from "@/lib/subtitle/custom-kuromoji-analyzer";
 import { getTokenizer } from "kuromojin";
 

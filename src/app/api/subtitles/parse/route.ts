@@ -1,509 +1,509 @@
-import { NextRequest, NextResponse } from 'next/server';
-import type { SubtitleCue, SubtitleTranscription, SubtitleFormat, SubtitleToken } from "@/types/subtitle";
-import { convertSubtitlesForNonJapaneseTranscription, parseAss, parseSrt, parseVtt, processEnglishSubtitles } from '@/lib/subtitle/parse.utils';
-import { redis } from '@/lib/redis';
-import { getTokenizer as getTokenizerKuromojin, type Tokenizer } from "kuromojin";
-import path from "path";
-import { cacheKeys } from '@/lib/constants/cache';
+// import { NextRequest, NextResponse } from 'next/server';
+// import type { SubtitleCue, SubtitleTranscription, SubtitleFormat, SubtitleToken } from "@/types/subtitle";
+// import { convertSubtitlesForNonJapaneseTranscription, parseAss, parseSrt, parseVtt, tokenizeEnglishSubtitles } from '@/lib/subtitle/utils';
+// import { redis } from '@/lib/redis';
+// import { getTokenizer as getTokenizerKuromojin, type Tokenizer } from "kuromojin";
+// import path from "path";
+// import { cacheKeys } from '@/lib/constants/cache';
 
-type CacheKey = string;
-interface SubtitleCache {
-  content: string;
-  parsedSubtitles: SubtitleCue[];
-  tokenizedSubtitles: {
-    transcription: SubtitleTranscription
-    cues: SubtitleCue[]
-  }[];
-  lastAccessed: number;
-}
+// type CacheKey = string;
+// interface SubtitleCache {
+//   content: string;
+//   parsedSubtitles: SubtitleCue[];
+//   tokenizedSubtitles: {
+//     transcription: SubtitleTranscription
+//     cues: SubtitleCue[]
+//   }[];
+//   lastAccessed: number;
+// }
 
-export interface SubtitleRequestBody {
-  source: string;
-  format: SubtitleFormat;
-  transcription: SubtitleTranscription;
-  isFile?: boolean;
-  fileContent?: string;
-  lastModified?: number;
-}
+// export interface SubtitleRequestBody {
+//   source: string;
+//   format: SubtitleFormat;
+//   transcription: SubtitleTranscription;
+//   isFile?: boolean;
+//   fileContent?: string;
+//   lastModified?: number;
+// }
 
-// Keep in-memory tracking for ongoing operations to prevent duplicate work
-const fetchingInProgress = new Map<CacheKey, Promise<string>>();
-const parsingInProgress = new Map<string, Promise<SubtitleCue[]>>();
-const tokenizationInProgress = new Map<string, Promise<SubtitleCue[]>>();
+// // Keep in-memory tracking for ongoing operations to prevent duplicate work
+// const fetchingInProgress = new Map<CacheKey, Promise<string>>();
+// const parsingInProgress = new Map<string, Promise<SubtitleCue[]>>();
+// const tokenizationInProgress = new Map<string, Promise<SubtitleCue[]>>();
 
-// Tokenizer caching
-let tokenizer: Tokenizer | null = null;
-let tokenizerInitPromise: Promise<Tokenizer> | null = null;
+// // Tokenizer caching
+// let tokenizer: Tokenizer | null = null;
+// let tokenizerInitPromise: Promise<Tokenizer> | null = null;
 
-async function getCacheFromRedis(key: string): Promise<SubtitleCache | null> {
-  try {
-    const cached = await redis.get(`${cacheKeys.subtitle()}${key}`);
-    if (cached) {
-      return JSON.parse(cached);
-    }
-    return null;
-  } catch (error) {
-    console.error('Redis get error:', error);
-    return null;
-  }
-}
+// async function getCacheFromRedis(key: string): Promise<SubtitleCache | null> {
+//   try {
+//     const cached = await redis.get(`${cacheKeys.subtitle(key)}`);
+//     if (cached) {
+//       return JSON.parse(cached);
+//     }
+//     return null;
+//   } catch (error) {
+//     console.error('Redis get error:', error);
+//     return null;
+//   }
+// }
 
-async function setCacheToRedis(key: string, data: SubtitleCache, ttl: number = 3600): Promise<void> {
-  try {
-    await redis.setex(`${cacheKeys.subtitle()}${key}`, ttl, JSON.stringify(data));
-  } catch (error) {
-    console.error('Redis set error:', error);
-  }
-}
+// async function setCacheToRedis(key: string, data: SubtitleCache, ttl: number = 3600): Promise<void> {
+//   try {
+//     await redis.setex(`${cacheKeys.subtitle(key)}`, ttl, JSON.stringify(data));
+//   } catch (error) {
+//     console.error('Redis set error:', error);
+//   }
+// }
 
-async function updateCacheInRedis(key: string, updates: Partial<SubtitleCache>): Promise<void> {
-  try {
-    const existing = await getCacheFromRedis(key);
-    if (existing) {
-      const updated = { ...existing, ...updates, lastAccessed: Date.now() };
-      await setCacheToRedis(key, updated);
-    }
-  } catch (error) {
-    console.error('Redis update error:', error);
-  }
-}
+// async function updateCacheInRedis(key: string, updates: Partial<SubtitleCache>): Promise<void> {
+//   try {
+//     const existing = await getCacheFromRedis(key);
+//     if (existing) {
+//       const updated = { ...existing, ...updates, lastAccessed: Date.now() };
+//       await setCacheToRedis(key, updated);
+//     }
+//   } catch (error) {
+//     console.error('Redis update error:', error);
+//   }
+// }
 
-async function deleteCacheFromRedis(key: string): Promise<void> {
-  try {
-    await redis.del(`${cacheKeys.subtitle()}${key}`);
-  } catch (error) {
-    console.error('Redis delete error:', error);
-  }
-}
+// async function deleteCacheFromRedis(key: string): Promise<void> {
+//   try {
+//     await redis.del(`${cacheKeys.subtitle(key)}`);
+//   } catch (error) {
+//     console.error('Redis delete error:', error);
+//   }
+// }
 
-export async function initializeTokenizer(name?: string): Promise<Tokenizer> {
-  if (tokenizer) {
-    console.info(`~${name} Tokenizer already exists in memory`);
-    return tokenizer;
-  }
+// export async function initializeTokenizer(name?: string): Promise<Tokenizer> {
+//   if (tokenizer) {
+//     console.info(`~${name} Tokenizer already exists in memory`);
+//     return tokenizer;
+//   }
 
-  if (tokenizerInitPromise) {
-    console.info(`~${name} Waiting for existing tokenizer initialization`);
-    return await tokenizerInitPromise;
-  }
+//   if (tokenizerInitPromise) {
+//     console.info(`~${name} Waiting for existing tokenizer initialization`);
+//     return await tokenizerInitPromise;
+//   }
 
-  const tokenizerStart = performance.now();
+//   const tokenizerStart = performance.now();
   
-  tokenizerInitPromise = (async () => {
-    const filePath = path.join(process.cwd(), 'public', 'dict');
-    const newTokenizer = await getTokenizerKuromojin({ dicPath: filePath });
+//   tokenizerInitPromise = (async () => {
+//     const filePath = path.join(process.cwd(), 'public', 'dict');
+//     const newTokenizer = await getTokenizerKuromojin({ dicPath: filePath });
     
-    tokenizer = newTokenizer;
-    const tokenizerEnd = performance.now();
-    console.info(`~${name} Tokenizer initialization took --> ${tokenizerEnd - tokenizerStart}ms`);
+//     tokenizer = newTokenizer;
+//     const tokenizerEnd = performance.now();
+//     console.info(`~${name} Tokenizer initialization took --> ${tokenizerEnd - tokenizerStart}ms`);
     
-    return newTokenizer;
-  })().catch(error => {
-    tokenizerInitPromise = null;
-    throw error;
-  });
+//     return newTokenizer;
+//   })().catch(error => {
+//     tokenizerInitPromise = null;
+//     throw error;
+//   });
 
-  return await tokenizerInitPromise;
-}
+//   return await tokenizerInitPromise;
+// }
 
-export async function isTokenizerInitialized() {
-  return !!tokenizer
-}
+// export async function isTokenizerInitialized() {
+//   return !!tokenizer
+// }
 
-async function tokenizeJapaneseSubtitles(subs: SubtitleCue[], transcription: SubtitleTranscription): Promise<SubtitleCue[]> {
-  const currentTokenizer = await initializeTokenizer(transcription);
+// async function tokenizeJapaneseSubtitles(subs: SubtitleCue[], transcription: SubtitleTranscription): Promise<SubtitleCue[]> {
+//   const currentTokenizer = await initializeTokenizer(transcription);
   
-  if (!currentTokenizer) {
-    throw new Error("Tokenizer initialization failed");
-  }
+//   if (!currentTokenizer) {
+//     throw new Error("Tokenizer initialization failed");
+//   }
   
-  const results = [];
+//   const results = [];
 
-  for (const sub of subs) {
-    const rawTokens = currentTokenizer.tokenize(sub.content || '');
+//   for (const sub of subs) {
+//     const rawTokens = currentTokenizer.tokenize(sub.content || '');
     
-    const tokens = rawTokens
-      .filter(token => token.surface_form !== ' ' && token.surface_form !== '　')
-      .map((token, index) => ({
-        ...token,
-        original_form: token.surface_form,
-        id: `${sub.id}-${index}`
-      })) as SubtitleToken[];
+//     const tokens = rawTokens
+//       .filter(token => token.surface_form !== ' ' && token.surface_form !== '　')
+//       .map((token, index) => ({
+//         ...token,
+//         original_form: token.surface_form,
+//         id: `${sub.id}-${index}`
+//       })) as SubtitleToken[];
     
-    results.push({
-      ...sub,
-      tokens
-    });
-  }
+//     results.push({
+//       ...sub,
+//       tokens
+//     });
+//   }
   
-  return results;
-}
+//   return results;
+// }
 
-export function getCacheKey({
-  source, 
-  isFile,
-  lastModified
-}: {
-  source: string, 
-  isFile: boolean,
-  lastModified?: number
-}): string {
-  if (isFile && lastModified) {
-    return `file-${source}-${lastModified}`;
-  }
-  return source;
-}
+// export function getCacheKey({
+//   source, 
+//   isFile,
+//   lastModified
+// }: {
+//   source: string, 
+//   isFile: boolean,
+//   lastModified?: number
+// }): string {
+//   if (isFile && lastModified) {
+//     return `file-${source}-${lastModified}`;
+//   }
+//   return source;
+// }
 
-export async function fetchSubtitleContent({
-  source,
-  isFile,
-  lastModified,
-  fileContent
-}: {
-  source: string,
-  isFile: boolean,
-  lastModified?: number,
-  fileContent?: string
-}) {
-  const cacheKey = getCacheKey({
-    source,
-    isFile,
-    lastModified
-  });
-  const sourceType = isFile ? 'file' : 'url';
+// export async function fetchSubtitleContent({
+//   source,
+//   isFile,
+//   lastModified,
+//   fileContent
+// }: {
+//   source: string,
+//   isFile: boolean,
+//   lastModified?: number,
+//   fileContent?: string
+// }) {
+//   const cacheKey = getCacheKey({
+//     source,
+//     isFile,
+//     lastModified
+//   });
+//   const sourceType = isFile ? 'file' : 'url';
   
-  // Check Redis cache first
-  const cachedData = await getCacheFromRedis(cacheKey);
+//   // Check Redis cache first
+//   const cachedData = await getCacheFromRedis(cacheKey);
   
-  if (cachedData && cachedData.content) {
-    console.info(`Using cached subtitle content for ${sourceType}: ${cacheKey}`);
-    // Update last accessed time
-    await updateCacheInRedis(cacheKey, { lastAccessed: Date.now() });
-    return cachedData.content;
-  }
+//   if (cachedData && cachedData.content) {
+//     console.info(`Using cached subtitle content for ${sourceType}: ${cacheKey}`);
+//     // Update last accessed time
+//     await updateCacheInRedis(cacheKey, { lastAccessed: Date.now() });
+//     return cachedData.content;
+//   }
 
-  if (fetchingInProgress.has(cacheKey)) {
-    console.info(`Waiting for in-progress fetch of ${sourceType}: ${cacheKey}`);
-    return await fetchingInProgress.get(cacheKey)!;
-  }
+//   if (fetchingInProgress.has(cacheKey)) {
+//     console.info(`Waiting for in-progress fetch of ${sourceType}: ${cacheKey}`);
+//     return await fetchingInProgress.get(cacheKey)!;
+//   }
   
-  console.info(`Fetching subtitle content for ${sourceType}: ${cacheKey}`);
+//   console.info(`Fetching subtitle content for ${sourceType}: ${cacheKey}`);
   
-  let fetchPromise: Promise<string>;
+//   let fetchPromise: Promise<string>;
   
-  if (isFile && fileContent) {
-    fetchPromise = Promise.resolve(fileContent);
-  } else if (!isFile) {
-    fetchPromise = fetch(source)
-      .then(response => response.text());
-  } else {
-    throw new Error('Invalid source: file content required for file type');
-  }
+//   if (isFile && fileContent) {
+//     fetchPromise = Promise.resolve(fileContent);
+//   } else if (!isFile) {
+//     fetchPromise = fetch(source)
+//       .then(response => response.text());
+//   } else {
+//     throw new Error('Invalid source: file content required for file type');
+//   }
   
-  fetchPromise = fetchPromise
-    .then(async text => {
-      const existingCache = await getCacheFromRedis(cacheKey);
-      if (!existingCache) {
-        await setCacheToRedis(cacheKey, {
-          content: text,
-          parsedSubtitles: [],
-          tokenizedSubtitles: [],
-          lastAccessed: Date.now()
-        });
-      } else {
-        await updateCacheInRedis(cacheKey, { 
-          content: text, 
-          lastAccessed: Date.now() 
-        });
-      }
+//   fetchPromise = fetchPromise
+//     .then(async text => {
+//       const existingCache = await getCacheFromRedis(cacheKey);
+//       if (!existingCache) {
+//         await setCacheToRedis(cacheKey, {
+//           content: text,
+//           parsedSubtitles: [],
+//           tokenizedSubtitles: [],
+//           lastAccessed: Date.now()
+//         });
+//       } else {
+//         await updateCacheInRedis(cacheKey, { 
+//           content: text, 
+//           lastAccessed: Date.now() 
+//         });
+//       }
       
-      fetchingInProgress.delete(cacheKey);
-      return text;
-    })
-    .catch(error => {
-      fetchingInProgress.delete(cacheKey);
-      throw error;
-    });
+//       fetchingInProgress.delete(cacheKey);
+//       return text;
+//     })
+//     .catch(error => {
+//       fetchingInProgress.delete(cacheKey);
+//       throw error;
+//     });
   
-  fetchingInProgress.set(cacheKey, fetchPromise);
-  return await fetchPromise;
-}
+//   fetchingInProgress.set(cacheKey, fetchPromise);
+//   return await fetchPromise;
+// }
 
-export async function POST(request: NextRequest) {
-  try {
-    const body = await request.json();
-    const { 
-      source, 
-      format, 
-      transcription = 'japanese',
-      isFile = false,
-      fileContent,
-      lastModified 
-    }: SubtitleRequestBody = body;
+// export async function POST(request: NextRequest) {
+//   try {
+//     const body = await request.json();
+//     const { 
+//       source, 
+//       format, 
+//       transcription = 'japanese',
+//       isFile = false,
+//       fileContent,
+//       lastModified 
+//     }: SubtitleRequestBody = body;
 
-    if (!source || !format) {
-      return NextResponse.json(
-        { error: 'Source and format are required' },
-        { status: 400 }
-      );
-    }
+//     if (!source || !format) {
+//       return NextResponse.json(
+//         { error: 'Source and format are required' },
+//         { status: 400 }
+//       );
+//     }
     
-    const cacheKey = getCacheKey({
-      source,
-      isFile,
-      lastModified
-    });
+//     const cacheKey = getCacheKey({
+//       source,
+//       isFile,
+//       lastModified
+//     });
     
-    const cachedData = await getCacheFromRedis(cacheKey);
+//     const cachedData = await getCacheFromRedis(cacheKey);
 
-    const fetchStart = performance.now();
-    const content = await fetchSubtitleContent({
-      source,
-      isFile,
-      fileContent,
-      lastModified
-    });
-    const fetchEnd = performance.now();
-    console.info(`~${transcription}-fetchSubtitles took --> ${fetchEnd - fetchStart}ms`);
+//     const fetchStart = performance.now();
+//     const content = await fetchSubtitleContent({
+//       source,
+//       isFile,
+//       fileContent,
+//       lastModified
+//     });
+//     const fetchEnd = performance.now();
+//     console.info(`~${transcription}-fetchSubtitles took --> ${fetchEnd - fetchStart}ms`);
 
-    let subtitles: SubtitleCue[] = [];
+//     let subtitles: SubtitleCue[] = [];
 
-    if (
-      cachedData 
-      && cachedData.parsedSubtitles.length > 0
-    ) {
-      console.info(`~${transcription} Using cached parsed subtitles`);
-      subtitles = cachedData.parsedSubtitles;
-    } else {
-      // Check if parsing is already in progress for this cache key
-      if (parsingInProgress.has(cacheKey)) {
-        console.info(`~${transcription} Waiting for in-progress parsing of ${cacheKey}`);
-        subtitles = await parsingInProgress.get(cacheKey)!;
-      } else {
-        console.info(`~${transcription} Parsing subtitles (not in cache)`);
+//     if (
+//       cachedData 
+//       && cachedData.parsedSubtitles.length > 0
+//     ) {
+//       console.info(`~${transcription} Using cached parsed subtitles`);
+//       subtitles = cachedData.parsedSubtitles;
+//     } else {
+//       // Check if parsing is already in progress for this cache key
+//       if (parsingInProgress.has(cacheKey)) {
+//         console.info(`~${transcription} Waiting for in-progress parsing of ${cacheKey}`);
+//         subtitles = await parsingInProgress.get(cacheKey)!;
+//       } else {
+//         console.info(`~${transcription} Parsing subtitles (not in cache)`);
         
-        // Create parsing promise
-        const parsingPromise: Promise<SubtitleCue[]> = (async () => {
-          let parsedSubs: SubtitleCue[] = [];
+//         // Create parsing promise
+//         const parsingPromise: Promise<SubtitleCue[]> = (async () => {
+//           let parsedSubs: SubtitleCue[] = [];
           
-          switch (format) {
-            case 'srt':
-              const parseSrtStart = performance.now();
-              parsedSubs = parseSrt(content, transcription);
-              const parseSrtEnd = performance.now();
-              console.info(`~${transcription}-parse-srt took --> ${parseSrtEnd - parseSrtStart}ms`);
-              break;
-            case 'vtt':
-              const parseVttStart = performance.now();
-              parsedSubs = parseVtt(content, transcription);
-              const parseVttEnd = performance.now();
-              console.info(`~${transcription}-parse-vtt took --> ${parseVttEnd - parseVttStart}ms`);
-              break;
-            case 'ass':
-              const parseAssStart = performance.now();
-              parsedSubs = parseAss(content, transcription);
-              const parseAssEnd = performance.now();
-              console.info(`~${transcription}-parse-ass took --> ${parseAssEnd - parseAssStart}ms`);
-              break;
-            default:
-              throw new Error(`Unsupported subtitle format: ${format}`);
-          }
+//           switch (format) {
+//             case 'srt':
+//               const parseSrtStart = performance.now();
+//               parsedSubs = parseSrt(content, transcription);
+//               const parseSrtEnd = performance.now();
+//               console.info(`~${transcription}-parse-srt took --> ${parseSrtEnd - parseSrtStart}ms`);
+//               break;
+//             case 'vtt':
+//               const parseVttStart = performance.now();
+//               parsedSubs = parseVtt(content, transcription);
+//               const parseVttEnd = performance.now();
+//               console.info(`~${transcription}-parse-vtt took --> ${parseVttEnd - parseVttStart}ms`);
+//               break;
+//             case 'ass':
+//               const parseAssStart = performance.now();
+//               parsedSubs = parseAss(content, transcription);
+//               const parseAssEnd = performance.now();
+//               console.info(`~${transcription}-parse-ass took --> ${parseAssEnd - parseAssStart}ms`);
+//               break;
+//             default:
+//               throw new Error(`Unsupported subtitle format: ${format}`);
+//           }
 
-          if (!parsedSubs.length) {
-            parsingInProgress.delete(cacheKey);
-            return [];
-          }
+//           if (!parsedSubs.length) {
+//             parsingInProgress.delete(cacheKey);
+//             return [];
+//           }
           
-          // Save parsed subtitles to Redis cache
-          console.info(`~${transcription} Saving parsed subtitles to cache`);
-          await updateCacheInRedis(cacheKey, { parsedSubtitles: parsedSubs });
+//           // Save parsed subtitles to Redis cache
+//           console.info(`~${transcription} Saving parsed subtitles to cache`);
+//           await updateCacheInRedis(cacheKey, { parsedSubtitles: parsedSubs });
           
-          parsingInProgress.delete(cacheKey);
-          return parsedSubs;
-        })().catch(error => {
-          parsingInProgress.delete(cacheKey);
-          throw error;
-        });
+//           parsingInProgress.delete(cacheKey);
+//           return parsedSubs;
+//         })().catch(error => {
+//           parsingInProgress.delete(cacheKey);
+//           throw error;
+//         });
 
-        parsingInProgress.set(cacheKey, parsingPromise);
-        subtitles = await parsingPromise;
-      }
-    }
+//         parsingInProgress.set(cacheKey, parsingPromise);
+//         subtitles = await parsingPromise;
+//       }
+//     }
 
-    // Handle empty subtitles case
-    if (!subtitles.length) {
-      return NextResponse.json({
-        transcription,
-        format,
-        cues: []
-      });
-    }
+//     // Handle empty subtitles case
+//     if (!subtitles.length) {
+//       return NextResponse.json({
+//         transcription,
+//         format,
+//         cues: []
+//       });
+//     }
 
-    if (transcription === 'english') {
-      const processStart = performance.now();
-      const processedSubs = processEnglishSubtitles(subtitles);
-      const processEnd = performance.now();
-      console.info(`~${transcription}-processEnglishSubtitles took --> ${processEnd - processStart}ms`);
+//     if (transcription === 'english') {
+//       const processStart = performance.now();
+//       const processedSubs = tokenizeEnglishSubtitles(subtitles);
+//       const processEnd = performance.now();
+//       console.info(`~${transcription}-tokenizeEnglishSubtitles took --> ${processEnd - processStart}ms`);
       
-      return NextResponse.json({
-        transcription,
-        format,
-        cues: processedSubs
-      });
-    }
+//       return NextResponse.json({
+//         transcription,
+//         format,
+//         cues: processedSubs
+//       });
+//     }
     
-    // Check Redis cache for tokenized subtitles
-    const updatedCachedData = await getCacheFromRedis(cacheKey);
-    if (
-      updatedCachedData 
-      && (updatedCachedData.tokenizedSubtitles.find(t => t.transcription == transcription)?.cues || []).length > 0
-    ) {
-      console.info(`~${transcription} Using cached tokenized subtitles`);
-      const tokenizedSubs = updatedCachedData.tokenizedSubtitles.find(t => t.transcription == transcription)?.cues || [];
+//     // Check Redis cache for tokenized subtitles
+//     const updatedCachedData = await getCacheFromRedis(cacheKey);
+//     if (
+//       updatedCachedData 
+//       && (updatedCachedData.tokenizedSubtitles.find(t => t.transcription == transcription)?.cues || []).length > 0
+//     ) {
+//       console.info(`~${transcription} Using cached tokenized subtitles`);
+//       const tokenizedSubs = updatedCachedData.tokenizedSubtitles.find(t => t.transcription == transcription)?.cues || [];
       
-      // If not pure Japanese, convert to the target transcription
-      if (transcription !== 'japanese') {
-        const currentTokenizer = await initializeTokenizer(transcription);
-        const conversionStart = performance.now();
-        const convertedSubs = await convertSubtitlesForNonJapaneseTranscription(tokenizedSubs, transcription, currentTokenizer);
-        const conversionEnd = performance.now();
-        console.info(`~${transcription}-convertNonJapaneseSubtitles took --> ${conversionEnd - conversionStart}ms`);
+//       // If not pure Japanese, convert to the target transcription
+//       if (transcription !== 'japanese') {
+//         const currentTokenizer = await initializeTokenizer(transcription);
+//         const conversionStart = performance.now();
+//         const convertedSubs = await convertSubtitlesForNonJapaneseTranscription(tokenizedSubs, transcription, currentTokenizer);
+//         const conversionEnd = performance.now();
+//         console.info(`~${transcription}-convertNonJapaneseSubtitles took --> ${conversionEnd - conversionStart}ms`);
         
-        return NextResponse.json({
-          transcription,
-          format,
-          cues: convertedSubs
-        });
-      }
+//         return NextResponse.json({
+//           transcription,
+//           format,
+//           cues: convertedSubs
+//         });
+//       }
       
-      return NextResponse.json({
-        transcription,
-        format,
-        cues: tokenizedSubs
-      });
-    }
+//       return NextResponse.json({
+//         transcription,
+//         format,
+//         cues: tokenizedSubs
+//       });
+//     }
     
-    // Check if this resource is already being tokenized by another call
-    if (tokenizationInProgress.has(cacheKey)) {
-      console.info(`Waiting for in-progress tokenization of ${transcription} for ${cacheKey}`);
-      const tokenizedSubs = await tokenizationInProgress.get(cacheKey)!;
+//     // Check if this resource is already being tokenized by another call
+//     if (tokenizationInProgress.has(cacheKey)) {
+//       console.info(`Waiting for in-progress tokenization of ${transcription} for ${cacheKey}`);
+//       const tokenizedSubs = await tokenizationInProgress.get(cacheKey)!;
       
-      // If not pure Japanese, convert to the target transcription
-      if (transcription !== 'japanese') {
-        const currentTokenizer = await initializeTokenizer(transcription);
-        const conversionStart = performance.now();
-        const convertedSubs = await convertSubtitlesForNonJapaneseTranscription(tokenizedSubs, transcription, currentTokenizer);
-        const conversionEnd = performance.now();
-        console.info(`~${transcription}-convertNonJapaneseSubtitles took --> ${conversionEnd - conversionStart}ms`);
+//       // If not pure Japanese, convert to the target transcription
+//       if (transcription !== 'japanese') {
+//         const currentTokenizer = await initializeTokenizer(transcription);
+//         const conversionStart = performance.now();
+//         const convertedSubs = await convertSubtitlesForNonJapaneseTranscription(tokenizedSubs, transcription, currentTokenizer);
+//         const conversionEnd = performance.now();
+//         console.info(`~${transcription}-convertNonJapaneseSubtitles took --> ${conversionEnd - conversionStart}ms`);
         
-        return NextResponse.json({
-          transcription,
-          format,
-          cues: convertedSubs
-        });
-      }
+//         return NextResponse.json({
+//           transcription,
+//           format,
+//           cues: convertedSubs
+//         });
+//       }
       
-      return NextResponse.json({
-        transcription,
-        format,
-        cues: tokenizedSubs
-      });
-    }
+//       return NextResponse.json({
+//         transcription,
+//         format,
+//         cues: tokenizedSubs
+//       });
+//     }
 
-    // Start new tokenization process
-    console.info(`Starting tokenization for ${cacheKey}`);
-    const tokenizationStart = performance.now();
+//     // Start new tokenization process
+//     console.info(`Starting tokenization for ${cacheKey}`);
+//     const tokenizationStart = performance.now();
 
-    const tokenizationPromise: Promise<SubtitleCue[]> = tokenizeJapaneseSubtitles(subtitles, transcription)
-      .then(async subs => {
-        const tokenizationEnd = performance.now();
-        console.info(`tokenization took --> ${tokenizationEnd - tokenizationStart}ms`);
+//     const tokenizationPromise: Promise<SubtitleCue[]> = tokenizeJapaneseSubtitles(subtitles, transcription)
+//       .then(async subs => {
+//         const tokenizationEnd = performance.now();
+//         console.info(`tokenization took --> ${tokenizationEnd - tokenizationStart}ms`);
       
-        // Save to Redis cache
-        await updateCacheInRedis(cacheKey, { 
-          tokenizedSubtitles: [
-            ...updatedCachedData?.tokenizedSubtitles || [],
-            {
-              transcription,
-              cues: subs
-            }
-          ],
-          lastAccessed: Date.now()
-        });
+//         // Save to Redis cache
+//         await updateCacheInRedis(cacheKey, { 
+//           tokenizedSubtitles: [
+//             ...updatedCachedData?.tokenizedSubtitles || [],
+//             {
+//               transcription,
+//               cues: subs
+//             }
+//           ],
+//           lastAccessed: Date.now()
+//         });
         
-        tokenizationInProgress.delete(cacheKey);
-        return subs;
-      })
-      .catch(error => {
-        tokenizationInProgress.delete(cacheKey);
-        throw error;
-      });
+//         tokenizationInProgress.delete(cacheKey);
+//         return subs;
+//       })
+//       .catch(error => {
+//         tokenizationInProgress.delete(cacheKey);
+//         throw error;
+//       });
 
-    tokenizationInProgress.set(cacheKey, tokenizationPromise);
+//     tokenizationInProgress.set(cacheKey, tokenizationPromise);
     
-    const tokenizedSubs = await tokenizationPromise;
+//     const tokenizedSubs = await tokenizationPromise;
     
-    if (transcription !== 'japanese') {
-      const currentTokenizer = await initializeTokenizer(transcription);
-      const conversionStart = performance.now();
-      const convertedSubs = await convertSubtitlesForNonJapaneseTranscription(tokenizedSubs, transcription, currentTokenizer);
-      const conversionEnd = performance.now();
-      console.info(`~${transcription}-convertNonJapaneseSubtitles took --> ${conversionEnd - conversionStart}ms`);
+//     if (transcription !== 'japanese') {
+//       const currentTokenizer = await initializeTokenizer(transcription);
+//       const conversionStart = performance.now();
+//       const convertedSubs = await convertSubtitlesForNonJapaneseTranscription(tokenizedSubs, transcription, currentTokenizer);
+//       const conversionEnd = performance.now();
+//       console.info(`~${transcription}-convertNonJapaneseSubtitles took --> ${conversionEnd - conversionStart}ms`);
       
-      return NextResponse.json({
-        transcription,
-        format,
-        cues: convertedSubs
-      });
-    }
+//       return NextResponse.json({
+//         transcription,
+//         format,
+//         cues: convertedSubs
+//       });
+//     }
 
-    return NextResponse.json({
-      transcription,
-      format,
-      cues: tokenizedSubs
-    });
+//     return NextResponse.json({
+//       transcription,
+//       format,
+//       cues: tokenizedSubs
+//     });
 
-  } catch (error) {
-    console.error('Error processing subtitles:', error);
-    return NextResponse.json(
-      { error: 'Failed to process subtitles' },
-      { status: 500 }
-    );
-  }
-}
+//   } catch (error) {
+//     console.error('Error processing subtitles:', error);
+//     return NextResponse.json(
+//       { error: 'Failed to process subtitles' },
+//       { status: 500 }
+//     );
+//   }
+// }
 
-// DELETE endpoint to clear Redis cache
-export async function DELETE(request: NextRequest) {
-  try {
-    // Clear all subtitle caches AND tokenizer cache
-    try {
-      const keys = await redis.keys(`${cacheKeys.subtitle()}*`);
-      if (keys.length > 0) {
-        await redis.del(...keys);
-      }
+// // DELETE endpoint to clear Redis cache
+// export async function DELETE(request: NextRequest) {
+//   try {
+//     // Clear all subtitle caches AND tokenizer cache
+//     try {
+//       const keys = await redis.keys(`${cacheKeys.subtitle('*')}`);
+//       if (keys.length > 0) {
+//         await redis.del(...keys);
+//       }
           
-      // Clear in-memory caches
-      fetchingInProgress.clear();
-      parsingInProgress.clear();
-      tokenizationInProgress.clear();
+//       // Clear in-memory caches
+//       fetchingInProgress.clear();
+//       parsingInProgress.clear();
+//       tokenizationInProgress.clear();
       
-      // Reset tokenizer
-      tokenizer = null;
-      tokenizerInitPromise = null;
+//       // Reset tokenizer
+//       tokenizer = null;
+//       tokenizerInitPromise = null;
       
-      return NextResponse.json({ message: 'All cache cleared including tokenizer' });
-    } catch (error) {
-      console.error('Error clearing all Redis cache:', error);
-      return NextResponse.json(
-        { error: 'Failed to clear all cache' },
-        { status: 500 }
-      );
-    }
-  } catch (error) {
-    console.error('Error clearing cache:', error);
-    return NextResponse.json(
-      { error: 'Failed to clear cache' },
-      { status: 500 }
-    );
-  }
-}
+//       return NextResponse.json({ message: 'All cache cleared including tokenizer' });
+//     } catch (error) {
+//       console.error('Error clearing all Redis cache:', error);
+//       return NextResponse.json(
+//         { error: 'Failed to clear all cache' },
+//         { status: 500 }
+//       );
+//     }
+//   } catch (error) {
+//     console.error('Error clearing cache:', error);
+//     return NextResponse.json(
+//       { error: 'Failed to clear cache' },
+//       { status: 500 }
+//     );
+//   }
+// }

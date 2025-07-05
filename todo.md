@@ -1,3 +1,7 @@
+fix checking if file is japanese first for local files
+
+currently having issues with the cached tokenization and convertion doesn't work if when adding another transcription beside japanese
+
 if all transcriptions are cached there would be no need to initialize the tokenizer but at the same time if need to add another transcription we will have to wait for tokenizer to initalize and parse so iam not sure
 
 check your words list button ?

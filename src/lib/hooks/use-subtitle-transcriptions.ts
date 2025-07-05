@@ -2,10 +2,9 @@ import { TranscriptionQuery } from "@/app/watch/[id]/[ep]/types";
 import { useInitializeTokenizer } from "@/lib/hooks/use-initialize-tokenizer";
 import { subtitleQueries } from "@/lib/queries/subtitle";
 import { useSubtitleStore } from "@/lib/stores/subtitle-store";
-import { getTranscriptionsLookupKey } from "@/lib/utils/subtitle";
-import { SubtitleCue, SubtitleTranscription } from "@/types/subtitle";
+import { SubtitleTranscription } from "@/types/subtitle";
 import { useQueries } from "@tanstack/react-query";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 export const useSubtitleTranscriptions = () => {
   const englishSubtitleUrl = useSubtitleStore((state) => state.englishSubtitleUrl) || "";
@@ -18,7 +17,7 @@ export const useSubtitleTranscriptions = () => {
 
   // Ensure 'japanese', 'english', and 'hiragana' are always included in the active transcriptions
   const activeTranscriptions: SubtitleTranscription[] = useMemo(() => {
-    const requiredTranscriptions: SubtitleTranscription[] = ['japanese'];
+    const requiredTranscriptions: SubtitleTranscription[] = ['japanese', 'hiragana', 'katakana'];
     
     // Get unique transcriptions by combining required ones with existing ones
     const uniqueTranscriptions = Array.from(

@@ -3,7 +3,7 @@
 import { SliderInput } from "@/components/form/slider-input";
 import TooltipWrapper from "@/components/tooltip-wrapper";
 import { useStyleFieldController } from "@/lib/hooks/use-style-field-controller";
-import { FieldControllerProps } from "@/types/subtitle";
+import { SubtitleStylesControllerProps } from "@/types/subtitle";
 
 export default function MarginController({
   transcription,
@@ -11,7 +11,7 @@ export default function MarginController({
   source,
   syncPlayerSettings,
   state
-}: FieldControllerProps) {
+}: SubtitleStylesControllerProps) {
   const { isLoading, displayValue, onSubmit } = useStyleFieldController({
     transcription,
     initialValue: value,

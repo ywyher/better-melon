@@ -1,5 +1,5 @@
 import { useTokenizerStore } from "@/lib/stores/use-tokenizer-store";
-import { initializeTokenizerThroughClient, isTokenizerInitialized, tokenizeText } from "@/lib/subtitle/parse.actions";
+import { initializeTokenizerThroughClient, isTokenizerInitialized, tokenizeText } from "@/lib/subtitle/actions";
 import { useCallback, useState } from "react";
 
 export function useTokenizer() {

@@ -2,7 +2,7 @@
 
 import { SliderInput } from "@/components/form/slider-input";
 import { useStyleFieldController } from "@/lib/hooks/use-style-field-controller";
-import { FieldControllerProps } from "@/types/subtitle";
+import { SubtitleStylesControllerProps } from "@/types/subtitle";
 
 export default function BackgroundBlurController({
   transcription,
@@ -10,7 +10,7 @@ export default function BackgroundBlurController({
   source,
   syncPlayerSettings,
   state
-}: FieldControllerProps) {
+}: SubtitleStylesControllerProps) {
   const { isLoading, displayValue, onSubmit } = useStyleFieldController({
     transcription,
     initialValue: value,
