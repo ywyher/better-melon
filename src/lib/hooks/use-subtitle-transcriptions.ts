@@ -1,5 +1,5 @@
 import { TranscriptionQuery } from "@/app/watch/[id]/[ep]/types";
-import { useTokenizer } from "@/lib/hooks/use-tokenizer";
+import { useInitializeTokenizer } from "@/lib/hooks/use-initialize-tokenizer";
 import { subtitleQueries } from "@/lib/queries/subtitle";
 import { useSubtitleStore } from "@/lib/stores/subtitle-store";
 import { getTranscriptionsLookupKey } from "@/lib/utils/subtitle";
@@ -8,56 +8,51 @@ import { useQueries } from "@tanstack/react-query";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 export const useSubtitleTranscriptions = () => {
-  // const englishSubtitleUrl = useSubtitleStore((state) => state.englishSubtitleUrl) || "";
-  // const activeSubtitleFile = useSubtitleStore((state) => state.activeSubtitleFile);
-  // const storeActiveTranscriptions = useSubtitleStore((state) => state.activeTranscriptions) || [];
-  
-  // // Ensure 'japanese', 'english', and 'hiragana' are always included in the active transcriptions
-  // const activeTranscriptions: SubtitleTranscription[] = useMemo(() => {
-  //   const requiredTranscriptions: SubtitleTranscription[] = ['japanese'];
+  const englishSubtitleUrl = useSubtitleStore((state) => state.englishSubtitleUrl) || "";
+  const activeSubtitleFile = useSubtitleStore((state) => state.activeSubtitleFile);
+  const storeActiveTranscriptions = useSubtitleStore((state) => state.activeTranscriptions) || [];
+  const {
+    isInitialized: isTokenizerInitialized,
+    isLoading: isTokenizerLoading
+  } = useInitializeTokenizer()
+
+  // Ensure 'japanese', 'english', and 'hiragana' are always included in the active transcriptions
+  const activeTranscriptions: SubtitleTranscription[] = useMemo(() => {
+    const requiredTranscriptions: SubtitleTranscription[] = ['japanese'];
     
-  //   // Get unique transcriptions by combining required ones with existing ones
-  //   const uniqueTranscriptions = Array.from(
-  //     new Set([...storeActiveTranscriptions, ...requiredTranscriptions])
-  //   );
+    // Get unique transcriptions by combining required ones with existing ones
+    const uniqueTranscriptions = Array.from(
+      new Set([...storeActiveTranscriptions, ...requiredTranscriptions])
+    );
     
-  //   return uniqueTranscriptions;
-  // }, [storeActiveTranscriptions]);
+    return uniqueTranscriptions;
+  }, [storeActiveTranscriptions]);
 
-  const { initalize, isInitialized: isTokenizerInitialized, isLoading: isTokenizerLoading, error: tokenizerError } = useTokenizer();
+  const hookStartTime = useRef<number>(performance.now());
+  const [loadingDuration, setLoadingDuration] = useState<number>(0);
 
-  useEffect(() => {
-    if(isTokenizerInitialized) return; 
-    (async () => {
-      await initalize()
-    })()
-  }, [initalize, isTokenizerInitialized])
-
-  // const hookStartTime = useRef<number>(performance.now());
-  // const [loadingDuration, setLoadingDuration] = useState<number>(0);
-
-  // const queryConfig = useMemo(() => ({
-  //   queries: activeTranscriptions.map(transcription => {
-  //     const isEnglish = transcription === 'english';
+  const queryConfig = useMemo(() => ({
+    queries: activeTranscriptions.map(transcription => {
+      const isEnglish = transcription === 'english';
       
-  //     return {
-  //       ...subtitleQueries.transcriptions({
-  //         activeSubtitleFile: activeSubtitleFile || undefined,
-  //         englishSubtitleUrl,
-  //         isEnglish,
-  //         isTokenizerInitialized,
-  //         transcription
-  //       }),
-  //       staleTime: 1000 * 60 * 60,
-  //       enabled: isTokenizerInitialized && (
-  //         (isEnglish && !!englishSubtitleUrl) || 
-  //         (!isEnglish && !!activeSubtitleFile)
-  //       ),
-  //     };
-  //   })
-  // }), [englishSubtitleUrl, activeSubtitleFile, activeTranscriptions, isTokenizerInitialized]);
+      return {
+        ...subtitleQueries.transcriptions({
+          activeSubtitleFile: activeSubtitleFile || undefined,
+          englishSubtitleUrl,
+          isEnglish,
+          isTokenizerInitialized,
+          transcription
+        }),
+        staleTime: 1000 * 60 * 60,
+        enabled: isTokenizerInitialized && (
+          (isEnglish && !!englishSubtitleUrl) || 
+          (!isEnglish && !!activeSubtitleFile)
+        ),
+      };
+    })
+  }), [englishSubtitleUrl, activeSubtitleFile, activeTranscriptions, isTokenizerInitialized]);
 
-  // const queries = useQueries(queryConfig);
+  const queries = useQueries(queryConfig);
 
   // useEffect(() => {
   //   const allQueriesFinished = queries.every(

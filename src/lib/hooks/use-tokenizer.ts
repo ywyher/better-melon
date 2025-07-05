@@ -1,8 +1,9 @@
-import { initializeTokenizer, initializeTokenizerForClient, isTokenizerInitialized, tokenizeText } from "@/lib/subtitle/parse.actions";
+import { useTokenizerStore } from "@/lib/stores/use-tokenizer-store";
+import { initializeTokenizerThroughClient, isTokenizerInitialized, tokenizeText } from "@/lib/subtitle/parse.actions";
 import { useCallback, useState } from "react";
 
 export function useTokenizer() {
-  const [isInitialized, setIsInitialized] = useState(false);
+  const { isInitialized, setIsInitialized } = useTokenizerStore()
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const [initializationTime, setInitializationTime] = useState<number>(0);
@@ -10,9 +11,14 @@ export function useTokenizer() {
   const initalize = useCallback(async () => {
     try {
       setIsLoading(true);
-      const isInitialized = await isTokenizerInitialized();
-      
+
       if (isInitialized) {
+        setIsInitialized(true);
+        setIsLoading(false);
+        return;
+      }
+      const isInitializedInner = await isTokenizerInitialized();
+      if (isInitializedInner) {
         console.log('~Tokenizer already initialized on server');
         setIsInitialized(true);
         setIsLoading(false);
@@ -20,7 +26,7 @@ export function useTokenizer() {
       }
       
       console.log('~Tokenizer Initializing on the server...');
-      const { initializationTime, error } = await initializeTokenizerForClient();
+      const { initializationTime, error } = await initializeTokenizerThroughClient();
       if (error) throw new Error(error)
         
       console.log(`~Tokenizer initialized: ${initializationTime}ms`);
@@ -33,7 +39,7 @@ export function useTokenizer() {
     } finally {
       setIsLoading(false);
     }
-  }, [])
+  }, [isInitialized, setError, setIsInitialized, setIsLoading])
 
   const tokenize = async (text: string) => {
     if (!isInitialized) {

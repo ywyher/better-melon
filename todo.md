@@ -1,3 +1,5 @@
+if all transcriptions are cached there would be no need to initialize the tokenizer but at the same time if need to add another transcription we will have to wait for tokenizer to initalize and parse so iam not sure
+
 check your words list button ?
 
 for the words part we are creating an entry for each word i think that is a bit expensive mayube try one entry with one field having all the word if that is better

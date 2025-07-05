@@ -144,10 +144,10 @@ export async function initializeTokenizer(name?: string): Promise<Tokenizer> {
   return await tokenizerInitPromise;
 }
 
-export async function initializeTokenizerForClient() {
+export async function initializeTokenizerThroughClient() {
   try {
     const start = performance.now();
-    const tokenizer = await initializeTokenizer('initializeTokenizer-action');
+    const tokenizer = await initializeTokenizer('initializeTokenizer-through-client');
     const end = performance.now();
     
     if(tokenizer) {

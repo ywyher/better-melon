@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "push": "npx drizzle-kit push"
+    "push": "npx drizzle-kit push",
+    "studio": "npx drizzle-kit studio"
   },
   "dependencies": {
     "@apollo/client": "^3.13.8",
@@ -42,6 +43,7 @@
     "@tanstack/react-query-devtools": "^5.74.9",
     "@tanstack/react-query-next-experimental": "^5.74.9",
     "@tanstack/react-virtual": "^3.13.6",
+    "@uidotdev/usehooks": "^2.4.1",
     "@vidstack/react": "^1.12.13",
     "better-auth": "^1.2.8",
     "btoa": "^1.2.1",
@@ -86,6 +88,7 @@
     "sonner": "^2.0.3",
     "tailwind-merge": "^3.2.0",
     "tailwindcss-animate": "^1.0.7",
+    "usehooks-ts": "^3.1.1",
     "uuid": "^11.1.0",
     "vaul": "^1.1.2",
     "wanakana": "^5.3.1",
