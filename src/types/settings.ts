@@ -1,4 +1,4 @@
-import { GeneralSettings, PlayerSettings, SubtitleSettings, WordSettings } from "@/lib/db/schema";
+import { GeneralSettings, PlayerSettings, SubtitleSettings, SubtitleStyles, WordSettings } from "@/lib/db/schema";
 
 export type SettingsForEpisode = {
   generalSettings: GeneralSettings;

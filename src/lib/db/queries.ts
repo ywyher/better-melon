@@ -74,6 +74,18 @@ export async function getPitchAccent(query: string) {
   return pitch.data.entries as NHKEntry[]
 }
 
-export async function getCache(key: string) {
-  return await redis.get(key)
+export async function getCache(key: string, parse: boolean = false) {
+  try {
+    const cache = await redis.get(key);
+    if(!cache) return null;
+
+    if (parse) {
+      return JSON.parse(cache);
+    }
+
+    return cache;
+  } catch (error) {
+    console.error('Redis get error:', error);
+    return null;
+  }
 }

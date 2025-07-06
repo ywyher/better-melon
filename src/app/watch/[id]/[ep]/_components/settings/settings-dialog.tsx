@@ -29,7 +29,6 @@ export default function SettingsDialog() {
         trigger={
           <Button variant='outline' className="gap-2">
             <Settings className="w-4 h-4" />
-            Settings
           </Button>
         }
         breakpoint="medium"

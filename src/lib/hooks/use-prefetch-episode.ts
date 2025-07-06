@@ -39,7 +39,7 @@ export function usePrefetchEpisode({
           
           if(Number(currentTime) > Number(duration/2)) {
               setPassedHalfDuration(true)
-            }
+          }
         }
     });
   }, [player])
@@ -77,7 +77,6 @@ export function usePrefetchEpisode({
     activeTranscriptions,
     subtitleQueries
   } = usePrefetchSubtitleTranscriptions({
-    episodeNumber,
     episodeData: prefetchedEpisodeData,
     preferredFormat,
     isReady,

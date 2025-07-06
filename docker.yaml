@@ -3,7 +3,7 @@ services:
   postgres:
     restart: always
     image: postgres:latest
-    container_name: better-melon
+    container_name: postgres
     ports:
       - 5432:5432
     environment:
@@ -11,25 +11,12 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: better-melon
     volumes:
-      - postgres:/data/postgres/better-melon
-  redis:
-    image: redis:latest
-    container_name: redis
-    ports:
-      - "6379:6379"
-    restart: unless-stopped
-    command: redis-server --appendonly yes
-    volumes:
-      - redis_data:/data
-    environment:
-      - REDIS_APPENDONLY=yes
+      - postgres:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 30s
       timeout: 10s
       retries: 5
 
 volumes:
   postgres:
-  redis_data:
-    driver: local

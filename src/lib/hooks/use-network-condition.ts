@@ -22,10 +22,10 @@ export function useNetworkCondition() {
         const responseTime = endTime - startTime;
         
         if (responseTime > 500) {
-          console.debug(`Debug poor network condition: ${responseTime}`)
+          console.debug(`Network condition poor: ${responseTime}`)
           setNetworkCondition('poor');
         } else {
-          console.debug(`Debug good network condition: ${responseTime}`)
+          console.debug(`Network condition poor: ${responseTime}`)
           setNetworkCondition('good');
         }
       } catch (error) {

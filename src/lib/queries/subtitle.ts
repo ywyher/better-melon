@@ -1,6 +1,6 @@
 import { getMultipleTranscriptionsStyles } from "@/components/subtitle/styles/actions";
 import { SubtitleStylesStore } from "@/lib/stores/subtitle-styles-store";
-import { parseSubtitleToJson } from "@/lib/subtitle/parse";
+import { parseSubtitlesFile } from "@/lib/subtitle/parse";
 import { convertToKana, getSubtitleFormat, getSubtitleSource } from "@/lib/utils/subtitle";
 import type { ActiveSubtitleFile, SubtitleTranscription } from "@/types/subtitle";
 import { createQueryKeys } from "@lukemorales/query-key-factory";
@@ -16,7 +16,7 @@ export const subtitleQueries = createQueryKeys('subtitle', {
       const source = getSubtitleSource(false, '', activeSubtitleFile);
       const format = getSubtitleFormat(false, '', activeSubtitleFile);
       
-      return await parseSubtitleToJson({
+      return await parseSubtitlesFile({
         format,
         source,
         transcription
@@ -57,11 +57,14 @@ export const subtitleQueries = createQueryKeys('subtitle', {
     const source = getSubtitleSource(isEnglish, englishSubtitleUrl, activeSubtitleFile);
     const format = getSubtitleFormat(isEnglish, englishSubtitleUrl, activeSubtitleFile);
 
-    const cues = await parseSubtitleToJson({
+    const startParsing = performance.now()
+    const cues = await parseSubtitlesFile({
       format,
       source,
       transcription
     })
+    const endParsing = performance.now()
+    console.log(`[ParseSubtitlesFile(${transcription})] Took -> ${(endParsing - startParsing).toFixed(2)}ms`)
 
     return {
       transcription,
@@ -114,7 +117,7 @@ export const subtitleQueries = createQueryKeys('subtitle', {
       const end = performance.now();
       const duration = end - start;
       if(setLoadingDuration) setLoadingDuration(duration);
-      console.debug(`~Subtitle styles fetched and stored in ${duration.toFixed(2)}ms for ${transcriptionsToFetch.length} transcriptions`);
+      (`~Subtitle styles fetched and stored in ${duration.toFixed(2)}ms for ${transcriptionsToFetch.length} transcriptions`);
       
       return stylesMap;
     }

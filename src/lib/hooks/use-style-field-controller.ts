@@ -8,7 +8,7 @@ import { GeneralSettings, SubtitleStyles } from "@/lib/db/schema";
 import { showSyncSettingsToast } from "@/components/sync-settings-toast";
 import { SyncStrategy } from "@/types";
 
-interface UseStyleFieldControllerProps {
+interface UseStyleSubtitleStylesControllerProps {
   transcription: SubtitleStyles['transcription'];
   initialValue: any;
   source: 'database' | 'local' | string;
@@ -28,7 +28,7 @@ export function useStyleFieldController({
   state,
   successMessage,
   errorMessage
-}: UseStyleFieldControllerProps) {
+}: UseStyleSubtitleStylesControllerProps) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [localValue, setLocalValue] = useState<any>(null);
   const [displayValue, setDisplayValue] = useState<string>('')

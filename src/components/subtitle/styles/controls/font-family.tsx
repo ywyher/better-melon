@@ -3,7 +3,7 @@
 import { SelectInput } from "@/components/form/select-input";
 import { fontFamilies } from "@/lib/constants/subtitle";
 import { useStyleFieldController } from "@/lib/hooks/use-style-field-controller";
-import { FieldControllerProps } from "@/types/subtitle";
+import { SubtitleStylesControllerProps } from "@/types/subtitle";
 import { useMemo } from "react";
 
 export default function FontFamilyController({ 
@@ -12,7 +12,7 @@ export default function FontFamilyController({
   source,
   syncPlayerSettings,
   state
-}: FieldControllerProps) {
+}: SubtitleStylesControllerProps) {
   const { isLoading, displayValue, onSubmit } = useStyleFieldController({
     transcription,
     initialValue: value,

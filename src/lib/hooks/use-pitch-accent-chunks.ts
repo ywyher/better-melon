@@ -95,7 +95,6 @@ export function usePitchAccentChunks({
       const endTime = performance.now();
       const executionTime = endTime - hookStartTime.current;
       setLoadingDuration(executionTime);
-      console.debug(`~Progressive pitch accent loading time: ${executionTime.toFixed(2)}ms`);
     }
   }, [loadingState.isComplete, loadingDuration, queries.length]);
 

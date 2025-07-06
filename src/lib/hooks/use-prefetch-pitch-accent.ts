@@ -88,11 +88,11 @@ export function usePrefetchPitchAccent({
     return queries.every(query => query.isSuccess);
   }, [queries]);
 
-  useEffect(() => {
-    if (pitchAccentPrefetched && queries.length > 0) {
-      console.info(`debug Successfully prefetched pitch accent data for episode ${episodeNumber}`);
-    }
-  }, [pitchAccentPrefetched, episodeNumber, queries.length]);
+  // useEffect(() => {
+  //   if (pitchAccentPrefetched && queries.length > 0) {
+  //     console.info(`debug Successfully prefetched pitch accent data for episode ${episodeNumber}`);
+  //   }
+  // }, [pitchAccentPrefetched, episodeNumber, queries.length]);
 
   return {
     pitchAccentPrefetched,
