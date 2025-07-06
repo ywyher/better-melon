@@ -39,7 +39,7 @@ export function usePrefetchEpisode({
           
           if(Number(currentTime) > Number(duration/2)) {
               setPassedHalfDuration(true)
-            }
+          }
         }
     });
   }, [player])

@@ -7,14 +7,10 @@ import { SubtitleCue, SubtitleTranscription } from "@/types/subtitle";
 import { useQueries } from "@tanstack/react-query";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-export const useSubtitleTranscriptions = () => {
+export const useSubtitleTranscriptions = (isTokenizerInitialized: boolean) => {
   const englishSubtitleUrl = useSubtitleStore((state) => state.englishSubtitleUrl) || "";
   const activeSubtitleFile = useSubtitleStore((state) => state.activeSubtitleFile);
   const storeActiveTranscriptions = useSubtitleStore((state) => state.activeTranscriptions) || [];
-  const {
-    isInitialized: isTokenizerInitialized,
-    isLoading: isTokenizerLoading
-  } = useInitializeTokenizer()
 
   // Ensure 'japanese', 'english', and 'hiragana' are always included in the active transcriptions
   const activeTranscriptions: SubtitleTranscription[] = useMemo(() => {
@@ -114,7 +110,7 @@ export const useSubtitleTranscriptions = () => {
     });
   }, [queries]);
 
-  const isLoading = isTokenizerLoading || queries.some(q => q.isLoading);
+  const isLoading = !isTokenizerInitialized || queries.some(q => q.isLoading);
   const error = queries.find(q => q.error)?.error;
 
   return {
@@ -123,7 +119,6 @@ export const useSubtitleTranscriptions = () => {
     transcriptions,
     transcriptionsLookup,
     loadingDuration: loadingDuration,
-    isTokenizerInitialized: isTokenizerInitialized,
     refetch: refetchAll
   };
 }

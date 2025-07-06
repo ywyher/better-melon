@@ -1,5 +1,6 @@
 import { useActiveSubtitles } from "@/lib/hooks/use-active-subtitles";
 import { useEpisodeData } from "@/lib/hooks/use-episode-data";
+import { useInitializeTokenizer } from "@/lib/hooks/use-initialize-tokenizer";
 import { usePitchAccentChunks } from "@/lib/hooks/use-pitch-accent-chunks";
 import { useSetSubtitles } from "@/lib/hooks/use-set-subtitles";
 import { useSettingsForEpisode } from "@/lib/hooks/use-settings-for-episode";
@@ -34,6 +35,8 @@ export const useWatchData = (animeId: string, episodeNumber: number) => {
 
   const store = useWatchDataStore.getState(); // use this to read current store values (won't trigger re-renders)
 
+  const { isInitialized } = useInitializeTokenizer()
+
   const {
     episodeData,
     isLoading: isEpisodeDataLoading,
@@ -56,7 +59,7 @@ export const useWatchData = (animeId: string, episodeNumber: number) => {
     transcriptionsLookup,
     error: transcriptionsError,
     loadingDuration: transcriptionsLoadingDuration,
-  } = useSubtitleTranscriptions();
+  } = useSubtitleTranscriptions(isInitialized);
 
   const { 
     styles, 

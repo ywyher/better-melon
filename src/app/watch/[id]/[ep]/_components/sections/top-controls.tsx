@@ -1,14 +1,9 @@
 import SubtitlePanel from "@/app/watch/[id]/[ep]/_components/panel/panel";
 import SettingsDialog from "@/app/watch/[id]/[ep]/_components/settings/settings-dialog";
-import { TranscriptionQuery, TranscriptionsLookup } from "@/app/watch/[id]/[ep]/types";
 import DialogWrapper from "@/components/dialog-wrapper";
 import { Button } from "@/components/ui/button";
-import { usePlayerStore } from "@/lib/stores/player-store";
-import { UIStateStore, useUIStateStore } from "@/lib/stores/ui-state-store";
+import { useUIStateStore } from "@/lib/stores/ui-state-store";
 import { useWatchDataStore } from "@/lib/stores/watch-store";
-import { AnimeEpisodeData } from "@/types/anime";
-import { SettingsForEpisode } from "@/types/settings";
-import { SubtitleCue } from "@/types/subtitle";
 import { Captions, Loader2, PanelLeftClose, PanelLeftOpen, Search } from "lucide-react";
 
 type TopControlsProps = {

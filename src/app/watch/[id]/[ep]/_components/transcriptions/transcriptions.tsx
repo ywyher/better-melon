@@ -220,7 +220,7 @@ export default function SubtitleTranscriptions() {
 
   return (
     <div
-      className="absolute left-1/2 transform -translate-x-1/2 flex items-center z-50 flex-col w-[100%]"
+      className="absolute left-1/2 transform -translate-x-1/2 flex items-center flex-col w-[100%]"
       style={wrapperStyles}
     >
       <Button
