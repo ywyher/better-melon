@@ -9,6 +9,23 @@ import { ActiveSubtitleFile, SubtitleFile, SubtitleFormat, SubtitleToken } from 
 import Kuroshiro from "@sglkc/kuroshiro";
 import CustomKuromojiAnalyzer from "@/lib/subtitle/custom-kuromoji-analyzer";
 import { getTokenizer } from "kuromojin";
+import { cacheKeys } from "@/lib/constants/cache";
+import { CacheKey } from "@/types";
+
+export function getSubtitleCacheKey({
+  source, 
+  isFile,
+  lastModified
+}: {
+  source: string, 
+  isFile: boolean,
+  lastModified?: number
+}): CacheKey {
+  if (isFile && lastModified) {
+    return cacheKeys.subtitle(`file-${source}-${lastModified}`);
+  }
+  return cacheKeys.subtitle(source);
+}
 
 export const getActiveSubtitleFile = (subtitleFiles: SubtitleFile[], preferredFormat: SubtitleSettings['preferredFormat']) => {
   const selectedFile = selectSubtitleFile({

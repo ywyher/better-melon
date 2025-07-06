@@ -75,9 +75,7 @@ export type SubtitleStylesControllerProps = {
 
 export interface ParseSubtitleBody {
   source: string;
-  format: SubtitleFormat;
-  transcription: SubtitleTranscription;
-  isFile?: boolean;
+  isFile: boolean;
   fileContent?: string;
   lastModified?: number;
 }
@@ -87,7 +85,7 @@ export interface SubtitleCache {
   // Japanese only
   parsedSubtitles: SubtitleCue[];
   // Japanese only
-  tokenizedSubtitles?: SubtitleCue[];
+  tokenizedSubtitles: SubtitleCue[];
   convertedSubtitles?: Partial<Record<Exclude<SubtitleTranscription, 'english' | 'japanese'>, SubtitleCue[]>>
   lastAccessed: number;
 }

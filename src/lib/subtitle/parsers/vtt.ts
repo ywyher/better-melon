@@ -2,6 +2,7 @@ import { removeHtmlTags, timestampToSeconds } from "@/lib/utils/subtitle";
 import { SubtitleCue, SubtitleTranscription } from "@/types/subtitle";
 
 export function parseVtt(content: string, transcription: SubtitleTranscription): SubtitleCue[] {
+  const parseVttStart = performance.now();
   const lines = content.split('\n');
   const result = [];
 
@@ -55,5 +56,7 @@ export function parseVtt(content: string, transcription: SubtitleTranscription):
     result.push(currentEntry);
   }
 
+  const parseVttEnd = performance.now();
+  console.info(`[Parsing(${transcription})] VTT parsing completed in ${Math.round(parseVttEnd - parseVttStart)}ms - ${result.length} cues parsed`);
   return result as SubtitleCue[];
 }

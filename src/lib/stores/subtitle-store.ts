@@ -24,7 +24,7 @@ export const useSubtitleStore = create<SubtitleStore>()((set) => ({
   englishSubtitleUrl: null,
   setEnglishSubtitleUrl: (englishSubtitleUrl) => set({ englishSubtitleUrl }),
   
-  activeTranscriptions: [],
+  activeTranscriptions: ["japanese"],
   setActiveTranscriptions: (activeTranscriptions) => set({ activeTranscriptions }),
   
   subtitleCues: [],

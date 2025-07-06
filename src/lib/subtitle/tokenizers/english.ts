@@ -2,7 +2,10 @@ import { SubtitleCue } from "@/types/subtitle";
 import nlp from "compromise";
 
 export function tokenizeEnglishSubtitles(cues: SubtitleCue[]): SubtitleCue[] {
-  return cues.map(sub => {
+  console.info(`[Tokenizing(English)] Started`);
+  const tokenizationStart = performance.now();
+  
+  const tokens: SubtitleCue[] = cues.map(sub => {
     if (!sub.content) {
       return sub;
     }
@@ -38,4 +41,8 @@ export function tokenizeEnglishSubtitles(cues: SubtitleCue[]): SubtitleCue[] {
       tokens
     };
   });
+
+  const tokenizationEnd = performance.now();
+  console.info(`[Tokenizing(English)] Took --> ${tokenizationEnd - tokenizationStart}ms`);
+  return tokens;
 }

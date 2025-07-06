@@ -2,6 +2,7 @@
 
 import { auth } from "@/lib/auth";
 import db from "@/lib/db";
+import { getCache } from "@/lib/db/queries";
 import { user, User } from "@/lib/db/schema";
 import { redis } from "@/lib/redis";
 import { eq } from "drizzle-orm";
@@ -51,9 +52,21 @@ export async function deleteUser({ userId }: { userId: User['id'] }) {
     }
 }
 
-export async function setCache(key: string, value: string) {
+export async function setCache(key: string, value: any) {
     const results = await redis.set(`${key}`, JSON.stringify(value));
     return {
         success: results ? true : false
     }
+}
+
+export async function updateCache(key: string, updates: any): Promise<void> {
+  try {
+    const existing = await getCache(`${key}`, true);
+    if (existing) {
+      const updated = { ...existing, ...updates };
+      await setCache(key, updated);
+    }
+  } catch (error) {
+    console.error('Redis update error:', error);
+  }
 }

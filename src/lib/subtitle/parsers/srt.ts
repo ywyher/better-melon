@@ -2,6 +2,7 @@ import { removeTags, timestampToSeconds } from "@/lib/utils/subtitle";
 import { SubtitleCue, SubtitleTranscription } from "@/types/subtitle";
 
 export function parseSrt(content: string, transcription: SubtitleTranscription): SubtitleCue[] {
+  const parseSrtStart = performance.now();
   const lines = content.split('\n');
   const result = [];
 
@@ -48,5 +49,7 @@ export function parseSrt(content: string, transcription: SubtitleTranscription):
     result.push(currentEntry);
   }
 
+  const parseSrtEnd = performance.now();
+  console.info(`[Parsing(${transcription})] SRT parsing completed in ${Math.round(parseSrtEnd - parseSrtStart)}ms - ${result.length} cues parsed`);
   return result as SubtitleCue[];
 }

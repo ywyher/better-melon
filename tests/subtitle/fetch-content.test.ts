@@ -1,6 +1,6 @@
 // shit ass
 
-import { fetchSubtitleContent } from '@/lib/subtitle/actions'
+import { fetchSubtitleContent } from '@/lib/subtitle/parse'
 import { expect, test } from 'vitest'
 
 test('Fetch subtitle content', async () => {

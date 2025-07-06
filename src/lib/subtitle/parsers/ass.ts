@@ -2,6 +2,7 @@ import { removeTags, timestampToSeconds } from "@/lib/utils/subtitle";
 import { SubtitleCue, SubtitleTranscription } from "@/types/subtitle";
 
 export function parseAss(content: string, transcription: SubtitleTranscription): SubtitleCue[] {
+  const parseAssStart = performance.now();
   const lines = content.split('\n');
   const result = [];
   let idCounter = 1;
@@ -50,5 +51,7 @@ export function parseAss(content: string, transcription: SubtitleTranscription):
     }
   }
 
+  const parseAssEnd = performance.now();
+  console.info(`[Parsing(${transcription})] ASS parsing completed in ${Math.round(parseAssEnd - parseAssStart)}ms - ${result.length} cues parsed`);
   return result as SubtitleCue[];
 }

@@ -1,6 +1,7 @@
 import CustomKuromojiAnalyzer from "@/lib/subtitle/custom-kuromoji-analyzer";
 import { SubtitleCue, SubtitleTranscription } from "@/types/subtitle";
 import { Tokenizer } from "kuromojin";
+import Kuroshiro from "@sglkc/kuroshiro"
 
 export async function convertSubtitlesForNonJapaneseTranscription(
   cues: SubtitleCue[], 
@@ -19,15 +20,17 @@ export async function convertSubtitlesForNonJapaneseTranscription(
   }
 
   const kuroshiroOptions = {
-    to: transcription,
+    to: (transcription == 'japanese' || transcription == 'furigana') ? "" : transcription,
     mode: transcription === 'romaji' 
-    ? 'spaced' 
-    : transcription == 'furigana' 
-    ? 'furigana'
-    : 'normal' 
+      ? 'spaced' 
+      : transcription == 'furigana' 
+        ? 'furigana'
+        : 'normal' 
   }
 
-  return Promise.all(
+  const conversionStart = performance.now();
+
+  const converted = Promise.all(
     cues.map(async sub => {
       if (!sub.content || !kuroshiro) {
         return sub;
@@ -59,4 +62,8 @@ export async function convertSubtitlesForNonJapaneseTranscription(
       };
     })
   );
+
+  const conversionEnd = performance.now();
+  console.info(`[Convert(${transcription})] Took --> ${conversionEnd - conversionStart}ms`);
+  return converted
 }

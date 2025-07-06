@@ -1,3 +1,7 @@
+remove furigana from the transcriptions and the japanese by default will be the furiagana with an option in the UI to remove them.
+
+and pitch accent to the dictionary too ??
+
 fix checking if file is japanese first for local files
 
 currently having issues with the cached tokenization and convertion doesn't work if when adding another transcription beside japanese

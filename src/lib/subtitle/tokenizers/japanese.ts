@@ -1,6 +1,6 @@
 'use server'
 
-import { initializeTokenizer } from "@/lib/subtitle/actions";
+import { initializeTokenizer } from "@/lib/subtitle/tokenizer";
 import { SubtitleCue, SubtitleToken, SubtitleTranscription } from "@/types/subtitle";
 
 export async function tokenizeJapaneseSubtitles(subs: SubtitleCue[], transcription: SubtitleTranscription): Promise<SubtitleCue[]> {

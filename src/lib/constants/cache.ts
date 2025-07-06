@@ -1,5 +1,3 @@
-import { ActiveSubtitleFile } from "@/types/subtitle";
-
 export const cacheKeys = {
   subtitle: (key: string) => `subtitle:${key}`,
   anime: {
