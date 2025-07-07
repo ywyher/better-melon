@@ -58,6 +58,7 @@ export const useWatchData = (animeId: string, episodeNumber: number) => {
     isLoading: isTranscriptionsLoading,
     transcriptionsLookup,
     error: transcriptionsError,
+    hasInitialized: hasTranscriptionsInitialized,
     loadingDuration: transcriptionsLoadingDuration,
   } = useSubtitleTranscriptions(isInitialized);
 
@@ -98,14 +99,31 @@ export const useWatchData = (animeId: string, episodeNumber: number) => {
   const isLoading = useMemo(() => {
     return (
       isEpisodeDataLoading
-      || isTranscriptionsLoading 
-      || isStylesLoading 
       || isSettingsLoading 
       || isWordsLoading
       || isPitchAccentLoading
       // || !isVideoReady
+      // so when the user add other transcriptions later we don't show the loading state
+      || (isTranscriptionsLoading && !hasTranscriptionsInitialized)
+      || (isStylesLoading && !hasTranscriptionsInitialized)
     );
   }, [isEpisodeDataLoading, isTranscriptionsLoading, isStylesLoading, isPitchAccentLoading, isSettingsLoading, isWordsLoading]);
+
+  useEffect(() => {
+    console.log({
+      isEpisodeDataLoading,
+      isStylesLoading ,
+      isSettingsLoading ,
+      isWordsLoading,
+      isPitchAccentLoading
+    })
+  }, [
+    isEpisodeDataLoading,
+    isStylesLoading ,
+    isSettingsLoading ,
+    isWordsLoading,
+    isPitchAccentLoading
+  ])
 
   const errors = useMemo(() => {
     return [

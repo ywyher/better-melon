@@ -18,21 +18,23 @@ export default function PlayerSettings({
     animeMetadata
 }: PlayerSettingsProps) {
     return (
-        <div className="flex flex-col lg:flex-row gap-2">
+        <div className="flex flex-col xl:flex-row gap-2">
             <EnabledTranscriptions
                 playerSettings={playerSettings as TPlayerSettings}
                 syncPlayerSettings={generalSettings.syncPlayerSettings}
             />
-            <PlaybackToggles 
-                playerSettings={playerSettings as TPlayerSettings}
-                syncPlayerSettings={generalSettings.syncPlayerSettings}
-            />
-            <Screenshot
-                namingPattern={generalSettings.screenshotNamingPattern}
-                namingDialog={generalSettings.screenshotNamingDialog}
-                format={generalSettings.screenshotFormat}
-                animeMetadata={animeMetadata}
-            />
+            <div className="flex flex-row gap-1">
+                <PlaybackToggles 
+                    playerSettings={playerSettings as TPlayerSettings}
+                    syncPlayerSettings={generalSettings.syncPlayerSettings}
+                />
+                <Screenshot
+                    namingPattern={generalSettings.screenshotNamingPattern}
+                    namingDialog={generalSettings.screenshotNamingDialog}
+                    format={generalSettings.screenshotFormat}
+                    animeMetadata={animeMetadata}
+                />
+            </div>
         </div>
     )
 }

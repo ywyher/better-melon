@@ -1,5 +1,4 @@
 import { TranscriptionQuery } from "@/app/watch/[id]/[ep]/types";
-import { useInitializeTokenizer } from "@/lib/hooks/use-initialize-tokenizer";
 import { subtitleQueries } from "@/lib/queries/subtitle";
 import { useSubtitleStore } from "@/lib/stores/subtitle-store";
 import { getTranscriptionsLookupKey } from "@/lib/utils/subtitle";
@@ -11,6 +10,8 @@ export const useSubtitleTranscriptions = (isTokenizerInitialized: boolean) => {
   const englishSubtitleUrl = useSubtitleStore((state) => state.englishSubtitleUrl) || "";
   const activeSubtitleFile = useSubtitleStore((state) => state.activeSubtitleFile);
   const storeActiveTranscriptions = useSubtitleStore((state) => state.activeTranscriptions) || [];
+  // so when the user add other transcriptions later we don't show the loading state
+  const hasInitialized = useRef<boolean>(false)
 
   // Ensure 'japanese', 'english', and 'hiragana' are always included in the active transcriptions
   const activeTranscriptions: SubtitleTranscription[] = useMemo(() => {
@@ -58,8 +59,9 @@ export const useSubtitleTranscriptions = (isTokenizerInitialized: boolean) => {
     if (allQueriesFinished && queries.length > 0 && !loadingDuration) {
       const endTime = performance.now();
       const executionTime = endTime - hookStartTime.current;
-
       console.log(`[SubtitleTranscriptionsParsing] Took -> ${executionTime.toFixed(2)}ms`)
+
+      hasInitialized.current = true;
       setLoadingDuration(executionTime);
     }
   }, [queries, loadingDuration]);
@@ -119,6 +121,7 @@ export const useSubtitleTranscriptions = (isTokenizerInitialized: boolean) => {
     transcriptions,
     transcriptionsLookup,
     loadingDuration: loadingDuration,
+    hasInitialized,
     refetch: refetchAll
   };
 }

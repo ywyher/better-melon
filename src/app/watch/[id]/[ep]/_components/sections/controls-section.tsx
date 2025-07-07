@@ -24,7 +24,7 @@ export default function ControlsSection() {
   return (
       <div className="flex flex-col gap-10">
           <div className="flex flex-col gap-5">
-              <PlayerSettings 
+              <PlayerSettings
                 playerSettings={settings.playerSettings} 
                 generalSettings={settings.generalSettings}
                 animeMetadata={episodeData.metadata}
