@@ -1,3 +1,4 @@
+import { StyleTranscription } from "@/app/watch/[id]/[ep]/types";
 import { getMultipleTranscriptionsStyles } from "@/components/subtitle/styles/actions";
 import { SubtitleStylesStore } from "@/lib/stores/subtitle-styles-store";
 import { parseSubtitlesFile } from "@/lib/subtitle/parse";
@@ -74,8 +75,8 @@ export const subtitleQueries = createQueryKeys('subtitle', {
   },
   }),
   styles: ({ transcriptionsToFetch, checkedTranscriptions, handleSubtitleStylesInStore, getStylesFromStore, setLoadingDuration }: {
-    transcriptionsToFetch: SubtitleTranscription[];
-    checkedTranscriptions: RefObject<Set<SubtitleTranscription>>;
+    transcriptionsToFetch: StyleTranscription[];
+    checkedTranscriptions: RefObject<Set<StyleTranscription>>;
     handleSubtitleStylesInStore: SubtitleStylesStore['handleStyles']
     getStylesFromStore: SubtitleStylesStore['getStyles'];
     setLoadingDuration?: Dispatch<SetStateAction<number>>
@@ -93,7 +94,7 @@ export const subtitleQueries = createQueryKeys('subtitle', {
         // Handle default state if it exists
         if (styles.default) {
           handleSubtitleStylesInStore(
-            transcription as SubtitleTranscription,
+            transcription as StyleTranscription,
             styles.default,
             'default'
           );
@@ -102,7 +103,7 @@ export const subtitleQueries = createQueryKeys('subtitle', {
         // Handle active state if it exists
         if (styles.active) {
           handleSubtitleStylesInStore(
-            transcription as SubtitleTranscription,
+            transcription as StyleTranscription,
             styles.active,
             'active'
           );

@@ -25,6 +25,7 @@ export default function SubtitleTranscriptionSelector({
     const transcriptions = [
         'all',
         ...subtitleTranscriptions,
+        'furigana'
     ]
 
     const onChange = (v: SubtitleStyles['transcription']) => {

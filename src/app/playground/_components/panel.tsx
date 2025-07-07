@@ -10,7 +10,7 @@ import { hasChanged } from "@/lib/utils/utils";
 import { useSubtitleStyles } from "@/lib/hooks/use-subtitle-styles";
 import { usePitchAccentChunks } from "@/lib/hooks/use-pitch-accent-chunks";
 
-export default function TranscriptionsPlayground() {
+export default function PanelPlayground() {
   const setActiveSubtitleFile = useSubtitleStore((state) => state.setActiveSubtitleFile);
   const setActiveTranscriptions = useSubtitleStore((state) => state.setActiveTranscriptions);
   const setEnglishSubtitleUrl = useSubtitleStore((state) => state.setEnglishSubtitleUrl);

@@ -13,7 +13,7 @@ export type SubtitleStore = {
   
   subtitleCues: SubtitleCue[];
   setSubtitleCues: (cues: SubtitleCue[]) => void;
-  
+
   reset: () => void;
 };
 

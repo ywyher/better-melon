@@ -93,6 +93,9 @@ const initialState = {
   pitchLookup: new Map(),
   wordsLookup: new Map(),
   
+  pitchColoring: true,
+  learningStatus: true,
+  
   isLoading: true,
   loadingDuration: 0
 };

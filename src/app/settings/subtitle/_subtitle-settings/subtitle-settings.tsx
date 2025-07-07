@@ -2,9 +2,9 @@
 
 import SubtitleSettingsSkeleton from "@/app/settings/subtitle/_components/subtitle-settings-skeleton"
 import DefinitionTrigger from "@/app/settings/subtitle/_subtitle-settings/components/definition-trigger"
+import Furigana from "@/app/settings/subtitle/_subtitle-settings/components/furigana"
 import MatchPattern from "@/app/settings/subtitle/_subtitle-settings/components/match-pattern"
 import PreferredFormat from "@/app/settings/subtitle/_subtitle-settings/components/preferred-format"
-import { Separator } from "@/components/ui/separator"
 import { settingsQueries } from "@/lib/queries/settings"
 import { useQuery } from "@tanstack/react-query"
   
@@ -19,6 +19,7 @@ export default function SubtitleSettings() {
             <PreferredFormat value={settings.preferredFormat} />
             <MatchPattern value={settings.matchPattern} />
             <DefinitionTrigger value={settings.definitionTrigger} />
+            <Furigana value={settings.furigana} />
         </div>
     )
 }

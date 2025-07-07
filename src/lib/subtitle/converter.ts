@@ -20,10 +20,10 @@ export async function convertSubtitlesForNonJapaneseTranscription(
   }
 
   const kuroshiroOptions = {
-    to: (transcription == 'japanese' || transcription == 'furigana') ? "" : transcription,
+    to: (transcription == 'japanese') ? "" : transcription,
     mode: transcription === 'romaji' 
       ? 'spaced' 
-      : transcription == 'furigana' 
+      : transcription == 'japanese' 
         ? 'furigana'
         : 'normal' 
   }

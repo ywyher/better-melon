@@ -1,6 +1,6 @@
 "use client"
 
-import React, { Fragment, useCallback, useState, useMemo, useEffect } from 'react';
+import React, { Fragment, useCallback, useState, useMemo } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { useDefinitionStore } from '@/lib/stores/definition-store';
@@ -17,17 +17,18 @@ import { pitchAccentsStyles } from '@/lib/constants/pitch';
 import { PitchAccents } from '@/types/pitch';
 import { excludedPos, learningStatusesStyles } from '@/lib/constants/subtitle';
 import { useWatchDataStore } from '@/lib/stores/watch-store';
+import { useSubtitleStore } from '@/lib/stores/subtitle-store';
 
 type TranscriptionItemProps = {
   transcription: SubtitleTranscription;
-  japaneseStyles: TranscriptionStyleSet;
+  furiganaStyles: TranscriptionStyleSet;
   styles: TranscriptionStyleSet;
   activeSubtitles: Subtitle
 }
 
 export const TranscriptionItem = React.memo(function TranscriptionItem({ 
     transcription,
-    japaneseStyles,
+    furiganaStyles,
     styles,
     activeSubtitles
 }: TranscriptionItemProps) {
@@ -54,6 +55,7 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
     const setToken = useDefinitionStore((state) => state.setToken);
     const storeToken = useDefinitionStore((state) => state.token)
 
+    const furigana = useWatchDataStore((state) => state.settings.subtitleSettings.furigana)
     const learningStatus = useWatchDataStore((state) => state.settings.wordSettings.learningStatus)
     const pitchColoring = useWatchDataStore((state) => state.settings.wordSettings.pitchColoring)
     const definitionTrigger = useWatchDataStore((state) => state.settings.subtitleSettings.definitionTrigger)
@@ -144,21 +146,15 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
             };
             const activeContainerStyles = isActive ? styles.containerStyle.active : undefined;
             
-            // Special handling for furigana transcription
-            if (transcription === 'furigana') {
+            // Special handling for japanese since it has furigana
+            if (transcription === 'japanese') {
                 const { baseText, rubyText } = parseFuriganaToken(token.surface_form);
 
                 // Use Japanese styles for base text, furigana styles for ruby text
-                const baseTextStyle = japaneseStyles 
-                    ? (isActive ? japaneseStyles.tokenStyles.active : japaneseStyles.tokenStyles.default)
-                    : tokenStyle;
-
-                const baseBackgroundStyle = japaneseStyles 
-                    ? (isActive ? japaneseStyles.containerStyle.active : undefined)
-                    : undefined;
-                    
+                const baseTextStyle = tokenStyle
+                const baseBackgroundStyle = (isActive ? activeContainerStyles : undefined)
                 const rubyTextStyle = {
-                    ...tokenStyle,
+                    ...(isActive ? furiganaStyles.tokenStyles.active : furiganaStyles.tokenStyles.default),
                 };
                 
                 return (
@@ -193,7 +189,7 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
                         }}
                     >
                         {/* Ruby text (furigana) - positioned above */}
-                        {rubyText && (
+                        {(rubyText && furigana) && (
                             <div
                                 style={{
                                     ...activeContainerStyles,
@@ -259,7 +255,7 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
         });
     }, [
         styles,
-        japaneseStyles, // Add this dependency
+        furiganaStyles,
         hoveredCueId, 
         hoveredTokenId, 
         transcription, 
@@ -272,7 +268,7 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
     // Memoize container className
     const containerClassName = useMemo(() => 
         cn(
-            transcription === 'furigana' && 'flex flex-row items-end',
+            transcription === 'japanese' && 'flex flex-row items-end',
             transcription === 'english' && 'flex flex-row gap-1',
         ),
         [transcription]

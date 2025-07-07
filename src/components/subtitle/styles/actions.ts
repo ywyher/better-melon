@@ -1,5 +1,6 @@
 "use server"
 
+import { StyleTranscription } from "@/app/watch/[id]/[ep]/types";
 import { defaultSubtitleStyles } from "@/components/subtitle/styles/constants";
 import { auth } from "@/lib/auth";
 import db from "@/lib/db";
@@ -11,18 +12,18 @@ import { generateId } from "better-auth";
 import { and, eq, inArray } from "drizzle-orm";
 import { headers } from "next/headers";
 
-export async function getMultipleTranscriptionsStyles(transcriptions: SubtitleTranscription[]) {
+export async function getMultipleTranscriptionsStyles(transcriptions: StyleTranscription[]) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user.id) {
     // Return default styles for each requested transcription
     return transcriptions.reduce((acc, transcription) => {
       acc[transcription] = defaultSubtitleStyles;
       return acc;
-    }, {} as Record<SubtitleTranscription, typeof defaultSubtitleStyles>);
+    }, {} as Record<StyleTranscription, typeof defaultSubtitleStyles>);
   }
 
   // Always include 'all' in our query since it's the fallback style
-  const transcriptionsToFetch = [...new Set([...transcriptions, 'all' as SubtitleTranscription])];
+  const transcriptionsToFetch = [...new Set([...transcriptions, 'all' as StyleTranscription])];
   
   const fetchedStyles = await db.select().from(subtitleStyles)
     .where(and(
@@ -56,7 +57,7 @@ export async function getMultipleTranscriptionsStyles(transcriptions: SubtitleTr
     stylesMap['all'] = defaultSubtitleStyles;
   }
 
-  return stylesMap as Record<SubtitleTranscription, typeof defaultSubtitleStyles>;
+  return stylesMap as Record<StyleTranscription, typeof defaultSubtitleStyles>;
 }
 
 export async function getSubtitleStyles({ transcription, state }: { transcription: SubtitleStyles['transcription'], state: SubtitleStyles['state'] }) {

@@ -7,6 +7,7 @@ import { Loader2 } from "lucide-react";
 import { useSubtitleStore } from "@/lib/stores/subtitle-store";
 import SubtitleFileSelector from "@/app/watch/[id]/[ep]/_components/subtitle-file-selector";
 import { useSettingsForEpisode } from "@/lib/hooks/use-settings-for-episode";
+import { useInitializeTokenizer } from "@/lib/hooks/use-initialize-tokenizer";
 
 export default function ProgressivePitch() {
   const setActiveSubtitleFile = useSubtitleStore((state) => state.setActiveSubtitleFile);
@@ -25,7 +26,8 @@ export default function ProgressivePitch() {
     });
   }, [setActiveTranscriptions, setActiveSubtitleFile]);
 
-  const { transcriptions, isLoading: isTranscriptionsLoading } = useSubtitleTranscriptions()
+  const { isInitialized } = useInitializeTokenizer()
+  const { transcriptions, isLoading: isTranscriptionsLoading } = useSubtitleTranscriptions(isInitialized)
   const { settings } = useSettingsForEpisode()
   const { pitchLookup } = usePitchAccentChunks({
     animeId: '9253',
