@@ -19,7 +19,7 @@ export default function Furigana({ value }: {
                     <h3 className="font-medium">Furigana</h3>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                    Whether to display furgiana or no
+                    Whether to display furigiana or not
                 </p>
             </div>
             <div className="col-span-1 flex flex-row gap-2 justify-end">

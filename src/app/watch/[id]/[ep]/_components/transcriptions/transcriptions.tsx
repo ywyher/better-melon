@@ -18,6 +18,7 @@ import { useSubtitleStore } from "@/lib/stores/subtitle-store";
 import { usePlaybackSettingsStore } from "@/lib/stores/playback-settings-store";
 import { useWatchDataStore } from "@/lib/stores/watch-store";
 import { useActiveSubtitles } from "@/lib/hooks/use-active-subtitles";
+import { useMediaState } from "@vidstack/react";
 
 export default function SubtitleTranscriptions() {
   const player = usePlayerStore((state) => state.player);
@@ -45,12 +46,12 @@ export default function SubtitleTranscriptions() {
   // This would stop the player from repausing it self if we are still in the small time window
   const lastPauseTime = useRef<number>(0);
     
-  // const isFullscreen = useMediaState('fullscreen', player);
-  // const controlsVisible = useMediaState('controlsVisible', player);
-  // const currentTime = useMediaState('currentTime', player);
-  const isFullscreen = true;
-  const controlsVisible = true;
-  const currentTime = 10;
+  const isFullscreen = useMediaState('fullscreen', player);
+  const controlsVisible = useMediaState('controlsVisible', player);
+  const currentTime = useMediaState('currentTime', player);
+  // const isFullscreen = true;
+  // const controlsVisible = true;
+  // const currentTime = 10;
 
   const sensors = useSensors(
     useSensor(PointerSensor, {

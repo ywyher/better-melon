@@ -1,6 +1,4 @@
-remove furigana from the transcriptions and the japanese by default will be the furiagana with an option in the UI to remove them.
-
-and pitch accent to the dictionary too ??
+the only part left in making japanese have furigana by default is the panel
 
 fix checking if file is japanese first for local files
 
@@ -10,19 +8,11 @@ check your words list button ?
 
 for the words part we are creating an entry for each word i think that is a bit expensive mayube try one entry with one field having all the word if that is better
 
-when the time comes to refactor the parsing logic i think we gotta cache the converted and tokenized stuff as well ? currently we only caching the file
-
 episode 11 of made in abyss is broken (special case)
 
 the home page should be introduction to the site and add an option to redirect to the animes page right away in the settings
 
 the definition card we should use furigana !! 
-
-the prevois use-anime-data code but make is existsInCache null instead of false so it cant skip till there is true or false ? prob not fuck
-
-use-prefetch-tokenizer instaed of the useEffect mess we got in the info.tsx
-
-currently the issue we have is with the transcriptions hook since the tokenization process doesn't work well, gotta solve it maybe try server actions instead of API routes idk clueless
 
 check https://github.com/Doublevil/JmdictFurigana
 

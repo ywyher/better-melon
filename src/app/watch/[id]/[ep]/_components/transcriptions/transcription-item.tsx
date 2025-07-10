@@ -17,7 +17,6 @@ import { pitchAccentsStyles } from '@/lib/constants/pitch';
 import { PitchAccents } from '@/types/pitch';
 import { excludedPos, learningStatusesStyles } from '@/lib/constants/subtitle';
 import { useWatchDataStore } from '@/lib/stores/watch-store';
-import { useSubtitleStore } from '@/lib/stores/subtitle-store';
 
 type TranscriptionItemProps = {
   transcription: SubtitleTranscription;
@@ -256,6 +255,7 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
     }, [
         styles,
         furiganaStyles,
+        furigana,
         hoveredCueId, 
         hoveredTokenId, 
         transcription, 

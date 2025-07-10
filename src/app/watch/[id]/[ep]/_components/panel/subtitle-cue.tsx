@@ -37,6 +37,7 @@ function SubtitleCueBase({
     const wordsLookup = useWatchDataStore((state) => state.wordsLookup)
     const pitchLookup = useWatchDataStore((state) => state.pitchLookup)
     const wordSettings = useWatchDataStore((state) => state.settings.wordSettings)
+    const furigana = useWatchDataStore((state) => state.settings.subtitleSettings.furigana)
     
     return (
         <div 
@@ -98,7 +99,7 @@ function SubtitleCueBase({
                             )
                         };
 
-                        if (cue.transcription === 'furigana') {
+                        if (cue.transcription === 'japanese') {
                             const { baseText, rubyText } = parseFuriganaToken(token.surface_form);
                             
                             return (
@@ -120,9 +121,9 @@ function SubtitleCueBase({
                                 >
                                     <div className='flex flex-col items-center'>
                                         {/* Ruby text (furigana) - positioned above */}
-                                        {rubyText && (
+                                        {(rubyText && furigana) && (
                                             <div>
-                                                <span>{rubyText}</span>
+                                                <span className="text-sm">{rubyText}</span>
                                             </div>
                                         )}
                                         

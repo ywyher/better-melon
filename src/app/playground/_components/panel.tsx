@@ -4,11 +4,11 @@ import { useEffect } from "react";
 import { useSubtitleStore } from "@/lib/stores/subtitle-store";
 import { useSubtitleTranscriptions } from "@/lib/hooks/use-subtitle-transcriptions";
 import { useInitializeTokenizer } from "@/lib/hooks/use-initialize-tokenizer";
-import SubtitleTranscriptions from "@/app/watch/[id]/[ep]/_components/transcriptions/transcriptions";
 import { useWatchDataStore } from "@/lib/stores/watch-store";
 import { hasChanged } from "@/lib/utils/utils";
 import { useSubtitleStyles } from "@/lib/hooks/use-subtitle-styles";
 import { usePitchAccentChunks } from "@/lib/hooks/use-pitch-accent-chunks";
+import SubtitlePanel from "@/app/watch/[id]/[ep]/_components/panel/panel";
 
 export default function PanelPlayground() {
   const setActiveSubtitleFile = useSubtitleStore((state) => state.setActiveSubtitleFile);
@@ -72,7 +72,7 @@ export default function PanelPlayground() {
   
   return (
     <div className="flex flex-row gap-10">
-      <SubtitleTranscriptions />
+      <SubtitlePanel />
     </div>
   );
 }

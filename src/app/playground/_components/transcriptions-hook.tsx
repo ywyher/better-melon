@@ -32,7 +32,7 @@ export default function TranscriptionsHookPlayground() {
   const cache = async () => {
     const raw = await getCache('subtitle:https://jimaku.cc/entry/1323/download/%5BMoozzi2%5D%20Made%20in%20Abyss%20-%2009%20(BD%201920x1080%20x.264%20Flac).ass')
 
-    const cache = JSON.parse(raw || "")
+    const cache = raw ? JSON.parse(raw) : {}
     console.log(cache)
   }
   

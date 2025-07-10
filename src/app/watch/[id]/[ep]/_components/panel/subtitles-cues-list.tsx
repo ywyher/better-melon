@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { TabsContent } from "@/components/ui/tabs";
-import { SubtitleCue as TSubtitleCue, SubtitleTranscription, SubtitleFormat } from "@/types/subtitle";
+import { SubtitleCue as TSubtitleCue, SubtitleTranscription } from "@/types/subtitle";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { usePlayerStore } from "@/lib/stores/player-store";
 import SubtitleCuesContainer from "@/app/watch/[id]/[ep]/_components/panel/subtitle-cues-container";
@@ -20,6 +20,7 @@ export default function SubtitleCuesList({
 }: SubtitleCuesListProps) {
 
   const playerSettings = useWatchDataStore((state) => state.settings.playerSettings)
+  const furigana = useWatchDataStore((state) => state.settings.subtitleSettings.furigana)
 
   const [activeIndex, setActiveIndex] = useState<number>(-1);
   const [autoScroll, setAutoScroll] = useState<boolean>(playerSettings.autoScrollToCue); // Use setting
@@ -46,7 +47,7 @@ export default function SubtitleCuesList({
     if (!cue) return 60;
     
     // Furigana needs more space for stacked text
-    if (selectedTranscription === 'furigana') {
+    if (selectedTranscription === 'japanese' && furigana) {
       return 95; // Increased height for furigana
     }
     
@@ -57,7 +58,7 @@ export default function SubtitleCuesList({
     }
     
     return 60; // Default size
-  }, [cues, selectedTranscription]);
+  }, [cues, selectedTranscription, furigana]);
 
   const rowVirtualizer = useVirtualizer({
       count: cues?.length || 0,

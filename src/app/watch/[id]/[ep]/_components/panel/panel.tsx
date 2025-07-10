@@ -25,7 +25,7 @@ export default function SubtitlePanel() {
     
     const { data: subtitleCues, isLoading: isCuesLoading, error: cuesError } = useQuery({
       ...subtitleQueries.cues(activeSubtitleFile!, selectedTranscription),
-      placeholderData: transcriptions?.find(t => t.transcription == 'japanese')!.cues,
+      placeholderData: transcriptions?.find(t => t.transcription == 'japanese')?.cues,
       enabled: !!activeSubtitleFile && !!transcriptions
     })
 
