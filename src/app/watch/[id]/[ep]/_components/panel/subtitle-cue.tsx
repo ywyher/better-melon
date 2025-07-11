@@ -38,7 +38,7 @@ function SubtitleCueBase({
     const wordsLookup = useWatchDataStore((state) => state.wordsLookup)
     const pitchLookup = useWatchDataStore((state) => state.pitchLookup)
     const wordSettings = useWatchDataStore((state) => state.settings.wordSettings)
-    const furigana = useWatchDataStore((state) => state.settings.subtitleSettings.furigana)
+    const showFurigana = useWatchDataStore((state) => state.settings.subtitleSettings.showFurigana)
     
     return (
         <div 
@@ -108,6 +108,7 @@ function SubtitleCueBase({
                                     key={idx}
                                     baseText={baseText}
                                     rubyText={rubyText || ""}
+                                    showFurigana={showFurigana}
                                     className={cn(
                                         "cursor-pointer rounded transition-colors hover:bg-primary/10",
                                         activeToken?.id === token.id && "bg-primary/20"

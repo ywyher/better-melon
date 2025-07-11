@@ -56,7 +56,7 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
     const storeToken = useDefinitionStore((state) => state.token)
     const setFurigana = useDefinitionStore((state) => state.setFurigana)
 
-    const furigana = useWatchDataStore((state) => state.settings.subtitleSettings.furigana)
+    const showFurigana = useWatchDataStore((state) => state.settings.subtitleSettings.showFurigana)
     const learningStatus = useWatchDataStore((state) => state.settings.wordSettings.learningStatus)
     const pitchColoring = useWatchDataStore((state) => state.settings.wordSettings.pitchColoring)
     const definitionTrigger = useWatchDataStore((state) => state.settings.subtitleSettings.definitionTrigger)
@@ -169,7 +169,7 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
                         key={`${token.id || tokenIdx}-${tokenIdx}`}
                         baseText={baseText}
                         rubyText={rubyText || ""}
-                        showFurigana={furigana}
+                        showFurigana={showFurigana}
                         baseTextStyle={baseTextStyle}
                         rubyTextStyle={rubyTextStyle}
                         baseBackgroundStyle={baseBackgroundStyle}
@@ -253,7 +253,7 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
     }, [
         styles,
         furiganaStyles,
-        furigana,
+        showFurigana,
         hoveredCueId, 
         hoveredTokenId, 
         transcription, 

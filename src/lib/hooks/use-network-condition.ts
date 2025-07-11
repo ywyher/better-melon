@@ -25,7 +25,7 @@ export function useNetworkCondition() {
           console.debug(`Network condition poor: ${responseTime}`)
           setNetworkCondition('poor');
         } else {
-          console.debug(`Network condition poor: ${responseTime}`)
+          console.debug(`Network condition good: ${responseTime}`)
           setNetworkCondition('good');
         }
       } catch (error) {

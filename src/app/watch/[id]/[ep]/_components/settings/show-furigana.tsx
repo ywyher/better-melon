@@ -2,7 +2,7 @@
 
 import ToggleButton from "@/components/toggle-button";
 import { useEffect, useState } from "react";
-import { GeneralSettings, PlayerSettings, SubtitleSettings } from "@/lib/db/schema";
+import { GeneralSettings, SubtitleSettings } from "@/lib/db/schema";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { showSyncSettingsToast } from "@/components/sync-settings-toast";
