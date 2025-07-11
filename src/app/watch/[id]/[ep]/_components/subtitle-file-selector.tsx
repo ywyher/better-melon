@@ -22,6 +22,10 @@ export default function SubtitleFileSelector() {
 
     const subtitleFiles = useWatchDataStore((state) => state.episodeData?.subtitles)
 
+    useEffect(() => {
+        console.log(`subtitleFiles`, subtitleFiles)
+    }, [subtitleFiles])
+
     const handleSelectFile = (file: SubtitleFile) => {
         if (file.name === activeSubtitleFile?.file.name) return;
         
