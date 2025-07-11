@@ -1,5 +1,4 @@
 'use server'
-
 import type { SubtitleCue, SubtitleTranscription, ParseSubtitleBody, SubtitleCache, SubtitleFormat } from "@/types/subtitle";
 import { getSubtitleCacheKey } from '@/lib/utils/subtitle';
 import { parseSrt } from "@/lib/subtitle/parsers/srt";
