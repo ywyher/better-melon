@@ -2,7 +2,7 @@
 
 import SubtitleSettingsSkeleton from "@/app/settings/subtitle/_components/subtitle-settings-skeleton"
 import DefinitionTrigger from "@/app/settings/subtitle/_subtitle-settings/components/definition-trigger"
-import Furigana from "@/app/settings/subtitle/_subtitle-settings/components/furigana"
+import ShowFurigana from "@/app/settings/subtitle/_subtitle-settings/components/show-furigana"
 import MatchPattern from "@/app/settings/subtitle/_subtitle-settings/components/match-pattern"
 import PreferredFormat from "@/app/settings/subtitle/_subtitle-settings/components/preferred-format"
 import { settingsQueries } from "@/lib/queries/settings"
@@ -19,7 +19,7 @@ export default function SubtitleSettings() {
             <PreferredFormat value={settings.preferredFormat} />
             <MatchPattern value={settings.matchPattern} />
             <DefinitionTrigger value={settings.definitionTrigger} />
-            <Furigana value={settings.furigana} />
+            <ShowFurigana value={settings.showFurigana} />
         </div>
     )
 }

@@ -1,10 +1,9 @@
 "use client"
 
-import { useState } from 'react';
 import { 
   DndContext, 
   DragEndEvent, 
-  PointerSensor, 
+  PointerSensor,
   useSensor,
   useSensors,
 } from '@dnd-kit/core';

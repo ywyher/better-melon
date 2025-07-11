@@ -3,7 +3,6 @@ import { StyleTranscription, TranscriptionStyles } from "@/app/watch/[id]/[ep]/t
 import { subtitleQueries } from "@/lib/queries/subtitle";
 import { usePlayerStore } from "@/lib/stores/player-store";
 import { useSubtitleStylesStore } from "@/lib/stores/subtitle-styles-store";
-import { SubtitleTranscription } from "@/types/subtitle";
 import { useQuery } from "@tanstack/react-query";
 import { useMediaState } from "@vidstack/react";
 import { useMemo, useRef, useState } from "react";

@@ -1,7 +1,7 @@
 'use server'
 
 import { env } from "@/lib/env/server";
-import { Index } from "@/types/dictionary";
+import { Dictionary, Index } from "@/types/dictionary";
 import { JMdictWord } from "@/types/jmdict";
 import { JMnedictWord } from "@/types/jmnedict";
 import { Kanjidic2Character } from "@/types/kanjidic2";
@@ -9,6 +9,7 @@ import { Kanjidic2Character } from "@/types/kanjidic2";
 export type JMdictResponse = {
   success: boolean;
   data?: {
+    index: 'jmdict'
     entries: JMdictWord[];
   }
   message?: string
@@ -31,9 +32,7 @@ export async function getJMdictEntries(query?: string) {
       throw new Error('Invalid entries structure returned from API');
     }
 
-    return {
-      entries: data.entries,
-    }
+    return data;
   } catch (error) {
     throw new Error(`Failed to fetch jmdict entries: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
@@ -80,7 +79,7 @@ export async function getDictionaryEntries(query?: string) {
         entries: result.entries,
         index: result.index as Index,
       }
-    });
+    }) as Dictionary;
   } catch (error) {
     throw new Error(`Failed to fetch dictionary entries: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }

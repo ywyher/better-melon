@@ -11,10 +11,10 @@ import { SyncStrategy } from "@/types";
 import { useWatchDataStore } from "@/lib/stores/watch-store";
 import { handleSubtitleSettings } from "@/app/settings/subtitle/_subtitle-settings/actions";
 
-export default function Furigana({ subtitleSettings, syncPlayerSettings }: { subtitleSettings: SubtitleSettings, syncPlayerSettings: GeneralSettings['syncPlayerSettings'] }) {
+export default function ShowFurigana({ subtitleSettings, syncPlayerSettings }: { subtitleSettings: SubtitleSettings, syncPlayerSettings: GeneralSettings['syncPlayerSettings'] }) {
     const [isLoading, setIsLoading] = useState<boolean>(false)
     
-    const furigana = useWatchDataStore((state) => state.settings.subtitleSettings.furigana)
+    const showFurigana = useWatchDataStore((state) => state.settings.subtitleSettings.showFurigana)
     const settings = useWatchDataStore((state) => state.settings)
     const setSettings = useWatchDataStore((state) => state.setSettings)
 
@@ -35,7 +35,7 @@ export default function Furigana({ subtitleSettings, syncPlayerSettings }: { sub
         ...settings,
         subtitleSettings: {
           ...subtitleSettings,
-          furigana: value
+          showFurigana: value
         }
       });
       
@@ -63,7 +63,7 @@ export default function Furigana({ subtitleSettings, syncPlayerSettings }: { sub
         console.log('ask')
         try {
           setIsLoading(true);
-          const { error, message } = await handleSubtitleSettings({ 'furigana': value });
+          const { error, message } = await handleSubtitleSettings({ 'showFurigana': value });
           
           if (error) {
             toast.error(error);
@@ -86,9 +86,9 @@ export default function Furigana({ subtitleSettings, syncPlayerSettings }: { sub
     return (
         <div className="flex flex-row gap-2">
             <ToggleButton
-              name="Furigana"
-              checked={furigana}
-              onClick={() => handleChange(!furigana)}
+              name="showFurigana"
+              checked={showFurigana}
+              onClick={() => handleChange(!showFurigana)}
               className="w-fit"
               disabled={isLoading}
             />

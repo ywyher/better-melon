@@ -25,7 +25,7 @@ export async function convertSubtitlesForNonJapaneseTranscription(
       ? 'spaced' 
       : transcription == 'japanese' 
         ? 'furigana'
-        : 'normal' 
+        : 'normal'
   }
 
   const conversionStart = performance.now();

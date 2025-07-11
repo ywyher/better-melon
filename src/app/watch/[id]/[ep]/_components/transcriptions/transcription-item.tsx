@@ -17,6 +17,7 @@ import { pitchAccentsStyles } from '@/lib/constants/pitch';
 import { PitchAccents } from '@/types/pitch';
 import { excludedPos, learningStatusesStyles } from '@/lib/constants/subtitle';
 import { useWatchDataStore } from '@/lib/stores/watch-store';
+import { RubyText } from '@/components/ruby-text';
 
 type TranscriptionItemProps = {
   transcription: SubtitleTranscription;
@@ -53,6 +54,7 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
     const storeSentences = useDefinitionStore((state) => state.sentences)
     const setToken = useDefinitionStore((state) => state.setToken);
     const storeToken = useDefinitionStore((state) => state.token)
+    const setFurigana = useDefinitionStore((state) => state.setFurigana)
 
     const furigana = useWatchDataStore((state) => state.settings.subtitleSettings.furigana)
     const learningStatus = useWatchDataStore((state) => state.settings.wordSettings.learningStatus)
@@ -75,7 +77,7 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
         setHoveredTokenId(null);
     }, []);
 
-    const handleActivate = useCallback(async (from: number, to: number, token: SubtitleToken, trigger: SubtitleSettings['definitionTrigger']) => {
+    const handleActivate = useCallback(async (from: number, to: number, token: SubtitleToken, furigana: string, trigger: SubtitleSettings['definitionTrigger']) => {
         if (
             !from
             || !to
@@ -99,6 +101,7 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
         if (storeToken && storeToken.id === token.id) {
             // If clicking on the same token, clear it
             setToken(null);
+            setFurigana(furigana)
             setSentences({
                 kanji: null,
                 kana: null,
@@ -107,6 +110,7 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
         } else {
             // Otherwise set the new token and sentence
             setToken(token);
+            setFurigana(furigana)
             const sentences = getSentencesForCue(transcriptionsLookup, from, to, delay);
             setSentences(sentences);
         }
@@ -117,8 +121,12 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
         if (!cue.tokens?.length) {
             return <span style={styles.tokenStyles.default}>{cue.content}</span>;
         }
+
         
         return cue.tokens.map((token, tokenIdx) => {
+            const japaneseToken: SubtitleToken | undefined = activeSubtitles?.['japanese']?.[0]?.tokens?.find((t) => t.id == token.id)
+            const { baseText, rubyText } = parseFuriganaToken(japaneseToken?.surface_form || token.surface_form);
+
             const pitch = pitchLookup.get(token.original_form)
             let accent: PitchAccents | null = null;
             if(pitch) {
@@ -147,27 +155,70 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
             
             // Special handling for japanese since it has furigana
             if (transcription === 'japanese') {
-                const { baseText, rubyText } = parseFuriganaToken(token.surface_form);
-
                 // Use Japanese styles for base text, furigana styles for ruby text
                 const baseTextStyle = tokenStyle
-                const baseBackgroundStyle = (isActive ? activeContainerStyles : undefined)
+                const baseBackgroundStyle = (isActive ? activeContainerStyles : {
+                    display: 'flex'
+                })
                 const rubyTextStyle = {
                     ...(isActive ? furiganaStyles.tokenStyles.active : furiganaStyles.tokenStyles.default),
-                };
-                
+                }
+
                 return (
-                    <div
+                    <RubyText
                         key={`${token.id || tokenIdx}-${tokenIdx}`}
-                        className='flex flex-col gap-1'
+                        baseText={baseText}
+                        rubyText={rubyText || ""}
+                        showFurigana={furigana}
+                        baseTextStyle={baseTextStyle}
+                        rubyTextStyle={rubyTextStyle}
+                        baseBackgroundStyle={baseBackgroundStyle}
+                        // className={className}
+                        style={style}
                         onClick={() => {
                             handleActivate(
                                 cue.from,
                                 cue.to,
-                                {
-                                    ...token,
-                                    surface_form: baseText
-                                },
+                                { ...token, surface_form: baseText },
+                                rubyText || "",
+                                'click'
+                            );
+                        }}
+                        onMouseEnter={() => {
+                            handleTokenMouseEnter(cue.id, token.id);
+                            handleActivate(
+                                cue.from,
+                                cue.to,
+                                { ...token, surface_form: baseText },
+                                rubyText || "",
+                                'hover'
+                            );
+                        }}
+                        onMouseLeave={() => {
+                            handleTokenMouseLeave();
+                        }}
+                    />
+                )
+            }
+        
+            // Regular rendering for other transcriptions
+            return (
+                <div
+                    key={`${token.id || tokenIdx}-${tokenIdx}`}
+                    style={{
+                        ...(isActive ? activeContainerStyles : {
+                            display: 'flex'
+                        }),
+                    }}
+                >
+                    <span
+                        style={tokenStyle}
+                        onClick={() => {
+                            handleActivate(
+                                cue.from,
+                                cue.to,
+                                token,
+                                rubyText || "",
                                 'click'
                             );
                         }}
@@ -176,63 +227,10 @@ export const TranscriptionItem = React.memo(function TranscriptionItem({
                             handleActivate(
                                 cue.from,
                                 cue.to,
-                                {
-                                    ...token,
-                                    surface_form: baseText
-                                },
+                                token,
+                                rubyText || "",
                                 'hover'
                             );
-                        }}
-                        onMouseLeave={() => { 
-                            handleTokenMouseLeave()
-                        }}
-                    >
-                        {/* Ruby text (furigana) - positioned above */}
-                        {(rubyText && furigana) && (
-                            <div
-                                style={{
-                                    ...activeContainerStyles,
-                                    width: '100% !important'
-                                }}
-                            >
-                                <span style={rubyTextStyle}>
-                                    {rubyText}
-                                </span>
-                            </div>
-                        )}
-                        
-                        {/* Base text (kanji/kana) - positioned below */}
-                        <div
-                            style={{
-                                ...baseBackgroundStyle,
-                                width: '100% !important'
-                            }}
-                            className='flex flex-row justify-center items-center text-center'
-                        >
-                            <span style={baseTextStyle}>
-                                {baseText}
-                            </span>
-                        </div>
-                    </div>
-                );
-            }
-        
-            // Regular rendering for other transcriptions
-            return (
-                <div
-                    key={`${token.id || tokenIdx}-${tokenIdx}`}
-                    style={{
-                        ...(isActive ? activeContainerStyles : {}),
-                    }}
-                >
-                    <span
-                        style={tokenStyle}
-                        onClick={() => {
-                            handleActivate(cue.from, cue.to, token, 'click');
-                        }}
-                        onMouseEnter={() => {
-                            handleTokenMouseEnter(cue.id, token.id)
-                            handleActivate(cue.from, cue.to, token, 'hover');
                         }}
                         onMouseLeave={() => { 
                             handleTokenMouseLeave()

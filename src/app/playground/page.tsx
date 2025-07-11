@@ -1,5 +1,6 @@
 'use client'
 
+import DefinitionPlayground from "@/app/playground/_components/definition";
 import PanelPlayground from "@/app/playground/_components/panel";
 import TranscriptionsPlayground from "@/app/playground/_components/transcriptions";
 import TranscriptionsHookPlayground from "@/app/playground/_components/transcriptions-hook";
@@ -7,7 +8,8 @@ import TranscriptionsHookPlayground from "@/app/playground/_components/transcrip
 export default function Playground() {
   return (
     <>
-      <PanelPlayground />
+      <DefinitionPlayground />
+      {/* <PanelPlayground /> */}
       {/* <TranscriptionsPlayground /> */}
       {/* <TranscriptionsHookPlayground /> */}
     </>

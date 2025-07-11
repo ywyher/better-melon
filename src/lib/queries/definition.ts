@@ -5,9 +5,12 @@ export const definitionQueries = createQueryKeys('definition', {
     jmdict: (query: string) => ({
         queryKey: ['definition', 'jmdict', query],
         queryFn: async () => {
-          const { entries } = await getJMdictEntries(query)
+          const { index, entries } = await getJMdictEntries(query)
 
-          return entries
+          return {
+            index,
+            entries
+          }
         },
     }),
     dictionary: (query: string) => ({

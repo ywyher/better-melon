@@ -1,11 +1,11 @@
 "use client"
 
 import EnabledTranscriptions from "@/app/watch/[id]/[ep]/_components/settings/enabled-transcriptions";
-import Furigana from "@/app/watch/[id]/[ep]/_components/settings/furigana";
 import PlaybackToggles from "@/app/watch/[id]/[ep]/_components/settings/playback-toggles";
 import Screenshot from "@/app/watch/[id]/[ep]/_components/settings/screenshot";
 import type { GeneralSettings, SubtitleSettings, PlayerSettings as TPlayerSettings } from "@/lib/db/schema/index"
 import { AnimeEpisodeMetadata } from "@/types/anime";
+import ShowFurigana from "@/app/watch/[id]/[ep]/_components/settings/show-furigana";
 
 type PlayerSettingsProps = {
     generalSettings: GeneralSettings
@@ -31,7 +31,7 @@ export default function PlayerSettings({
                     playerSettings={playerSettings as TPlayerSettings}
                     syncPlayerSettings={generalSettings.syncPlayerSettings}
                 />
-                <Furigana 
+                <ShowFurigana 
                     subtitleSettings={subtitelSettings}
                     syncPlayerSettings={generalSettings.syncPlayerSettings}
                 />

@@ -109,7 +109,7 @@ export const subtitleSettings = pgTable("subtitle_settings", {
   // .default(["hiragana","katakana","romaji","japanese","english"])
 
   definitionTrigger: definitionTriggerEnum('definition_trigger').notNull().default('click'),
-  furigana: boolean('furigana').default(true).notNull(),
+  showFurigana: boolean('furigana').default(true).notNull(),
 
   userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }).unique(),
   createdAt: timestamp("created_at").notNull(),

@@ -9,6 +9,7 @@ import { excludedPos, learningStatusesStyles } from "@/lib/constants/subtitle";
 import { pitchAccentsStyles } from "@/lib/constants/pitch";
 import { PitchAccents } from "@/types/pitch";
 import { useWatchDataStore } from "@/lib/stores/watch-store";
+import { RubyText } from "@/components/ruby-text";
 
 type SubtitleCueProps = { 
     index: number;
@@ -103,8 +104,10 @@ function SubtitleCueBase({
                             const { baseText, rubyText } = parseFuriganaToken(token.surface_form);
                             
                             return (
-                                <div
+                                <RubyText 
                                     key={idx}
+                                    baseText={baseText}
+                                    rubyText={rubyText || ""}
                                     className={cn(
                                         "cursor-pointer rounded transition-colors hover:bg-primary/10",
                                         activeToken?.id === token.id && "bg-primary/20"
@@ -118,21 +121,7 @@ function SubtitleCueBase({
                                         cue.to
                                     )}
                                     style={style}
-                                >
-                                    <div className='flex flex-col items-center'>
-                                        {/* Ruby text (furigana) - positioned above */}
-                                        {(rubyText && furigana) && (
-                                            <div>
-                                                <span className="text-sm">{rubyText}</span>
-                                            </div>
-                                        )}
-                                        
-                                        {/* Base text (kanji/kana) - positioned below */}
-                                        <div>
-                                            <span>{baseText}</span>
-                                        </div>
-                                    </div>
-                                </div>
+                                />
                             );
                         }
                         
