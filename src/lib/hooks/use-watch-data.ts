@@ -64,8 +64,8 @@ export const useWatchData = (animeId: string, episodeNumber: number) => {
   } = useSubtitleTranscriptions(isInitialized);
 
   const { 
-    styles, 
-    isLoading: isStylesLoading, 
+    styles,
+    isLoading: isStylesLoading,
     error: stylesError,
     loadingDuration: stylesLoadingDuration 
   } = useSubtitleStyles();
