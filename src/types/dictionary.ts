@@ -1,3 +1,13 @@
+import { JMdictWord } from "@/types/jmdict";
+import { JMnedictWord } from "@/types/jmnedict";
+import { Kanjidic2Character } from "@/types/kanjidic2";
+
+export type Dictionary = (
+  | { index: 'jmdict'; entries: JMdictWord[] }
+  | { index: 'jmnedict'; entries: JMnedictWord[] }
+  | { index: 'kanjidic2'; entries: Kanjidic2Character[] }
+)[]
+  
 export type Index = 'jmdict' | 'jmnedict' | 'kanjidic2'
 
 /**

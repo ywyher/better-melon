@@ -52,14 +52,14 @@ export async function deleteUser({ userId }: { userId: User['id'] }) {
     }
 }
 
-export async function setCache(key: string, value: any) {
+export async function setCache<T>(key: string, value: T) {
     const results = await redis.set(`${key}`, JSON.stringify(value));
     return {
         success: results ? true : false
     }
 }
 
-export async function updateCache(key: string, updates: any): Promise<void> {
+export async function updateCache<T>(key: string, updates: T): Promise<void> {
   try {
     const existing = await getCache(`${key}`, true);
     if (existing) {

@@ -175,10 +175,10 @@ async function getCachedSubtitles({
       parsedSubtitles: cachedData?.parsedSubtitles || [],
       tokenizedSubtitles: cachedData?.tokenizedSubtitles || [],
       convertedSubtitles: {
+        japanese: cachedData?.convertedSubtitles?.japanese || [],
         hiragana: cachedData?.convertedSubtitles?.hiragana || [],
         katakana: cachedData?.convertedSubtitles?.katakana || [],
         romaji: cachedData?.convertedSubtitles?.romaji || [],
-        furigana: cachedData?.convertedSubtitles?.furigana || [],
       },
       lastAccessed: cachedData?.lastAccessed || 0
     },
@@ -271,29 +271,21 @@ async function processTokenizedSubtitles({
   cacheKey: CacheKey,
   cachedData: SubtitleCache
 }) {
-  if (transcription !== 'japanese') {
-    const currentTokenizer = await initializeTokenizer(transcription);
-    const convertedSubs = await convertSubtitlesForNonJapaneseTranscription(tokenizedSubs, transcription, currentTokenizer);
-    
-    updateCache(cacheKey, { 
-      convertedSubtitles: {
-        ...cachedData?.convertedSubtitles,
-        [transcription]: convertedSubs
-      },
-      lastAccessed: Date.now()
-    }).catch(console.error);
-
-    return {
-      transcription,
-      format,
-      cues: convertedSubs
-    };
-  }
+  const currentTokenizer = await initializeTokenizer(transcription);
+  const convertedSubs = await convertSubtitlesForNonJapaneseTranscription(tokenizedSubs, transcription, currentTokenizer);
+  
+  updateCache(cacheKey, { 
+    convertedSubtitles: {
+      ...cachedData?.convertedSubtitles,
+      [transcription]: convertedSubs
+    },
+    lastAccessed: Date.now()
+  }).catch(console.error);
 
   return {
     transcription,
     format,
-    cues: tokenizedSubs
+    cues: convertedSubs
   };
 }
 
@@ -310,7 +302,7 @@ async function tokenizeAndConvertSubtitles({
   format: SubtitleFormat
   subtitles: SubtitleCue[]
 }) {
-  if (transcription === 'japanese' || transcription === 'english') {
+  if (transcription === 'english') {
     if ((cachedData?.tokenizedSubtitles || []).length > 0) {
       console.info(`[Tokenizing(${transcription})] Using cached tokenized subtitles`);
       return {
@@ -320,7 +312,7 @@ async function tokenizeAndConvertSubtitles({
       };
     }
   } else {
-    // For non-Japanese/English transcriptions, check converted subtitles
+    // For non-english transcriptions, check converted subtitles
     if ((cachedData?.convertedSubtitles?.[transcription] || []).length > 0) {
       console.info(`[Convert(${transcription})] Using cached converted subtitles`);
       return {

@@ -14,11 +14,11 @@ import { SyncStrategy } from "@/types";
 import { showSyncSettingsToast } from "@/components/sync-settings-toast";
 import { Button } from "@/components/ui/button";
 import { useDelayStore } from "@/lib/stores/delay-store";
-import { useMediaState } from "@vidstack/react";
 import { useSubtitleStore } from "@/lib/stores/subtitle-store";
 import { usePlaybackSettingsStore } from "@/lib/stores/playback-settings-store";
 import { useWatchDataStore } from "@/lib/stores/watch-store";
 import { useActiveSubtitles } from "@/lib/hooks/use-active-subtitles";
+import { useMediaState } from "@vidstack/react";
 
 export default function SubtitleTranscriptions() {
   const player = usePlayerStore((state) => state.player);
@@ -49,9 +49,7 @@ export default function SubtitleTranscriptions() {
   const isFullscreen = useMediaState('fullscreen', player);
   const controlsVisible = useMediaState('controlsVisible', player);
   const currentTime = useMediaState('currentTime', player);
-  // const isFullscreen = true;
-  // const controlsVisible = true;
-  // const currentTime = 10;
+  // const currentTime = 200;
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -256,17 +254,17 @@ export default function SubtitleTranscriptions() {
                     styles[transcription]?.containerStyle
                     || styles["all"].containerStyle
 
-                  // Get Japanese styles for furigana base text
-                  const japaneseStyles = {
-                    tokenStyles: styles['japanese']?.tokenStyles || styles['all'].tokenStyles,
-                    containerStyle: styles['japanese']?.containerStyle || styles['all'].containerStyle
+                  // Get furigana styles for ruby text
+                  const furiganaStyles = {
+                    tokenStyles: styles['furigana']?.tokenStyles || styles['all'].tokenStyles,
+                    containerStyle: styles['furigana']?.containerStyle || styles['all'].containerStyle
                   }
 
                   return (
                     <TranscriptionItem
                       key={transcription}
                       transcription={transcription}
-                      japaneseStyles={japaneseStyles}
+                      furiganaStyles={furiganaStyles}
                       activeSubtitles={activeSubtitles}
                       styles={{
                         tokenStyles,

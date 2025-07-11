@@ -22,6 +22,8 @@ export type SubtitleQuery = UseQueryResult<{
     cues: SubtitleCue[];
 }, Error>;
 
+export type StyleTranscription = SubtitleTranscription | 'furigana'
+
 export type TranscriptionStyleSet = {
   tokenStyles: {
     default: CSSProperties;
@@ -33,7 +35,7 @@ export type TranscriptionStyleSet = {
   };
 };
 
-export type TranscriptionStyles = { all: TranscriptionStyleSet } & Partial<Record<SubtitleTranscription, TranscriptionStyleSet>>;
+export type TranscriptionStyles = { all: TranscriptionStyleSet } & Partial<Record<StyleTranscription, TranscriptionStyleSet>>;
 
 export type StyleQuery = UseQueryResult<
   Partial<Record<SubtitleTranscription | 'all', SubtitleStyles | null>>,

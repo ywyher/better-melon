@@ -20,10 +20,8 @@ export const getTokenStyles = (
     opacity: styles.default.textOpacity ||  defaultSubtitleStyles.default.textOpacity,
     fontWeight: styles.default.fontWeight ||  defaultSubtitleStyles.default.fontWeight,
     transition: 'all 0.15s ease',
-    display: 'inline-block',
     margin: `0 ${styles.default.margin || defaultSubtitleStyles.default.margin}px`,
     cursor: 'pointer',
-
     textShadow: styles.default.textShadow === 'drop-shadow' 
       ? '1px 1px 2px rgba(0, 0, 0, 0.8)'
       : styles.default.textShadow === 'raised'
@@ -49,7 +47,6 @@ export const getTokenStyles = (
     fontWeight: styles.active.fontWeight || defaultSubtitleStyles.active.fontWeight,
     margin: `0 ${styles.active.margin || defaultSubtitleStyles.active.margin}px`,
     cursor: 'pointer',
-
     textShadow: styles.active.textShadow === 'drop-shadow' 
       ? '1px 1px 2px rgba(0, 0, 0, 0.8)'
       : styles.active.textShadow === 'raised'
@@ -74,6 +71,7 @@ export const getContainerStyles = (styles: {
   default: Partial<SubtitleStyles>,
 }): { default: CSSProperties; active: CSSProperties } => {
   const defaultStyles: CSSProperties = {
+    display: "flex",
     backgroundColor: `color-mix(in oklab, ${styles.default.backgroundColor} ${(((styles.default.backgroundOpacity || 0) * 100))}%, transparent)`,
     backdropFilter: styles.default.backgroundBlur 
       ? `blur(${styles.default.backgroundBlur * 4}px)` 
@@ -83,13 +81,13 @@ export const getContainerStyles = (styles: {
       : '8px',
     padding: '.5rem 1rem',
     marginBottom: ".5rem",
-    display: 'flex',
     flexWrap: 'wrap',
     justifyContent: 'center',
     textAlign: 'center',
   }
 
   const activeStyles: CSSProperties = {
+    display: "flex",
     backgroundColor: `color-mix(in oklab, ${styles.active.backgroundColor} ${(((styles.active.backgroundOpacity || 0) * 100))}%, transparent)`,
     backdropFilter: styles.active.backgroundBlur 
       ? `blur(${styles.active.backgroundBlur * 4}px)` 
@@ -97,7 +95,6 @@ export const getContainerStyles = (styles: {
     borderRadius: styles.active.backgroundRadius 
       ? `${styles.active.backgroundRadius}px` 
       : '8px',
-    display: 'flex',
     flexWrap: 'wrap',
     justifyContent: 'center',
     textAlign: 'center',

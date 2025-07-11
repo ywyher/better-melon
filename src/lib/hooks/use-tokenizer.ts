@@ -19,22 +19,22 @@ export function useTokenizer() {
       }
       const isInitializedInner = await isTokenizerInitialized();
       if (isInitializedInner) {
-        console.log('~Tokenizer already initialized on server');
+        console.log('[Tokenizer] already initialized on server');
         setIsInitialized(true);
         setIsLoading(false);
         return;
       }
       
-      console.log('~Tokenizer Initializing on the server...');
+      console.log('[Tokenizer] Initializing on the server...');
       const { initializationTime, error } = await initializeTokenizerThroughClient();
       if (error) throw new Error(error)
         
-      console.log(`~Tokenizer initialized: ${initializationTime}ms`);
+      console.log(`[Tokenizer] initialized: ${initializationTime}ms`);
       setIsInitialized(true);
       setInitializationTime(initializationTime);
     } catch (err) {
-      console.error("~Tokenizer Failed to initialize:", err);
-      setError(err instanceof Error ? err : new Error("~Tokenizer Unknown error during initialization"));
+      console.error("[Tokenizer] Failed to initialize:", err);
+      setError(err instanceof Error ? err : new Error("[Tokenizer] Unknown error during initialization"));
       setIsInitialized(false);
     } finally {
       setIsLoading(false);

@@ -9,6 +9,7 @@ import { excludedPos, learningStatusesStyles } from "@/lib/constants/subtitle";
 import { pitchAccentsStyles } from "@/lib/constants/pitch";
 import { PitchAccents } from "@/types/pitch";
 import { useWatchDataStore } from "@/lib/stores/watch-store";
+import { RubyText } from "@/components/ruby-text";
 
 type SubtitleCueProps = { 
     index: number;
@@ -37,6 +38,7 @@ function SubtitleCueBase({
     const wordsLookup = useWatchDataStore((state) => state.wordsLookup)
     const pitchLookup = useWatchDataStore((state) => state.pitchLookup)
     const wordSettings = useWatchDataStore((state) => state.settings.wordSettings)
+    const showFurigana = useWatchDataStore((state) => state.settings.subtitleSettings.showFurigana)
     
     return (
         <div 
@@ -98,12 +100,15 @@ function SubtitleCueBase({
                             )
                         };
 
-                        if (cue.transcription === 'furigana') {
+                        if (cue.transcription === 'japanese') {
                             const { baseText, rubyText } = parseFuriganaToken(token.surface_form);
                             
                             return (
-                                <div
+                                <RubyText 
                                     key={idx}
+                                    baseText={baseText}
+                                    rubyText={rubyText || ""}
+                                    showFurigana={showFurigana}
                                     className={cn(
                                         "cursor-pointer rounded transition-colors hover:bg-primary/10",
                                         activeToken?.id === token.id && "bg-primary/20"
@@ -117,21 +122,7 @@ function SubtitleCueBase({
                                         cue.to
                                     )}
                                     style={style}
-                                >
-                                    <div className='flex flex-col items-center'>
-                                        {/* Ruby text (furigana) - positioned above */}
-                                        {rubyText && (
-                                            <div>
-                                                <span>{rubyText}</span>
-                                            </div>
-                                        )}
-                                        
-                                        {/* Base text (kanji/kana) - positioned below */}
-                                        <div>
-                                            <span>{baseText}</span>
-                                        </div>
-                                    </div>
-                                </div>
+                                />
                             );
                         }
                         

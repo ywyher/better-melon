@@ -35,10 +35,6 @@ type TranscriptionItemType = {
 type TranscriptionItems = Record<string, TranscriptionItemType>;
 
 const defaultItems: TranscriptionItems = {
-  furigana: {
-      id: 'furigana',
-      text: '(furigana) <ruby>日本<rt>にほん</rt></ruby><ruby>語<rt>ご</rt></ruby>、マジで<ruby>下手<rt>へた</rt></ruby>くそです。'
-  },
   japanese: {
       id: 'japanese',
       text: "(japanese) 日本語、マジで下手くそです。"

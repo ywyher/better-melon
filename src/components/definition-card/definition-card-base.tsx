@@ -3,11 +3,12 @@
 import DefinitionCardContent from "@/components/definition-card/definition-card-content";
 import DefinitionCardHeader from "@/components/definition-card/_header/definition-card-header";
 import { Card } from "@/components/ui/card";
-import { useDefinition } from "@/lib/hooks/use-definition";
+import { useDictionary } from "@/lib/hooks/use-dictionary";
 import { useDefinitionStore } from "@/lib/stores/definition-store";
 import { cn } from "@/lib/utils/utils";
 import { useDraggable } from "@dnd-kit/core";
 import { createPortal } from "react-dom";
+import { useEffect } from "react";
 
 export default function DefinitionCardBase() {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
@@ -24,7 +25,9 @@ export default function DefinitionCardBase() {
     transform: `translate3d(${position.x}px, ${position.y}px, 0)`,
   };
 
-  const { dictionary, entries, isLoading, error } = useDefinition({ query: token?.original_form ,isExpanded })
+  const { dictionary, isLoading, error } = useDictionary({ query: token?.original_form })
+
+  if (!token) return;
 
   const cardContent = (
     <Card
@@ -41,12 +44,12 @@ export default function DefinitionCardBase() {
       )}
     >
       <DefinitionCardHeader
-        entries={entries}
+        token={token}
+        entries={dictionary?.find(d => d.index == 'jmdict')?.entries}
       />
       <DefinitionCardContent
         isExpanded={isExpanded}
         dictionary={dictionary}
-        entries={entries}
         isLoading={isLoading}
       />
     </Card>

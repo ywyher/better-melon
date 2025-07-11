@@ -58,7 +58,7 @@ export type SubtitleCue = {
 }
 
 export type SubtitleFormat = 'srt' | 'vtt' | 'ass'
-export type SubtitleTranscription = "japanese" | "hiragana" | "katakana" | "romaji" | "english" | "furigana"
+export type SubtitleTranscription = "japanese" | "hiragana" | "katakana" | "romaji" | "english"
 
 export type SubtitleDelay = {
   japanese: number,
@@ -82,10 +82,11 @@ export interface ParseSubtitleBody {
 
 export interface SubtitleCache {
   content: string;
-  // Japanese only
+  // Japanese/English only
   parsedSubtitles: SubtitleCue[];
-  // Japanese only
+  // Japanese/English only
+  // YOU DUMB FUCK, JAPANESE AND ENGLISH DOESN'T SHARE THE SAME FILE NOR CACHE KEY
   tokenizedSubtitles: SubtitleCue[];
-  convertedSubtitles?: Partial<Record<Exclude<SubtitleTranscription, 'english' | 'japanese'>, SubtitleCue[]>>
+  convertedSubtitles?: Partial<Record<Exclude<SubtitleTranscription, 'english'>, SubtitleCue[]>>
   lastAccessed: number;
 }

@@ -1,9 +1,8 @@
 import { defaultSubtitleStyles } from "@/components/subtitle/styles/constants";
-import { TranscriptionStyles } from "@/app/watch/[id]/[ep]/types";
+import { StyleTranscription, TranscriptionStyles } from "@/app/watch/[id]/[ep]/types";
 import { subtitleQueries } from "@/lib/queries/subtitle";
 import { usePlayerStore } from "@/lib/stores/player-store";
 import { useSubtitleStylesStore } from "@/lib/stores/subtitle-styles-store";
-import { SubtitleTranscription } from "@/types/subtitle";
 import { useQuery } from "@tanstack/react-query";
 import { useMediaState } from "@vidstack/react";
 import { useMemo, useRef, useState } from "react";
@@ -24,13 +23,13 @@ export const useSubtitleStyles = () => {
   const [loadingDuration, setLoadingDuration] = useState<number>(0);
   
   // Track which transcriptions have already been checked against the database
-  const checkedTranscriptions = useRef<Set<SubtitleTranscription>>(new Set());
+  const checkedTranscriptions = useRef<Set<StyleTranscription>>(new Set());
   
   // Determine which transcriptions need to be checked against the database
   const transcriptionsToFetch = useMemo(() => {
     if (!activeTranscriptions) return [];
     
-    return activeTranscriptions.filter(transcription => {
+    return ([...activeTranscriptions, 'furigana'] as StyleTranscription[]).filter(transcription => {
       // Only check if we haven't already checked this transcription
       return !checkedTranscriptions.current.has(transcription);
     });
@@ -86,8 +85,8 @@ export const useSubtitleStyles = () => {
         default: defaultAllStyles
       })
     };
-    
-    activeTranscriptions.forEach(transcription => {
+
+    ([...activeTranscriptions, "furigana"] as StyleTranscription[]).forEach(transcription => {
       const defaultStyleData = getStylesFromStore(transcription, 'default');
       const activeStyleData = getStylesFromStore(transcription, 'active');
 

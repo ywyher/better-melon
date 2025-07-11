@@ -10,13 +10,15 @@ import { hasChanged } from "@/lib/utils/utils";
 import { useSubtitleStyles } from "@/lib/hooks/use-subtitle-styles";
 import { usePitchAccentChunks } from "@/lib/hooks/use-pitch-accent-chunks";
 
-export default function TranscriptionsPlayground() {
+import DefinitionCard from "@/components/definition-card/definition-card";
+
+export default function DefinitionPlayground() {
   const setActiveSubtitleFile = useSubtitleStore((state) => state.setActiveSubtitleFile);
   const setActiveTranscriptions = useSubtitleStore((state) => state.setActiveTranscriptions);
   const setEnglishSubtitleUrl = useSubtitleStore((state) => state.setEnglishSubtitleUrl);
 
   useEffect(() => {
-    // setActiveTranscriptions(['japanese']);
+    setActiveTranscriptions(['hiragana', 'japanese']);
     setActiveSubtitleFile({
       file: {
         last_modified: "2024-04-28T16:23:56.084911647Z",
@@ -69,10 +71,11 @@ export default function TranscriptionsPlayground() {
       setTranscriptions(transcriptions);
     }
   }, [transcriptions]);
-  
+
   return (
-    <div className="flex flex-row gap-10">
+    <>
+      <DefinitionCard />
       <SubtitleTranscriptions />
-    </div>
-  );
+    </>
+  )
 }

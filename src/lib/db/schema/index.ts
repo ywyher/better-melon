@@ -109,6 +109,7 @@ export const subtitleSettings = pgTable("subtitle_settings", {
   // .default(["hiragana","katakana","romaji","japanese","english"])
 
   definitionTrigger: definitionTriggerEnum('definition_trigger').notNull().default('click'),
+  showFurigana: boolean('furigana').default(true).notNull(),
 
   userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }).unique(),
   createdAt: timestamp("created_at").notNull(),
@@ -130,7 +131,7 @@ export const textShadowEnum = pgEnum("text_shadow_enum", [
   "outline"
 ]);
 
-export const subtitleTranscriptionEnum = pgEnum("subtitle_transcription", [
+export const stlyeTranscriptionEnum = pgEnum("style_transcription", [
   "all",
   "japanese",
   "hiragana",
@@ -169,7 +170,7 @@ export const subtitleStyles = pgTable("subtitle_styles", {
   
   state: subtitleStateEnum('state').notNull().default('default'),
   userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }),
-  transcription: subtitleTranscriptionEnum("transcription").notNull().default('all'),
+  transcription: stlyeTranscriptionEnum("transcription").notNull().default('all'),
   createdAt: timestamp("created_at").default(new Date()),
   updatedAt: timestamp("updated_at").default(new Date())
 });
@@ -187,7 +188,6 @@ export const transcriptionEnum = pgEnum("transcription_enum", [
   "katakana",
   "romaji",
   "english",
-  "furigana"
 ])
 
 export const playerSettings = pgTable("player_settings", {

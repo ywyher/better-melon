@@ -6,6 +6,7 @@ export const defaultSubtitleSettings: SubtitleSettings = {
     preferredFormat: 'srt',
     transcriptionOrder: ["hiragana","katakana","romaji","japanese","english"],
     definitionTrigger: 'click',
+    showFurigana: true,
     userId: "",
     createdAt: new Date(),
     updatedAt: new Date(),

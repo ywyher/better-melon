@@ -1,4 +1,5 @@
-import { useActiveSubtitles } from "@/lib/hooks/use-active-subtitles";
+'use client'
+
 import { useEpisodeData } from "@/lib/hooks/use-episode-data";
 import { useInitializeTokenizer } from "@/lib/hooks/use-initialize-tokenizer";
 import { usePitchAccentChunks } from "@/lib/hooks/use-pitch-accent-chunks";
@@ -45,6 +46,10 @@ export const useWatchData = (animeId: string, episodeNumber: number) => {
     episodesLength,
     refetch: refetchEpisodeData
   } = useEpisodeData(animeId, episodeNumber);
+
+  useEffect(() => {
+    console.log(`episodeData`, episodeData)
+  }, [episodeData])
 
   const {
     settings,

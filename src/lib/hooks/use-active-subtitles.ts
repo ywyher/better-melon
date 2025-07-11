@@ -8,6 +8,7 @@ import { usePlayerStore } from '@/lib/stores/player-store';
 export function useActiveSubtitles(transcriptions: TranscriptionQuery[]) {
   const player = usePlayerStore((state) => state.player)
   const currentTime = useMediaState('currentTime', player);
+  // const currentTime = 10
   const delay = useDelayStore((state) => state.delay)
 
   const getActiveSubtitleSets = useCallback(() => {
@@ -18,7 +19,6 @@ export function useActiveSubtitles(transcriptions: TranscriptionQuery[]) {
             katakana: [],
             romaji: [],
             english: [],
-            furigana: []
         };
     };
     
@@ -28,7 +28,6 @@ export function useActiveSubtitles(transcriptions: TranscriptionQuery[]) {
         katakana: [],
         romaji: [],
         english: [],
-        furigana: []
     };
 
     transcriptions.forEach(t => {
@@ -36,7 +35,7 @@ export function useActiveSubtitles(transcriptions: TranscriptionQuery[]) {
             const { transcription, cues } = t;
             const subtitleTranscription = transcription as SubtitleTranscription;
             
-            const transcriptionDelay = ['hiragana', 'katakana', 'romaji', 'japanese', 'furigana'].includes(subtitleTranscription) 
+            const transcriptionDelay = ['hiragana', 'katakana', 'romaji', 'japanese'].includes(subtitleTranscription) 
                 ? delay.japanese 
                 : delay.english;
             

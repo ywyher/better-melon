@@ -6,26 +6,20 @@ import JMnedictSection from "@/components/definition-card/_sections/jmnedict/sec
 import Kanjidic2Section from "@/components/definition-card/_sections/kanjidic2/section"
 import { Separator } from "@/components/ui/separator"
 import { cn } from "@/lib/utils/utils"
-import { Index } from "@/types/dictionary"
+import { Dictionary, Index } from "@/types/dictionary"
 import { JMdictWord } from "@/types/jmdict"
 import { JMnedictWord } from "@/types/jmnedict"
 import { Kanjidic2Character } from "@/types/kanjidic2"
 
 type DefinitionCardContentProps = {
   isExpanded: boolean
-  dictionary: {
-    index: Index;
-    entries: JMdictWord[] | Kanjidic2Character[] | JMnedictWord[];
-  }[] | undefined | null;
-  entries?: JMdictWord[] | null
+  dictionary?: Dictionary
   isLoading: boolean
 }
 
-// Updated DefinitionCardContent with loading skeleton
-export default function DefinitionCardContentWithSkeleton({
+export default function DefinitionCardContent({
   isExpanded,
   dictionary,
-  entries,
   isLoading = false
 }: DefinitionCardContentProps) {
   if (isLoading) {
@@ -61,9 +55,9 @@ export default function DefinitionCardContentWithSkeleton({
           </div>
         </div>
       ): (
-        <p>
-          {entries?.[0].sense?.[0]?.gloss?.[0]?.text || "Nothing found"}
-        </p>
+        <div>
+          {dictionary?.find(d => d.index == 'jmdict')?.entries?.[0].sense?.[0]?.gloss?.[0]?.text || <span className="text-red-500">Nothing found</span>}
+        </div>
       )}
     </div>
   )
