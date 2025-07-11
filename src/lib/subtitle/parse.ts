@@ -1,5 +1,4 @@
 'use server'
-
 import type { SubtitleCue, SubtitleTranscription, ParseSubtitleBody, SubtitleCache, SubtitleFormat } from "@/types/subtitle";
 import { getSubtitleCacheKey } from '@/lib/utils/subtitle';
 import { parseSrt } from "@/lib/subtitle/parsers/srt";
@@ -13,11 +12,19 @@ import { getCache } from "@/lib/db/queries";
 import { setCache, updateCache } from "@/lib/db/mutations";
 import { initializeTokenizer } from "@/lib/subtitle/tokenizer";
 import { tokenizerStats } from "@/lib/subtitle/globals";
-import { readFileContent } from "@/lib/utils/utils";
+import { promises as fs } from 'fs';
 
 // Keep in-memory tracking for ongoing operations to prevent duplicate work
 const fetchingInProgress = new Map<CacheKey, Promise<string>>();
 const parsingInProgress = new Map<string, Promise<SubtitleCue[]>>();
+
+async function readFileContent(filePath: string): Promise<string> {
+  try {
+    return await fs.readFile(filePath, 'utf-8');
+  } catch (error) {
+    throw new Error(`Failed to read file: ${error}`);
+  }
+}
 
 export async function fetchSubtitleContent({
   source,
@@ -399,7 +406,7 @@ async function getParsingData({
   };
   
   if (typeof source !== 'string') {
-    body.fileContent = await readFileContent(source);
+    body.fileContent = await source.text();
     body.lastModified = source.lastModified;
   }
 

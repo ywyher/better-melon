@@ -11,6 +11,10 @@ import CustomKuromojiAnalyzer from "@/lib/subtitle/custom-kuromoji-analyzer";
 import { getTokenizer } from "kuromojin";
 import { cacheKeys } from "@/lib/constants/cache";
 import { CacheKey } from "@/types";
+import { parseSrt } from "@/lib/subtitle/parsers/srt";
+import { parseVtt } from "@/lib/subtitle/parsers/vtt";
+import { parseAss } from "@/lib/subtitle/parsers/ass";
+import { fetchSubtitleContent } from "@/lib/subtitle/parse";
 
 export function getSubtitleCacheKey({
   source, 
@@ -240,7 +244,7 @@ export function generateWebVTTFromSkipTimes({
 }
 
 // export async function isFileJpn(file: File) {
-//   const content = await fetchSubtitles(file)
+//   const content = await fetchSubtitleContent()
 //   const format = getExtension(file.name)
 
 //   let parsed

@@ -4,6 +4,7 @@ import { S3Client } from "@aws-sdk/client-s3";
 import { Anime, AnimeEpisodeMetadata } from "@/types/anime";
 import { MediaPlayerInstance } from "@vidstack/react";
 import { defaultGeneralSettings } from "@/lib/constants/settings";
+import { promises as fs } from 'fs';
 import _ from 'lodash';
 
 export const s3 = new S3Client({
@@ -21,7 +22,12 @@ export function cn(...inputs: ClassValue[]) {
 
 export const hasChanged = (a: any, b: any) => !_.isEqual(a, b);
 
+// ONLY ON CLIENT SIDE
 export async function readFileContent(file: File): Promise<string> {
+  if (typeof window === 'undefined' || typeof FileReader === 'undefined') {
+    throw new Error('FileReader is only available in browser environments');
+  }
+
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = (e) => resolve(e.target?.result as string);

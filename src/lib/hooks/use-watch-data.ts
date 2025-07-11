@@ -47,10 +47,6 @@ export const useWatchData = (animeId: string, episodeNumber: number) => {
     refetch: refetchEpisodeData
   } = useEpisodeData(animeId, episodeNumber);
 
-  useEffect(() => {
-    console.log(`episodeData`, episodeData)
-  }, [episodeData])
-
   const {
     settings,
     isLoading: isSettingsLoading,
@@ -106,28 +102,32 @@ export const useWatchData = (animeId: string, episodeNumber: number) => {
       isEpisodeDataLoading
       || isSettingsLoading 
       || isWordsLoading
-      || isPitchAccentLoading
       // || !isVideoReady
       // so when the user add other transcriptions later we don't show the loading state
+      || (isPitchAccentLoading && !hasTranscriptionsInitialized)
       || (isTranscriptionsLoading && !hasTranscriptionsInitialized)
       || (isStylesLoading && !hasTranscriptionsInitialized)
     );
   }, [isEpisodeDataLoading, isTranscriptionsLoading, isStylesLoading, isPitchAccentLoading, isSettingsLoading, isWordsLoading]);
 
   useEffect(() => {
-    console.log({
+    console.log(`isLoading`, {
       isEpisodeDataLoading,
-      isStylesLoading ,
       isSettingsLoading ,
       isWordsLoading,
-      isPitchAccentLoading
+      isPitchAccentLoading,
+      isTranscriptionsLoading: (isTranscriptionsLoading && !hasTranscriptionsInitialized),
+      isStylesLoading: (isStylesLoading && !hasTranscriptionsInitialized)
     })
   }, [
     isEpisodeDataLoading,
     isStylesLoading ,
     isSettingsLoading ,
     isWordsLoading,
-    isPitchAccentLoading
+    isPitchAccentLoading,
+    isTranscriptionsLoading,
+    hasTranscriptionsInitialized,
+    isStylesLoading,
   ])
 
   const errors = useMemo(() => {
