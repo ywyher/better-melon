@@ -18,14 +18,6 @@ import { promises as fs } from 'fs';
 const fetchingInProgress = new Map<CacheKey, Promise<string>>();
 const parsingInProgress = new Map<string, Promise<SubtitleCue[]>>();
 
-async function readFileContent(filePath: string): Promise<string> {
-  try {
-    return await fs.readFile(filePath, 'utf-8');
-  } catch (error) {
-    throw new Error(`Failed to read file: ${error}`);
-  }
-}
-
 export async function fetchSubtitleContent({
   source,
   isFile,

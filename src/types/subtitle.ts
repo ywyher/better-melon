@@ -17,10 +17,10 @@ export type SubtitleEntry = {
 }
 
 export type SubtitleFile = {
-    url: string;
-    name: string;
-    size: number;
-    last_modified: Date | string;
+  url: string;
+  name: string;
+  size: number;
+  last_modified: Date | string;
 }
 
 export type ActiveSubtitleFile = 

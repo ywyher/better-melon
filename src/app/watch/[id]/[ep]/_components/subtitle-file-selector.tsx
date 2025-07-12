@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { DialogClose } from "@/components/ui/dialog"
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Check, FileText, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -22,13 +22,9 @@ export default function SubtitleFileSelector() {
 
     const subtitleFiles = useWatchDataStore((state) => state.episodeData?.subtitles)
 
-    useEffect(() => {
-        console.log(`subtitleFiles`, subtitleFiles)
-    }, [subtitleFiles])
-
-    const handleSelectFile = (file: SubtitleFile) => {
+    const handleSelectFile = async (file: SubtitleFile) => {
         if (file.name === activeSubtitleFile?.file.name) return;
-        
+
         setLoading(file.name);
         setActiveSubtitleFile({ source: "remote", file: file });
         

@@ -14,7 +14,7 @@ import { CacheKey } from "@/types";
 import { parseSrt } from "@/lib/subtitle/parsers/srt";
 import { parseVtt } from "@/lib/subtitle/parsers/vtt";
 import { parseAss } from "@/lib/subtitle/parsers/ass";
-import { fetchSubtitleContent } from "@/lib/subtitle/parse";
+import { franc } from 'franc-min'
 
 export function getSubtitleCacheKey({
   source, 
@@ -243,36 +243,36 @@ export function generateWebVTTFromSkipTimes({
     return vttString;
 }
 
-// export async function isFileJpn(file: File) {
-//   const content = await fetchSubtitleContent()
-//   const format = getExtension(file.name)
+export async function isFileJpn(file: File) {
+  const content = await file.text()
+  const format = getExtension(file.name)
 
-//   let parsed
+  let parsed
   
-//   switch (format) {
-//     case 'srt':
-//       parsed = parseSrt(content, 'japanese');
-//     break;
-//     case 'vtt':
-//       parsed = parseVtt(content, 'japanese');
-//     break;
-//     case 'ass':
-//       parsed = parseAss(content, 'japanese');
-//     break;
-//     default:
-//       throw new Error(`Unsupported subtitle format: ${format}`);
-//   }
+  switch (format) {
+    case 'srt':
+      parsed = parseSrt(content, 'japanese');
+    break;
+    case 'vtt':
+      parsed = parseVtt(content, 'japanese');
+    break;
+    case 'ass':
+      parsed = parseAss(content, 'japanese');
+    break;
+    default:
+      throw new Error(`Unsupported subtitle format: ${format}`);
+  }
 
-//   if(!parsed) return;
+  if(!parsed) return;
 
-//   const toBeTested = parsed?.slice(0, Math.ceil(parsed?.length / 2))
-//     .map((cue) => cue.content)
-//     .join(' ')
+  const toBeTested = parsed?.slice(0, Math.ceil(parsed?.length / 2))
+    .map((cue) => cue.content)
+    .join(' ')
 
-//   const result = franc(toBeTested)
+  const result = franc(toBeTested)
 
-//   return result == 'jpn' ? true : false
-// }
+  return result == 'jpn' ? true : false
+}
 
 export function getSubtitleSource(
   isEnglish: boolean,

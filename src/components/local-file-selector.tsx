@@ -2,6 +2,7 @@
 
 import { subtitleFormats } from "@/lib/constants/subtitle";
 import { useSubtitleStore } from "@/lib/stores/subtitle-store";
+import { isFileJpn } from "@/lib/utils/subtitle";
 import { cn, getExtension } from "@/lib/utils/utils";
 import { Check, Loader2, Upload, X } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -41,14 +42,12 @@ export default function LocalFileSelector({ onSelect }: LocalFileSelectorProps) 
   const handleFileChange = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    
+
     setFileState({ loading: true, fileName: null, error: null });
     
     try {
-      const isJpn = await Promise.resolve(setTimeout(() => {
-        return true;
-      }, 100));
-      
+      const isJpn = await isFileJpn(file);
+
       if (isJpn) {
         setFileState({ loading: false, fileName: file.name, error: null });
         setActiveSubtitleFile({ source: "local", file });
