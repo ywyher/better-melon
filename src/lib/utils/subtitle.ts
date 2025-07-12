@@ -5,7 +5,7 @@ import { FileSelectionError } from "@/lib/errors/player";
 import { DelayStore } from "@/lib/stores/delay-store";
 import { getExtension } from "@/lib/utils/utils";
 import { AnimeEpisodeSources, SkipTime } from "@/types/anime";
-import { ActiveSubtitleFile, SubtitleFile, SubtitleFormat, SubtitleToken } from "@/types/subtitle";
+import { ActiveSubtitleFile, Ruby, SubtitleFile, SubtitleFormat, SubtitleToken } from "@/types/subtitle";
 import Kuroshiro from "@sglkc/kuroshiro";
 import CustomKuromojiAnalyzer from "@/lib/subtitle/custom-kuromoji-analyzer";
 import { getTokenizer } from "kuromojin";
@@ -409,26 +409,64 @@ export const convertToKana = async (sentence: string) => {
   return await kuroshiro.convert(sentence, { to: "hiragana" });
 }
 
-// Helper function to parse furigana HTML and extract parts
-export const parseFuriganaToken = (htmlString: string) => {
+
+// EX: <ruby>度<rp>(</rp><rt>ど</rt><rp>)</rp></ruby>し<ruby>難<rp>(</rp><rt>がた</rt><rp>)</rp></ruby>い
+export const parseRuby = (html: string, includeNonRuby: boolean = true) => {
   const parser = new DOMParser();
-  const doc = parser.parseFromString(htmlString, 'text/html');
-  const rubyElement = doc.querySelector('ruby');
+  const doc = parser.parseFromString(html, 'text/html');
+  const rubyElements = doc.querySelectorAll('ruby');
   
-  if (!rubyElement) {
-    return { baseText: htmlString, rubyText: null };
+  if (rubyElements.length === 0) {
+    return [{ baseText: html, rubyText: "" }];
   }
   
-  // Extract base text (everything except rt elements)
-  const baseText = Array.from(rubyElement.childNodes)
-    .filter(node => node.nodeType === Node.TEXT_NODE || 
-                   (node.nodeType === Node.ELEMENT_NODE && node.nodeName !== 'RT' && node.nodeName !== 'RP'))
-    .map(node => node.textContent)
-    .join('');
-    
-  // Extract ruby text (rt elements)
-  const rtElement = rubyElement.querySelector('rt');
-  const rubyText = rtElement ? rtElement.textContent : null;
+  const rubyPairs: { baseText: string; rubyText: string }[] = [];
   
-  return { baseText, rubyText };
+  if (includeNonRuby) {
+    const bodyElement = doc.body || doc.documentElement;
+    const allNodes = Array.from(bodyElement.childNodes);
+    
+    allNodes.forEach(node => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        // Non-ruby text node
+        const text = node.textContent?.trim();
+        if (text) {
+          rubyPairs.push({ baseText: text, rubyText: "" });
+        }
+      } else if (node.nodeType === Node.ELEMENT_NODE && node.nodeName === 'RUBY') {
+        const rubyElement = node as Element;
+        
+        // everything except rt and rp elements
+        const baseText = Array.from(rubyElement.childNodes)
+          .filter(childNode => childNode.nodeType === Node.TEXT_NODE || 
+                             (childNode.nodeType === Node.ELEMENT_NODE && 
+                              childNode.nodeName !== 'RT' && childNode.nodeName !== 'RP'))
+          .map(childNode => childNode.textContent)
+          .join('');
+        
+        // rt elements
+        const rtElement = rubyElement.querySelector('rt');
+        const rubyText = rtElement?.textContent ?? "";
+        
+        rubyPairs.push({ baseText, rubyText });
+      }
+    });
+  } else {
+    rubyElements.forEach(rubyElement => {
+      // everything except rt elements
+      const baseText = Array.from(rubyElement.childNodes)
+        .filter(node => node.nodeType === Node.TEXT_NODE || 
+                       (node.nodeType === Node.ELEMENT_NODE && node.nodeName !== 'RT' && node.nodeName !== 'RP'))
+        .map(node => node.textContent)
+        .join('');
+      
+      // rt elements
+      const rtElement = rubyElement.querySelector('rt');
+      const rubyText = rtElement?.textContent ?? "";
+      
+      rubyPairs.push({ baseText, rubyText });
+    });
+  }
+  
+  return rubyPairs as Ruby[];
 };

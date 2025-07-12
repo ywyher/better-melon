@@ -6,7 +6,6 @@ import { usePlayerStore } from "@/lib/stores/player-store";
 import { SubtitleCue, SubtitleFormat } from "@/types/subtitle";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { getExtension } from "@/lib/utils/utils";
-import {  } from "@/lib/utils/subtitle";
 import { useDelayStore } from "@/lib/stores/delay-store";
 import { useSubtitleStore } from "@/lib/stores/subtitle-store";
 
@@ -45,7 +44,6 @@ export default function CueNavigations({ direction }: CueNavigationProps) {
     
     // Use the reference value to avoid the this.$state is null error
     const currentTime = currentTimeRef.current;
-    const format = getExtension(activeSubtitleFile.file.name || "srt") as SubtitleFormat;
     
     return subtitleCues.find(cue => {
       const startTime = cue.from + delay.japanese
@@ -62,7 +60,6 @@ export default function CueNavigations({ direction }: CueNavigationProps) {
     // Always use the ref for current time
     const currentTime = currentTimeRef.current;
     const currentCue = findCurrentCue();
-    const format = getExtension(activeSubtitleFile.file.name || "srt") as SubtitleFormat;
     
     // Find target cue based on direction
     let targetCue: SubtitleCue | undefined = undefined;
@@ -108,11 +105,12 @@ export default function CueNavigations({ direction }: CueNavigationProps) {
         player.current.currentTime = targetTime;
         
         // Try to play if paused, for better UX when navigating
-        if (player.current.paused) {
-          player.current.play().catch(() => {
-            console.warn("Failed to play after cue navigation");
-          });
-        }
+        // Maybe its bad for the ux ?
+        // if (player.current.paused) {
+        //   player.current.play().catch(() => {
+        //     console.warn("Failed to play after cue navigation");
+        //   });
+        // }
       } catch (e) {
         console.warn("Error navigating to cue:", e);
       }

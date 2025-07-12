@@ -115,7 +115,7 @@ export const useWatchData = (animeId: string, episodeNumber: number) => {
       isEpisodeDataLoading,
       isSettingsLoading ,
       isWordsLoading,
-      isPitchAccentLoading,
+      isPitchAccentLoading: (isPitchAccentLoading && !hasTranscriptionsInitialized),
       isTranscriptionsLoading: (isTranscriptionsLoading && !hasTranscriptionsInitialized),
       isStylesLoading: (isStylesLoading && !hasTranscriptionsInitialized)
     })

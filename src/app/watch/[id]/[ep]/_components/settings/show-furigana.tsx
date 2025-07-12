@@ -10,6 +10,7 @@ import { settingsQueries } from "@/lib/queries/settings";
 import { SyncStrategy } from "@/types";
 import { useWatchDataStore } from "@/lib/stores/watch-store";
 import { handleSubtitleSettings } from "@/app/settings/subtitle/_subtitle-settings/actions";
+import { defaultSubtitleSettings } from "@/app/settings/subtitle/_subtitle-settings/constants";
 
 export default function ShowFurigana({ subtitleSettings, syncPlayerSettings }: { subtitleSettings: SubtitleSettings, syncPlayerSettings: GeneralSettings['syncPlayerSettings'] }) {
     const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -30,15 +31,14 @@ export default function ShowFurigana({ subtitleSettings, syncPlayerSettings }: {
     const queryClient = useQueryClient()
     
     const handleChange = async (value: boolean) => {
-      console.log(`value`, value)
       setSettings({
         ...settings,
         subtitleSettings: {
-          ...subtitleSettings,
+          ...(subtitleSettings || defaultSubtitleSettings),
           showFurigana: value
         }
       });
-      
+
       let resolvedSyncStrategy = syncPlayerSettings as SyncStrategy;
         
       if (resolvedSyncStrategy === 'ask') {
@@ -86,7 +86,7 @@ export default function ShowFurigana({ subtitleSettings, syncPlayerSettings }: {
     return (
         <div className="flex flex-row gap-2">
             <ToggleButton
-              name="showFurigana"
+              name="Show Furigana"
               checked={showFurigana}
               onClick={() => handleChange(!showFurigana)}
               className="w-fit"

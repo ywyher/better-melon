@@ -1,5 +1,10 @@
 import { GeneralSettings, SubtitleStyles } from "@/lib/db/schema";
 
+export type Ruby = {
+  baseText: string;
+  rubyText: string;
+}
+
 export type SubtitleEntry = {
   id: number;
   name: string;

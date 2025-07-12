@@ -49,7 +49,7 @@ export default function SubtitleTranscriptions() {
   const isFullscreen = useMediaState('fullscreen', player);
   const controlsVisible = useMediaState('controlsVisible', player);
   const currentTime = useMediaState('currentTime', player);
-  // const currentTime = 200;
+  // const currentTime = 10;
 
   const sensors = useSensors(
     useSensor(PointerSensor, {

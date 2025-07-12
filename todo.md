@@ -1,16 +1,13 @@
-fix checking if file is japanese first for local files
+we have issue with the coverted japanese to furigana for example 
+this 度し難い becomes 度
 
 if all transcriptions are cached there would be no need to initialize the tokenizer but at the same time if need to add another transcription we will have to wait for tokenizer to initalize and parse so iam not sure
 
 check your words list button ?
 
-for the words part we are creating an entry for each word i think that is a bit expensive mayube try one entry with one field having all the word if that is better
-
-episode 11 of made in abyss is broken (special case)
+for the words part we are creating an entry for each word i think that is a bit expensive be try one entry with one field having all the word if that is better
 
 the home page should be introduction to the site and add an option to redirect to the animes page right away in the settings
-
-the definition card we should use furigana !! 
 
 check https://github.com/Doublevil/JmdictFurigana
 

@@ -21,10 +21,6 @@ type DefinitionStore = {
     token: SubtitleToken | null;
     setToken: (token: DefinitionStore['token']) => void;
 
-    furigana: string | null;
-    setFurigana: (furigana: DefinitionStore['furigana']) => void;
-
-
     isAddToAnki: boolean;
     setIsAddToAnki: (token: DefinitionStore['isAddToAnki']) => void;
 }
@@ -46,10 +42,6 @@ export const useDefinitionStore = create<DefinitionStore>()(
 
         token: null,
         setToken: (token: DefinitionStore['token']) => set({ token }),
-
-        furigana: null,
-        setFurigana: (furigana: DefinitionStore['furigana']) => set({ furigana }),
-        
 
         isAddToAnki: true,
         setIsAddToAnki: (isAddToAnki: DefinitionStore['isAddToAnki']) => set({ isAddToAnki }),

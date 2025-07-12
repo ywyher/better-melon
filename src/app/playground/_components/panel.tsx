@@ -9,6 +9,7 @@ import { hasChanged } from "@/lib/utils/utils";
 import { useSubtitleStyles } from "@/lib/hooks/use-subtitle-styles";
 import { usePitchAccentChunks } from "@/lib/hooks/use-pitch-accent-chunks";
 import SubtitlePanel from "@/app/watch/[id]/[ep]/_components/panel/panel";
+import DefinitionCard from "@/components/definition-card/definition-card";
 
 export default function PanelPlayground() {
   const setActiveSubtitleFile = useSubtitleStore((state) => state.setActiveSubtitleFile);
@@ -73,6 +74,7 @@ export default function PanelPlayground() {
   return (
     <div className="flex flex-row gap-10">
       <SubtitlePanel />
+      <DefinitionCard />
     </div>
   );
 }

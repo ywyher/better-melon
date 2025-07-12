@@ -9,6 +9,7 @@ import { useWatchDataStore } from "@/lib/stores/watch-store";
 import { hasChanged } from "@/lib/utils/utils";
 import { useSubtitleStyles } from "@/lib/hooks/use-subtitle-styles";
 import { usePitchAccentChunks } from "@/lib/hooks/use-pitch-accent-chunks";
+import DefinitionCard from "@/components/definition-card/definition-card";
 
 export default function TranscriptionsPlayground() {
   const setActiveSubtitleFile = useSubtitleStore((state) => state.setActiveSubtitleFile);
@@ -16,7 +17,7 @@ export default function TranscriptionsPlayground() {
   const setEnglishSubtitleUrl = useSubtitleStore((state) => state.setEnglishSubtitleUrl);
 
   useEffect(() => {
-    // setActiveTranscriptions(['japanese']);
+    setActiveTranscriptions(['japanese', 'hiragana']);
     setActiveSubtitleFile({
       file: {
         last_modified: "2024-04-28T16:23:56.084911647Z",
@@ -73,6 +74,7 @@ export default function TranscriptionsPlayground() {
   return (
     <div className="flex flex-row gap-10">
       <SubtitleTranscriptions />
+      <DefinitionCard />
     </div>
   );
 }

@@ -1,0 +1,81 @@
+import React from 'react';
+import { SubtitleToken } from '@/types/subtitle';
+import { cn } from '@/lib/utils/utils';
+import { parseRuby } from '@/lib/utils/subtitle';
+import { RubyText } from '@/components/ruby-text';
+import DOMPurify from 'dompurify';
+import { useTokenStyles } from '@/lib/hooks/use-token-styles';
+import { PitchAccents } from '@/types/pitch';
+
+interface SubtitleCueTokenProps {
+  token: SubtitleToken;
+  index: number;
+  transcription: string;
+  isActive: boolean;
+  showFurigana: boolean;
+  accent: PitchAccents | null;
+  onTokenClick: () => void;
+}
+
+export const CueToken: React.FC<SubtitleCueTokenProps> = ({
+  token,
+  index,
+  transcription,
+  isActive,
+  showFurigana,
+  accent,
+  onTokenClick,
+}) => {
+  const {
+    getPitchStyles,
+    getLearningStatusStyles
+  } = useTokenStyles();
+
+  const pitchStyles = getPitchStyles(isActive, accent)
+  const learningStatusStyles = getLearningStatusStyles(token)
+
+  const className = cn(
+    "cursor-pointer mr-1 pb-2 transition-colors hover:bg-primary/10",
+    isActive && "bg-primary/20"
+  )
+
+  if (transcription === 'japanese') {
+    const rubyPairs = parseRuby(token.surface_form);
+    
+    return (
+      <div
+        onClick={() => onTokenClick()}
+      >
+        {rubyPairs.map((pair, pairIdx) => {
+          const { baseText, rubyText } = pair;
+          return (
+            <RubyText 
+              key={pairIdx}
+              baseText={baseText}
+              rubyText={rubyText || ""}
+              showFurigana={showFurigana}
+              style={{
+                ...pitchStyles,
+                ...learningStatusStyles
+              }}
+              className={className}
+            />
+          )
+        })}
+      </div>
+    );
+  }
+  
+  return (
+    <span
+      key={index}
+      className={className}
+      style={{
+        ...pitchStyles,
+        ...learningStatusStyles
+      }}
+      onClick={() => onTokenClick()}
+      dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(token.surface_form) }}
+    />
+  );
+};

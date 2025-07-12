@@ -3,24 +3,25 @@ import { TabsContent } from "@/components/ui/tabs";
 import { SubtitleCue as TSubtitleCue, SubtitleTranscription } from "@/types/subtitle";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { usePlayerStore } from "@/lib/stores/player-store";
-import SubtitleCuesContainer from "@/app/watch/[id]/[ep]/_components/panel/subtitle-cues-container";
 import { useDelayStore } from "@/lib/stores/delay-store";
 import { useWatchDataStore } from "@/lib/stores/watch-store";
+import SubtitleCue from "@/app/watch/[id]/[ep]/_components/panel/subtitle-cue";
 
 type SubtitleCuesListProps = {
   isLoading: boolean;
   selectedTranscription: SubtitleTranscription;
   cues: TSubtitleCue[];
+  japaneseCues?: TSubtitleCue[];
 }
 
 export default function SubtitleCuesList({
   selectedTranscription,
   isLoading,
   cues,
+  japaneseCues
 }: SubtitleCuesListProps) {
 
   const playerSettings = useWatchDataStore((state) => state.settings.playerSettings)
-  const furigana = useWatchDataStore((state) => state.settings.subtitleSettings.furigana)
 
   const [activeIndex, setActiveIndex] = useState<number>(-1);
   const [autoScroll, setAutoScroll] = useState<boolean>(playerSettings.autoScrollToCue); // Use setting
@@ -47,8 +48,8 @@ export default function SubtitleCuesList({
     if (!cue) return 60;
     
     // Furigana needs more space for stacked text
-    if (selectedTranscription === 'japanese' && furigana) {
-      return 95; // Increased height for furigana
+    if (selectedTranscription === 'japanese') {
+      return 110; // Increased height for furigana
     }
     
     // Check if the content is particularly long and might wrap
@@ -58,7 +59,7 @@ export default function SubtitleCuesList({
     }
     
     return 60; // Default size
-  }, [cues, selectedTranscription, furigana]);
+  }, [cues, selectedTranscription]);
 
   const rowVirtualizer = useVirtualizer({
       count: cues?.length || 0,
@@ -138,28 +139,42 @@ export default function SubtitleCuesList({
   }, []);
     
   return (
-      <div 
-          ref={scrollAreaRef} 
-          className="overflow-y-auto h-[80vh] w-full"
-          style={{
-              opacity: isLoading ? 0.8 : 1,
-          }}
-          onScroll={handleManualScroll}
-      >
-          <TabsContent 
-              value={selectedTranscription}
-              className="relative w-full"
-              style={{
-                  height: `${rowVirtualizer.getTotalSize()}px`,
-                  position: 'relative',
-              }}
-          >   
-            <SubtitleCuesContainer 
-              items={rowVirtualizer}
-              activeCueIdRef={activeCueIdRef}
-              cues={cues}
+    <div 
+      ref={scrollAreaRef} 
+      className="overflow-y-auto h-[80vh] w-full"
+      style={{
+        opacity: isLoading ? 0.8 : 1,
+      }}
+      onScroll={handleManualScroll}
+    >
+      <TabsContent 
+        value={selectedTranscription}
+        className="relative w-full"
+        style={{
+          height: `${rowVirtualizer.getTotalSize()}px`,
+          position: 'relative',
+        }}
+      >   
+        {/* Direct rendering without container component */}
+        {rowVirtualizer.getVirtualItems().map((row) => {
+          const cue = cues[row.index];
+          const japaneseCue = japaneseCues?.[row.index]
+
+          if (!cue) return null;
+          
+          return (
+            <SubtitleCue
+              key={`${row.key}-${cue.id}`}
+              cue={cue}
+              japaneseCue={japaneseCue}
+              index={row.index}
+              isActive={activeCueIdRef.current === cue.id}
+              size={row.size}
+              start={row.start}
             />
-          </TabsContent>
-      </div>
+          );
+        })}
+      </TabsContent>
+    </div>
   )
 }

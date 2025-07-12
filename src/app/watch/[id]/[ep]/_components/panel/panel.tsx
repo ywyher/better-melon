@@ -8,7 +8,7 @@ import { Tabs } from "@/components/ui/tabs";
 import type { SubtitleCue as TSubtitleCue, SubtitleTranscription } from "@/types/subtitle";
 import { subtitleTranscriptions } from "@/lib/constants/subtitle";
 import PanelHeader from "@/app/watch/[id]/[ep]/_components/panel/panel-header";
-import SubtitleCuesList from "@/app/watch/[id]/[ep]/_components/panel/subtitles-cues-list";
+import SubtitleCuesList from "@/app/watch/[id]/[ep]/_components/panel/subtitle-cues-list";
 import PanelSkeleton from "@/app/watch/[id]/[ep]/_components/panel/panel-skeleton";
 import { subtitleQueries } from "@/lib/queries/subtitle";
 import { useSubtitleStore } from "@/lib/stores/subtitle-store";
@@ -67,6 +67,7 @@ export default function SubtitlePanel() {
                         isLoading={isCuesLoading}
                         selectedTranscription={selectedTranscription}
                         cues={cues}
+                        japaneseCues={transcriptions?.find(t => t.transcription == 'japanese')?.cues}
                       />
                   ): (
                     <Card className="w-full p-4 bg-yellow-50 border-yellow-200">

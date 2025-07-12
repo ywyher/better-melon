@@ -8,7 +8,6 @@ import { useDefinitionStore } from "@/lib/stores/definition-store";
 import { cn } from "@/lib/utils/utils";
 import { useDraggable } from "@dnd-kit/core";
 import { createPortal } from "react-dom";
-import { useEffect } from "react";
 
 export default function DefinitionCardBase() {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
