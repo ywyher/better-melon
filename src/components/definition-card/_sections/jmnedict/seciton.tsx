@@ -10,7 +10,6 @@ type JMnedictProps = {
 }
 
 export default function JMnedictSection({ entries }: JMnedictProps) {
-  if(!entries?.length) return
   return (
     <div className="flex flex-col gap-3">
       <JMnedictHeader length={entries.length} />

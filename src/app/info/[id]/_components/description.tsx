@@ -22,9 +22,9 @@ export function AnimeDescription({ title, description }: AnimeDescriptionProps) 
         <Card>
             <CardHeader>
                 <CardTitle className="text-2xl font-bold">
-                    {title.romaji}
+                    {title?.english || ""}
                 </CardTitle>
-                {title.english && title.english !== title.romaji && (
+                {title?.english && title?.english !== title?.english && (
                     <p className="text-lg text-muted-foreground">{title.english}</p>
                 )}
             </CardHeader>

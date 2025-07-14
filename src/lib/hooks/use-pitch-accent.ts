@@ -1,7 +1,8 @@
 import { useEffect, useState, useRef, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { NHKEntry } from '@/types/nhk';
 import { pitchQueries } from '@/lib/queries/pitch';
+import { getPitchAccent } from '@/lib/utils/pitch';
+import { PitchAccents } from '@/types/pitch';
 
 export function usePitchAccent(query: string) {
   const loadingStartTime = useRef<number>(0);
@@ -26,18 +27,20 @@ export function usePitchAccent(query: string) {
     }
   }, [isLoading, pitch, loadingDuration]);
 
-  const pitchLookupRef = useRef(new Map<string, NHKEntry>());
-  const pitchLookup = useMemo(() => {
-    if (!pitch) return pitchLookupRef.current;
-    pitch.forEach((pitchData) => pitchLookupRef.current.set(pitchData.word, pitchData));
-    return pitchLookupRef.current;
-  }, [pitch]);
+  const accent: PitchAccents | undefined = useMemo(() => {
+    if(!pitch || pitch?.length == 0) return;
+    
+    return getPitchAccent({ 
+      position: pitch[0].pitches[0].position,
+      reading: query
+    }) 
+  }, [pitch])
 
   return {
     pitch,
+    accent,
     isLoading,
     error,
     loadingDuration,
-    pitchLookup
   };
 }

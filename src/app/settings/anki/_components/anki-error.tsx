@@ -59,28 +59,13 @@ export default function AnkiError() {
                 <div className="text-gray-700 dark:text-gray-300">
                   <p className="font-medium">Configure the plugin</p>
                   <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                    Add the following URL to <code className="bg-gray-100 px-1.5 py-0.5 rounded text-sm font-mono dark:bg-gray-800">webCorsOriginList</code>:
+                    Make sure that <code className="bg-gray-100 px-1.5 py-0.5 rounded text-sm font-mono dark:bg-gray-800">http://localhost</code> exists in <code className="bg-gray-100 px-1.5 py-0.5 rounded text-sm font-mono dark:bg-gray-800">webCorsOriginList</code>:
                   </p>
-                  <div className="mt-2 relative group">
-                    <div className="bg-gray-100 p-3 rounded-md text-sm font-mono overflow-x-auto dark:bg-gray-800 dark:text-gray-200 border border-gray-200 dark:border-gray-700">
-                      <code>http://localhost:3000</code>
-                    </div>
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      className="absolute right-2 top-2 h-7 w-7 p-0 opacity-50 hover:opacity-100 hover:bg-gray-200 dark:hover:bg-gray-700"
-                      onClick={() => navigator.clipboard.writeText("http://localhost:3000")}
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
-                      <span className="sr-only">Copy to clipboard</span>
-                    </Button>
-                  </div>
                   <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
                     Your configuration should look similar to:
                   </p>
                   <pre className="bg-gray-100 p-3 rounded-md mt-2 text-sm font-mono overflow-x-auto dark:bg-gray-800 dark:text-gray-200 border border-gray-200 dark:border-gray-700">
                     {`"webCorsOriginList": [
-    "http://localhost:3000",
     "http://localhost",
 ]`}
                   </pre>
@@ -90,9 +75,9 @@ export default function AnkiError() {
               <li className="flex gap-3">
                 <span className="flex items-center justify-center bg-indigo-100 text-indigo-700 font-semibold rounded-full h-7 w-7 flex-shrink-0 dark:bg-indigo-900 dark:text-indigo-300">4</span>
                 <div className="text-gray-700 dark:text-gray-300">
-                  <p className="font-medium">Refresh & Keep Anki running</p>
+                  <p className="font-medium">Restart & Refresh & Keep Anki running</p>
                   <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                    Ensure Anki remains open in the background while using this application
+                    After installing configuring the plugin restart anki then ensure Anki remains open in the background while using this application
                   </p>
                 </div>
               </li>

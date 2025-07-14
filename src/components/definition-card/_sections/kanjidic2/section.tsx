@@ -16,7 +16,6 @@ type Kanjidic2Props = {
 }
 
 export default function Kanjidic2Section({ entries, sentences }: Kanjidic2Props) {
-  if(!entries?.length) return
   return (
     <div className="flex flex-col gap-3">
       <Kanjidic2Header length={entries.length} />

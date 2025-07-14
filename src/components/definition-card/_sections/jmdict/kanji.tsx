@@ -1,10 +1,8 @@
-import useAddToAnki from "@/lib/hooks/use-add-to-anki"
 import type { JMdictGloss, JMdictKana, JMdictKanji, JMdictPos, JMdictSentence } from "@/types/jmdict"
 import { jmdictTags } from "@/lib/constants/jmdict"
 import { Badge } from "@/components/ui/badge"
 import { useQuery } from "@tanstack/react-query"
 import { subtitleQueries } from "@/lib/queries/subtitle"
-import { toast } from "sonner"
 import AddToAnki from "@/components/add-to-anki"
 
 type JMdictKanjiProps = {
@@ -36,11 +34,9 @@ export default function JMdictKanji({ kanji, kana, pos, definition, sentenceEngl
           partOfSpeech={pos
             ?.map(p => jmdictTags[p] || p)
             .join(', ')}
-          disabled={isLoading}
+          isLoading={isLoading}
         >
-          <Badge className="cursor-pointer min-w-[100px]">
-            Add to anki
-          </Badge>
+          Add to anki
         </AddToAnki>
       </div>
     </div>

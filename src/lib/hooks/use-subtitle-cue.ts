@@ -7,7 +7,7 @@ import { useWatchDataStore } from "@/lib/stores/watch-store";
 import { SubtitleToken, SubtitleCue as TSubtitleCue } from "@/types/subtitle";
 import { getSentencesForCue, isTokenExcluded } from "@/lib/utils/subtitle";
 import { toast } from "sonner";
-import { getPitchAccentType } from "@/lib/utils/pitch";
+import { getPitchAccent } from "@/lib/utils/pitch";
 import { PitchAccents } from "@/types/pitch";
 
 export const useSubtitleCue = () => {
@@ -62,7 +62,7 @@ export const useSubtitleCue = () => {
     const pitch = pitchLookup.get(token.original_form);
     if (!pitch) return null;
     
-    return getPitchAccentType({
+    return getPitchAccent({
       position: pitch.pitches[0].position,
       reading: token.original_form
     });

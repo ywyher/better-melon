@@ -1,5 +1,8 @@
-import { Button } from "@/components/ui/button";
+import LoadingButton from "@/components/loading-button";
 import useAddToAnki from "@/lib/hooks/use-add-to-anki";
+import { usePitchAccent } from "@/lib/hooks/use-pitch-accent";
+import { generatePitchAccentHTML } from "@/lib/utils/pitch";
+import { cn } from "@/lib/utils/utils";
 import React from "react";
 import { toast } from "sonner";
 
@@ -12,7 +15,8 @@ type AddToAnkiProps = {
   sentenceKana?: string;
   kana?: string;
   partOfSpeech?: string;
-  disabled?: boolean
+  className?: string;
+  isLoading?: boolean
 }
 
 export default function AddToAnki({
@@ -24,8 +28,11 @@ export default function AddToAnki({
   sentenceKana,
   partOfSpeech,
   children,
-  disabled = false
+  className = "",
+  isLoading = false
 }: AddToAnkiProps) {
+  const { accent } = usePitchAccent(kanji);
+
   const { addToAnki } = useAddToAnki({
     fields: {
       kanji,
@@ -34,22 +41,30 @@ export default function AddToAnki({
       "sentence-kanji": sentenceKanji,
       "sentence-english": sentenceEnglish,
       "sentence-kana": sentenceKana,
-      "part-of-speech": partOfSpeech
+      "part-of-speech": partOfSpeech,
+      "pitch-accent": generatePitchAccentHTML({
+        kana: kana || "",
+        accent: accent || ""
+      })
     },
-  })
+  });
 
   return (
-    <Button
-      className="cursor-pointer z-20 rounded-sm p-1 w-fit h-7"
+    <LoadingButton
+      className={cn(
+        "cursor-pointer z-20 rounded-sm p-1 w-fit h-7",
+        className
+      )}
       onClick={() => {
-        if(!disabled) {
-          addToAnki()
-        }else {
-          toast.warning('Either disabled or loading')
+        if(!isLoading) {
+          addToAnki();
+        } else {
+          toast.warning('Either disabled or loading');
         }
       }}
+      isLoading={isLoading}
     >
       {children}
-    </Button>
-  )
+    </LoadingButton>
+  );
 }

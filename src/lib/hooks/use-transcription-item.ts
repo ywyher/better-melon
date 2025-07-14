@@ -5,7 +5,7 @@ import { useWatchDataStore } from '@/lib/stores/watch-store';
 import { SubtitleToken, SubtitleTranscription } from '@/types/subtitle';
 import { SubtitleSettings } from '@/lib/db/schema';
 import { getSentencesForCue, isTokenExcluded } from '@/lib/utils/subtitle';
-import { getPitchAccentType } from '@/lib/utils/pitch';
+import { getPitchAccent } from '@/lib/utils/pitch';
 import { PitchAccents } from '@/types/pitch';
 
 export const useTranscriptionItem = (transcription: SubtitleTranscription) => {
@@ -72,7 +72,7 @@ export const useTranscriptionItem = (transcription: SubtitleTranscription) => {
     const pitch = pitchLookup.get(token.original_form);
     if (!pitch) return null;
     
-    return getPitchAccentType({
+    return getPitchAccent({
       position: pitch.pitches[0].position,
       reading: token.original_form
     });

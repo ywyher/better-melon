@@ -21,9 +21,10 @@ export default function DefinitionCardHeaderAnki({ entries }: { entries?: JMdict
           sentenceEnglish={sentences.english || ""}
           partOfSpeech={
             (entries?.[0]?.sense[0]?.partOfSpeech as JMdictPos[])
-            ?.map(p => jmdictTags[p] || p) // Get tag value or fallback to original if not found
+            ?.map(p => jmdictTags[p] || p)
             .join(', ')
           }
+          className="w-7 rounded-full"
         >
           <Plus />
         </AddToAnki>

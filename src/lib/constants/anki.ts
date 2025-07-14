@@ -7,4 +7,5 @@ export const ankiFieldsValues = [
   "sentence-english",
   "part-of-speech",
   "image",
+  "pitch-accent"
 ] as const;

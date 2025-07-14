@@ -6,10 +6,9 @@ import JMnedictSection from "@/components/definition-card/_sections/jmnedict/sec
 import Kanjidic2Section from "@/components/definition-card/_sections/kanjidic2/section"
 import { Separator } from "@/components/ui/separator"
 import { cn } from "@/lib/utils/utils"
-import { Dictionary, Index } from "@/types/dictionary"
-import { JMdictWord } from "@/types/jmdict"
+import { Dictionary } from "@/types/dictionary"
 import { JMnedictWord } from "@/types/jmnedict"
-import { Kanjidic2Character } from "@/types/kanjidic2"
+import { useMemo } from "react"
 
 type DefinitionCardContentProps = {
   isExpanded: boolean
@@ -25,40 +24,83 @@ export default function DefinitionCardContent({
   if (isLoading) {
     return <DefinitionCardContentSkeleton isExpanded={isExpanded} />
   }
+  
+  if (!dictionary?.length) {
+    return null
+  }
+
+  const dictionarySections = useMemo(() => {
+    const jmdict = dictionary.find((d) => d.index === 'jmdict')
+    const jmnedict = dictionary.find((d) => d.index === 'jmnedict')
+    const kanjidic2 = dictionary.find((d) => d.index === 'kanjidic2')
+    
+    return { jmdict, jmnedict, kanjidic2 }
+  }, [dictionary])
+
+  const { jmdict, jmnedict, kanjidic2 } = dictionarySections
+
+  const sentenceData = useMemo(() => {
+    if (!jmdict?.entries?.[0]?.sense?.[0]?.examples?.[0]?.sentences) {
+      return { kanji: "", english: "" }
+    }
+    
+    const sentences = jmdict.entries[0].sense[0].examples[0].sentences
+    return {
+      kanji: sentences.find(s => s.land === 'jpn')?.text || "",
+      english: sentences.find(s => s.land === 'eng')?.text || "",
+    }
+  }, [jmdict])
+
+  if (!isExpanded) {
+    return (
+      <div>
+        {jmdict?.entries?.[0]?.sense?.[0]?.gloss?.[0]?.text || (
+          <span className="text-red-500">Nothing found</span>
+        )}
+      </div>
+    )
+  }
+
+  const hasMultipleSections = dictionary.length > 1
 
   return (
     <div className="flex flex-col gap-2">
-      {isExpanded ? (
+      <div className={cn(
+        hasMultipleSections && "flex flex-col gap-6 lg:grid lg:grid-cols-12 lg:gap-4"
+      )}>
+        {/* Main content column */}
+        <div className="col-span-8">
+          {jmdict && (
+            <JMdictSection entries={jmdict.entries} />
+          )}
+        </div>
+
+        {/* Sidebar column */}
         <div className={cn(
-          dictionary && dictionary?.length > 1 && "flex flex-col gap-6 lg:grid lg:grid-cols-12 lg:gap-4"
+          "col-span-4",
+          "sm:border-t-2 sm:pt-5 lg:pt-0 lg:border-none"
         )}>
-          <div className="col-span-8">
-            <JMdictSection entries={dictionary?.find(d => d.index == 'jmdict')?.entries as JMdictWord[]} />
-          </div>
-          <div className={cn(
-            "col-span-4",
-            "sm:border-t-2 sm:pt-5 lg:pt-0 lg:border-none"
-          )}>
-            <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4">
+            {/* Kanji section */}
+            {jmdict && kanjidic2 && (
               <Kanjidic2Section
-                entries={dictionary?.find(d => d.index == 'kanjidic2')?.entries as Kanjidic2Character[]} 
-                sentences={{
-                  kanji: (dictionary?.find(d => d.index == 'jmdict')?.entries as JMdictWord[])[0].sense[0].examples?.[0]?.sentences.find(s => s.land == 'jpn')?.text || "",
-                  english: (dictionary?.find(d => d.index == 'jmdict')?.entries as JMdictWord[])[0].sense[0].examples?.[0]?.sentences.find(s => s.land == 'eng')?.text || "",
-                }}
+                entries={kanjidic2.entries}
+                sentences={sentenceData}
               />
-              {dictionary?.find(d => d.index == 'kanjidic2')?.entries && <Separator />}
+            )}
+
+            {/* Separator between sections */}
+            {kanjidic2 && jmnedict && <Separator />}
+
+            {/* Names section */}
+            {jmnedict && (
               <JMnedictSection
-                entries={dictionary?.find(d => d.index == 'jmnedict')?.entries as JMnedictWord[]}
+                entries={jmnedict.entries as JMnedictWord[]}
               />
-            </div>
+            )}
           </div>
         </div>
-      ): (
-        <div>
-          {dictionary?.find(d => d.index == 'jmdict')?.entries?.[0].sense?.[0]?.gloss?.[0]?.text || <span className="text-red-500">Nothing found</span>}
-        </div>
-      )}
+      </div>
     </div>
   )
 }

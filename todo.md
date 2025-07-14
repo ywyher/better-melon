@@ -140,15 +140,13 @@ Atamadaka
 Nakadaka
 Odaka
 Color words to show their respective pitch patterns:
-
-Heiban “flat board” (blue)
-Rises after first mora*; pitch stays high and doesn’t drop
-
-*A mora is a single unit of sound in the Japanese language
-
 あ - 1 mora
 おう - 2 moras
 せんせい - 4 moras
+*A mora is a single unit of sound in the Japanese language
+
+Heiban “flat board” (blue)
+Rises after first mora*; pitch stays high and doesn’t drop
 
 Atamadaka “head high” (red)
 Pitch starts high but drops after the first mora

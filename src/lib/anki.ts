@@ -19,7 +19,7 @@ export const invokeAnkiConnect = async (action: string, version: number, params 
         error: data.error
       }
     }
-    
+
     return {
       data: data.result,
       error: null

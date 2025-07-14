@@ -178,6 +178,13 @@ export default function Player() {
         };
     }, [vttUrl]);
 
+    useEffect(() => {
+        console.log({
+            videoSrc,
+            metadata
+        })
+    }, [videoSrc, metadata])
+
     return (
         <div className="relative w-full aspect-video">
             {(!isVideoReady || !isInitialized) && (

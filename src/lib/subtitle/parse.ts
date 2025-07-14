@@ -12,7 +12,6 @@ import { getCache } from "@/lib/db/queries";
 import { setCache, updateCache } from "@/lib/db/mutations";
 import { initializeTokenizer } from "@/lib/subtitle/tokenizer";
 import { tokenizerStats } from "@/lib/subtitle/globals";
-import { promises as fs } from 'fs';
 
 // Keep in-memory tracking for ongoing operations to prevent duplicate work
 const fetchingInProgress = new Map<CacheKey, Promise<string>>();

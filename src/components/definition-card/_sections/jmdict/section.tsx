@@ -5,14 +5,13 @@ import JMdictHeader from "@/components/definition-card/_sections/jmdict/header"
 import DotSeparator from "@/components/dot-separator"
 import { Separator } from "@/components/ui/separator"
 import type { JMdictPos, JMdictWord as TJMdictWord  } from "@/types/jmdict"
+import JMdictPitchAccent from "@/components/definition-card/_sections/jmdict/pitch-accent"
 
 type JMdictSectionProps = {
   entries: TJMdictWord[]
 }
 
 export default function JMdictSection({ entries }: JMdictSectionProps) {
-  if (!entries?.length) return null
-
   return (
     <div className="flex flex-col gap-5">
       <JMdictHeader length={entries.length} />
@@ -33,9 +32,13 @@ export default function JMdictSection({ entries }: JMdictSectionProps) {
 
             {/* Content grid */}
             <div className="grid grid-cols-12 gap-6">
-              {/* Forms section */}
-              <div className="col-span-12 md:col-span-4 lg:col-span-3">
+              <div className="
+                col-span-12 md:col-span-4 lg:col-span-3 
+                flex flex-col gap-3
+              ">
+                {/* Forms section */}
                 <JMdictForms kana={entry.kana} kanji={entry.kanji} />
+                {entry.kanji.length && <JMdictPitchAccent kanji={entry.kanji} kana={entry.kana} />}
               </div>
               
               {/* Meanings section */}
