@@ -1,6 +1,3 @@
-we have issue with the coverted japanese to furigana for example 
-this 度し難い becomes 度
-
 if all transcriptions are cached there would be no need to initialize the tokenizer but at the same time if need to add another transcription we will have to wait for tokenizer to initalize and parse so iam not sure
 
 check your words list button ?

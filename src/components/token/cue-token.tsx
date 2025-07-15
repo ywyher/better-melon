@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { SubtitleToken } from '@/types/subtitle';
 import { cn } from '@/lib/utils/utils';
 import { parseRuby } from '@/lib/utils/subtitle';
@@ -31,13 +31,20 @@ export const CueToken: React.FC<SubtitleCueTokenProps> = ({
     getLearningStatusStyles
   } = useTokenStyles();
 
-  const pitchStyles = getPitchStyles(isActive, accent)
-  const learningStatusStyles = getLearningStatusStyles(token)
+  const pitchStyles = useMemo(() => 
+    getPitchStyles(isActive, accent), 
+    [getPitchStyles, isActive, accent]
+  );
+  
+  const learningStatusStyles = useMemo(() => 
+    getLearningStatusStyles(token), 
+    [getLearningStatusStyles, token]
+  );
 
-  const className = cn(
+  const className = useMemo(() => cn(
     "cursor-pointer mr-1 pb-2 transition-colors hover:bg-primary/10",
     isActive && "bg-primary/20"
-  )
+  ), [isActive]);
 
   if (transcription === 'japanese') {
     const rubyPairs = parseRuby(token.surface_form);
@@ -75,7 +82,8 @@ export const CueToken: React.FC<SubtitleCueTokenProps> = ({
         ...learningStatusStyles
       }}
       onClick={() => onTokenClick()}
-      dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(token.surface_form) }}
-    />
+    >
+      {token.surface_form}
+    </span>
   );
 };

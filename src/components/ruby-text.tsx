@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo, useMemo } from 'react';
 
 interface RubyTextProps {
   baseText: string;
@@ -14,7 +14,7 @@ interface RubyTextProps {
   style?: React.CSSProperties;
 }
 
-export const RubyText: React.FC<RubyTextProps> = ({
+export const RubyText = memo<RubyTextProps>(({
   baseText,
   rubyText,
   showFurigana = true,
@@ -27,31 +27,38 @@ export const RubyText: React.FC<RubyTextProps> = ({
   className,
   style,
 }) => {
-  const isMinimal = (
-    Object.keys(baseTextStyle).length === 0 && 
-    Object.keys(rubyTextStyle).length === 0 && 
-    Object.keys(baseBackgroundStyle).length === 0
-  );
+  const styleCalculations = useMemo(() => {
+    const isMinimal = (
+      Object.keys(baseTextStyle).length === 0 && 
+      Object.keys(rubyTextStyle).length === 0 && 
+      Object.keys(baseBackgroundStyle).length === 0
+    );
 
-  const baseFontSize = Number(baseTextStyle.fontSize) || 24;
-  const dynamicMargin = isMinimal ? 5 : Math.max(baseFontSize * 0.5, 10);
+    const baseFontSize = Number(baseTextStyle.fontSize) || 24;
+    const dynamicMargin = isMinimal ? 5 : Math.max(baseFontSize * 0.5, 10);
 
-  const defaultBaseStyle: React.CSSProperties = {
-    fontSize: '18px',
-  };
+    const defaultBaseStyle: React.CSSProperties = {
+      fontSize: '18px',
+    };
 
-  const defaultRubyStyle: React.CSSProperties = {
-    fontSize: '14px',
-    textAlign: 'center',
-  };
+    const defaultRubyStyle: React.CSSProperties = {
+      fontSize: '14px',
+      textAlign: 'center',
+    };
 
-  const finalBaseStyle = isMinimal 
-    ? defaultBaseStyle
-    : baseTextStyle;
+    const finalBaseStyle = isMinimal ? defaultBaseStyle : baseTextStyle;
+    const finalRubyStyle = isMinimal 
+      ? { ...defaultRubyStyle, ...rubyTextStyle, marginBottom: `${dynamicMargin}px` }
+      : { ...rubyTextStyle, marginBottom: `${dynamicMargin}px` };
 
-  const finalRubyStyle = isMinimal 
-    ? { ...defaultRubyStyle, ...rubyTextStyle, marginBottom: `${dynamicMargin}px` }
-    : { ...rubyTextStyle, marginBottom: `${dynamicMargin}px` };
+    return {
+      isMinimal,
+      finalBaseStyle,
+      finalRubyStyle
+    };
+  }, [baseTextStyle, rubyTextStyle, baseBackgroundStyle]);
+
+  const { isMinimal, finalBaseStyle, finalRubyStyle } = styleCalculations;
 
   return (
     <ruby
@@ -64,7 +71,6 @@ export const RubyText: React.FC<RubyTextProps> = ({
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
-      {/* Base text (kanji/kana) */}
       <div style={baseBackgroundStyle}>
         <span style={finalBaseStyle}>
           {baseText}
@@ -73,7 +79,6 @@ export const RubyText: React.FC<RubyTextProps> = ({
       
       <rp>(</rp>
       
-      {/* Ruby text (furigana) */}
       {(rubyText && showFurigana) && (
         <rt style={finalRubyStyle}>
           {rubyText}
@@ -83,4 +88,4 @@ export const RubyText: React.FC<RubyTextProps> = ({
       <rp>)</rp>
     </ruby>
   );
-};
+});

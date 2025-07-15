@@ -1,8 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { useDefinitionStore } from "@/lib/stores/definition-store";
+import { usePlayerStore } from "@/lib/stores/player-store";
 import { Expand, Shrink } from "lucide-react";
 
 export default function DefinitionCardHeaderExpand() {
+  const player = usePlayerStore((state) => state.player)
   const setPosition  = useDefinitionStore((state) => state.setPosition)
   const setIsExpanded  = useDefinitionStore((state) => state.setIsExpanded)
   const isExpanded  = useDefinitionStore((state) => state.isExpanded)
@@ -11,6 +13,10 @@ export default function DefinitionCardHeaderExpand() {
     if(!isExpanded) {
       setIsExpanded(true)
       setPosition({ x: 0, y: 0 })
+
+      if(player.current) {
+        player.current.pause()
+      } 
     }else {
       setIsExpanded(false)
     }

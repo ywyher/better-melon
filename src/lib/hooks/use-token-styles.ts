@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { useWatchDataStore } from '@/lib/stores/watch-store';
 import { excludedPos, learningStatusesStyles } from '@/lib/constants/subtitle';
 import { SubtitleToken } from '@/types/subtitle';
@@ -10,18 +11,18 @@ export const useTokenStyles = () => {
   const learningStatus = useWatchDataStore((state) => state.settings.wordSettings.learningStatus);
   const wordsLookup = useWatchDataStore((state) => state.wordsLookup);
 
-  const getTokenStyles = (isActive: boolean, accent: PitchAccents | null, styles: TranscriptionStyleSet) => {
-    return {
-      ...(isActive ? styles.tokenStyles.active : styles.tokenStyles.default),
-      ...(pitchColoring && !isActive && accent ? pitchAccentsStyles[accent] : undefined),
-    };
-  };
+  const getTokenStyles = useCallback((isActive: boolean, accent: PitchAccents | null, styles: TranscriptionStyleSet) => {
+    const baseStyle = isActive ? styles.tokenStyles.active : styles.tokenStyles.default;
+    const pitchStyle = pitchColoring && !isActive && accent ? pitchAccentsStyles[accent] : undefined;
+    
+    return pitchStyle ? { ...baseStyle, ...pitchStyle } : baseStyle;
+  }, [pitchColoring]);
 
-  const getContainerStyles = (isActive: boolean, styles: TranscriptionStyleSet) => {
+  const getContainerStyles = useCallback((isActive: boolean, styles: TranscriptionStyleSet) => {
     return isActive ? styles.containerStyle.active : undefined;
-  };
+  }, []);
 
-  const getLearningStatusStyles = (token: SubtitleToken) => {
+  const getLearningStatusStyles = useCallback((token: SubtitleToken) => {
     const word = wordsLookup.get(token.original_form);
     const status = word?.status;
     
@@ -34,13 +35,12 @@ export const useTokenStyles = () => {
     }
     
     return {};
-  };
+  }, [learningStatus, wordsLookup]);
 
-  const getPitchStyles = (isActive: boolean, accent: PitchAccents | null) => {
-    return {
-      ...(pitchColoring && !isActive && accent ? pitchAccentsStyles[accent] : undefined),
-    }
-  }
+  const getPitchStyles = useCallback((isActive: boolean, accent: PitchAccents | null) => {
+    if(!accent) return;
+    return isActive ? undefined :pitchAccentsStyles[accent]
+  }, [pitchColoring])
 
   return {
     getTokenStyles,

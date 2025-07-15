@@ -21,7 +21,6 @@ export const useTranscriptionItem = (transcription: SubtitleTranscription) => {
   const learningStatus = useWatchDataStore((state) => state.settings.wordSettings.learningStatus);
   const pitchColoring = useWatchDataStore((state) => state.settings.wordSettings.pitchColoring);
   const definitionTrigger = useWatchDataStore((state) => state.settings.subtitleSettings.definitionTrigger);
-  const settings = useWatchDataStore((state) => state.settings);
   const pitchLookup = useWatchDataStore((state) => state.pitchLookup);
   const wordsLookup = useWatchDataStore((state) => state.wordsLookup);
   const transcriptionsLookup = useWatchDataStore((state) => state.transcriptionsLookup);
@@ -40,9 +39,9 @@ export const useTranscriptionItem = (transcription: SubtitleTranscription) => {
   }, []);
 
   const handleActivate = useCallback((
-    from: number, 
-    to: number, 
-    token: SubtitleToken, 
+    from: number,
+    to: number,
+    token: SubtitleToken,
     trigger: SubtitleSettings['definitionTrigger']
   ) => {
     if (

@@ -1,5 +1,5 @@
-import React from 'react';
-import { Ruby, SubtitleToken } from '@/types/subtitle';
+import React, { memo, useMemo } from 'react';
+import { SubtitleToken } from '@/types/subtitle';
 import { TranscriptionStyleSet } from '@/app/watch/[id]/[ep]/types';
 import { RubyText } from '@/components/ruby-text';
 import { parseRuby } from '@/lib/utils/subtitle';
@@ -17,7 +17,7 @@ interface JapaneseTokenProps {
   onTokenMouseLeave: () => void;
 }
 
-export const JapaneseToken: React.FC<JapaneseTokenProps> = ({
+export const JapaneseToken = memo<JapaneseTokenProps>(({
   token,
   isActive,
   accent,
@@ -29,17 +29,22 @@ export const JapaneseToken: React.FC<JapaneseTokenProps> = ({
 }) => {
   const showFurigana = useWatchDataStore((state) => state.settings.subtitleSettings.showFurigana);
   const { getTokenStyles, getContainerStyles, getLearningStatusStyles } = useTokenStyles();
-  const rubyPairs = parseRuby(token.surface_form, true);
-    
-  const tokenStyle = getTokenStyles(isActive, accent, styles);
-  const containerStyle = getContainerStyles(isActive, styles);
-  const learningStatusStyle = getLearningStatusStyles(token);
+  
+  const rubyPairs = useMemo(() => parseRuby(token.surface_form, true), [token.surface_form]);
+  
+  const tokenStyle = useMemo(() => getTokenStyles(isActive, accent, styles), [getTokenStyles, isActive, accent, styles]);
+  const containerStyle = useMemo(() => getContainerStyles(isActive, styles), [getContainerStyles, isActive, styles]);
+  const learningStatusStyle = useMemo(() => getLearningStatusStyles(token), [getLearningStatusStyles, token]);
   
   const baseTextStyle = tokenStyle;
-  const baseBackgroundStyle = isActive ? containerStyle : { display: 'flex' };
-  const rubyTextStyle = isActive 
-    ? furiganaStyles.tokenStyles.active 
-    : furiganaStyles.tokenStyles.default;
+  const baseBackgroundStyle = useMemo(() => 
+    isActive ? containerStyle : { display: 'flex' }, 
+    [isActive, containerStyle]
+  );
+  const rubyTextStyle = useMemo(() => 
+    isActive ? furiganaStyles.tokenStyles.active : furiganaStyles.tokenStyles.default,
+    [isActive, furiganaStyles.tokenStyles.active, furiganaStyles.tokenStyles.default]
+  );
 
   return (
     <div
@@ -53,7 +58,7 @@ export const JapaneseToken: React.FC<JapaneseTokenProps> = ({
         const { baseText, rubyText } = pair;
         return (
           <RubyText
-            key={`${pairIdx}-${pairIdx}`}
+            key={`${token.id}-${pairIdx}`}
             baseText={baseText}
             rubyText={rubyText || ""}
             showFurigana={showFurigana}
@@ -65,4 +70,4 @@ export const JapaneseToken: React.FC<JapaneseTokenProps> = ({
       })}
     </div>
   );
-};
+});

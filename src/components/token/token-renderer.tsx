@@ -1,9 +1,8 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { SubtitleToken, SubtitleCue } from '@/types/subtitle';
 import { TranscriptionStyleSet } from '@/app/watch/[id]/[ep]/types';
 import { JapaneseToken } from '@/components/token/japanese-token';
 import { RegularToken } from '@/components/token/regular-token';
-import { parseRuby } from '@/lib/utils/subtitle';
 import { PitchAccents } from '@/types/pitch';
 
 interface TokenRendererProps {
@@ -19,7 +18,7 @@ interface TokenRendererProps {
   japaneseTokens?: SubtitleToken[];
 }
 
-export default function TokenRenderer({
+const TokenRenderer = memo<TokenRendererProps>(({
   cue,
   transcription,
   styles,
@@ -30,7 +29,7 @@ export default function TokenRenderer({
   isTokenActive,
   getTokenAccent,
   japaneseTokens = []
-}: TokenRendererProps) {
+}) => {
   if (!cue.tokens?.length) {
     return <span style={styles.tokenStyles.default}>{cue.content}</span>;
   }
@@ -45,7 +44,7 @@ export default function TokenRenderer({
         if (transcription === 'japanese') {
           return (
             <JapaneseToken
-              key={tokenIdx}
+              key={`${token.id}-${tokenIdx}`}
               token={token}
               isActive={isActive}
               accent={accent}
@@ -60,7 +59,7 @@ export default function TokenRenderer({
 
         return (
           <RegularToken
-            key={`${token.id || tokenIdx}-${tokenIdx}`}
+            key={`${token.id}-${tokenIdx}`}
             token={token}
             isActive={isActive}
             accent={accent}
@@ -73,4 +72,6 @@ export default function TokenRenderer({
       })}
     </>
   );
-};
+});
+
+export default TokenRenderer;
