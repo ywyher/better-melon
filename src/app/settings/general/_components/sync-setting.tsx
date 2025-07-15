@@ -5,10 +5,10 @@ import { syncStrategies } from "@/lib/constants";
 import { GeneralSettings } from "@/lib/db/schema";
 import { useGeneralSettings } from "@/lib/hooks/use-general-settings";
 
-export default function SyncPlayerSetting({ value }: { value: GeneralSettings['syncPlayerSettings'] }) {
+export default function SyncPlayerSetting({ value }: { value: GeneralSettings['syncSettings'] }) {
     const { isLoading, displayValue, onSubmit } = useGeneralSettings({
         initialValue: value,
-        field: "syncPlayerSettings",
+        field: "syncSettings",
     });
         
     return (

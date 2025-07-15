@@ -8,7 +8,7 @@ export default function FontSizeController({
   transcription,
   value,
   source,
-  syncPlayerSettings,
+  syncSettings,
   state
 }: SubtitleStylesControllerProps) {
   const { isLoading, displayValue, onSubmit } = useStyleFieldController({
@@ -16,7 +16,7 @@ export default function FontSizeController({
     initialValue: value,
     source,
     field: 'fontSize',
-    syncPlayerSettings,
+    syncSettings,
     state,
     successMessage: 'Font size updated successfully',
     errorMessage: 'Failed to update font size'

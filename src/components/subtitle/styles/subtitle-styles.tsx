@@ -16,10 +16,10 @@ import SubtitleStylesSkeleton from "@/components/subtitle/styles/subtitle-styles
 
 type SubtitleStylesProps = {
   source: 'store' | 'database',
-  syncPlayerSettings?: GeneralSettings['syncPlayerSettings']
+  syncSettings?: GeneralSettings['syncSettings']
 }
 
-export default function SubtitleStyles({ syncPlayerSettings: propSyncStrategy, source }: SubtitleStylesProps) {
+export default function SubtitleStyles({ syncSettings: propSyncStrategy, source }: SubtitleStylesProps) {
   const [selectedTranscription, setSelectedTranscription] = useState<TSubtitleStyles['transcription']>('all');
   const [selectedState, setSelectedState] = useState<TSubtitleStyles['state']>('default');
   
@@ -43,11 +43,11 @@ export default function SubtitleStyles({ syncPlayerSettings: propSyncStrategy, s
     return source === 'database' ? remoteStyles : storeStyles
   }, [source, remoteStyles, storeStyles]);
   
-  const syncPlayerSettings = useMemo(() => {
+  const syncSettings = useMemo(() => {
     if (propSyncStrategy !== undefined) {
       return propSyncStrategy;
     }
-    return generalSettings?.syncPlayerSettings ?? 'ask';
+    return generalSettings?.syncSettings ?? 'ask';
   }, [propSyncStrategy, generalSettings]);
   
   const isLoading = useMemo(() => {
@@ -96,7 +96,7 @@ export default function SubtitleStyles({ syncPlayerSettings: propSyncStrategy, s
             
             {shouldShowDeleteButton && (
               <DeleteSubtitleStyles
-                syncPlayerSettings={syncPlayerSettings}
+                syncSettings={syncSettings}
                 transcription={selectedTranscription}
                 source={source}
                 state={selectedState}
@@ -118,7 +118,7 @@ export default function SubtitleStyles({ syncPlayerSettings: propSyncStrategy, s
             transcription={selectedTranscription}
             styles={styles}
             source={source}
-            syncPlayerSettings={syncPlayerSettings}
+            syncSettings={syncSettings}
             state={selectedState}
           />
         </div>

@@ -1,4 +1,5 @@
 import { AnkiFieldKey } from "@/types/anki";
+import { SubtitleTranscription } from "@/types/subtitle";
 import { InferSelectModel, relations } from "drizzle-orm";
 import { pgTable, text, timestamp, boolean, jsonb, pgEnum, real } from "drizzle-orm/pg-core";
 			
@@ -69,7 +70,7 @@ export const generalSettings = pgTable("general_settings", {
   id: text("id").primaryKey(),
 
   hideSpoilers: boolean('hide_spoilers').notNull().default(false),
-  syncPlayerSettings: syncStrategyEnum('sync_player_settings').default('ask').notNull(),
+  syncSettings: syncStrategyEnum('sync_settings').default('ask').notNull(),
 
   screenshotNamingDialog: boolean('screenshotNamingDialog').notNull().default(true),
   screenshotNamingPattern: text('screenshotNamingPattern').notNull().default('better_melon_{title}_{counter}_{random}'),
@@ -302,6 +303,8 @@ export type AnkiPreset = Omit<InferSelectModel<typeof ankiPreset>, 'fields'> & {
 export type Word = InferSelectModel<typeof word>
 export type WordSettings = InferSelectModel<typeof wordSettings>
 export type SubtitleStyles = InferSelectModel<typeof subtitleStyles>
-export type SubtitleSettings = InferSelectModel<typeof subtitleSettings>
+export type SubtitleSettings = InferSelectModel<typeof subtitleSettings> & {
+  transcriptionOrder: SubtitleTranscription[]
+}
 export type PlayerSettings = InferSelectModel<typeof playerSettings>
 export type GeneralSettings = InferSelectModel<typeof generalSettings>

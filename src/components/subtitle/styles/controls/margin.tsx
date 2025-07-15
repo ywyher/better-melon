@@ -9,7 +9,7 @@ export default function MarginController({
   transcription,
   value,
   source,
-  syncPlayerSettings,
+  syncSettings,
   state
 }: SubtitleStylesControllerProps) {
   const { isLoading, displayValue, onSubmit } = useStyleFieldController({
@@ -17,7 +17,7 @@ export default function MarginController({
     initialValue: value,
     source,
     field: 'margin',
-    syncPlayerSettings,
+    syncSettings,
     state,
     successMessage: 'Margin updated successfully',
     errorMessage: 'Failed to update margin'

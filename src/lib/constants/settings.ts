@@ -5,7 +5,7 @@ export const screenshotFormats = ['png', 'jpeg', 'webp']
 export const defaultGeneralSettings: GeneralSettings =  {
     id: '',
     hideSpoilers: false,
-    syncPlayerSettings: 'ask' as GeneralSettings['syncPlayerSettings'],
+    syncSettings: 'ask' as GeneralSettings['syncSettings'],
     screenshotNamingDialog: true,
     screenshotNamingPattern: "better_melon_{title}_{counter}_{random}",
     screenshotFormat: 'png',

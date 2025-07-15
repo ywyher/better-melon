@@ -8,14 +8,14 @@ export default function BackgroundOpacityController({
   transcription,
   value,
   source,
-  syncPlayerSettings,
+  syncSettings,
   state
 }: SubtitleStylesControllerProps) {
   const { isLoading, displayValue, onSubmit } = useStyleFieldController({
     transcription,
     initialValue: value,
     source,
-    syncPlayerSettings,
+    syncSettings,
     state,
     field: 'backgroundOpacity',
     successMessage: 'Background opacity updated successfully',

@@ -12,7 +12,7 @@ import { useWatchDataStore } from "@/lib/stores/watch-store";
 import { handleSubtitleSettings } from "@/app/settings/subtitle/_subtitle-settings/actions";
 import { defaultSubtitleSettings } from "@/app/settings/subtitle/_subtitle-settings/constants";
 
-export default function ShowFurigana({ subtitleSettings, syncPlayerSettings }: { subtitleSettings: SubtitleSettings, syncPlayerSettings: GeneralSettings['syncPlayerSettings'] }) {
+export default function ShowFurigana({ subtitleSettings, syncSettings }: { subtitleSettings: SubtitleSettings, syncSettings: GeneralSettings['syncSettings'] }) {
     const [isLoading, setIsLoading] = useState<boolean>(false)
     
     const showFurigana = useWatchDataStore((state) => state.settings.subtitleSettings.showFurigana)
@@ -39,7 +39,7 @@ export default function ShowFurigana({ subtitleSettings, syncPlayerSettings }: {
         }
       });
 
-      let resolvedSyncStrategy = syncPlayerSettings as SyncStrategy;
+      let resolvedSyncStrategy = syncSettings as SyncStrategy;
         
       if (resolvedSyncStrategy === 'ask') {
         console.log('ask')

@@ -16,10 +16,10 @@ import { useDebounce } from "use-debounce"
 
 type EnabledTranscriptionsSettingProps = {
   playerSettings: PlayerSettings
-  syncPlayerSettings: GeneralSettings['syncPlayerSettings']
+  syncSettings: GeneralSettings['syncSettings']
 }
 
-export default function EnabledTranscriptions({ playerSettings, syncPlayerSettings }: EnabledTranscriptionsSettingProps) {
+export default function EnabledTranscriptions({ playerSettings, syncSettings }: EnabledTranscriptionsSettingProps) {
   const activeTranscriptions = useSubtitleStore((state) => state.activeTranscriptions)
   const setActiveTranscriptions = useSubtitleStore((state) => state.setActiveTranscriptions)
   const [selectedTranscriptions, setSelectedTranscriptions] = useState<SubtitleTranscription[]>([])
@@ -46,7 +46,7 @@ export default function EnabledTranscriptions({ playerSettings, syncPlayerSettin
   const { mutate, isPending } = useMutation({
     mutationKey: ['enabled-transcriptions'],
     mutationFn: async (newTranscriptions: SubtitleTranscription[]) => {
-      let resolvedSyncStrategy = syncPlayerSettings as SyncStrategy;
+      let resolvedSyncStrategy = syncSettings as SyncStrategy;
       
       if (resolvedSyncStrategy === 'ask') {
         const { strategy, error } = await showSyncSettingsToast();

@@ -13,12 +13,12 @@ import { usePlaybackSettingsStore } from "@/lib/stores/playback-settings-store";
 
 type TogglesProps = { 
     playerSettings: PlayerSettings
-    syncPlayerSettings: GeneralSettings['syncPlayerSettings']
+    syncSettings: GeneralSettings['syncSettings']
 }
 
 type PlaybackSetting = 'autoPlay' | 'autoNext' | 'autoSkip' | 'pauseOnCue';
 
-export default function PlaybackToggles({ playerSettings, syncPlayerSettings }: TogglesProps) {
+export default function PlaybackToggles({ playerSettings, syncSettings }: TogglesProps) {
     const [isLoading, setIsLoading] = useState<boolean>(false)
     
     const autoPlay = usePlaybackSettingsStore((state) => state.autoPlay)
@@ -51,7 +51,7 @@ export default function PlaybackToggles({ playerSettings, syncPlayerSettings }: 
     const handleValueChange = async (setting: PlaybackSetting, value: boolean) => {
         updateSettingState(setting, value);
         
-        let resolvedSyncStrategy = syncPlayerSettings as SyncStrategy;
+        let resolvedSyncStrategy = syncSettings as SyncStrategy;
         
         if (resolvedSyncStrategy === 'ask') {
           const { strategy, error } = await showSyncSettingsToast();

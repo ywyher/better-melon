@@ -10,14 +10,14 @@ export default function FontFamilyController({
   transcription, 
   value,
   source,
-  syncPlayerSettings,
+  syncSettings,
   state
 }: SubtitleStylesControllerProps) {
   const { isLoading, displayValue, onSubmit } = useStyleFieldController({
     transcription,
     initialValue: value,
     source,
-    syncPlayerSettings,
+    syncSettings,
     state,
     field: 'fontFamily',
     successMessage: 'Font family updated successfully',

@@ -17,7 +17,7 @@ type SubtitleStylesControlsProps = {
   transcription: SubtitleStyles['transcription']
   styles: SubtitleStyles
   source: 'store' | 'database'
-  syncPlayerSettings: GeneralSettings['syncPlayerSettings']
+  syncSettings: GeneralSettings['syncSettings']
   state: SubtitleStyles['state']
 }
 
@@ -25,7 +25,7 @@ export default function SubtitleStylesControls({
   transcription,
   styles,
   source,
-  syncPlayerSettings,
+  syncSettings,
   state
 }: SubtitleStylesControlsProps) {
     return (
@@ -46,14 +46,14 @@ export default function SubtitleStylesControls({
                           value={styles.fontSize}
                           transcription={transcription}
                           source={source}
-                          syncPlayerSettings={syncPlayerSettings}
+                          syncSettings={syncSettings}
                           state={state}
                         />
                         <FontFamilyController 
                           value={styles.fontFamily}
                           transcription={transcription}
                           source={source}
-                          syncPlayerSettings={syncPlayerSettings}
+                          syncSettings={syncSettings}
                           state={state}
                         />
                       </div>
@@ -62,7 +62,7 @@ export default function SubtitleStylesControls({
                           value={styles.fontWeight}
                           transcription={transcription}
                           source={source}
-                          syncPlayerSettings={syncPlayerSettings}
+                          syncSettings={syncSettings}
                           state={state}
                         />
                       </div>
@@ -83,14 +83,14 @@ export default function SubtitleStylesControls({
                           value={styles.textColor}
                           transcription={transcription}
                           source={source}
-                          syncPlayerSettings={syncPlayerSettings}
+                          syncSettings={syncSettings}
                           state={state}
                         />
                         <TextShadowController 
                           value={styles.textShadow}
                           transcription={transcription}
                           source={source}
-                          syncPlayerSettings={syncPlayerSettings}
+                          syncSettings={syncSettings}
                           state={state}
                         />
                       </div>
@@ -98,7 +98,7 @@ export default function SubtitleStylesControls({
                           value={styles.textOpacity}
                           transcription={transcription}
                           source={source}
-                          syncPlayerSettings={syncPlayerSettings}
+                          syncSettings={syncSettings}
                           state={state}
                       />
                   </div>
@@ -118,14 +118,14 @@ export default function SubtitleStylesControls({
                               value={styles.backgroundColor}
                               transcription={transcription}
                               source={source}
-                              syncPlayerSettings={syncPlayerSettings}
+                              syncSettings={syncSettings}
                               state={state}
                           />
                           <BackgroundOpacityController
                               value={styles.backgroundOpacity}
                               transcription={transcription}
                               source={source}
-                              syncPlayerSettings={syncPlayerSettings}
+                              syncSettings={syncSettings}
                               state={state}
                           />
                       </div>
@@ -134,14 +134,14 @@ export default function SubtitleStylesControls({
                               value={styles.backgroundBlur}
                               transcription={transcription}
                               source={source}
-                              syncPlayerSettings={syncPlayerSettings}
+                              syncSettings={syncSettings}
                               state={state}
                           />
                           <BackgroundRadiusController 
                               value={styles.backgroundRadius}
                               transcription={transcription}
                               source={source}
-                              syncPlayerSettings={syncPlayerSettings}
+                              syncSettings={syncSettings}
                               state={state}
                           />
                       </div>
@@ -160,7 +160,7 @@ export default function SubtitleStylesControls({
                               value={styles.margin}
                               transcription={transcription}
                               source={source}
-                              syncPlayerSettings={syncPlayerSettings}
+                              syncSettings={syncSettings}
                               state={state}
                           />
                       </div>

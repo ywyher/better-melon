@@ -2,7 +2,6 @@
 
 import { TranscriptionItem } from "@/app/watch/[id]/[ep]/_components/transcriptions/transcription-item";
 import { usePlayerStore } from "@/lib/stores/player-store";
-import type { SubtitleTranscription } from "@/types/subtitle";
 import { closestCenter, DndContext, type DragEndEvent, KeyboardSensor, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -10,8 +9,6 @@ import { useDebounce } from "@/components/multiple-selector";
 import { handleTranscriptionOrder } from "@/app/settings/subtitle/_transcription-order/actions";
 import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
-import { SyncStrategy } from "@/types";
-import { showSyncSettingsToast } from "@/components/sync-settings-toast";
 import { Button } from "@/components/ui/button";
 import { useDelayStore } from "@/lib/stores/delay-store";
 import { useSubtitleStore } from "@/lib/stores/subtitle-store";
@@ -19,6 +16,9 @@ import { usePlaybackSettingsStore } from "@/lib/stores/playback-settings-store";
 import { useWatchDataStore } from "@/lib/stores/watch-store";
 import { useActiveSubtitles } from "@/lib/hooks/use-active-subtitles";
 import { useMediaState } from "@vidstack/react";
+import { useSyncSettings } from "@/lib/hooks/use-sync-settings";
+import { settingsQueries } from "@/lib/queries/settings";
+import type { SubtitleTranscription } from "@/types/subtitle";
 
 export default function SubtitleTranscriptions() {
   const player = usePlayerStore((state) => state.player);
@@ -36,8 +36,9 @@ export default function SubtitleTranscriptions() {
   const handleActiveCuesIdsRef = useRef('');
 
   const cuePauseDuration = useWatchDataStore((state) => state.settings.playerSettings.cuePauseDuration)
-  const syncPlayerSettings = useWatchDataStore((state) => state.settings.generalSettings.syncPlayerSettings)
+  const syncSettings = useWatchDataStore((state) => state.settings.generalSettings.syncSettings)
   const styles = useWatchDataStore((state) => state.styles)
+  const settings = useWatchDataStore((state) => state.settings)
   const transcriptions = useWatchDataStore((state) => state.transcriptions)
   const {
     activeSubtitles
@@ -49,7 +50,6 @@ export default function SubtitleTranscriptions() {
   const isFullscreen = useMediaState('fullscreen', player);
   const controlsVisible = useMediaState('controlsVisible', player);
   const currentTime = useMediaState('currentTime', player);
-  // const currentTime = 10;
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -62,39 +62,34 @@ export default function SubtitleTranscriptions() {
     })
   );
 
+  const { handleSync } = useSyncSettings({
+    syncSettings,
+    onSuccess: (message) => toast.success(message),
+    onError: (error) => toast.error(error),
+    invalidateQueries: [settingsQueries.subtitle._def]
+  });
+
   useMemo(() => {
-    setOrder([...activeTranscriptions]);
-  }, [activeTranscriptions]);
+    if(settings.subtitleSettings.transcriptionOrder) {
+      setOrder([...settings.subtitleSettings.transcriptionOrder]);
+    }else {
+      setOrder([...activeTranscriptions]);
+    }
+  }, [settings, activeTranscriptions]);
 
   const { mutate } = useMutation({
     mutationFn: async () => {
-      let resolvedStrategy = syncPlayerSettings as SyncStrategy;
-      
-      if (resolvedStrategy === 'ask') {
-        const { error, strategy } = await showSyncSettingsToast();
-        if (error) {
-          toast.error(error);
-          return;
-        }
-        if(!strategy) return;
-        resolvedStrategy = strategy;
-      }
-      
-      if (resolvedStrategy === 'always' || resolvedStrategy === 'once') {
-        const { message, error } = await handleTranscriptionOrder({ 
+      await handleSync({
+        serverOperation: () => handleTranscriptionOrder({ 
           transcriptions: debouncedOrder 
-        });
-  
-        if (error) {
-          toast.error(error);
-          return;
-        }
-  
-        toast.success(message || `Transcription order updated successfully`);
-      }
+        }),
+        successMessage: "Transcription order updated successfully"
+      });
+      
+      hasUserDragged.current = false; // Reset after mutation
     }
-  })
-  
+  });
+
   const handleDragEnd = useCallback((event: DragEndEvent) => {
       const {active, over} = event;
       
@@ -118,7 +113,7 @@ export default function SubtitleTranscriptions() {
     if (shouldTriggerUpdate) {
       mutate();
     }
-  }, [debouncedOrder, mutate, hasUserDragged]);
+  }, [debouncedOrder, hasUserDragged]);
 
   useEffect(() => {
     const handleCueFeatures = () => {

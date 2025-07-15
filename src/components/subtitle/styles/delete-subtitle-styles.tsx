@@ -2,18 +2,17 @@
 
 import LoadingButton from "@/components/loading-button"
 import { deleteSubtitleStyles } from "@/components/subtitle/styles/actions";
-import { showSyncSettingsToast } from "@/components/sync-settings-toast";
-import { GeneralSettings, PlayerSettings, SubtitleStyles } from "@/lib/db/schema"
+import { GeneralSettings, SubtitleStyles } from "@/lib/db/schema"
+import { useSyncSettings } from "@/lib/hooks/use-sync-settings";
 import { settingsQueries } from "@/lib/queries/settings";
 import { useSubtitleStylesStore } from "@/lib/stores/subtitle-styles-store";
-import { SyncStrategy } from "@/types";
 import { useQueryClient } from "@tanstack/react-query";
 import { X } from "lucide-react"
 import { useState } from "react";
 import { toast } from "sonner";
 
 type RemoveSubtitleStylesProps = {
-  syncPlayerSettings: GeneralSettings['syncPlayerSettings'];
+  syncSettings: GeneralSettings['syncSettings'];
   transcription: SubtitleStyles['transcription'];
   source: 'store' | 'database';
   subtitleStylesId: SubtitleStyles['id']
@@ -21,7 +20,7 @@ type RemoveSubtitleStylesProps = {
 }
 
 export default function DeleteSubtitleStyles({
-  syncPlayerSettings,
+  syncSettings,
   transcription,
   source,
   subtitleStylesId,
@@ -30,6 +29,13 @@ export default function DeleteSubtitleStyles({
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const deleteStyles = useSubtitleStylesStore((state) => state.deleteStyles)
   const queryClient = useQueryClient()
+
+  const { handleSync } = useSyncSettings({
+    syncSettings,
+    onSuccess: (message) => toast.success(message),
+    onError: (error) => toast.error(error),
+    invalidateQueries: [settingsQueries.subtitleStyles._def]
+  });
 
   const handleRemove = async () => {
     setIsLoading(true);
@@ -42,36 +48,13 @@ export default function DeleteSubtitleStyles({
         queryClient.invalidateQueries({ queryKey: settingsQueries.subtitleStyles._def });
         toast.success(message);
       } else {
-        deleteStyles(transcription, state);
-        
-        let resolvedStrategy = syncPlayerSettings as SyncStrategy;
-        
-        if (resolvedStrategy === 'ask') {
-          const result = await showSyncSettingsToast();
-          if (result.error) {
-            toast.error(result.error);
-            return;
-          }
-          
-          if (!result.strategy) {
-            toast.success(`Styles removed successfully`);
-            return;
-          }
-          
-          resolvedStrategy = result.strategy;
-        }
-        
-        if (resolvedStrategy === 'always' || resolvedStrategy === 'once') {
-          const { message, error } = await deleteSubtitleStyles({
+        await handleSync({
+          localOperation: () => deleteStyles(transcription, state),
+          serverOperation: () => deleteSubtitleStyles({ 
             subtitleStylesId
-          });
-          if (error) throw new Error(error);
-          queryClient.invalidateQueries({ queryKey: settingsQueries.subtitleStyles._def });
-          queryClient.invalidateQueries({ queryKey: settingsQueries.general._def });
-          toast.success(message);
-        } else {
-          toast.success(`Styles reset successfully`);
-        }
+          }),
+          successMessage: "Styles removed successfully"
+        });
       }
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : `Failed to reset styles`;

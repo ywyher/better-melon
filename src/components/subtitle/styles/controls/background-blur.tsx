@@ -8,14 +8,14 @@ export default function BackgroundBlurController({
   transcription,
   value,
   source,
-  syncPlayerSettings,
+  syncSettings,
   state
 }: SubtitleStylesControllerProps) {
   const { isLoading, displayValue, onSubmit } = useStyleFieldController({
     transcription,
     initialValue: value,
     source,
-    syncPlayerSettings,
+    syncSettings,
     state,
     field: 'backgroundBlur',
     successMessage: 'Background Blur updated successfully',

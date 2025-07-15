@@ -8,14 +8,14 @@ export default function BackgroundRadiusController({
   transcription,
   value,
   source,
-  syncPlayerSettings,
+  syncSettings,
   state
 }: SubtitleStylesControllerProps) {
   const { isLoading, displayValue, onSubmit } = useStyleFieldController({
     transcription,
     initialValue: value,
     source,
-    syncPlayerSettings,
+    syncSettings,
     state,
     field: 'backgroundRadius',
     successMessage: 'Background radius updated successfully',

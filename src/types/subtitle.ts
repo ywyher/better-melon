@@ -74,7 +74,7 @@ export type SubtitleStylesControllerProps = {
   value: string | number
   transcription: SubtitleStyles['transcription'] 
   source: 'store' | 'database'
-  syncPlayerSettings: GeneralSettings['syncPlayerSettings']
+  syncSettings: GeneralSettings['syncSettings']
   state: SubtitleStyles['state']
 }
 

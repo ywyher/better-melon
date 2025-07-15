@@ -12,7 +12,7 @@ export function showSyncSettingsToast(): Promise<{ strategy: SyncStrategy | null
           <button
             onClick={async () => {
               try {
-                const { error } = await handleGeneralSettings({ syncPlayerSettings: "always" });
+                const { error } = await handleGeneralSettings({ syncSettings: "always" });
                 if (error) {
                   sonnerToast.error(error);
                   resolve({ strategy: null, error });
@@ -42,7 +42,7 @@ export function showSyncSettingsToast(): Promise<{ strategy: SyncStrategy | null
           <button
             onClick={async () => {
               try {
-                const { error } = await handleGeneralSettings({ syncPlayerSettings: "always" });
+                const { error } = await handleGeneralSettings({ syncSettings: "always" });
                 if (error) {
                   sonnerToast.error(error);
                   resolve({ strategy: null, error });

@@ -1,19 +1,18 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { settingsQueries } from "@/lib/queries/settings";
 import { handleSubtitleStyles } from "@/components/subtitle/styles/actions";
 import { useSubtitleStylesStore } from "@/lib/stores/subtitle-styles-store";
 import { GeneralSettings, SubtitleStyles } from "@/lib/db/schema";
-import { showSyncSettingsToast } from "@/components/sync-settings-toast";
-import { SyncStrategy } from "@/types";
+import { useSyncSettings } from "@/lib/hooks/use-sync-settings";
 
 interface UseStyleSubtitleStylesControllerProps {
   transcription: SubtitleStyles['transcription'];
   initialValue: any;
   source: 'database' | 'local' | string;
   field: keyof Omit<SubtitleStyles, 'id' | 'userId' | 'createdAt' | 'updatedAt'>
-  syncPlayerSettings: GeneralSettings['syncPlayerSettings']
+  syncSettings: GeneralSettings['syncSettings']
   state: SubtitleStyles['state']
   successMessage?: string;
   errorMessage?: string;
@@ -24,7 +23,7 @@ export function useStyleFieldController({
   initialValue,
   source,
   field,
-  syncPlayerSettings,
+  syncSettings,
   state,
   successMessage,
   errorMessage
@@ -34,6 +33,13 @@ export function useStyleFieldController({
   const [displayValue, setDisplayValue] = useState<string>('')
   const queryClient = useQueryClient();
   const handleStyles = useSubtitleStylesStore((state) => state.handleStyles);
+  
+  const { handleSync } = useSyncSettings({
+    syncSettings,
+    onSuccess: (message) => toast.success(message),
+    onError: (error) => toast.error(error),
+    invalidateQueries: [settingsQueries.subtitleStyles._def]
+  });
 
   useEffect(() => {
     if(localValue) {
@@ -61,38 +67,19 @@ export function useStyleFieldController({
         queryClient.invalidateQueries({ queryKey: settingsQueries.subtitleStyles._def });
         toast.success(message || successMessage || `${field} updated successfully`);
       } else {
-        handleStyles(transcription, { [field]: value }, state);
-        
-        let resolvedStrategy = syncPlayerSettings as SyncStrategy;
-        
-        if (resolvedStrategy === 'ask') {
-          const result = await showSyncSettingsToast();
-          if (result.error) {
-            toast.error(result.error);
-            return;
-          }
-          
-          if (!result.strategy) {
-            toast.success(`${field} updated successfully in store`);
-            return;
-          }
-          
-          resolvedStrategy = result.strategy;
-        }
-        
-        if (resolvedStrategy === 'always' || resolvedStrategy === 'once') {
-          const { message, error } = await handleSubtitleStyles({
+        const { success } = await handleSync({
+          localOperation: () => handleStyles(transcription, { [field]: value }, state),
+          serverOperation: () => handleSubtitleStyles({
             field,
             value,
             transcription,
             state
-          });
-          if (error) throw new Error(error);
-          queryClient.invalidateQueries({ queryKey: settingsQueries.subtitleStyles._def });
-          queryClient.invalidateQueries({ queryKey: settingsQueries.general._def });
-          toast.success(message || successMessage || `${field} updated successfully`);
-        } else {
-          toast.success(successMessage || `${field} updated successfully in store`);
+          }),
+          successMessage: successMessage || `${field} updated successfully`
+        });
+        
+        if (!success) {
+          setLocalValue(null);
         }
       }
     } catch (err) {

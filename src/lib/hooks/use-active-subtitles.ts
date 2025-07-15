@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { SubtitleCue, SubtitleTranscription } from '@/types/subtitle';
 import { useMediaState } from '@vidstack/react';
 import { useDelayStore } from '@/lib/stores/delay-store';
@@ -35,9 +35,9 @@ export function useActiveSubtitles(transcriptions: TranscriptionQuery[]) {
             const { transcription, cues } = t;
             const subtitleTranscription = transcription as SubtitleTranscription;
             
-            const transcriptionDelay = ['hiragana', 'katakana', 'romaji', 'japanese'].includes(subtitleTranscription) 
-                ? delay.japanese 
-                : delay.english;
+            const transcriptionDelay = ['english'].includes(subtitleTranscription) 
+                ? delay.english 
+                : delay.japanese;
             
             const currentTimePlusBuffer = currentTime;
             

@@ -81,7 +81,7 @@ export default function SettingsDialog() {
                 <div className="flex-1 min-h-0">
                   <div className="p-6 h-full">
                     <SubtitleStyles 
-                      syncPlayerSettings={generalSettings.syncPlayerSettings} 
+                      syncSettings={generalSettings.syncSettings} 
                       source="store"
                     />
                   </div>
@@ -99,7 +99,7 @@ export default function SettingsDialog() {
               <Separator />
               <div className="flex-1 min-h-0">
                 <SubtitleStyles 
-                  syncPlayerSettings={generalSettings.syncPlayerSettings} 
+                  syncSettings={generalSettings.syncSettings} 
                   source="store"
                 />
               </div>

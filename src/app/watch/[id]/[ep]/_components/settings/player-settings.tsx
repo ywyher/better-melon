@@ -24,16 +24,16 @@ export default function PlayerSettings({
         <div className="flex flex-col xl:flex-row gap-2">
             <EnabledTranscriptions
                 playerSettings={playerSettings as TPlayerSettings}
-                syncPlayerSettings={generalSettings.syncPlayerSettings}
+                syncSettings={generalSettings.syncSettings}
             />
             <div className="flex flex-row gap-1">
                 <PlaybackToggles 
                     playerSettings={playerSettings as TPlayerSettings}
-                    syncPlayerSettings={generalSettings.syncPlayerSettings}
+                    syncSettings={generalSettings.syncSettings}
                 />
                 <ShowFurigana 
                     subtitleSettings={subtitelSettings}
-                    syncPlayerSettings={generalSettings.syncPlayerSettings}
+                    syncSettings={generalSettings.syncSettings}
                 />
                 <Screenshot
                     namingPattern={generalSettings.screenshotNamingPattern}

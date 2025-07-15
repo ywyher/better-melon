@@ -8,14 +8,14 @@ export default function TextOpacityController({
   transcription,
   value,
   source,
-  syncPlayerSettings,
+  syncSettings,
   state
 }: SubtitleStylesControllerProps) {
   const { isLoading, displayValue, onSubmit } = useStyleFieldController({
     transcription,
     initialValue: value,
     source,
-    syncPlayerSettings,
+    syncSettings,
     state,
     field: 'textOpacity',
     successMessage: 'Text opacity updated successfully',
