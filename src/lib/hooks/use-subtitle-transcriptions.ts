@@ -24,7 +24,7 @@ export const useSubtitleTranscriptions = ({
 
   // Ensure 'japanese', 'english', and 'hiragana' are always included in the active transcriptions
   const activeTranscriptions: SubtitleTranscription[] = useMemo(() => {
-    const requiredTranscriptions: SubtitleTranscription[] = ['english', 'japanese', 'hiragana'];
+    const requiredTranscriptions: SubtitleTranscription[] = [];
     
     // Get unique transcriptions by combining required ones with existing ones
     const uniqueTranscriptions = Array.from(

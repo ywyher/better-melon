@@ -103,9 +103,9 @@ export default function WatchPage() {
         <ControlsSection />
       </div>
       {/* Side panel (visible based on state) */}
-      {shouldShowPanel && (
+      {/* {shouldShowPanel && (
         <PanelSection />
-      )}
+      )} */}
     </div>
   );
 }

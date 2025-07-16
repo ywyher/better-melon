@@ -29,10 +29,16 @@ export const useSubtitleStyles = () => {
   const transcriptionsToFetch = useMemo(() => {
     if (!activeTranscriptions) return [];
     
-    return ([...activeTranscriptions, 'furigana'] as StyleTranscription[]).filter(transcription => {
-      // Only check if we haven't already checked this transcription
-      return !checkedTranscriptions.current.has(transcription);
-    });
+    if(activeTranscriptions.some(t => t == 'japanese')) {
+      return ([...activeTranscriptions, 'furigana'] as StyleTranscription[]).filter(transcription => {
+        // Only check if we haven't already checked this transcription
+        return !checkedTranscriptions.current.has(transcription);
+      });
+    }else {
+      return ([...activeTranscriptions] as StyleTranscription[]).filter(transcription => {
+        return !checkedTranscriptions.current.has(transcription);
+      });
+    }
   }, [activeTranscriptions]);
 
   const shouldScaleFontDown = useMemo(() => {
