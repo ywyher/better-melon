@@ -14,9 +14,9 @@ export default function SyncPlayerSetting({ value }: { value: GeneralSettings['s
     return (
         <div className="flex flex-col md:grid grid-cols-2 md:items-center justify-between gap-2 pb-4">
             <div className="col-span-1 space-y-1">
-                <h3 className="font-medium">Sync player settings</h3>
+                <h3 className="font-medium">Sync settings</h3>
                 <p className="text-sm text-muted-foreground">
-                    Changes made in the player page will be saved in the database instead of locally
+                    Changes made in the watch will be saved in the database instead so it can persist
                 </p>
             </div>
             <div className="col-span-1 flex justify-end">

@@ -95,3 +95,8 @@ export interface SubtitleCache {
   convertedSubtitles?: Partial<Record<Exclude<SubtitleTranscription, 'english'>, SubtitleCue[]>>
   lastAccessed: number;
 }
+
+export type CachedFiles = {
+  japanese: string | null;
+  english: string | null;
+}

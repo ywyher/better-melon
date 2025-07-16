@@ -81,7 +81,9 @@ export function usePrefetchEpisode({
     preferredFormat,
     isReady,
     isLastEpisode,
-    networkCondition
+    networkCondition,
+    animeId,
+    episodeNumber
   });
   
   const { 

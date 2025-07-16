@@ -18,7 +18,7 @@ export const pitchQueries = createQueryKeys('anime', {
     ) => ({
         queryKey: ['accent-chunk', animeId, subtitleFileName, chunkIndex],
         queryFn: async (): Promise<NHKEntry[]> => {
-          const query = chunk.join(',');
+          const query = chunk.join(',').replace(/[\/\\]/g, '');
 
           try {
             const cache = await getCache(cacheKeys.pitch.accent(animeId, subtitleFileName, chunkIndex));

@@ -1,8 +1,12 @@
 import { useEffect, useState, useRef } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { settingsQueries } from '@/lib/queries/settings';
-import { SettingsForEpisode } from '@/types/settings';
 import { usePathname } from 'next/navigation';
+import { defaultSubtitleSettings } from '@/app/settings/subtitle/_subtitle-settings/constants';
+import { defaultGeneralSettings } from '@/lib/constants/settings';
+import { defaultPlayerSettings } from '@/app/settings/player/constants';
+import { defaultWordSettings } from '@/app/settings/word/constants';
+import { SettingsForEpisode } from '@/types/settings';
 
 export function useSettingsForEpisode() {
   const queryClient = useQueryClient();
@@ -16,6 +20,12 @@ export function useSettingsForEpisode() {
     error,
   } = useQuery({
     ...settingsQueries.forEpisode(),
+    placeholderData: {
+      subtitleSettings: defaultSubtitleSettings,
+      generalSettings: defaultGeneralSettings,
+      playerSettings: defaultPlayerSettings,
+      wordSettings: defaultWordSettings,
+    },
     staleTime: 1000 * 60 * 5,
     refetchOnWindowFocus: false,
   });
@@ -34,7 +44,7 @@ export function useSettingsForEpisode() {
   }, [isLoading, settings, loadingDuration]);
 
   return {
-    settings,
+    settings: settings as SettingsForEpisode,
     isLoading,
     error,
     loadingDuration,

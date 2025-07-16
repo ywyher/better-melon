@@ -22,9 +22,16 @@ export default function SubtitlePanel() {
     const setSubtitleCues = useSubtitleStore((state) => state.setSubtitleCues);
 
     const transcriptions = useWatchDataStore((state) => state.transcriptions)
+    const animeId = useWatchDataStore((state) => state.animeId)
+    const episodeNumber = useWatchDataStore((state) => state.episodeNumber)
     
     const { data: subtitleCues, isLoading: isCuesLoading, error: cuesError } = useQuery({
-      ...subtitleQueries.cues(activeSubtitleFile!, selectedTranscription),
+      ...subtitleQueries.cues({
+        activeSubtitleFile: activeSubtitleFile!,
+        transcription: selectedTranscription,
+        animeId,
+        episodeNumber
+      }),
       placeholderData: transcriptions?.find(t => t.transcription == 'japanese')?.cues,
       enabled: !!activeSubtitleFile && !!transcriptions
     })

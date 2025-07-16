@@ -9,25 +9,29 @@ import SubtitleFileSelector from "@/app/watch/[id]/[ep]/_components/subtitle-fil
 import { useSettingsForEpisode } from "@/lib/hooks/use-settings-for-episode";
 import { useInitializeTokenizer } from "@/lib/hooks/use-initialize-tokenizer";
 
-export default function ProgressivePitch() {
+export default function ProgressivePitchPlayground() {
   const setActiveSubtitleFile = useSubtitleStore((state) => state.setActiveSubtitleFile);
   const setActiveTranscriptions = useSubtitleStore((state) => state.setActiveTranscriptions);
 
   useEffect(() => {
     setActiveTranscriptions(['japanese']);
     setActiveSubtitleFile({
+      source: "remote",
       file: {
-        last_modified: "2024-04-28T16:23:56.084911647Z",
-        name: "[Judas] Steins;Gate - S01E02.srt",
-        size: 36924,
-        url: "https://jimaku.cc/entry/1323/download/%5BMoozzi2%5D%20Made%20in%20Abyss%20-%2009%20(BD%201920x1080%20x.264%20Flac).ass"
-      },
-      source: 'remote'
+        name: "[KissSub][Steins;Gate][02][GB_BIG5_JP][BDrip][1080P][HEVC].ass",
+        url: "https://jimaku.cc/entry/1310/download/%5BKissSub%5D%5BSteins%3BGate%5D%5B02%5D%5BGB_BIG5_JP%5D%5BBDrip%5D%5B1080P%5D%5BHEVC%5D.ass",
+        last_modified: "2024-04-28T16:23:14.21334011Z",
+        size: 65574
+      }
     });
   }, [setActiveTranscriptions, setActiveSubtitleFile]);
 
   const { isInitialized } = useInitializeTokenizer()
-  const { transcriptions, isLoading: isTranscriptionsLoading } = useSubtitleTranscriptions(isInitialized)
+  const { transcriptions, isLoading: isTranscriptionsLoading } = useSubtitleTranscriptions({
+    isTokenizerInitialized: isInitialized,
+    animeId: '9253',
+    episodeNumber: 2
+  })
   const { settings } = useSettingsForEpisode()
   const { pitchLookup } = usePitchAccentChunks({
     animeId: '9253',

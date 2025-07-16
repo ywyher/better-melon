@@ -6,7 +6,7 @@ import { TextareaInput } from "@/components/form/textarea-input";
 import LoadingButton from "@/components/loading-button";
 import { Button } from "@/components/ui/button";
 import { useTokenizer } from "@/lib/hooks/use-tokenizer";
-import { tokenizeText } from "@/lib/subtitle/parse";
+import { tokenizeText } from "@/lib/subtitle/tokenizer";
 import { useState } from "react";
 import { toast } from "sonner";
 import { isJapanese } from "wanakana";

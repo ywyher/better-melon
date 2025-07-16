@@ -70,6 +70,9 @@ export async function getAccountProvider(userId: string) {
 
 export async function getPitchAccent(query: string) {
   const res = await fetch(`${env.API_URL}/pitch/search/${query}`)
+
+  if(!res.ok) throw new Error("Pitch not found")
+
   const pitch = await res.json()
   return pitch.data.entries as NHKEntry[]
 }
@@ -87,5 +90,16 @@ export async function getCache(key: string, parse: boolean = false) {
   } catch (error) {
     console.error('Redis get error:', error);
     return null;
+  }
+}
+
+export async function getCacheKeys(pattern: string) {
+  try {
+    const keys = await redis.keys(pattern);
+
+    return keys;
+  } catch (error) {
+    console.error('Redis keys error:', error);
+    return [];
   }
 }

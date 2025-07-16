@@ -1,4 +1,12 @@
-if all transcriptions are cached there would be no need to initialize the tokenizer but at the same time if need to add another transcription we will have to wait for tokenizer to initalize and parse so iam not sure
+on resizing the it shows the loading state for some reason prob cuz isVideoReady which result in the player returning back to 0:00 fix this shit
+
+we have an issue with aniwatch package is that when the key changes on 
+https://github.com/itzzzme/megacloud-keys/blob/main/key.txt
+we get the malformed error for a while, it fixes it self after a while tho
+
+transcriptinos selector doesn't seeem to work lol most likely cuz we have english japanese hiragana to always be there, but they should be visable of they are removed dumbass me
+
+if all transcriptions are cached there would be no need to initialize the tokenizer and while they are watching we initialze the tokenizer in the background in case they add any other transcriptions later
 
 check your words list button ?
 

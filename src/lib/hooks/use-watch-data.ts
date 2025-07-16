@@ -2,6 +2,7 @@
 
 import { useEpisodeData } from "@/lib/hooks/use-episode-data";
 import { useInitializeTokenizer } from "@/lib/hooks/use-initialize-tokenizer";
+import useIsTranscriptionsCached from "@/lib/hooks/use-is-transcriptions-cached";
 import { usePitchAccentChunks } from "@/lib/hooks/use-pitch-accent-chunks";
 import { useSetSubtitles } from "@/lib/hooks/use-set-subtitles";
 import { useSettingsForEpisode } from "@/lib/hooks/use-settings-for-episode";
@@ -16,6 +17,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 export const useWatchData = (animeId: string, episodeNumber: number) => {
   const isVideoReady = usePlayerStore((state) => state.isVideoReady);
   const loadStartTimeRef = useRef<number>(performance.now());
+  const [hasInitialized, setHasInitialized] = useState<boolean>(false)
   const [totalDuration, setTotalDuration] = useState<number>(0);
 
   // Get store actions
@@ -35,8 +37,20 @@ export const useWatchData = (animeId: string, episodeNumber: number) => {
   } = useWatchDataStore();
 
   const store = useWatchDataStore.getState(); // use this to read current store values (won't trigger re-renders)
+  const {
+    cachedFiles,
+    isCached,
+    isLoading: isTranscriptionsCachedLoading
+  } = useIsTranscriptionsCached({
+    animeId: "97986",
+    episodeNumber: 9
+  })
 
-  const { isInitialized } = useInitializeTokenizer()
+  const shouldInitializeTokenizer = useMemo(() => {
+    return (!isCached && !isTranscriptionsCachedLoading) || hasInitialized;
+  }, [isCached, isTranscriptionsCachedLoading, hasInitialized])
+  
+  const { isInitialized } = useInitializeTokenizer({ shouldInitialize: shouldInitializeTokenizer });
 
   const {
     episodeData,
@@ -47,21 +61,24 @@ export const useWatchData = (animeId: string, episodeNumber: number) => {
     refetch: refetchEpisodeData
   } = useEpisodeData(animeId, episodeNumber);
 
+  const { 
+    transcriptions, 
+    isLoading: isTranscriptionsLoading,
+    transcriptionsLookup,
+    error: transcriptionsError,
+    loadingDuration: transcriptionsLoadingDuration,
+  } = useSubtitleTranscriptions({
+    shouldFetch: isCached || isInitialized,
+    animeId,
+    episodeNumber
+  });
+
   const {
     settings,
     isLoading: isSettingsLoading,
     error: settingsError,
     loadingDuration: settingsLoadingDuration
   } = useSettingsForEpisode()
-
-  const { 
-    transcriptions, 
-    isLoading: isTranscriptionsLoading,
-    transcriptionsLookup,
-    error: transcriptionsError,
-    hasInitialized: hasTranscriptionsInitialized,
-    loadingDuration: transcriptionsLoadingDuration,
-  } = useSubtitleTranscriptions(isInitialized);
 
   const { 
     styles, 
@@ -88,14 +105,19 @@ export const useWatchData = (animeId: string, episodeNumber: number) => {
     loadingDuration: wordsLoadingDuration
   } = useWords({
     shouldFetch: settings?.wordSettings.learningStatus || false
-  })
+  });
 
   const {
     subtitlesError,
     subtitlesErrorDialog,
     setSubtitlesErrorDialog,
     resetSubtitlesErrors
-  } = useSetSubtitles(episodeData, settings, episodeNumber);
+  } = useSetSubtitles({
+    episodeData,
+    settings,
+    episodeNumber,
+    cachedFiles
+  });
 
   const isLoading = useMemo(() => {
     return (
@@ -104,9 +126,9 @@ export const useWatchData = (animeId: string, episodeNumber: number) => {
       || isWordsLoading
       // || !isVideoReady
       // so when the user add other transcriptions later we don't show the loading state
-      || (isPitchAccentLoading && !hasTranscriptionsInitialized)
-      || (isTranscriptionsLoading && !hasTranscriptionsInitialized)
-      || (isStylesLoading && !hasTranscriptionsInitialized)
+      || (isPitchAccentLoading && !hasInitialized)
+      || (isTranscriptionsLoading && !hasInitialized)
+      || (isStylesLoading && !hasInitialized)
     );
   }, [isEpisodeDataLoading, isTranscriptionsLoading, isStylesLoading, isPitchAccentLoading, isSettingsLoading, isWordsLoading]);
 
@@ -115,9 +137,9 @@ export const useWatchData = (animeId: string, episodeNumber: number) => {
       isEpisodeDataLoading,
       isSettingsLoading ,
       isWordsLoading,
-      isPitchAccentLoading: (isPitchAccentLoading && !hasTranscriptionsInitialized),
-      isTranscriptionsLoading: (isTranscriptionsLoading && !hasTranscriptionsInitialized),
-      isStylesLoading: (isStylesLoading && !hasTranscriptionsInitialized)
+      isPitchAccentLoading: (isPitchAccentLoading && !hasInitialized),
+      isTranscriptionsLoading: (isTranscriptionsLoading && !hasInitialized),
+      isStylesLoading: (isStylesLoading && !hasInitialized),
     })
   }, [
     isEpisodeDataLoading,
@@ -126,7 +148,7 @@ export const useWatchData = (animeId: string, episodeNumber: number) => {
     isWordsLoading,
     isPitchAccentLoading,
     isTranscriptionsLoading,
-    hasTranscriptionsInitialized,
+    hasInitialized,
     isStylesLoading,
   ])
 
@@ -208,6 +230,12 @@ export const useWatchData = (animeId: string, episodeNumber: number) => {
       setIsLoading(isLoading);
     }
   }, [isLoading]);
+
+  useEffect(() => {
+    if (!isLoading && !hasInitialized) {
+      setHasInitialized(true);
+    }
+  }, [isLoading, hasInitialized]);
 
   useEffect(() => {
     if (totalDuration !== store.loadingDuration) {

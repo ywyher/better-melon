@@ -1,5 +1,15 @@
+import { Anime } from "@/types/anime";
+
 export const cacheKeys = {
-  subtitle: (key: string) => `subtitle:${key}`,
+  subtitle: ({
+    animeId,
+    episodeNumber,
+    name
+  }: {
+    name: string,
+    animeId: Anime['id'],
+    episodeNumber: number
+  }) => `subtitle:${animeId}:${episodeNumber}:${name}`,
   anime: {
     info: (animeId: string) => `anime:info:${animeId}`
   },

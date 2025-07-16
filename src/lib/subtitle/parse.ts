@@ -12,6 +12,7 @@ import { getCache } from "@/lib/db/queries";
 import { setCache, updateCache } from "@/lib/db/mutations";
 import { initializeTokenizer } from "@/lib/subtitle/tokenizer";
 import { tokenizerStats } from "@/lib/subtitle/globals";
+import { Anime } from "@/types/anime";
 
 // Keep in-memory tracking for ongoing operations to prevent duplicate work
 const fetchingInProgress = new Map<CacheKey, Promise<string>>();
@@ -121,6 +122,13 @@ export async function fetchSubtitleContent({
       
       if (!existingCache) {
         console.log(`[SubtitleFetch(${transcription})] Creating new cache entry`, { cacheKey });
+        console.log(`#######################3`)
+        console.log({
+          transcription,
+          source
+        })
+        console.log(`#######################3`)
+
         // AWAIT: New cache entry is critical - other operations depend on it
         await setCache(cacheKey, cacheData);
       } else {
@@ -151,36 +159,23 @@ export async function fetchSubtitleContent({
 }
 
 async function getCachedSubtitles({
-  source,
-  isFile,
-  lastModified
+  cacheKey,
 }: {
-  source: string;
-  isFile: boolean;
-  lastModified?: number;
+  cacheKey: CacheKey;
 }) {
-  const cacheKey = getSubtitleCacheKey({
-    source,
-    isFile,
-    lastModified
-  });
-
   const cachedData: SubtitleCache = await getCache(`${cacheKey}`, true);
 
   return {
-    cachedData: {
-      content: cachedData?.content || "",
-      parsedSubtitles: cachedData?.parsedSubtitles || [],
-      tokenizedSubtitles: cachedData?.tokenizedSubtitles || [],
-      convertedSubtitles: {
-        japanese: cachedData?.convertedSubtitles?.japanese || [],
-        hiragana: cachedData?.convertedSubtitles?.hiragana || [],
-        katakana: cachedData?.convertedSubtitles?.katakana || [],
-        romaji: cachedData?.convertedSubtitles?.romaji || [],
-      },
-      lastAccessed: cachedData?.lastAccessed || 0
+    content: cachedData?.content || "",
+    parsedSubtitles: cachedData?.parsedSubtitles || [],
+    tokenizedSubtitles: cachedData?.tokenizedSubtitles || [],
+    convertedSubtitles: {
+      japanese: cachedData?.convertedSubtitles?.japanese || [],
+      hiragana: cachedData?.convertedSubtitles?.hiragana || [],
+      katakana: cachedData?.convertedSubtitles?.katakana || [],
+      romaji: cachedData?.convertedSubtitles?.romaji || [],
     },
-    cacheKey
+    lastAccessed: cachedData?.lastAccessed || 0
   }
 }
 
@@ -408,18 +403,30 @@ export async function parseSubtitlesFile({
   source: rawSource,
   format,
   transcription = 'japanese',
+  animeId,
+  episodeNumber
 }: {
-  source: string | File,
-  format: SubtitleFormat,
-  transcription: SubtitleTranscription
+  source: string | File;
+  format: SubtitleFormat;
+  transcription: SubtitleTranscription;
+  animeId: Anime['id'];
+  episodeNumber: number
 }): Promise<any> {
   try {
+    if(!animeId || !episodeNumber) throw new Error("Anime Id and Episode Number must be defined")
+
     const { source, fileContent, isFile, lastModified } = await getParsingData({ source: rawSource })
-    
-    const { cacheKey, cachedData } = await getCachedSubtitles({
-      isFile,
+
+    const cacheKey = getSubtitleCacheKey({
       source,
-      lastModified
+      isFile,
+      lastModified,
+      animeId,
+      episodeNumber
+    });
+
+    const cachedData = await getCachedSubtitles({
+      cacheKey
     })
 
     const content = await fetchSubtitleContent({

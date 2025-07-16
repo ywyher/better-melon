@@ -3,10 +3,10 @@ import { subtitleQueries } from "@/lib/queries/subtitle";
 import { useSubtitleStore } from "@/lib/stores/subtitle-store";
 import { getActiveSubtitleFile, getEnglishSubtitleUrl } from "@/lib/utils/subtitle";
 import { NetworkCondition } from "@/types";
-import { AnimeEpisodeData } from "@/types/anime";
+import { Anime, AnimeEpisodeData } from "@/types/anime";
 import { ActiveSubtitleFile, SubtitleTranscription } from "@/types/subtitle";
 import { useQueries } from "@tanstack/react-query";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 
 type PrefetchSubtitleTranscriptionsProps = {
   episodeData: AnimeEpisodeData | undefined,
@@ -14,6 +14,8 @@ type PrefetchSubtitleTranscriptionsProps = {
   isReady: boolean,
   isLastEpisode: boolean,
   networkCondition: NetworkCondition
+  animeId: Anime['id']
+  episodeNumber: number
 }
 
 export function usePrefetchSubtitleTranscriptions({
@@ -21,7 +23,9 @@ export function usePrefetchSubtitleTranscriptions({
   preferredFormat,
   isReady,
   isLastEpisode,
-  networkCondition
+  networkCondition,
+  animeId,
+  episodeNumber
 }: PrefetchSubtitleTranscriptionsProps) {
   const storeActiveTranscriptions = useSubtitleStore((state) => state.activeTranscriptions) || [];
 
@@ -66,8 +70,10 @@ export function usePrefetchSubtitleTranscriptions({
           activeSubtitleFile,
           englishSubtitleUrl,
           isEnglish,
-          isTokenizerInitialized: true,
-          transcription
+          shouldFetch: true,
+          transcription,
+          animeId,
+          episodeNumber
         }),
         staleTime: 1000 * 60 * 60,
         enabled: !!shouldFetchSubtitles && 

@@ -2,16 +2,25 @@ import { TranscriptionQuery } from "@/app/watch/[id]/[ep]/types";
 import { subtitleQueries } from "@/lib/queries/subtitle";
 import { useSubtitleStore } from "@/lib/stores/subtitle-store";
 import { getTranscriptionsLookupKey } from "@/lib/utils/subtitle";
+import { Anime } from "@/types/anime";
 import { SubtitleCue, SubtitleTranscription } from "@/types/subtitle";
 import { useQueries } from "@tanstack/react-query";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-export const useSubtitleTranscriptions = (isTokenizerInitialized: boolean) => {
+type UseSubtitleTranscriptionsProps = {
+  shouldFetch: boolean,
+  animeId: Anime['id'],
+  episodeNumber: number
+}
+
+export const useSubtitleTranscriptions = ({
+  shouldFetch,
+  animeId,
+  episodeNumber
+}: UseSubtitleTranscriptionsProps) => {
   const englishSubtitleUrl = useSubtitleStore((state) => state.englishSubtitleUrl) || "";
   const activeSubtitleFile = useSubtitleStore((state) => state.activeSubtitleFile);
   const storeActiveTranscriptions = useSubtitleStore((state) => state.activeTranscriptions) || [];
-  // so when the user add other transcriptions later we don't show the loading state
-  const hasInitialized = useRef<boolean>(false)
 
   // Ensure 'japanese', 'english', and 'hiragana' are always included in the active transcriptions
   const activeTranscriptions: SubtitleTranscription[] = useMemo(() => {
@@ -37,17 +46,19 @@ export const useSubtitleTranscriptions = (isTokenizerInitialized: boolean) => {
           activeSubtitleFile: activeSubtitleFile || undefined,
           englishSubtitleUrl,
           isEnglish,
-          isTokenizerInitialized,
-          transcription
+          shouldFetch,
+          transcription,
+          animeId,
+          episodeNumber
         }),
         staleTime: 1000 * 60 * 60,
-        enabled: isTokenizerInitialized && (
+        enabled: shouldFetch && (
           (isEnglish && !!englishSubtitleUrl) || 
           (!isEnglish && !!activeSubtitleFile)
         ),
       };
     })
-  }), [englishSubtitleUrl, activeSubtitleFile, activeTranscriptions, isTokenizerInitialized]);
+  }), [englishSubtitleUrl, activeSubtitleFile, activeTranscriptions, shouldFetch]);
 
   const queries = useQueries(queryConfig);
 
@@ -61,7 +72,6 @@ export const useSubtitleTranscriptions = (isTokenizerInitialized: boolean) => {
       const executionTime = endTime - hookStartTime.current;
       console.log(`[SubtitleTranscriptionsParsing] Took -> ${executionTime.toFixed(2)}ms`)
 
-      hasInitialized.current = true;
       setLoadingDuration(executionTime);
     }
   }, [queries, loadingDuration]);
@@ -112,7 +122,7 @@ export const useSubtitleTranscriptions = (isTokenizerInitialized: boolean) => {
     });
   }, [queries]);
 
-  const isLoading = !isTokenizerInitialized || queries.some(q => q.isLoading);
+  const isLoading = !shouldFetch || queries.some(q => q.isLoading);
   const error = queries.find(q => q.error)?.error;
 
   return {
@@ -121,7 +131,6 @@ export const useSubtitleTranscriptions = (isTokenizerInitialized: boolean) => {
     transcriptions,
     transcriptionsLookup,
     loadingDuration: loadingDuration,
-    hasInitialized,
     refetch: refetchAll
   };
 }

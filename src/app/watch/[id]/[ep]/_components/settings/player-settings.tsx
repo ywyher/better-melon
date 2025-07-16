@@ -21,7 +21,7 @@ export default function PlayerSettings({
     animeMetadata
 }: PlayerSettingsProps) {
     return (
-        <div className="flex flex-col xl:flex-row gap-2">
+        <div className="flex flex-col-reverse gap-2">
             <EnabledTranscriptions
                 playerSettings={playerSettings as TPlayerSettings}
                 syncSettings={generalSettings.syncSettings}

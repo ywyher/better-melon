@@ -6,7 +6,7 @@ import { AnimeEpisodeData, AnimeProvider } from "@/types/anime";
 export async function getEpisodeData(animeId: string, episodeNumber: number, provider: AnimeProvider): Promise<AnimeEpisodeData> {
   try {
     const dataRaw = await fetch(
-      `${env.API_URL}/${animeId}/${episodeNumber}/${provider}`
+      `${env.API_URL}/anime/${animeId}/${episodeNumber}/${provider}`
     );
     
     if (!dataRaw.ok) {

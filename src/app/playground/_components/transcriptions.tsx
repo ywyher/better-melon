@@ -17,7 +17,7 @@ export default function TranscriptionsPlayground() {
   const setEnglishSubtitleUrl = useSubtitleStore((state) => state.setEnglishSubtitleUrl);
 
   useEffect(() => {
-    setActiveTranscriptions(['japanese', 'hiragana']);
+    // setActiveTranscriptions(['japanese', 'hiragana']);
     setActiveSubtitleFile({
       file: {
         last_modified: "2024-04-28T16:23:56.084911647Z",
@@ -31,7 +31,11 @@ export default function TranscriptionsPlayground() {
   }, [setEnglishSubtitleUrl, setActiveTranscriptions, setActiveSubtitleFile]);
 
   const { isInitialized } = useInitializeTokenizer()
-  const { transcriptions, transcriptionsLookup } = useSubtitleTranscriptions(isInitialized)
+  const { transcriptions, transcriptionsLookup } = useSubtitleTranscriptions({
+    isTokenizerInitialized: isInitialized,
+    animeId: '9253',
+    episodeNumber: 2
+  })
   const { styles } = useSubtitleStyles() 
   const { 
     pitchLookup,

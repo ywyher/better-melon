@@ -3,13 +3,24 @@ import { getMultipleTranscriptionsStyles } from "@/components/subtitle/styles/ac
 import { SubtitleStylesStore } from "@/lib/stores/subtitle-styles-store";
 import { parseSubtitlesFile } from "@/lib/subtitle/parse";
 import { convertToKana, getSubtitleFormat, getSubtitleSource } from "@/lib/utils/subtitle";
+import { Anime } from "@/types/anime";
 import type { ActiveSubtitleFile, SubtitleTranscription } from "@/types/subtitle";
 import { createQueryKeys } from "@lukemorales/query-key-factory";
 import { Dispatch, RefObject, SetStateAction } from "react";
 
 
 export const subtitleQueries = createQueryKeys('subtitle', {
-  cues: (activeSubtitleFile: ActiveSubtitleFile, transcription: SubtitleTranscription) => ({
+  cues: ({
+    activeSubtitleFile,
+    animeId,
+    episodeNumber,
+    transcription
+  }: {
+    activeSubtitleFile: ActiveSubtitleFile,
+    transcription: SubtitleTranscription,
+    animeId: Anime['id'],
+    episodeNumber: number
+  }) => ({
     queryKey: ['cues', activeSubtitleFile, transcription],
     queryFn: async () => {
       if (!activeSubtitleFile) return undefined;
@@ -20,16 +31,20 @@ export const subtitleQueries = createQueryKeys('subtitle', {
       return await parseSubtitlesFile({
         format,
         source,
-        transcription
+        transcription,
+        animeId,
+        episodeNumber
       })
     }
   }),
-  transcriptions: ({ activeSubtitleFile, englishSubtitleUrl, transcription, isEnglish, isTokenizerInitialized }: {
+  transcriptions: ({ activeSubtitleFile, englishSubtitleUrl, transcription, isEnglish, shouldFetch, animeId, episodeNumber }: {
     activeSubtitleFile?: ActiveSubtitleFile;
     englishSubtitleUrl: string;
     transcription: SubtitleTranscription;
     isEnglish: boolean;
-    isTokenizerInitialized: boolean
+    shouldFetch: boolean,
+    animeId: Anime['id'],
+    episodeNumber: number
   }) => ({
     queryKey: [
       'subtitle',
@@ -51,8 +66,8 @@ export const subtitleQueries = createQueryKeys('subtitle', {
       throw new Error(`Active subtitle file is null`);
     }
     
-    if (!isTokenizerInitialized) {
-      throw new Error(`tokenizer isn't initialized`);
+    if (!shouldFetch) {
+      throw new Error(`Should fetch is false`);
     }
     
     const source = getSubtitleSource(isEnglish, englishSubtitleUrl, activeSubtitleFile);
@@ -62,7 +77,9 @@ export const subtitleQueries = createQueryKeys('subtitle', {
     const cues = await parseSubtitlesFile({
       format,
       source,
-      transcription
+      transcription,
+      animeId,
+      episodeNumber
     })
     const endParsing = performance.now()
     console.log(`[ParseSubtitlesFile(${transcription})] Took -> ${(endParsing - startParsing).toFixed(2)}ms`)

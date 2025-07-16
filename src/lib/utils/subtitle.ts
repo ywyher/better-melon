@@ -4,7 +4,7 @@ import { SubtitleSettings } from "@/lib/db/schema";
 import { FileSelectionError } from "@/lib/errors/player";
 import { DelayStore } from "@/lib/stores/delay-store";
 import { getExtension } from "@/lib/utils/utils";
-import { AnimeEpisodeSources, SkipTime } from "@/types/anime";
+import { Anime, AnimeEpisodeSources, SkipTime, SubtitleTrack } from "@/types/anime";
 import { ActiveSubtitleFile, Ruby, SubtitleFile, SubtitleFormat, SubtitleToken } from "@/types/subtitle";
 import Kuroshiro from "@sglkc/kuroshiro";
 import CustomKuromojiAnalyzer from "@/lib/subtitle/custom-kuromoji-analyzer";
@@ -17,24 +17,45 @@ import { parseAss } from "@/lib/subtitle/parsers/ass";
 import { franc } from 'franc-min'
 
 export function getSubtitleCacheKey({
-  source, 
+  source,
   isFile,
-  lastModified
+  animeId,
+  episodeNumber,
+  lastModified,
 }: {
   source: string, 
   isFile: boolean,
-  lastModified?: number
+  animeId: Anime['id'];
+  episodeNumber: number
+  lastModified?: number;
 }): CacheKey {
   if (isFile && lastModified) {
-    return cacheKeys.subtitle(`file-${source}-${lastModified}`);
+    return cacheKeys.subtitle({
+      name: `file-${source}-${lastModified}`,
+      animeId,
+      episodeNumber
+    });
   }
-  return cacheKeys.subtitle(source);
+  return cacheKeys.subtitle({
+    name: source,
+    animeId,
+    episodeNumber
+  });
 }
 
-export const getActiveSubtitleFile = (subtitleFiles: SubtitleFile[], preferredFormat: SubtitleSettings['preferredFormat']) => {
+export const getActiveSubtitleFile = ({
+  preferredFormat,
+  files,
+  matchPattern
+}: {
+  files: SubtitleFile[], 
+  preferredFormat: SubtitleSettings['preferredFormat']
+  matchPattern?: SubtitleSettings['matchPattern']
+}) => {
   const selectedFile = selectSubtitleFile({
-    files: subtitleFiles,
-    preferredFormat: preferredFormat
+    files: files,
+    preferredFormat: preferredFormat,
+    matchPattern
   })
 
   if(!selectedFile) throw new FileSelectionError()
@@ -50,9 +71,17 @@ export const getActiveSubtitleFile = (subtitleFiles: SubtitleFile[], preferredFo
   } as ActiveSubtitleFile
 }
 
-export const getEnglishSubtitleUrl = (tracks: AnimeEpisodeSources['tracks']) => {
-  return tracks.find(
-    (s: AnimeEpisodeSources['tracks'][0]) => s.lang === 'English'
+export const getEnglishSubtitleUrl = ({
+  files,
+  // url
+  match
+}: {
+  files: SubtitleTrack[]
+  match: string | null
+}) => {
+  return files.find(
+    (s: SubtitleTrack) => 
+      s.lang === 'English' && (!match || s.url == match)
   )?.url || "";
 }
 
@@ -130,30 +159,44 @@ export const selectSubtitleFile = ({ files, preferredFormat, matchPattern }: {
   if (!files || files.length === 0) {
     return null;
   }
-
+  
+  console.log(`matchPattern`, matchPattern)
+  
   // Helper function to check if file matches pattern
-  const matchesPattern = (file: SubtitleFile) => {
+  const matchesPattern = (file: SubtitleFile): boolean => {
     if (!matchPattern) return false;
     
     // Try to use it as regex if it looks like one
     if (/[\\^$.*+?()[\]{}|]/.test(matchPattern)) {
       try {
         const regex = new RegExp(matchPattern, 'i');
-        return regex.test(file.name);
-      } catch {
+        const result = regex.test(file.name);
+        console.log(`Regex test result: ${result}`);
+
+        if(!result) {
+          throw new Error("Regex test failed")
+        }
+
+        return result;
+      } catch (error) {
+        const msg = error instanceof Error ? error.message : "Refex check faild."
+        console.log(`Regex failed: ${msg}, falling back to string matching`);
+
         // If regex fails, fall back to string matching
-        return file.name.toLowerCase().includes(matchPattern.toLowerCase());
+        const result = file.name.toLowerCase().includes(matchPattern.toLowerCase());
+        return result;
       }
     }
     
     // Simple string matching
-    return file.name.toLowerCase().includes(matchPattern.toLowerCase());
+    const result = file.name.toLowerCase().includes(matchPattern.toLowerCase());
+    return result;
   };
   
   // First priority: Check if there's a file matching the pattern
   if (matchPattern) {
     // If we want to match pattern in preferred format first
-    const patternMatchInPreferredFormat = files.find(file => 
+    const patternMatchInPreferredFormat = files.find(file =>
       matchesPattern(file) && getExtension(file.name) === preferredFormat
     );
     
@@ -162,13 +205,14 @@ export const selectSubtitleFile = ({ files, preferredFormat, matchPattern }: {
     }
     
     // If no match in preferred format, try any file matching the pattern
-    const patternMatch = files.find(matchesPattern);
+    const patternMatch = files.find((f) => matchesPattern(f));
+    
     if (patternMatch) {
       return patternMatch;
     }
   }
-
-  const preferredFormatFiles = files.filter(file => 
+  
+  const preferredFormatFiles = files.filter(file =>
     getExtension(file.name) === preferredFormat
   );
   
@@ -178,7 +222,7 @@ export const selectSubtitleFile = ({ files, preferredFormat, matchPattern }: {
   
   // Third priority: Return first subtitle file of any supported format
   const supportedFormats = ["srt", "vtt", "ass"];
-  const supportedFile = files.find(file => 
+  const supportedFile = files.find(file =>
     supportedFormats.includes(getExtension(file.name) || '')
   );
   
