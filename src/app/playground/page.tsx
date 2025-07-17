@@ -10,11 +10,17 @@ import SubtitleFileSelectorPlayground from "@/app/playground/_components/subtitl
 import TranscriptionsPlayground from "@/app/playground/_components/transcriptions";
 import TranscriptionsHookPlayground from "@/app/playground/_components/transcriptions-hook";
 import WatchDataPlayground from "@/app/playground/_components/watch-data";
+import { defaultPlayerSettings } from "@/app/settings/player/constants";
+import EnabledTranscriptions from "@/app/watch/[id]/[ep]/_components/settings/enabled-transcriptions";
 
 export default function Playground() {
   return (
     <>
-      <IsTranscriptionsCachedPlayground />
+      <EnabledTranscriptions
+        playerSettings={defaultPlayerSettings}
+        syncSettings="never"
+      />
+      {/* <IsTranscriptionsCachedPlayground /> */}
       {/* <ProgressivePitchPlayground /> */}
       {/* <WatchDataPlayground /> */}
       {/* <TranscriptionsHookPlayground /> */}

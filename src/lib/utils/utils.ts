@@ -192,3 +192,8 @@ export function takeSnapshot(player: MediaPlayerInstance, format: 'png' | 'jpeg'
 
     return dataURL.split(',')[1];
 }
+
+export const arraysEqual = (a: SubtitleTranscription[], b: SubtitleTranscription[]) => {
+  if (a.length !== b.length) return false;
+  return a.every((val, index) => val === b[index]);
+};

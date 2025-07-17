@@ -3,13 +3,11 @@
 import ToggleButton from "@/components/toggle-button";
 import { useEffect, useState } from "react";
 import { GeneralSettings, PlayerSettings } from "@/lib/db/schema";
-import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { showSyncSettingsToast } from "@/components/sync-settings-toast";
 import { settingsQueries } from "@/lib/queries/settings";
-import { SyncStrategy } from "@/types";
 import { handlePlayerSettings } from "@/app/settings/player/actions";
 import { usePlaybackSettingsStore } from "@/lib/stores/playback-settings-store";
+import { useSyncSettings } from "@/lib/hooks/use-sync-settings";
 
 type TogglesProps = { 
     playerSettings: PlayerSettings
@@ -30,6 +28,18 @@ export default function PlaybackToggles({ playerSettings, syncSettings }: Toggle
     const pauseOnCue = usePlaybackSettingsStore((state) => state.pauseOnCue)
     const setPauseOnCue = usePlaybackSettingsStore((state) => state.setPauseOnCue)
 
+    const { handleSync } = useSyncSettings({
+        syncSettings,
+        onSuccess: (message) => toast.success(message || "Settings updated successfully"),
+        onError: (error) => {
+            toast.error(error);
+        },
+        invalidateQueries: [
+            settingsQueries.player._def,
+            settingsQueries.forEpisode._def
+        ]
+    });
+
     useEffect(() => {
         if (playerSettings) {
             setAutoPlay(playerSettings.autoPlay);
@@ -38,8 +48,6 @@ export default function PlaybackToggles({ playerSettings, syncSettings }: Toggle
             setPauseOnCue(playerSettings.pauseOnCue);
         }
     }, [playerSettings, setAutoPlay, setAutoNext, setAutoSkip, setPauseOnCue]);
-
-    const queryClient = useQueryClient()
     
     const updateSettingState = (setting: PlaybackSetting, value: boolean) => {
         if(setting === 'autoNext') setAutoNext(value)
@@ -49,42 +57,19 @@ export default function PlaybackToggles({ playerSettings, syncSettings }: Toggle
     };
 
     const handleValueChange = async (setting: PlaybackSetting, value: boolean) => {
-        updateSettingState(setting, value);
+        setIsLoading(true);
         
-        let resolvedSyncStrategy = syncSettings as SyncStrategy;
-        
-        if (resolvedSyncStrategy === 'ask') {
-          const { strategy, error } = await showSyncSettingsToast();
-          
-          if (error) {
-            toast.error(error);
+        const result = await handleSync({
+            localOperation: () => updateSettingState(setting, value),
+            serverOperation: () => handlePlayerSettings({ [setting]: value }),
+            successMessage: "Settings updated successfully"
+        });
+
+        if (!result.success) {
             updateSettingState(setting, !value);
-            return;
-          }
-          
-          if (!strategy) return;
-          
-          resolvedSyncStrategy = strategy;
         }
         
-        if (resolvedSyncStrategy === 'always' || resolvedSyncStrategy === 'once') {
-          try {
-            setIsLoading(true);
-            const { error, message } = await handlePlayerSettings({ [setting]: value });
-            
-            if (error) {
-              toast.error(error);
-              updateSettingState(setting, !value);
-              return;
-            }
-            
-            toast.success(message);
-            queryClient.invalidateQueries({ queryKey: settingsQueries.player._def })          
-            queryClient.invalidateQueries({ queryKey: settingsQueries.forEpisode._def });
-          } finally {
-            setIsLoading(false);
-          }
-        }
+        setIsLoading(false);
     };
 
     return (

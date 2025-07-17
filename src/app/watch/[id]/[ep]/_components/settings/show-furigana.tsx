@@ -11,6 +11,7 @@ import { SyncStrategy } from "@/types";
 import { useWatchDataStore } from "@/lib/stores/watch-store";
 import { handleSubtitleSettings } from "@/app/settings/subtitle/_subtitle-settings/actions";
 import { defaultSubtitleSettings } from "@/app/settings/subtitle/_subtitle-settings/constants";
+import { useSyncSettings } from "@/lib/hooks/use-sync-settings";
 
 export default function ShowFurigana({ subtitleSettings, syncSettings }: { subtitleSettings: SubtitleSettings, syncSettings: GeneralSettings['syncSettings'] }) {
     const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -18,6 +19,18 @@ export default function ShowFurigana({ subtitleSettings, syncSettings }: { subti
     const showFurigana = useWatchDataStore((state) => state.settings.subtitleSettings.showFurigana)
     const settings = useWatchDataStore((state) => state.settings)
     const setSettings = useWatchDataStore((state) => state.setSettings)
+
+    const { handleSync } = useSyncSettings({
+        syncSettings,
+        onSuccess: (message) => toast.success(message || "Settings updated successfully"),
+        onError: (error) => {
+            toast.error(error);
+        },
+        invalidateQueries: [
+            settingsQueries.player._def,
+            settingsQueries.forEpisode._def
+        ]
+    });
 
     useEffect(() => {
         if (subtitleSettings) {
@@ -28,8 +41,6 @@ export default function ShowFurigana({ subtitleSettings, syncSettings }: { subti
         }
     }, [subtitleSettings]);
 
-    const queryClient = useQueryClient()
-    
     const handleChange = async (value: boolean) => {
       setSettings({
         ...settings,
@@ -39,48 +50,27 @@ export default function ShowFurigana({ subtitleSettings, syncSettings }: { subti
         }
       });
 
-      let resolvedSyncStrategy = syncSettings as SyncStrategy;
-        
-      if (resolvedSyncStrategy === 'ask') {
-        console.log('ask')
-        const { strategy, error } = await showSyncSettingsToast();
-        
-        if (error) {
-          toast.error(error);
+      const { success } = await handleSync({
+        localOperation: () => {
           setSettings({
             ...settings,
-            subtitleSettings
-          });
-          return;
-        }
-        
-        if (!strategy) return;
-        
-        resolvedSyncStrategy = strategy;
+            subtitleSettings: {
+              ...(subtitleSettings || defaultSubtitleSettings),
+              showFurigana: value
+            }
+          })
+        },
+        serverOperation: () => handleSubtitleSettings({ 'showFurigana': value }),
+      })
+
+      if(!success) {
+        setSettings({
+          ...settings,
+          subtitleSettings
+        });
       }
-      
-      if (resolvedSyncStrategy === 'always' || resolvedSyncStrategy === 'once') {
-        console.log('ask')
-        try {
-          setIsLoading(true);
-          const { error, message } = await handleSubtitleSettings({ 'showFurigana': value });
-          
-          if (error) {
-            toast.error(error);
-            setSettings({
-              ...settings,
-              subtitleSettings
-            });
-            return;
-          }
-          
-          toast.success(message);
-          queryClient.invalidateQueries({ queryKey: settingsQueries.player._def })          
-          queryClient.invalidateQueries({ queryKey: settingsQueries.forEpisode._def });
-        } finally {
-          setIsLoading(false);
-        }
-      }
+
+      setIsLoading(false)
     };
 
     return (

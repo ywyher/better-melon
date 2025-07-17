@@ -1,18 +1,18 @@
 "use client"
 import { handleEnabledTranscriptions } from "@/app/settings/player/actions"
 import MultipleSelector from "@/components/multiple-selector"
-import { showSyncSettingsToast } from "@/components/sync-settings-toast"
 import TooltipWrapper from "@/components/tooltip-wrapper"
 import { subtitleTranscriptions } from "@/lib/constants/subtitle";
 import { GeneralSettings, PlayerSettings } from "@/lib/db/schema"
 import { settingsQueries } from "@/lib/queries/settings"
 import { useSubtitleStore } from "@/lib/stores/subtitle-store"
-import { SyncStrategy } from "@/types"
 import { SubtitleTranscription } from "@/types/subtitle"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useMutation } from "@tanstack/react-query"
 import { useEffect, useState, useRef } from "react"
 import { toast } from "sonner"
 import { useDebounce } from "use-debounce"
+import { arraysEqual } from "@/lib/utils/utils";
+import { useSyncSettings } from "@/lib/hooks/use-sync-settings";
 
 type EnabledTranscriptionsSettingProps = {
   playerSettings: PlayerSettings
@@ -23,15 +23,20 @@ export default function EnabledTranscriptions({ playerSettings, syncSettings }: 
   const activeTranscriptions = useSubtitleStore((state) => state.activeTranscriptions)
   const setActiveTranscriptions = useSubtitleStore((state) => state.setActiveTranscriptions)
   const [selectedTranscriptions, setSelectedTranscriptions] = useState<SubtitleTranscription[]>([])
-  const [debouncedTranscriptions] = useDebounce(selectedTranscriptions, 1000) // 1000ms debounce
+  const [debouncedTranscriptions] = useDebounce(selectedTranscriptions, 1000)
 
   const hasInitializedRef = useRef(false)
   const hasUserChangedRef = useRef(false)
 
-  const arraysEqual = (a: SubtitleTranscription[], b: SubtitleTranscription[]) => {
-    if (a.length !== b.length) return false;
-    return a.every((val, index) => val === b[index]);
-  };
+  const { handleSync } = useSyncSettings({
+    syncSettings,
+    onSuccess: (message) => toast.success(message || "Transcriptions updated successfully"),
+    onError: (error) => {
+      toast.error(error);
+      setSelectedTranscriptions(activeTranscriptions);
+    },
+    invalidateQueries: [settingsQueries.general._def]
+  });
 
   useEffect(() => {
     if (playerSettings && !hasInitializedRef.current) {
@@ -41,49 +46,16 @@ export default function EnabledTranscriptions({ playerSettings, syncSettings }: 
     }
   }, [playerSettings, setActiveTranscriptions]);
 
-  const queryClient = useQueryClient()
-
   const { mutate, isPending } = useMutation({
     mutationKey: ['enabled-transcriptions'],
     mutationFn: async (newTranscriptions: SubtitleTranscription[]) => {
-      let resolvedSyncStrategy = syncSettings as SyncStrategy;
-      
-      if (resolvedSyncStrategy === 'ask') {
-        const { strategy, error } = await showSyncSettingsToast();
-        if (error) {
-          toast.error(error);
-          setSelectedTranscriptions(activeTranscriptions);
-          return;
-        }
-        if(!strategy) {
-          setActiveTranscriptions(newTranscriptions);
-          return;
-        }
-        resolvedSyncStrategy = strategy;
-      }
-
-      if (resolvedSyncStrategy === 'always' || resolvedSyncStrategy === 'once') {
-        try {
-          const { error, message } = await handleEnabledTranscriptions({
-            transcriptions: newTranscriptions,
-          });
-          
-          if (error) {
-            toast.error(error);
-            setSelectedTranscriptions(activeTranscriptions);
-            return;
-          }
-          
-          toast.success(message);
-          setActiveTranscriptions(newTranscriptions);
-          queryClient.invalidateQueries({ queryKey: settingsQueries.general._def });
-        } catch (error) {
-          toast.error(error instanceof Error ? error.message : "Failed to update transcriptions");
-          setSelectedTranscriptions(activeTranscriptions);
-        }
-      } else {
-        setActiveTranscriptions(newTranscriptions);
-      }
+      await handleSync({
+        localOperation: () => setActiveTranscriptions(newTranscriptions),
+        serverOperation: () => handleEnabledTranscriptions({
+          transcriptions: newTranscriptions,
+        }),
+        successMessage: "Transcriptions updated successfully"
+      });
     }
   });
 
