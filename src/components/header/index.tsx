@@ -8,11 +8,12 @@ import { Menu } from '@/components/header/menu';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { Avatar } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
 import { useIsSmall } from '@/lib/hooks/use-media-query';
 import { useSession } from '@/lib/queries/user';
 import { useAuthStore } from '@/lib/stores/auth-store';
 import { cn } from '@/lib/utils/utils';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, HTMLAttributes } from 'react';
 
 export default function Header() {
   const isAuthDialogOpen = useAuthStore((state) => state.isAuthDialogOpen)
@@ -40,7 +41,11 @@ export default function Header() {
     };
   }, []);
   
-  const headerBaseClasses = "sticky top-0 h-16 max-h-16 container mx-auto z-50 flex flex-row items-center justify-between py-3 transition-all duration-300 ease-in-out";
+  const headerBaseClasses = cn(
+    "sticky top-0 h-16 max-h-16 container mx-auto z-50",
+    "flex flex-row items-center justify-between py-3",
+    "transition-all duration-300 ease-in-out",
+  );
   
   const scrolledClasses = scrolled ? cn(
     "px-3 top-2 rounded-lg", 

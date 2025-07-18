@@ -74,8 +74,9 @@ export interface AnimeTitle {
 }
 
 export interface AnimeCoverImage {
-  large: string;
   medium: string;
+  large: string;
+  extraLarge?: string;
   color?: string
 }
 
@@ -83,29 +84,6 @@ export interface AnimeDate {
     day: number
     month: number
     year: number
-}
-
-export interface Anime {
-  id: number | string;
-  idMal: number | string;
-  title: AnimeTitle;
-  episodes: number;
-  nextAiringEpisode: {
-    episode: number
-    timeUntilAiring: number
-  } | null
-  coverImage: AnimeCoverImage;
-  genres: string[];
-  status: AnimeStatus;
-  startDate: AnimeDate
-  endDate: AnimeDate
-  description: string;
-  bannerImage: string;
-  season: AnimeSeason;
-  seasonYear: number;
-  averageScore: number;
-  isAdult: boolean;
-  format: string;
 }
 
 export type SkipTime = {
@@ -161,3 +139,52 @@ export type AnimeEpisodeData = {
   sources: AnimeEpisodeSources;
   subtitles: SubtitleFile[]
 }
+
+export interface Anime {
+  id: number | string;
+  idMal: number | string;
+  title: AnimeTitle;
+  episodes: number;
+  nextAiringEpisode: {
+    episode: number
+    timeUntilAiring: number
+  } | null
+  coverImage: AnimeCoverImage;
+  genres: string[];
+  status: AnimeStatus;
+  startDate: AnimeDate
+  endDate: AnimeDate
+  description: string;
+  bannerImage: string;
+  season: AnimeSeason;
+  seasonYear: number;
+  averageScore: number;
+  isAdult: boolean;
+  format: string;
+}
+
+export type AnimeInList = {
+  id: number | string;
+  format: AnimeFormat;
+  title: AnimeTitle;
+  bannerImage?: string
+  coverImage: AnimeCoverImage
+  description?: string
+  averageScore?: number
+  status?: AnimeStatus
+  seasonYear?: number
+}
+
+export type AnimeInListVariables = { sort: AnimeSort; } & Partial<{
+  page: number;
+  perPage: number;
+  status: AnimeStatus;
+  includeDescription?: Boolean // = false
+  includeBanner?: Boolean // = false
+  includeMediumCover?: Boolean // = true
+  includeLargeCover?: Boolean // = true
+  includeExtraLargeCover?: Boolean // = false
+  includeAverageScore?: Boolean // = false
+  includeStatus?: Boolean // = false
+  includeSeasonYear?: Boolean // = false
+}>

@@ -1,9 +1,9 @@
 import { GET_ANIME_DYNAMIC_DATA } from "@/lib/graphql/queries";
 import { Anime } from "@/types/anime";
-import { useQuery } from "@tanstack/react-query";
-import { useQuery as useApolloQuery } from "@apollo/client";
+import { useQuery, UseQueryResult } from "@tanstack/react-query";
+import { QueryResult, useQuery as useApolloQuery } from "@apollo/client";
 import { animeQueries } from "@/lib/queries/anime";
-import { useEffect } from "react";
+import { AnilistResponse } from "@/types/anilist";
 
 export function useAnimeData(animeId: string) {
   const { 
@@ -11,23 +11,23 @@ export function useAnimeData(animeId: string) {
     isLoading: isStaticLoading, 
     error: staticError,
     refetch: refetchStatic
-  } = useQuery({
-    ...animeQueries.data(animeId),
+  }: UseQueryResult<AnilistResponse<"Media", Anime>, Error> = useQuery({
+    ...animeQueries.staticData(animeId),
     staleTime: 24 * 60 * 60 * 1000,
     gcTime: 48 * 60 * 60 * 1000,
     retry: 3,
-  });
+  })
 
   const {
+    data: dynamicData,
     loading: isDynamicLoading, 
     error: dynamicError,
-    data: dynamicData,
     refetch: refetchDynamic
-  } = useApolloQuery(GET_ANIME_DYNAMIC_DATA, { variables: { id: Number(animeId) }, fetchPolicy: 'cache-first', });
+  }:  QueryResult<AnilistResponse<"Media", Anime>> = useApolloQuery(GET_ANIME_DYNAMIC_DATA, { variables: { id: Number(animeId) }, fetchPolicy: 'cache-first', });
 
   return {
     animeData: {
-      ...staticData?.data?.Media,
+      ...staticData?.Media,
       ...dynamicData?.Media,
     } as Anime,
     isLoading: isStaticLoading || isDynamicLoading,

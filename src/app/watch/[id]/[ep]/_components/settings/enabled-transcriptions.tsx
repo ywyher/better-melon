@@ -1,4 +1,5 @@
 "use client"
+
 import { handleEnabledTranscriptions } from "@/app/settings/player/actions"
 import MultipleSelector from "@/components/multiple-selector"
 import TooltipWrapper from "@/components/tooltip-wrapper"
