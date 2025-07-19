@@ -1,6 +1,6 @@
 "use client"
 
-import Header from "@/components/header"
+import Header from "@/components/header/header"
 import Bottombar from "@/components/sidebar/bottombar"
 import { Separator } from "@/components/ui/separator"
 import { useIsSmall } from "@/lib/hooks/use-media-query"

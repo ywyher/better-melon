@@ -1,8 +1,8 @@
 'use client'
 
 import ResetPasswordHandler from "@/components/reset-password-handler";
-import TopTrending from "@/components/home/top-trending";
-import AnimeList from "@/components/home/anime-list";
+import TopTrending from "@/components/home/top-trending/top-trending";
+import AnimeList from "@/components/home/anime-list/anime-list";
 import { Award, Clock, Heart, LucideIcon, TrendingUp } from "lucide-react";
 import { AnimeInListVariables } from "@/types/anime";
 
@@ -19,7 +19,8 @@ const animeListConfigs: {
       includeExtraLargeCover: true,
       includeSeasonYear: true,
       includeStatus: true,
-      perPage: 10
+      includeAverageScore: true,
+      perPage: 10,
     }
   },
   {
@@ -30,6 +31,7 @@ const animeListConfigs: {
       includeExtraLargeCover: true,
       includeSeasonYear: true,
       includeStatus: true,
+      includeAverageScore: true,
       perPage: 10
     }
   },
@@ -41,6 +43,7 @@ const animeListConfigs: {
       includeExtraLargeCover: true,
       includeSeasonYear: true,
       includeStatus: true,
+      includeAverageScore: true,
       perPage: 10
     }
   },
@@ -53,6 +56,7 @@ const animeListConfigs: {
       includeExtraLargeCover: true,
       includeSeasonYear: true,
       includeStatus: true,
+      includeAverageScore: true,
       perPage: 10
     }
   },
@@ -65,6 +69,7 @@ const animeListConfigs: {
       includeExtraLargeCover: true,
       includeSeasonYear: true,
       includeStatus: true,
+      includeAverageScore: true,
       perPage: 10
     }
   }

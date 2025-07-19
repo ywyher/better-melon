@@ -160,7 +160,8 @@ export interface Anime {
   seasonYear: number;
   averageScore: number;
   isAdult: boolean;
-  format: string;
+  format: AnimeFormat;
+  duration: number
 }
 
 export type AnimeInList = {

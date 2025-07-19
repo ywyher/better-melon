@@ -26,7 +26,7 @@ export function useAnimeData(animeId: string) {
   }:  QueryResult<AnilistResponse<"Media", Anime>> = useApolloQuery(GET_ANIME_DYNAMIC_DATA, { variables: { id: Number(animeId) }, fetchPolicy: 'cache-first', });
 
   return {
-    animeData: {
+    data: {
       ...staticData?.Media,
       ...dynamicData?.Media,
     } as Anime,

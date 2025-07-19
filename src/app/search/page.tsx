@@ -2,8 +2,8 @@
 
 import { Suspense } from "react";
 import AnimeFilters from "@/app/search/_components/filters";
-import AnimeCard, { AnimeCardSkeleton } from "@/components/anime/anime-card";
-import Header from "@/components/header";
+import AnimeCard, { AnimeCardSkeleton } from "@/components/anime/anime-card/anime-card";
+import Header from "@/components/header/header";
 import { Indicator } from "@/components/indicator";
 import { Anime } from "@/types/anime";
 import { gql, useQuery } from "@apollo/client"

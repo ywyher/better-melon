@@ -18,12 +18,16 @@ export const GET_ANIME = gql`
       }
       coverImage {
         large
+        extraLarge
+        medium
       }
       description
       genres
       status
       season
       seasonYear
+      duration
+      averageScore
     }
   }
 `;

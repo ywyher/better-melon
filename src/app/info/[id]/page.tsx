@@ -1,14 +1,31 @@
-import AnimeInfo from "@/app/info/[id]/_components/info"
-import { Anime } from "@/types/anime";
+'use client'
 
-type Params = Promise<{ id: Anime['id'] }>
+import InfoHero from "@/components/info/hero/hero";
+import { useAnimeData } from "@/lib/hooks/use-anime-data";
+import { useParams } from "next/navigation";
+import { useEffect } from "react";
 
-export default async function AnimeData({ params }: { params: Params }) {
-  const { id } = await params;
+export default function AnimeData() {
+  const params = useParams();
+  const animeId = params.id as string;
+
+  const { data, isLoading, error } = useAnimeData(animeId)
 
   return (
-    <AnimeInfo
-      animeId={id}
-    />
+    <>
+      <InfoHero
+        averageScore={data.averageScore}
+        bannerImage={data.bannerImage}
+        coverImage={data.coverImage}
+        duration={data.duration}
+        episodes={data.episodes}
+        format={data.format}
+        genres={data.genres}
+        id={data.id}
+        seasonYear={data.seasonYear}
+        title={data.title}
+        isLoading={isLoading}
+      />
+    </>
   )
 }
