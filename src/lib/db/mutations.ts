@@ -52,11 +52,19 @@ export async function deleteUser({ userId }: { userId: User['id'] }) {
     }
 }
 
-export async function setCache<T>(key: string, value: T) {
-    const results = await redis.set(`${key}`, JSON.stringify(value));
-    return {
-        success: results ? true : false
+export async function setCache<T>(key: string, value: T, ttlSeconds?: number) {
+    const serializedValue = JSON.stringify(value);
+    
+    let results;
+    if (ttlSeconds) {
+        results = await redis.setex(`${key}`, ttlSeconds, serializedValue);
+    } else {
+        results = await redis.set(`${key}`, serializedValue);
     }
+    
+    return {
+        success: results === 'OK'
+    };
 }
 
 export async function updateCache<T>(key: string, updates: T): Promise<void> {

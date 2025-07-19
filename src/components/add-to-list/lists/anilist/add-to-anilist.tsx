@@ -19,7 +19,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { FieldErrors, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { GET_ANIME_FROM_LIST } from "@/lib/graphql/queries";
+import { GET_ANIME_IN_LIST } from "@/lib/graphql/queries";
 import { ADD_ANIME_TO_LIST, DELETE_ANIME_FROM_LIST } from "@/lib/graphql/mutations";
 import { convertFuzzyDateToDate } from "@/lib/utils/utils";
 
@@ -41,7 +41,7 @@ export default function AnilistListOptions({
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const isSmall = useIsSmall()
   
-  const { data: animeFromList, loading: isAnimeFromListLoading } = useQuery<AnilistGetAnimeFromListQuery, {mediaId: number, userId: number, type: "ANIME"}>(GET_ANIME_FROM_LIST, {
+  const { data: animeFromList, loading: isAnimeFromListLoading } = useQuery<AnilistGetAnimeFromListQuery, {mediaId: number, userId: number, type: "ANIME"}>(GET_ANIME_IN_LIST, {
     context: {
       headers: {
         "Authorization": accessToken

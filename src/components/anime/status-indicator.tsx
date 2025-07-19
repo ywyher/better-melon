@@ -1,6 +1,7 @@
+import { cn } from "@/lib/utils/utils";
 import { Anime } from "@/types/anime";
 
-export default function AnimeStatusIndicator({ status }: { status: Anime['status'] }) {
+export default function AnimeStatusIndicator({ status, animate = false }: { status: Anime['status']; animate: boolean }) {
   const getStatusStyles = () => {
     switch (status) {
       case 'RELEASING':
@@ -51,15 +52,20 @@ export default function AnimeStatusIndicator({ status }: { status: Anime['status
   const { bgColor, pulseColor, shadow } = getStatusStyles();
 
   return (
-    <div className="flex items-center gap-2 p-1">
+    <div className="flex items-center gap-2">
       <div className="relative flex items-center justify-center">
         <div 
-          className={`h-3 w-3 rounded-full ${bgColor} animate-pulse ${shadow}`}
+          className={cn(
+            `h-3 w-3 rounded-full ${bgColor} ${shadow}`,
+            animate && `animate-pulse`
+          )}
         />
-          <div 
-            className={`absolute h-5 w-5 rounded-full ${pulseColor} opacity-75 animate-ping`}
-            style={{ animationDuration: '1.5s' }}
-          />
+          {animate && (
+            <div
+              className={`absolute h-5 w-5 rounded-full ${pulseColor} opacity-75 animate-ping`}
+              style={{ animationDuration: '1.5s' }}
+            />
+          )}
       </div>
     </div>
   );
