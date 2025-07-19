@@ -1,7 +1,7 @@
 import { AnimeCoverImage, AnimeTitle } from "@/types/anime";
 import Image from "next/image";
 
-export default function InfoHeroCoverImage({ coverImage, title, episodes, duration }: {
+export default function HeroCoverImage({ coverImage, title, episodes, duration }: {
   coverImage: AnimeCoverImage;
   title: AnimeTitle;
   episodes: number;
@@ -12,7 +12,6 @@ export default function InfoHeroCoverImage({ coverImage, title, episodes, durati
       className="
         relative h-[400px] w-[280px]
         hover:scale-105 transition-all duration-300
-        hidden md:block
         rounded-lg
       "
     >

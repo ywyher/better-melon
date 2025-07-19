@@ -1,9 +1,9 @@
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 
-export default function InfoHeroGenreTags({ genres }: { genres: string[] }) {
+export default function GenreTags({ genres }: { genres: string[] }) {
   return (
-    <div className="flex flex-row gap-2">
+    <div className="flex flex-row flex-wrap justify-center md:justify-start gap-2">
       {genres.join(',').split(',').map((g) => (
         <Badge
           key={g}

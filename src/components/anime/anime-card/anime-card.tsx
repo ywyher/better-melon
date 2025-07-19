@@ -3,7 +3,8 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import AnimeCardFooter from "@/components/anime/anime-card/footer";
 import AnimeCardContent from "@/components/anime/anime-card/content";
-import type { Anime, AnimeCoverImage, AnimeFormat, AnimeStatus, AnimeTitle } from "@/types/anime";
+import type { Anime, AnimeCoverImage, AnimeFormat, AnimeRelatoinType, AnimeStatus, AnimeTitle } from "@/types/anime";
+import { cn } from "@/lib/utils/utils";
 
 type AnimeCardProps = {
   id: Anime['id'];
@@ -13,6 +14,8 @@ type AnimeCardProps = {
   format: AnimeFormat;
   seasonYear: Anime["seasonYear"]
   averageScore: Anime['averageScore']
+  relationType?: AnimeRelatoinType
+  className?: string
 }
 
 export default function AnimeCard({ 
@@ -22,7 +25,9 @@ export default function AnimeCard({
   status,
   format,
   seasonYear,
-  averageScore
+  averageScore,
+  relationType,
+  className
 }: AnimeCardProps) {
   const [imageLoading, setImageLoading] = useState<boolean>(true);
 
@@ -34,11 +39,12 @@ export default function AnimeCard({
   
   return (
     <Card 
-      className="
-        relative w-50 h-70 p-0
-        border-0 outline-0 shadow-none
-        flex flex-col gap-2
-      "
+      className={cn(
+        "aspect-[3/4] relative p-0 max-h-100 w-full bg-transparent",
+        "border-0 outline-0 shadow-none",
+        "flex flex-col gap-2",
+        className
+      )}
       onClick={handleClick}
     >
       <AnimeCardContent
@@ -53,6 +59,7 @@ export default function AnimeCard({
       <AnimeCardFooter
         format={format}
         seasonYear={seasonYear}
+        relationType={relationType}
         averageScore={averageScore}
       />
     </Card>

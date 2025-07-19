@@ -2,7 +2,7 @@ import { ImageSkeleton } from "@/components/image-skeleton";
 import { AnimeTitle } from "@/types/anime";
 import Image from "next/image";
 
-export function InfoHeroBackground({ bannerImage, title, imageLoading, setImageLoading }: {
+export function HeroBackground({ bannerImage, title, imageLoading, setImageLoading }: {
   bannerImage: string;
   title: AnimeTitle;
   imageLoading: boolean;

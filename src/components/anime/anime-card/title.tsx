@@ -1,3 +1,4 @@
+import { useState } from "react";
 import AnimeStatusIndicator from "@/components/anime/status-indicator";
 import { stripText } from "@/lib/utils/utils";
 import { AnimeStatus, AnimeTitle } from "@/types/anime";
@@ -9,15 +10,21 @@ export default function AnimeCardTitle({
   status: AnimeStatus;
   title: AnimeTitle;
 }) {
+  const [isHovered, setIsHovered] = useState(false);
+
   return (
-    <div className="
-      flex flex-row gap-2 pl-1 py-1
-      cursor-pointer rounded-sm
-      hover:bg-[#ffffff1a] transition-all
-    ">
+    <div 
+      className="
+        flex flex-row gap-2 pl-1 py-1
+        cursor-pointer rounded-sm
+        hover:bg-[#ffffff1a] transition-all
+      "
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
       <AnimeStatusIndicator animate={false} status={status} />
       <div className="font-bold text-sm">
-        {stripText(title.english, 18)}
+        {isHovered ? title.english : stripText(title.english, 18)}
       </div>
     </div>
   );

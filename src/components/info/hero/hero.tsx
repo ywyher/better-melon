@@ -1,60 +1,34 @@
 'use client'
 
-import { InfoHeroBackground } from "@/components/info/hero/background";
-import { InfoHeroContent } from "@/components/info/hero/content";
-import { InfoHeroSkeleton } from "@/components/info/hero/skeleton";
+import { HeroBackground } from "@/components/info/hero/background";
+import { HeroContent } from "@/components/info/hero/content";
+import { HeroSkeleton } from "@/components/info/hero/skeleton";
 import { Anime, AnimeCoverImage, AnimeFormat, AnimeTitle } from "@/types/anime"
 import { useState } from "react";
 
 export type HeroProps = {
-  id: Anime['id'];
-  title: AnimeTitle;
-  seasonYear: Anime['seasonYear'];
-  genres: Anime['genres'];
-  episodes: Anime['episodes'];
-  averageScore: Anime['averageScore'];
-  bannerImage: Anime['bannerImage'];
-  coverImage: AnimeCoverImage;
-  duration: Anime['duration'];
-  format: AnimeFormat;
+  anime: Anime
   isLoading: boolean
 }
 
-export default function InfoHero({
-  id,
-  title,
-  seasonYear,
-  genres,
-  episodes,
-  averageScore,
-  bannerImage,
-  coverImage,
-  duration,
-  format,
+export default function Hero({
+  anime,
   isLoading
 }: HeroProps) {
   const [imageLoading, setImageLoading] = useState<boolean>(true);
 
-  if(isLoading) return <InfoHeroSkeleton />
+  if(isLoading) return <HeroSkeleton />
 
   return (
-    <div className="relative w-full min-h-[500px]">
-      <InfoHeroBackground 
-        bannerImage={bannerImage}
-        title={title}
+    <div className="relative w-full min-h-[800px] lg:min-h-[500px]">
+      <HeroBackground 
+        bannerImage={anime.bannerImage}
+        title={anime.title}
         imageLoading={imageLoading}
         setImageLoading={setImageLoading}
       />
-      <InfoHeroContent 
-        id={id}
-        title={title}
-        seasonYear={seasonYear}
-        genres={genres}
-        episodes={episodes}
-        averageScore={averageScore}
-        format={format}
-        coverImage={coverImage}
-        duration={duration}
+      <HeroContent 
+        anime={anime}
       />
     </div>
   );

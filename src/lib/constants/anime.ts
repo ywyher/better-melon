@@ -1,4 +1,4 @@
-import { AnimeFormat, AnimeSeason, AnimeSort, AnimeSource, AnimeStatus } from "@/types/anime"
+import { AnimeFormat, AnimeRelatoinType, AnimeSeason, AnimeSort, AnimeSource, AnimeStatus } from "@/types/anime"
 
 export const animeStatuses: AnimeStatus[] = [
     "CANCELLED",
@@ -104,3 +104,5 @@ export const animeCountries = [
         label: "China"
     }
 ];
+
+export const excludeRelations: AnimeRelatoinType[] = ['ADAPTATION', 'CHARACTER', 'SOURCE', "ALTERNATIVE"]

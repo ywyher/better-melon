@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Play } from "lucide-react";
 import Link from "next/link";
 
-export function InfoHeroWatchButton({ id }: { id: string | number }) {
+export function HeroWatchButton({ id }: { id: string | number }) {
   return (
     <Button
       className="

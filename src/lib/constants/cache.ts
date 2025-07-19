@@ -18,7 +18,7 @@ export const cacheKeys = {
       // Sort entries by key to ensure consistent ordering
       const sortedEntries = Object.entries(variables).sort(([a], [b]) => a.localeCompare(b));
       return `anime:list:${sortedEntries.flat().join(',')}`;
-    }
+    },
   },
   
   pitch: {

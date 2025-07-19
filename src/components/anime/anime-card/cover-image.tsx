@@ -20,7 +20,7 @@ export default function AnimeCardCoverImage({
         src={coverImage.extraLarge || coverImage.large}
         alt={String(id)}
         fill
-        className="rounded-sm transition-all"
+        className="rounded-sm transition-all object-cover"
         loading="lazy"
         onLoadingComplete={() => setImageLoading(false)}
       />

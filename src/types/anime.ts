@@ -1,8 +1,22 @@
-import { GeneralSettings, PlayerSettings, SubtitleSettings } from "@/lib/db/schema"
+import { AnilistEdges } from "@/types/anilist"
 import { SubtitleFile } from "@/types/subtitle"
 
+export type AnimeChracterRole = "MAIN" | "SUPPORTING" | "BACKGROUND"
 export type AnimeStatus = "CANCELLED" | "FINISHED" | "HIATUS" | "NOT_YET_RELEASED" | "RELEASING"
 export type AnimeSeason = "SPRING" | "FALL" | "SUMMER" | "WINTER"
+export type AnimeRelatoinType = "ADAPTATION" 
+| "PREQUEL" 
+| "SEQUEL" 
+| "PARENT" 
+| "SIDE_STORY" 
+| "CHARACTER" 
+| "SUMMARY" 
+| "ALTERNATIVE" 
+| "SPIN_OFF" 
+| "OTHER" 
+| "SOURCE" 
+| "COMPILATION" 
+| "CONTAINS" 
 export type AnimeFormat = "TV" 
 | "TV_SHORT" 
 | "MOVIE" 
@@ -140,11 +154,83 @@ export type AnimeEpisodeData = {
   subtitles: SubtitleFile[]
 }
 
+export type AnimeStreamingEpisode = {
+  title: string;
+  thumbnail: string;
+}
+
+export type AnimeStudio = {
+  isMain: boolean
+  node: {
+    name: string
+  }
+}
+
+export type AnimeChracter = {
+  role: AnimeChracterRole;
+  node: {
+    name: {
+      first: string;
+      last: string
+    }
+    image: {
+      large: string
+    }
+    age: string;
+  };
+  voiceActors: {
+    name: {
+      first: string;
+      last: string;
+    }
+    image: {
+      large: string
+    }
+  }[]
+}
+
+export type AnimeRleation = {
+  relationType: AnimeRelatoinType
+  node: {
+    id: Anime['id']
+    coverImage: AnimeCoverImage
+    title: AnimeTitle;
+    status: AnimeStatus;
+    format: AnimeFormat
+  }
+}
+
+export type AnimeRecommendation = {
+  node: {
+    mediaRecommendation: {
+      id: Anime['id']
+      title: AnimeTitle;
+      coverImage: AnimeCoverImage
+      status: AnimeStatus
+      format: AnimeFormat
+      averageScore: Anime['averageScore']
+      seasonYear: Anime['seasonYear']
+    }
+  }
+}
+
+export type AnimeTrailer = {
+  id: string;
+  thumbnail: string;
+  site: string
+}
+
 export interface Anime {
   id: number | string;
   idMal: number | string;
   title: AnimeTitle;
   episodes: number;
+  animeStreamingEpisodes: AnimeStreamingEpisode[]
+  studios: AnilistEdges<AnimeStudio>;
+  characters: AnilistEdges<AnimeChracter>;
+  relations: AnilistEdges<AnimeRleation>;
+  recommendations: AnilistEdges<AnimeRecommendation>;
+  trailer: AnimeTrailer
   nextAiringEpisode: {
     episode: number
     timeUntilAiring: number

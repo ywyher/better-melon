@@ -2,7 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { AnimeFormat } from "@/types/anime";
 import { Calendar, Camera, Film, Star } from "lucide-react";
 
-export default function InfoHeroStatsBar({ averageScore, seasonYear, format, episodes }: {
+export default function HeroStatsBar({ averageScore, seasonYear, format, episodes }: {
   averageScore: number;
   seasonYear: number;
   format: AnimeFormat;

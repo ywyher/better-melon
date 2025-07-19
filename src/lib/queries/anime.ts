@@ -3,7 +3,7 @@ import { setCache } from "@/lib/db/mutations";
 import { getCache } from "@/lib/db/queries";
 import { env } from "@/lib/env/client";
 import { GET_ANIME, GET_ANIME_LIST } from "@/lib/graphql/queries";
-import { AnimeInListVariables } from "@/types/anime";
+import { Anime, AnimeInListVariables } from "@/types/anime";
 import { createQueryKeys } from "@lukemorales/query-key-factory";
 
 export const animeQueries = createQueryKeys('anime', {

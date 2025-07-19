@@ -1,22 +1,22 @@
-import InfoHeroCoverImage from "@/components/info/hero/cover-image";
-import InfoHeroGenreTags from "@/components/info/hero/genre-tags";
-import { HeroProps } from "@/components/info/hero/hero";
-import InfoHeroStatsBar from "@/components/info/hero/stats";
-import { InfoHeroWatchButton } from "@/components/info/hero/watch-button";
+import HeroCoverImage from "@/components/info/hero/cover-image";
+import GenreTags from "@/components/genre-tags";
+import HeroStatsBar from "@/components/info/hero/stats";
+import { HeroWatchButton } from "@/components/info/hero/watch-button";
+import { Anime } from "@/types/anime";
 
-export function InfoHeroContent({ id, title, seasonYear, genres, episodes, averageScore, format, coverImage, duration }: Omit<Omit<HeroProps, 'bannerImage'>, 'isLoading'>) {
+export function HeroContent({ anime }: { anime: Anime }) {
   return (
     <div className="
       absolute inset-0 z-10
-      flex justify-between items-center
-      px-10
+      flex flex-col lg:flex-row justify-between items-center
+      px-10 py-10 lg:py-0
     ">
-      <div className="flex flex-col gap-5">
-        <InfoHeroStatsBar
-          averageScore={averageScore} 
-          seasonYear={seasonYear} 
-          format={format} 
-          episodes={episodes} 
+      <div className="flex flex-col gap-5 items-center lg:items-start">
+        <HeroStatsBar
+          averageScore={anime.averageScore} 
+          seasonYear={anime.seasonYear} 
+          format={anime.format} 
+          episodes={anime.episodes} 
         />
         
         <div
@@ -26,19 +26,19 @@ export function InfoHeroContent({ id, title, seasonYear, genres, episodes, avera
             hover:bg-primary/30 hover:pl-4 transition-all
           "
         >
-          {title.english}
+          {anime.title.english}
         </div>
         
-        <InfoHeroGenreTags genres={genres} />
+        <GenreTags genres={anime.genres} />
         
-        <InfoHeroWatchButton id={id} />
+        <HeroWatchButton id={anime.id} />
       </div>
       
-      <InfoHeroCoverImage
-        coverImage={coverImage}
-        title={title}
-        episodes={episodes}
-        duration={duration}
+      <HeroCoverImage
+        coverImage={anime.coverImage}
+        title={anime.title}
+        episodes={anime.episodes}
+        duration={anime.duration}
       />
     </div>
   );

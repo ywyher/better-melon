@@ -7,11 +7,15 @@ export const GET_ANIME = gql`
       idMal
       bannerImage
       format
+      episodes
+      streamingEpisodes {
+        title
+        thumbnail
+      }
       title {
         romaji
         english
       }
-      episodes
       nextAiringEpisode {
         episode
         timeUntilAiring
@@ -20,6 +24,93 @@ export const GET_ANIME = gql`
         large
         extraLarge
         medium
+      }
+      studios {
+        edges {
+          isMain
+          node {
+            name
+            isAnimationStudio
+          }
+        }
+      }
+      characters {
+        edges {
+          node {
+            name {
+              first
+              last
+            }
+            age
+            image {
+              large
+            }
+          }
+          role
+          voiceActors {
+            name {
+              first
+              last
+            }
+            image {
+              large
+            }
+          }
+        }
+      }
+      relations {
+        edges {
+          relationType
+          node {
+            id
+            coverImage {
+              medium
+              large
+              extraLarge
+            }
+            title {
+              english
+            }
+            status
+            format
+          }
+        }
+      }
+      recommendations {
+        edges {
+          node {
+            mediaRecommendation {
+              id
+              title {
+                english
+              }
+              coverImage {
+                large
+                extraLarge
+                medium
+              }
+              status
+              format
+              averageScore
+              seasonYear
+            }
+          }
+        }
+      }
+      trailer {
+        thumbnail
+        id
+        site
+      }
+      startDate {
+        day
+        month
+        year
+      }
+      endDate {
+        day
+        month
+        year
       }
       description
       genres
