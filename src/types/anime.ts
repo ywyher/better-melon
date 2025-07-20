@@ -221,6 +221,12 @@ export type AnimeTrailer = {
   site: string
 }
 
+export type AnimeNextAiringEpisode = {
+  airingAt: number
+  episode: number
+  timeUntilAiring: number
+}
+
 export interface Anime {
   id: number | string;
   idMal: number | string;
@@ -231,10 +237,7 @@ export interface Anime {
   relations: AnilistEdges<AnimeRleation>;
   recommendations: AnilistEdges<AnimeRecommendation>;
   trailer: AnimeTrailer
-  nextAiringEpisode: {
-    episode: number
-    timeUntilAiring: number
-  } | null
+  nextAiringEpisode: AnimeNextAiringEpisode | null
   coverImage: AnimeCoverImage;
   genres: string[];
   status: AnimeStatus;

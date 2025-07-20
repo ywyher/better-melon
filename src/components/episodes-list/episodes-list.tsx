@@ -1,6 +1,6 @@
 "use client"
 
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Grid, List, Image as ImageIcon, Eye, EyeOff, Search } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
@@ -8,21 +8,24 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useCallback, useRef } from "react";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import { Anime, AnimeTitle } from "@/types/anime";
+import { Anime, AnimeNextAiringEpisode, AnimeTitle } from "@/types/anime";
 import useEpisodesList from "@/lib/hooks/use-episodes-list";
 import GridView from "@/components/episodes-list/modes/grid";
 import ImageView from "@/components/episodes-list/modes/image";
 import ListView from "@/components/episodes-list/modes/list";
 import { cn } from "@/lib/utils/utils";
 import EpisodesListSkeleton from "@/components/episodes-list/skeleton";
+import { Separator } from "@/components/ui/separator";
+import AiringIn from "@/components/airing-in";
 
 type EpisodesListProps = {
+  nextAiringEpisode: AnimeNextAiringEpisode
   animeTitle: AnimeTitle
   animeBanner: Anime['bannerImage']
   className?: string
 }
 
-export default function EpisodesList({ animeTitle, animeBanner, className = "" }: EpisodesListProps) {
+export default function EpisodesList({ nextAiringEpisode, animeTitle, animeBanner, className = "" }: EpisodesListProps) {
   const params = useParams<{ id: string, ep: string }>();
   const router = useRouter();
   const animeId = params.id
@@ -127,7 +130,7 @@ export default function EpisodesList({ animeTitle, animeBanner, className = "" }
       </CardHeader>
       <CardContent
         ref={scrollAreaRef}
-        className="relative h-fit min-h-[10vh] w-full overflow-y-auto"
+        className="relative h-full min-h-[10vh] w-full overflow-y-auto"
       >
         <div
           style={{
@@ -168,6 +171,14 @@ export default function EpisodesList({ animeTitle, animeBanner, className = "" }
           )}
         </div>
       </CardContent>
+      {nextAiringEpisode && (
+        <div>
+          <Separator />
+          <div className="px-4 pt-5">
+            <AiringIn nextAiringEpisode={nextAiringEpisode} />
+          </div>
+        </div>
+      )}
     </Card>
   );
 }

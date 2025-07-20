@@ -3,10 +3,14 @@ import EpisodesList from "@/components/episodes-list/episodes-list";
 export default function EpisodesListPlayground() {
   return (
     <EpisodesList
-      animeTitle={{
-        english: "naruto"
+      nextAiringEpisode={{
+        episode: 4,
+        timeUntilAiring: 372341
       }}
-      animeBanner={"https://s4.anilist.co/file/anilistcdn/media/anime/banner/20-HHxhPj5JD13a.jpg"}
+      animeTitle={{
+        english: "DAN DA DAN Season 2"
+      }}
+      animeBanner="https://s4.anilist.co/file/anilistcdn/media/anime/banner/185660-NdXFgzcYmcDz.jpg"   
       className="max-w-[600px]"
     />
   )

@@ -22,7 +22,8 @@ export default function Details({ anime, isLoading }: DetailsProps) {
           <DetailsTabs anime={anime} />
         </div>
         <div className="hidden xl:block  max-w-full xl:max-w-[500px] h-[80vh]">
-          <EpisodesList 
+          <EpisodesList
+            nextAiringEpisode={anime.nextAiringEpisode}
             animeBanner={anime.bannerImage}
             animeTitle={anime.title}
             className="h-full"

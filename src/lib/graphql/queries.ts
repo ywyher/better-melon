@@ -14,6 +14,7 @@ export const GET_ANIME = gql`
       }
       nextAiringEpisode {
         episode
+        airingAt
         timeUntilAiring
       }
       coverImage {
