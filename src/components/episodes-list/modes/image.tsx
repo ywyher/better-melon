@@ -1,61 +1,63 @@
 import { ImageSkeleton } from "@/components/image-skeleton";
 import { cn } from "@/lib/utils/utils";
-import { Anime, AnimeEpisodeMetadata } from "@/types/anime";
+import { Anime, AnimeTitle } from "@/types/anime";
+import { KitsuAnimeEpisode } from "@/types/kitsu";
 import { Play } from "lucide-react";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import Image from "next/image";
 import { useState } from "react";
 
 interface ImageViewProps {
-  episodes: AnimeEpisodeMetadata[];
+  episodes: KitsuAnimeEpisode[];
   currentEpisode: number;
   animeId: Anime['id'];
   router: AppRouterInstance;
+  animeTitle: AnimeTitle;
+  animeBanner: Anime['bannerImage']
   spoilerMode?: boolean;
-  animeData: Anime;
 }
 
 export default function ImageView({ 
-  episodes, 
+  episodes,
   currentEpisode, 
   animeId, 
   router,
+  animeTitle,
+  animeBanner,
   spoilerMode = false,
-  animeData
 }: ImageViewProps) {
   const [imageLoading, setImageLoading] = useState<boolean>(true);
-
-  const genericTitle = animeData.title.english || "Episode";
-  const genericImage = animeData.coverImage.medium || null;
-  const genericDescription = animeData.description || "No description available for this episode.";
 
   return (
     <div className="flex flex-col gap-4">
       {episodes.map((ep) => {
-        const isActive = ep.number == currentEpisode;
+        const number = ep.attributes.number
+        const isActive = number == currentEpisode;
         return (
           <div
-            key={ep.id}
-            onClick={() => router.push(`/watch/${animeId}/${ep.number}`)}
+            key={number}
+            onClick={() => router.push(`/watch/${animeId}/${number}`)}
             className={cn(
-              "flex flex-row rounded-lg overflow-hidden cursor-pointer bg-[#141414]",
-              "hover:scale-105 transition-all",
+              "flex flex-row rounded-lg overflow-hidden cursor-pointer bg-primary-foreground",
+              "text-muted-foreground border-1 border-transparent",
+              "hover:bg-accent hover:scale-[1.009] transition-all",
               "transition-all duration-200 hover:bg-[#2B2B2B]",
-              isActive && "ring-1 ring-[#8080CF]"
+              "hover:text-white hover:border-white",
+              isActive && "bg-accent"
             )}
           >
             {/* Left side - Image with episode number */}
             <div className="relative h-24 w-36 flex-shrink-0">
               {/* Episode image or placeholder */}
               <div className="w-full h-full bg-[#1A1A1A] flex items-center justify-center">
-                {((spoilerMode ? genericImage : ep.image) && imageLoading) && <ImageSkeleton />}
-                {(spoilerMode ? genericImage : ep.image) ? (
+                {((spoilerMode ? animeBanner : ep.attributes.thumbnail?.original) && imageLoading) && <ImageSkeleton />}
+                {(spoilerMode ? animeBanner : ep.attributes.thumbnail?.original) ? (
                   <Image 
-                    src={spoilerMode ? (genericImage || "") : (ep.image || (genericImage || ""))}
-                    alt={`Ep: ${ep.number}`}
+                    src={spoilerMode ? (animeBanner || "") : (ep.attributes.thumbnail?.original || (animeBanner || ""))}
+                    alt={`Ep: ${number}`}
                     fill
-                    className="w-full h-full object-cover"
                     priority
+                    className="w-full h-full object-cover"
                     onLoadingComplete={() => setImageLoading(false)}
                   />
                 ) : (
@@ -65,7 +67,7 @@ export default function ImageView({
               
               {/* Episode number floating on image */}
               <div className="text-sm absolute bottom-2 left-2 bg-black/70 text-white px-2 rounded-md">
-                EP: {ep.number}
+                EP: {number}
               </div>
               
               {/* Play button for active episode */}
@@ -77,18 +79,18 @@ export default function ImageView({
             </div>
             
             {/* Right side - Text content */}
-            <div className="flex flex-col p-3 flex-grow">
+            <div className="flex flex-col gap-2 p-3 flex-grow">
               <h3 className={cn(
-                "font-medium text-sm mb-1",
+                "font-medium text-xs",
                 isActive ? "text-white" : "text-gray-300"
               )}>
-                {spoilerMode ? genericTitle : ep.title}
+                {spoilerMode ? animeTitle.english : ep.attributes.canonicalTitle}
               </h3>
-              
+
               <p className="text-xs text-gray-400 line-clamp-2">
-                {spoilerMode && !isActive
-                  ? genericDescription
-                  : (ep.description || "No description available for this episode.")}
+                {spoilerMode
+                  ? ""
+                  : (ep.attributes.description || "No description available for this episode.")}
               </p>
             </div>
           </div>

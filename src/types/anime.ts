@@ -155,6 +155,7 @@ export type AnimeEpisodeData = {
 }
 
 export type AnimeStreamingEpisode = {
+  number: number;
   title: string;
   thumbnail: string;
 }
@@ -225,7 +226,6 @@ export interface Anime {
   idMal: number | string;
   title: AnimeTitle;
   episodes: number;
-  animeStreamingEpisodes: AnimeStreamingEpisode[]
   studios: AnilistEdges<AnimeStudio>;
   characters: AnilistEdges<AnimeChracter>;
   relations: AnilistEdges<AnimeRleation>;

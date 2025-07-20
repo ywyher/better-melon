@@ -9,7 +9,7 @@ export default function MoreCard({ onClick }: MoreCardProps) {
     <div
       onClick={onClick}
       className="
-        w-50 h-70 p-0
+        min-w-50 h-70 p-0
         relative
         flex flex-col items-center justify-center gap-4
         bg-gradient-to-br from-gray-900 to-black

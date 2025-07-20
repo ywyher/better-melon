@@ -8,10 +8,6 @@ export const GET_ANIME = gql`
       bannerImage
       format
       episodes
-      streamingEpisodes {
-        title
-        thumbnail
-      }
       title {
         romaji
         english
@@ -128,6 +124,10 @@ export const GET_ANIME_DYNAMIC_DATA = gql`
     Media(id: $id) {
       status
       episodes
+      streamingEpisodes {
+        title
+        thumbnail
+      }
     } 
   }
 `;

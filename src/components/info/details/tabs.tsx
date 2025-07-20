@@ -1,6 +1,7 @@
 'use client'
 
 import DetailsCharacters from "@/components/info/details/characters"
+import DetailsEpisodesList from "@/components/info/details/episodes-list"
 import DetailsOverview from "@/components/info/details/overview/overview"
 import DetailsRecommendations from "@/components/info/details/recommendations"
 import DetailsRelations from "@/components/info/details/relations"
@@ -8,34 +9,39 @@ import DetailsTabTrigger from "@/components/info/details/tab-trigger"
 import DetailsTrailer from "@/components/info/details/trailer"
 import { Tabs, TabsContent, TabsList } from "@/components/ui/tabs"
 import { Anime } from "@/types/anime"
-import { Film, Info, Link, PersonStanding, Star } from "lucide-react"
+import { Film, Info, Link, PersonStanding, Star, TvMinimalPlay } from "lucide-react"
 import { useState } from "react"
 
-export type DetailsTab = 'overview' | 'characters' | "relations" | 'recommendations' | 'trailer'
+export type DetailsTab = 'overview' | 'characters' | "relations" | 'recommendations' | 'trailer' | "episodes"
 
 const tabs = [
   {
-    name: "overview" as const,
+    name: "overview" as DetailsTab,
     icon: Info,
     component: DetailsOverview,
   },
   {
-    name: "characters" as const,
+    name: "episodes" as DetailsTab,
+    icon: TvMinimalPlay,
+    component: DetailsEpisodesList,
+  },
+  {
+    name: "characters" as DetailsTab,
     icon: PersonStanding,
     component: DetailsCharacters,
   },
   {
-    name: "relations" as const,
+    name: "relations" as DetailsTab,
     icon: Link,
     component: DetailsRelations,
   },
   {
-    name: "recommendations" as const,
+    name: "recommendations" as DetailsTab,
     icon: Star,
     component: DetailsRecommendations,
   },
   {
-    name: "trailer" as const,
+    name: "trailer" as DetailsTab,
     icon: Film,
     component: DetailsTrailer,
   },
@@ -52,15 +58,17 @@ export default function DetailsTabs({ anime }: DetailsTabsProps) {
     <Tabs 
       value={activeTab} 
       onValueChange={(v) => setActiveTab(v as DetailsTab)}
-      className="w-full"
+      className="w-full h-full flex flex-col"
     >
-      <TabsList 
+      <TabsList
         className="
           w-full px-0 py-6
           bg-secondary
           flex flex-row justify-start
           border-1 border-accent 
           rounded-xl rounded-b-none
+          flex-shrink-0
+          overflow-x-scroll overflow-y-hidden
         "
       >
         {tabs.map((tab, idx) => (
@@ -70,6 +78,7 @@ export default function DetailsTabs({ anime }: DetailsTabsProps) {
             name={tab.name}
             icon={tab.icon}
             activeTab={activeTab}
+            className={tab.name == 'episodes' ? "xl:hidden" : ""}
           />
         ))}
       </TabsList>
@@ -82,6 +91,7 @@ export default function DetailsTabs({ anime }: DetailsTabsProps) {
             className="
               pt-5 pb-10 px-10 bg-secondary
               rounded-b-xl
+              flex-1 overflow-y-auto
             "
             value={tab.name}
           >

@@ -1,12 +1,12 @@
 'use server'
 
-import { env } from "@/lib/env/server";
+import { env } from "@/lib/env/client";
 import { AnimeEpisodeData, AnimeProvider } from "@/types/anime";
 
 export async function getEpisodeData(animeId: string, episodeNumber: number, provider: AnimeProvider): Promise<AnimeEpisodeData> {
   try {
     const dataRaw = await fetch(
-      `${env.API_URL}/anime/${animeId}/${episodeNumber}/${provider}`
+      `${env.NEXT_PUBLIC_API_URL}/anime/${animeId}/${episodeNumber}/${provider}`
     );
     
     if (!dataRaw.ok) {
@@ -32,7 +32,7 @@ export async function getEpisodeData(animeId: string, episodeNumber: number, pro
       metadata: {
         number: episodeNumber,
         title: data.details.title.english,
-        image: data.details.coverImage.large,
+        image: data.details.coverImage.extraLarge || data.details.coverImage.large,
         description: data.details.description,
         thumbnails: data.sources.tracks.find(t => t.lang == 'thumbnails')
       }

@@ -1,5 +1,7 @@
 'use client'
 
+import EpisodesList from "@/components/episodes-list/episodes-list";
+import EpisodeSelector from "@/components/episodes-list/episodes-list";
 import Details from "@/components/info/details/details";
 import Hero from "@/components/info/hero/hero";
 import { useAnimeData } from "@/lib/hooks/use-anime-data";
