@@ -22,12 +22,14 @@ export default function Details({ anime, isLoading }: DetailsProps) {
           <DetailsTabs anime={anime} />
         </div>
         <div className="hidden xl:block  max-w-full xl:max-w-[500px] h-[80vh]">
-          <EpisodesList
-            nextAiringEpisode={anime.nextAiringEpisode}
-            animeBanner={anime.bannerImage}
-            animeTitle={anime.title}
-            className="h-full"
-          />
+          {anime.status != 'NOT_YET_RELEASED' && (
+            <EpisodesList
+              nextAiringEpisode={anime.nextAiringEpisode}
+              animeBanner={anime.bannerImage}
+              animeTitle={anime.title}
+              className="h-full"
+            />
+          )}
         </div>
       </div>
     </div>

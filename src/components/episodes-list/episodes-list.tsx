@@ -19,7 +19,7 @@ import { Separator } from "@/components/ui/separator";
 import AiringIn from "@/components/airing-in";
 
 type EpisodesListProps = {
-  nextAiringEpisode: AnimeNextAiringEpisode
+  nextAiringEpisode: AnimeNextAiringEpisode | null
   animeTitle: AnimeTitle
   animeBanner: Anime['bannerImage']
   className?: string

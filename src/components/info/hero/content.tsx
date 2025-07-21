@@ -31,7 +31,9 @@ export function HeroContent({ anime }: { anime: Anime }) {
         
         <GenreTags genres={anime.genres} />
         
-        <HeroWatchButton id={anime.id} />
+        {anime.status != 'NOT_YET_RELEASED' && (
+          <HeroWatchButton id={anime.id} />
+        )}
       </div>
       
       <HeroCoverImage
