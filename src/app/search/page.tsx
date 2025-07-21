@@ -1,78 +1,26 @@
 "use client"
 
-import { Suspense } from "react";
-import AnimeFilters from "@/app/search/_components/filters";
-import AnimeCard from "@/components/anime/anime-card/anime-card";
-import Header from "@/components/header/header";
+import AnimeFilters from "@/components/filters/filters";
 import { Indicator } from "@/components/indicator";
-import { Anime } from "@/types/anime";
-import { gql, useQuery } from "@apollo/client"
-import { parseAsArrayOf, parseAsString, useQueryState } from 'nuqs'
-import { useState } from "react";
-import AnimeCardSkeleton from "@/components/anime/anime-card/skeleton";
+import { Anime, AnimePageInfo } from "@/types/anime";
+import { useLazyQuery } from "@apollo/client"
+import { parseAsArrayOf, parseAsInteger, parseAsString, useQueryState } from 'nuqs'
+import { GET_ANIME_LIST } from "@/lib/graphql/queries";
+import { AnilistResponse } from "@/types/anilist";
+import { useCallback, useEffect, useRef } from "react";
+import SearchHeader from "@/app/search/_components/header";
+import SearchContent from "@/app/search/_components/content";
+import SearchBar from "@/app/search/_components/search-bar";
+import SearchPagination from "@/app/search/_components/pagination";
 
-const GET_ANIMES = gql`
-    query GetAnimes(
-        $genres: [String], 
-        $tags: [String], 
-        $status: MediaStatus, 
-        $seasonYear: Int, 
-        $format: MediaFormat,
-        $season: MediaSeason,
-        $isAdult: Boolean,
-        $source: MediaSource,
-        $sort: [MediaSort] = [POPULARITY_DESC, SCORE_DESC],
-        $countryOfOrigin: CountryCode,
-        $averageScore: Int,
-        $search: String
-    ) {
-        Page {
-            pageInfo {
-                hasNextPage
-            }
-            media (
-                type: ANIME,
-                sort: $sort,
-                genre_in: $genres,
-                tag_in: $tags,
-                status: $status,
-                seasonYear: $seasonYear,
-                format: $format,
-                season: $season,
-                isAdult: $isAdult,
-                source: $source,
-                countryOfOrigin: $countryOfOrigin,
-                averageScore: $averageScore,
-                search: $search
-            ) {
-                id
-                title {
-                    english
-                }
-                genres
-                tags {
-                    name
-                }
-                status
-                coverImage {
-                    large
-                }
-                season
-                seasonYear
-                popularity
-                episodes
-                description
-                averageScore
-            }
-        }
-    }
-`;
+export default function Search() {
+    const initialRender = useRef<boolean>(false)
 
-function SearchContent() {
     const [genres] = useQueryState('genres', parseAsArrayOf(parseAsString))
     const [tags] = useQueryState('tags', parseAsArrayOf(parseAsString))
     const [sort] = useQueryState('sort', parseAsArrayOf(parseAsString))
-
+    
+    const [page, setPage] = useQueryState('page', parseAsInteger.withDefault(1))
     const [status] = useQueryState('status')
     const [year] = useQueryState('year')
     const [format] = useQueryState('format')
@@ -81,17 +29,23 @@ function SearchContent() {
     const [source] = useQueryState('source')
     const [country] = useQueryState('country')
     const [score] = useQueryState('score')
-    
     const [query] = useQueryState('query')
 
-    const [isLoading] = useState<boolean>(false)
+    const [executeQuery, {
+        data,
+        loading,
+        error,
+        refetch
+    }] = useLazyQuery<AnilistResponse<"Page", { pageInfo: AnimePageInfo, media: Anime[] }>>(GET_ANIME_LIST);
 
-    const { data, loading, error, refetch } = useQuery(GET_ANIMES, {
-        variables: {
+    const buildQueryVariables = useCallback((overrideVars?: any) => {
+        const baseVars = {
+            search: query || undefined,
+            page: page,
+            
+            sort: (sort && (sort?.length > 0)) ? sort : undefined,
             genres: (genres && (genres?.length > 0)) ? genres : undefined,
             tags: (tags && (tags?.length > 0)) ? tags : undefined,
-            sort: (sort && (sort?.length > 0)) ? sort : undefined,
-
             status: status || undefined,
             seasonYear: year ? parseInt(year) : undefined,
             format: format || undefined,
@@ -100,82 +54,65 @@ function SearchContent() {
             source: source || undefined,
             countryOfOrigin: country || undefined,
             score: score ? parseInt(score) : undefined,
-            search: query || undefined,
+        };
+        
+        return overrideVars ? { ...baseVars, ...overrideVars } : baseVars;
+    }, [genres, tags, sort, status, year, format, season, isAdult, source, country, score, query, page]);
+
+    const handleApplyFilters = useCallback((overrideVars?: any) => {
+        const variables = buildQueryVariables({
+            ...overrideVars,
+            perPage: 15
+        });
+        executeQuery({ variables });
+    }, [executeQuery, buildQueryVariables]);
+
+    const handlePageChange = useCallback((newPage: number) => {
+        setPage(newPage);
+        handleApplyFilters({
+            page: newPage
+        })
+    }, [setPage]);
+
+    useEffect(() => {
+        if(!initialRender.current) {
+            initialRender.current = true
+            handleApplyFilters();
         }
-    });
+    }, [initialRender]);
 
     if (error)
-      return (
-          <Indicator message={error.message} type="error" onRetry={() => refetch()} />
-      );
+        return (
+            <Indicator message={error.message} type="error" onRetry={() => refetch()} />
+        );
 
     return (
-        <>
-            <AnimeFilters refetch={refetch} />
-            {(loading || isLoading) && (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
-                {[1, 2, 3, 4, 5, 6].map((_, idx) => (
-                    <AnimeCardSkeleton key={idx} />
-                ))}
-                </div>
-            )}
+        <div className="flex flex-col lg:flex-row gap-8">
+            <AnimeFilters 
+                onApply={handleApplyFilters}
+                className="lg:max-w-[400px]"
+            />
 
-            {(data && data.Page.media && data.Page.media.length > 0) ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
-                {data.Page.media.map((anime: Anime) => (
-                    <AnimeCard
-                        key={anime.id} 
-                        id={anime.id}
-                        title={anime.title}
-                        coverImage={anime.coverImage}
-                        averageScore={anime.averageScore}
-                        status={anime.status}
-                        seasonYear={anime.seasonYear}
-                        format={anime.format}
+            <div className="space-y-10 flex-1 pb-20">
+                <div className="flex flex-col gap-5 flex-1">
+                    <div className="flex flex-col gap-3">
+                        <SearchHeader
+                            query={query || ""}
+                            animesLength={data?.Page.media.length || 0}
+                        />
+                        <SearchBar onApply={handleApplyFilters} />
+                    </div>
+                    <SearchContent 
+                        isLoading={loading}
+                        animes={data?.Page.media}
                     />
-                ))}
                 </div>
-            ) : (
-                <div className="text-center py-12">
-                    <p className="text-lg text-gray-500">
-                        No anime found. Try a different search query.
-                    </p>
-                </div>
-            )}
-        </>
+                <SearchPagination 
+                    pageInfo={data?.Page.pageInfo}
+                    currentPage={page}
+                    onPageChange={handlePageChange}
+                />
+            </div>
+        </div>
     );
-}
-
-function SearchFallback() {
-  return (
-    <>
-      <div className="animate-pulse p-4 rounded-lg border mb-6">
-          <div className="h-10 bg-gray-200 rounded w-1/3 mb-4"></div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="h-8 bg-gray-200 rounded"></div>
-              <div className="h-8 bg-gray-200 rounded"></div>
-              <div className="h-8 bg-gray-200 rounded"></div>
-              <div className="h-8 bg-gray-200 rounded"></div>
-          </div>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
-          {[1, 2, 3, 4, 5, 6].map((_, idx) => (
-              <AnimeCardSkeleton key={idx} />
-          ))}
-      </div>
-    </>
-  );
-}
-
-export default function SearchPage() {
-  return (
-    <>
-      <Header />
-      <div className="container mx-auto py-8 px-4">
-          <Suspense fallback={<SearchFallback />}>
-              <SearchContent />
-          </Suspense>
-      </div>
-    </>
-  );
 }

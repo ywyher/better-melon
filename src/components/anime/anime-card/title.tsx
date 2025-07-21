@@ -10,7 +10,7 @@ export default function AnimeCardTitle({
   status: AnimeStatus;
   title: AnimeTitle;
 }) {
-  const [isHovered, setIsHovered] = useState(false);
+  // const [isHovered, setIsHovered] = useState(false);
 
   return (
     <div 
@@ -19,12 +19,16 @@ export default function AnimeCardTitle({
         cursor-pointer rounded-sm
         hover:bg-[#ffffff1a] transition-all
       "
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      // onMouseEnter={() => setIsHovered(true)}
+      // onMouseLeave={() => setIsHovered(false)}
     >
       <AnimeStatusIndicator animate={false} status={status} />
-      <div className="font-bold text-sm">
-        {isHovered ? title.english : stripText(title.english, 18)}
+      <div 
+        className="font-bold text-sm transition-all"
+        title={title.english}
+      >
+        {/* {isHovered ? title.english : stripText(title.english, 18)} */}
+        {stripText(title.english, 18)}
       </div>
     </div>
   );

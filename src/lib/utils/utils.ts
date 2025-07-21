@@ -55,7 +55,7 @@ export const getExtension = (text: string) => {
 };
 
 export const stripText = (desc: Anime['description'], max?: number) => {
-  if (!desc) return "No description available.";
+  if (!desc) return "Empty";
   const plainText = desc.replace(/<[^>]+>/g, '');
   return plainText.length > (max || 120) ? plainText.substring(0, (max || 120)) + "..." : plainText;
 };

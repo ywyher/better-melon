@@ -176,19 +176,53 @@ export const GET_ANIME_LIST = gql`
   query GetAnimeList(
     $page: Int = 1
     $perPage: Int = 10
-    $sort: [MediaSort]
+    $sort: [MediaSort] = [POPULARITY_DESC, SCORE_DESC]
     $status: MediaStatus
-    $includeDescription: Boolean = false
+    $genres: [String]
+    $tags: [String]
+    $seasonYear: Int
+    $format: MediaFormat
+    $season: MediaSeason
+    $isAdult: Boolean
+    $source: MediaSource
+    $countryOfOrigin: CountryCode
+    $averageScore: Int
+    $search: String
+    
+    $includeDescription: Boolean = true
     $includeBanner: Boolean = false
-    $includeMediumCover: Boolean = true
+    $includeMediumCover: Boolean = false
     $includeLargeCover: Boolean = true
     $includeExtraLargeCover: Boolean = false
-    $includeSeasonYear: Boolean = false
-    $includeAverageScore: Boolean = false
-    $includeStatus: Boolean = false
+    $includeSeasonYear: Boolean = true
+    $includeAverageScore: Boolean = true
+    $includeStatus: Boolean = true
+    $includeGenres: Boolean = true
+    $includeTags: Boolean = true
+    $includeSeason: Boolean = true
+    $includePopularity: Boolean = false
+    $includeEpisodes: Boolean = false
   ) {
     Page(page: $page, perPage: $perPage) {
-      media(type: ANIME, sort: $sort, status: $status) {
+      pageInfo {
+        hasNextPage
+        currentPage
+      }
+      media(
+        type: ANIME
+        sort: $sort
+        status: $status
+        genre_in: $genres
+        tag_in: $tags
+        seasonYear: $seasonYear
+        format: $format
+        season: $season
+        isAdult: $isAdult
+        source: $source
+        countryOfOrigin: $countryOfOrigin
+        averageScore: $averageScore
+        search: $search
+      ) {
         id
         format
         title {
@@ -204,6 +238,13 @@ export const GET_ANIME_LIST = gql`
         seasonYear @include(if: $includeSeasonYear)
         averageScore @include(if: $includeAverageScore)
         status @include(if: $includeStatus)
+        genres @include(if: $includeGenres)
+        tags @include(if: $includeTags) {
+          name
+        }
+        season @include(if: $includeSeason)
+        popularity @include(if: $includePopularity)
+        episodes @include(if: $includeEpisodes)
       }
     }
   }

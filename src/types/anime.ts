@@ -2,6 +2,25 @@ import { AnilistEdges } from "@/types/anilist"
 import { SubtitleFile } from "@/types/subtitle"
 
 export type AnimeChracterRole = "MAIN" | "SUPPORTING" | "BACKGROUND"
+export type AnimeGenre = "Action"
+  | "Adventure"
+  | "Comedy"
+  | "Drama"
+  | "Ecchi"
+  | "Fantasy"
+  | "Hentai"
+  | "Horror"
+  | "Mahou Shoujo"
+  | "Mecha"
+  | "Music"
+  | "Mystery"
+  | "Psychological"
+  | "Romance"
+  | "Sci-Fi"
+  | "Slice of Life"
+  | "Sports"
+  | "Supernatural"
+  | "Thriller"
 export type AnimeStatus = "CANCELLED" | "FINISHED" | "HIATUS" | "NOT_YET_RELEASED" | "RELEASING"
 export type AnimeSeason = "SPRING" | "FALL" | "SUMMER" | "WINTER"
 export type AnimeRelatoinType = "ADAPTATION" 
@@ -80,6 +99,11 @@ export type AnimeSort = "ID"
 | "FAVOURITES"	
 | "FAVOURITES_DESC"	
 export type AnimeCountry = "JP" | "KR" | "TW" | "CN"
+
+export type AnimePageInfo = {
+  hasNextPage: boolean
+  currentPage: number
+}
 
 export interface AnimeTitle {
   english: string;
