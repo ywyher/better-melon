@@ -1,0 +1,26 @@
+{
+  "name": "@better-melon/scraper",
+  "version": "0.1.0",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "echo 'No dev script for scraper package'",
+    "build": "echo 'No build script for scraper package'"
+  },
+  "exports": {
+    ".": "./src/hianime/index.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@types/crypto-js": "^4.2.2",
+    "cheerio": "^1.1.2",
+    "crypto-js": "^4.2.0",
+    "ky": "^1.8.2"
+  }
+}

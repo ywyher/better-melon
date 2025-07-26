@@ -1,0 +1,27 @@
+{
+  "name": "@better-melon/dictionary-indexer",
+  "version": "0.1.0",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "echo 'No dev script for scraper package'",
+    "build": "bun ./src/index.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@scriptin/jmdict-simplified-types": "^3.6.1",
+    "@t3-oss/env-core": "^0.13.6",
+    "@types/yauzl-promise": "^4.0.1",
+    "ky": "^1.8.1",
+    "meilisearch": "^0.50.0",
+    "yauzl-promise": "^4.0.0",
+    "yomichan-dict-builder": "^2.9.2",
+    "zod": "^3.25.36"
+  }
+}
