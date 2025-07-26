@@ -5,13 +5,13 @@ import { defaultSubtitleSettings } from "@/app/settings/subtitle/_subtitle-setti
 import { defaultWordSettings } from "@/app/settings/word/constants"
 import { auth } from "@/lib/auth"
 import { defaultGeneralSettings } from "@/lib/constants/settings"
-import db from "@/lib/db"
-import { account, GeneralSettings, generalSettings, PlayerSettings, playerSettings, SubtitleSettings, subtitleSettings, User, word, wordSettings } from "@/lib/db/schema"
-import { env } from "@/lib/env/server"
+import { account, generalSettings, playerSettings, subtitleSettings, User, wordSettings } from "@/lib/db/schema"
+import { env } from "@/lib/env/client"
 import { redis } from "@/lib/redis"
 import { NHKEntry } from "@/types/nhk"
-import { and, eq } from "drizzle-orm"
+import { eq } from "drizzle-orm"
 import { headers } from "next/headers"
+import db from "@/lib/db"
 
 export async function getAccessToken({ accountId }: {accountId: string}) {
   const [accountData] = await db.select().from(account)
@@ -69,7 +69,7 @@ export async function getAccountProvider(userId: string) {
 }
 
 export async function getPitchAccent(query: string) {
-  const res = await fetch(`${env.API_URL}/pitch/search/${query}`)
+  const res = await fetch(`${env.NEXT_PUBLIC_API_URL}/pitch/search/${query}`)
 
   if(!res.ok) throw new Error("Pitch not found")
 

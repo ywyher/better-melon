@@ -1,6 +1,6 @@
 'use server'
 
-import { env } from "@/lib/env/server";
+import { env } from "@/lib/env/client";
 import { Dictionary, Index } from "@/types/dictionary";
 import { JMdictWord } from "@/types/jmdict";
 import { JMnedictWord } from "@/types/jmnedict";
@@ -17,7 +17,7 @@ export type JMdictResponse = {
 
 export async function getJMdictEntries(query?: string) {
   try {
-    const dataRaw = await fetch(`${env.API_URL}/indexes/jmdict/search/${query}`)
+    const dataRaw = await fetch(`${env.NEXT_PUBLIC_API_URL}/indexes/jmdict/search/${query}`)
 
     if (!dataRaw.ok) {
       throw new Error(`API responded with status: ${dataRaw.status}`);
@@ -59,7 +59,7 @@ export type DictionaryResponse = {
 
 export async function getDictionaryEntries(query?: string) {
   try {
-    const dataRaw = await fetch(`${env.API_URL}/dictionary/search/${query}`)
+    const dataRaw = await fetch(`${env.NEXT_PUBLIC_API_URL}/dictionary/search/${query}`)
 
     if (!dataRaw.ok) {
       throw new Error(`API responded with status: ${dataRaw.status}`);

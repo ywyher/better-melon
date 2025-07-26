@@ -8,8 +8,6 @@ export const env = createEnv({
     DATABASE_URL: z.string().url(),
 
     BETTER_AUTH_SECRET: z.string().min(1),
-    
-    API_URL: z.string().url(),
 
     REDIS_PORT: z.string().min(1),
     

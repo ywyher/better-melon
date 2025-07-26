@@ -1,12 +1,12 @@
+maybe change the player loading strategy to idle
+
+header search component uses a custom query, change it to the global one
+
+GET_ANIME query is kinda a mess rn
+
 on resizing the it shows the loading state for some reason prob cuz isVideoReady which result in the player returning back to 0:00 fix this shit
 
-we have an issue with aniwatch package is that when the key changes on 
-https://github.com/itzzzme/megacloud-keys/blob/main/key.txt
-we get the malformed error for a while, it fixes it self after a while tho
-
 transcriptinos selector doesn't seeem to work lol most likely cuz we have english japanese hiragana to always be there, but they should be visable of they are removed dumbass me
-
-if all transcriptions are cached there would be no need to initialize the tokenizer and while they are watching we initialze the tokenizer in the background in case they add any other transcriptions later
 
 check your words list button ?
 
@@ -114,31 +114,6 @@ https://receive-smss.com/
 check out
 1- https://github.com/shaka-project/shaka-player
 2- https://github.com/zhw2590582/ArtPlayer
-
-[frontend](https://github.com/ywyher/better-melon)
-```bash
-Language                     files          blank        comment           code
--------------------------------------------------------------------------------
-SUM:                           312           2470           1101          20599
-```
-
-[api](https://github.com/ywyher/better-melon-api)
-```bash
--------------------------------------------------------------------------------
-Language                     files          blank        comment           code
--------------------------------------------------------------------------------
-SUM:                            26            179             76           1340
--------------------------------------------------------------------------------
-```
-
-[dictionary indexer](https://github.com/ywyher/better-melon-dictionary-indexer)
-```bash
--------------------------------------------------------------------------------
-Language                     files          blank        comment           code
--------------------------------------------------------------------------------
-SUM:                            12             68              2            483
--------------------------------------------------------------------------------
-```
 
 Heiban
 Atamadaka

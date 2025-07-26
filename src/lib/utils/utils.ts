@@ -1,10 +1,9 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { S3Client } from "@aws-sdk/client-s3";
-import { Anime, AnimeEpisodeMetadata } from "@/types/anime";
+import { Anime, AnimeDate, AnimeEpisodeMetadata } from "@/types/anime";
 import { MediaPlayerInstance } from "@vidstack/react";
 import { defaultGeneralSettings } from "@/lib/constants/settings";
-import { promises as fs } from 'fs';
 import _ from 'lodash';
 
 export const s3 = new S3Client({
@@ -55,10 +54,10 @@ export const getExtension = (text: string) => {
   return text.split('.').pop()?.toLowerCase();
 };
 
-export const formatDescription = (desc: Anime['description'], max?: number) => {
-    if (!desc) return "No description available.";
-    const plainText = desc.replace(/<[^>]+>/g, '');
-    return plainText.length > (max || 120) ? plainText.substring(0, (max || 120)) + "..." : plainText;
+export const stripText = (desc: Anime['description'], max?: number) => {
+  if (!desc) return "Empty";
+  const plainText = desc.replace(/<[^>]+>/g, '');
+  return plainText.length > (max || 120) ? plainText.substring(0, (max || 120)) + "..." : plainText;
 };
 
 export const getTitle = (title: Anime['title']) => {
@@ -193,7 +192,7 @@ export function takeSnapshot(player: MediaPlayerInstance, format: 'png' | 'jpeg'
     return dataURL.split(',')[1];
 }
 
-export const arraysEqual = (a: SubtitleTranscription[], b: SubtitleTranscription[]) => {
+export const arraysEqual = (a: unknown[], b: unknown[]) => {
   if (a.length !== b.length) return false;
   return a.every((val, index) => val === b[index]);
 };

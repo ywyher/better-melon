@@ -1,6 +1,7 @@
 'use client'
 
 import DefinitionPlayground from "@/app/playground/_components/definition";
+import EpisodesListPlayground from "@/app/playground/_components/episodes-list";
 import IsTranscriptionsCachedPlayground from "@/app/playground/_components/is-transcriptions-cached";
 import PanelPlayground from "@/app/playground/_components/panel";
 import ProgressivePitchPlayground from "@/app/playground/_components/progressive-pitch";
@@ -16,10 +17,11 @@ import EnabledTranscriptions from "@/app/watch/[id]/[ep]/_components/settings/en
 export default function Playground() {
   return (
     <>
-      <EnabledTranscriptions
+      <EpisodesListPlayground />
+      {/* <EnabledTranscriptions
         playerSettings={defaultPlayerSettings}
         syncSettings="never"
-      />
+      /> */}
       {/* <IsTranscriptionsCachedPlayground /> */}
       {/* <ProgressivePitchPlayground /> */}
       {/* <WatchDataPlayground /> */}

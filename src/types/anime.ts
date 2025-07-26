@@ -1,8 +1,41 @@
-import { GeneralSettings, PlayerSettings, SubtitleSettings } from "@/lib/db/schema"
+import { AnilistEdges } from "@/types/anilist"
 import { SubtitleFile } from "@/types/subtitle"
 
+export type AnimeChracterRole = "MAIN" | "SUPPORTING" | "BACKGROUND"
+export type AnimeGenre = "Action"
+  | "Adventure"
+  | "Comedy"
+  | "Drama"
+  | "Ecchi"
+  | "Fantasy"
+  | "Hentai"
+  | "Horror"
+  | "Mahou Shoujo"
+  | "Mecha"
+  | "Music"
+  | "Mystery"
+  | "Psychological"
+  | "Romance"
+  | "Sci-Fi"
+  | "Slice of Life"
+  | "Sports"
+  | "Supernatural"
+  | "Thriller"
 export type AnimeStatus = "CANCELLED" | "FINISHED" | "HIATUS" | "NOT_YET_RELEASED" | "RELEASING"
 export type AnimeSeason = "SPRING" | "FALL" | "SUMMER" | "WINTER"
+export type AnimeRelatoinType = "ADAPTATION" 
+| "PREQUEL" 
+| "SEQUEL" 
+| "PARENT" 
+| "SIDE_STORY" 
+| "CHARACTER" 
+| "SUMMARY" 
+| "ALTERNATIVE" 
+| "SPIN_OFF" 
+| "OTHER" 
+| "SOURCE" 
+| "COMPILATION" 
+| "CONTAINS" 
 export type AnimeFormat = "TV" 
 | "TV_SHORT" 
 | "MOVIE" 
@@ -67,6 +100,11 @@ export type AnimeSort = "ID"
 | "FAVOURITES_DESC"	
 export type AnimeCountry = "JP" | "KR" | "TW" | "CN"
 
+export type AnimePageInfo = {
+  hasNextPage: boolean
+  currentPage: number
+}
+
 export interface AnimeTitle {
   english: string;
   romaji?: string;
@@ -74,8 +112,9 @@ export interface AnimeTitle {
 }
 
 export interface AnimeCoverImage {
-  large: string;
   medium: string;
+  large: string;
+  extraLarge?: string;
   color?: string
 }
 
@@ -83,29 +122,6 @@ export interface AnimeDate {
     day: number
     month: number
     year: number
-}
-
-export interface Anime {
-  id: number | string;
-  idMal: number | string;
-  title: AnimeTitle;
-  episodes: number;
-  nextAiringEpisode: {
-    episode: number
-    timeUntilAiring: number
-  } | null
-  coverImage: AnimeCoverImage;
-  genres: string[];
-  status: AnimeStatus;
-  startDate: AnimeDate
-  endDate: AnimeDate
-  description: string;
-  bannerImage: string;
-  season: AnimeSeason;
-  seasonYear: number;
-  averageScore: number;
-  isAdult: boolean;
-  format: string;
 }
 
 export type SkipTime = {
@@ -161,3 +177,128 @@ export type AnimeEpisodeData = {
   sources: AnimeEpisodeSources;
   subtitles: SubtitleFile[]
 }
+
+export type AnimeStreamingEpisode = {
+  number: number;
+  title: string;
+  thumbnail: string;
+}
+
+export type AnimeStudio = {
+  isMain: boolean
+  node: {
+    name: string
+  }
+}
+
+export type AnimeChracter = {
+  role: AnimeChracterRole;
+  node: {
+    name: {
+      first: string;
+      last: string
+    }
+    image: {
+      large: string
+    }
+    age: string;
+  };
+  voiceActors: {
+    name: {
+      first: string;
+      last: string;
+    }
+    image: {
+      large: string
+    }
+  }[]
+}
+
+export type AnimeRleation = {
+  relationType: AnimeRelatoinType
+  node: {
+    id: Anime['id']
+    coverImage: AnimeCoverImage
+    title: AnimeTitle;
+    status: AnimeStatus;
+    format: AnimeFormat
+  }
+}
+
+export type AnimeRecommendation = {
+  node: {
+    mediaRecommendation: {
+      id: Anime['id']
+      title: AnimeTitle;
+      coverImage: AnimeCoverImage
+      status: AnimeStatus
+      format: AnimeFormat
+      averageScore: Anime['averageScore']
+      seasonYear: Anime['seasonYear']
+    }
+  }
+}
+
+export type AnimeTrailer = {
+  id: string;
+  thumbnail: string;
+  site: string
+}
+
+export type AnimeNextAiringEpisode = {
+  airingAt: number
+  episode: number
+  timeUntilAiring: number
+}
+
+export interface Anime {
+  id: number | string;
+  idMal: number | string;
+  title: AnimeTitle;
+  episodes: number;
+  studios: AnilistEdges<AnimeStudio>;
+  characters: AnilistEdges<AnimeChracter>;
+  relations: AnilistEdges<AnimeRleation>;
+  recommendations: AnilistEdges<AnimeRecommendation>;
+  trailer: AnimeTrailer
+  nextAiringEpisode: AnimeNextAiringEpisode | null
+  coverImage: AnimeCoverImage;
+  genres: string[];
+  status: AnimeStatus;
+  startDate: AnimeDate
+  endDate: AnimeDate
+  description: string;
+  bannerImage: string;
+  season: AnimeSeason;
+  seasonYear: number;
+  averageScore: number;
+  isAdult: boolean;
+  format: AnimeFormat;
+  duration: number
+}
+
+export type AnimeInList = {
+  id: number | string;
+  format: AnimeFormat;
+  title: AnimeTitle;
+  bannerImage?: string
+  coverImage: AnimeCoverImage
+  description?: string
+  averageScore?: number
+  status?: AnimeStatus
+  seasonYear?: number
+}
+
+export type AnimeInListVariables = { sort: AnimeSort; } & Partial<{
+  page: number;
+  perPage: number;
+  status: AnimeStatus;
+  includeDescription?: Boolean // = false
+  includeBanner?: Boolean // = false
+  includeMediumCover?: Boolean // = true
+  includeLargeCover?: Boolean // = true
+  includeExtraLargeCover?: Boolean // = false
+  includeAverageScore?: Boolean // = false
+  includeStatus?: Boolean // = false
+  includeSeasonYear?: Boolean // = false
+}>

@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Check, ChevronsUpDown } from "lucide-react"
+import { Check, ChevronsUpDown, X } from "lucide-react"
 import { cn } from "@/lib/utils/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -43,6 +43,11 @@ export function Combobox({
   const [open, setOpen] = React.useState(false)
   const [value, setValue] = React.useState(defaultValue)
 
+  // Sync internal state with defaultValue prop changes
+  React.useEffect(() => {
+    setValue(defaultValue)
+  }, [defaultValue])
+
   const normalizedOptions: Option[] = React.useMemo(() => {
     if (!options.length) return []
     
@@ -65,6 +70,19 @@ export function Combobox({
     }
   }
 
+  const handleClear = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setValue("")
+    if (onChange) {
+      onChange("")
+    }
+  }
+
+  const handleButtonClick = () => {
+    setOpen(!open)
+  }
+
   const getSelectedLabel = () => {
     if (!value) return placeholder
     const selected = normalizedOptions.find(option => option.value === value)
@@ -74,15 +92,31 @@ export function Combobox({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          role="combobox"
-          aria-expanded={open}
-          className={`${buttonWidth} justify-between text-muted-foreground`}
-        >
-          {getSelectedLabel()}
-          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-        </Button>
+        <div className={`${buttonWidth} relative`}>
+          <Button
+            variant="outline"
+            role="combobox"
+            aria-expanded={open}
+            className="w-full justify-between text-muted-foreground pr-16"
+            onClick={handleButtonClick}
+          >
+            {getSelectedLabel()}
+            <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50" />
+          </Button>
+          {value && (
+            <Button
+              variant={'ghost'}
+              className="
+                absolute right-7 top-1/2 -translate-y-1/2 
+                rounded-sm hover:bg-transparent
+                opacity-50 hover:opacity-100 hover:text-destructive
+              "
+              onClick={handleClear}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
       </PopoverTrigger>
       <PopoverContent className={`${contentWidth} p-0`}>
         <Command>
