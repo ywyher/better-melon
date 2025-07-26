@@ -1,13 +1,13 @@
 {
-  "name": "anime",
+  "name": "better-melon",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "test": "vitest",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "test": "vitest",
     "push": "npx drizzle-kit push",
     "studio": "npx drizzle-kit studio"
   },

@@ -8,7 +8,7 @@ export function HeroContent({ anime }: { anime: Anime }) {
   return (
     <div className="
       absolute inset-0 z-10
-      flex flex-col lg:flex-row justify-between items-center
+      flex flex-col lg:flex-row justify-between items-center gap-10
       px-10 py-10 lg:py-0
     ">
       <div className="flex flex-col gap-5 items-center lg:items-start">

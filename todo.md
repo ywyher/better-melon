@@ -1,7 +1,8 @@
+maybe change the player loading strategy to idle
+
 header search component uses a custom query, change it to the global one
 
 GET_ANIME query is kinda a mess rn
-
 
 on resizing the it shows the loading state for some reason prob cuz isVideoReady which result in the player returning back to 0:00 fix this shit
 

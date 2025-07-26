@@ -23,7 +23,8 @@ export default function Hero({
     <div className="relative w-full min-h-[800px] lg:min-h-[500px]">
       <HeroBackground 
         bannerImage={anime.bannerImage}
-        title={anime.title}
+        coverImage={anime.coverImage}
+        id={anime.id}
         imageLoading={imageLoading}
         setImageLoading={setImageLoading}
       />

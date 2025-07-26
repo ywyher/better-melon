@@ -1,23 +1,30 @@
 import { ImageSkeleton } from "@/components/image-skeleton";
-import { AnimeTitle } from "@/types/anime";
+import { cn } from "@/lib/utils/utils";
+import { Anime, AnimeCoverImage } from "@/types/anime";
 import Image from "next/image";
 
-export function HeroBackground({ bannerImage, title, imageLoading, setImageLoading }: {
+export function HeroBackground({ bannerImage, coverImage, id, imageLoading, setImageLoading }: {
   bannerImage: string;
-  title: AnimeTitle;
+  coverImage: AnimeCoverImage
+  id: Anime['id'];
   imageLoading: boolean;
   setImageLoading: (loading: boolean) => void;
 }) {
+  if(!bannerImage && !coverImage.extraLarge) return;
+
   return (
     <>
       {/* overlay */}
       <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/70 to-background/60 backdrop-blur-xs z-[3] rounded-xl" />
       {imageLoading && <ImageSkeleton />}
       <Image
-        src={bannerImage}
-        alt={title.english}
+        src={bannerImage || (coverImage.extraLarge || "")}
+        alt={String(id)}
         fill
-        className="rounded-xl"
+        className={cn(
+          "rounded-xl",
+          !bannerImage && "object-cover"
+        )}
         onLoadingComplete={() => setImageLoading(false)}
       />
     </>
