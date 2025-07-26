@@ -76,9 +76,13 @@ async function getFallbackEpisodeSources(
     }
   ).json();
 
+
   const sources: HianimeEpisodeSources = {
     type: 'sub',
-    sources: data.sources ?? "",
+    sources: {
+      ...data.sources,
+      type: 'hls'
+    },
     tracks: data.tracks ?? [],
     intro: data.intro ?? null,
     outro: data.outro ?? null,

@@ -42,7 +42,7 @@ export const HIANIME_FILTERS_MAP = {
     THRILLER: 41,
     VAMPIRE: 32
   },
-  TYPE: {
+  FORMAT: {
     ALL: 0,
     MOVIE: 1,
     TV: 2,

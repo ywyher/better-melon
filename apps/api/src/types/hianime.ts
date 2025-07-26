@@ -1,26 +1,40 @@
 import { t } from "elysia";
 import { anilistAnimeData } from "./anilist";
-import { datePattern } from ".";
+import { date } from ".";
 
-export const hianimeAnimeStatus = t.UnionEnum(["finished-airing", "currently-airing", "not-yet-aired"])
+export const hianimeAnimeStatus = t.UnionEnum([
+  "FINISHED",
+  "NOT_YET_RELEASED",
+  "RELEASING"
+])
 export const hianimeAnimeSeasons = t.UnionEnum(["spring", "fall", "summer", "winter"])
-export const hianimeAnimeType = t.UnionEnum(['movie', 'tv', 'ova', 'ona', 'special', 'music'])
-
-const commaSeparatedPattern = '^[a-zA-Z0-9]+(,[a-zA-Z0-9]+)*$';
+export const hianimeAnimeFormat = t.UnionEnum([
+  "TV"
+, "MOVIE" 
+, "SPECIAL" 
+, "OVA" 
+, "ONA" 
+, "MUSIC" 
+])
 
 export const anilistToHiAnime = t.Object({
   q: t.String(),
   success: t.Boolean(),
-  type: hianimeAnimeType,
+  format: hianimeAnimeFormat,
   status: hianimeAnimeStatus,
-  startDate: t.String({ pattern: datePattern }),
-  endDate: t.Nullable(t.String({ pattern: datePattern })),
+  startDate: date,
+  endDate: t.Nullable(date),
+})
+
+export const hianimeAnimeTitle = t.Object({
+  english: t.String(),
+  native: t.Optional(t.String())
 })
 
 export const hianimeAnimeEpisode = t.Object({
+  id: t.Number(),
   number: t.Number(),
-  title: t.String(),
-  episodeId: t.String(),
+  title: t.Partial(hianimeAnimeTitle),
   isFiller: t.Boolean(),
 })
 
@@ -29,14 +43,15 @@ export const hianimeAnimeEpiosdeSourcesHeader = t.Object({
 })
 
 export const hianimeAnimeEpisodeTimeSegment = t.Object({
-  intro: t.Number(),
-  outro: t.Number()
+  start: t.Number(),
+  end: t.Number()
 })
 
 export const hianimeAnimeEpisodeTrack = t.Object({
-  url: t.String(),
+  file: t.String(),
   label: t.Optional(t.String()),
   kind: t.Optional(t.String()),
+  default: t.Optional(t.Boolean())
 })
 
 export const hianimeAnimeEpisodeSource = t.Object({
@@ -45,13 +60,13 @@ export const hianimeAnimeEpisodeSource = t.Object({
 })
 
 export const hianimeAnimeEpisodeSources = t.Object({
+  sources: hianimeAnimeEpisodeSource,
   headers: t.Optional(hianimeAnimeEpiosdeSourcesHeader),
   tracks: t.Array(hianimeAnimeEpisodeTrack),
   intro: hianimeAnimeEpisodeTimeSegment,
   outro: hianimeAnimeEpisodeTimeSegment,
-  sources: t.Array(hianimeAnimeEpisodeSource),
   iframe: t.String(),
-  serverId: t.String(),
+  serverId: t.Number(),
 })
 
 export const hianimeAnimeData = t.Object({
@@ -60,7 +75,7 @@ export const hianimeAnimeData = t.Object({
   jname: t.String(),
   poster: t.String(),
   duration: t.String(),
-  type: hianimeAnimeType,
+  format: hianimeAnimeFormat,
   rating: t.Nullable(t.Number()),
   episodes: t.Object({
     sub: t.Number(),
@@ -73,7 +88,7 @@ export const hianimeSearchResponse = t.Object({
   mostPopularAnimes: t.Array(hianimeAnimeData),
   searchFilters: t.Object({
     genres: t.String(),
-    type: hianimeAnimeType,
+    format: hianimeAnimeFormat,
     status: hianimeAnimeStatus,
     season: hianimeAnimeSeasons,
     sort: t.String(),
@@ -83,11 +98,6 @@ export const hianimeSearchResponse = t.Object({
   totalPages: t.Number(),
   hasNextPage: t.Boolean(),
   currentPage: t.Number()
-})
-
-export const hianimeEpisodesResponse = t.Object({
-  totalEpisodes: t.Number(),
-  episodes: t.Array(hianimeAnimeEpisode)
 })
 
 export const hianimeAnimeResponse = t.Object({
@@ -102,8 +112,7 @@ export type HianimeAnimeEpisode = typeof hianimeAnimeEpisode.static
 export type HianimeSearchResponse = typeof hianimeSearchResponse.static
 export type HianimeAnimeStatus = typeof hianimeAnimeStatus.static
 export type HianimeAnimeSeason = typeof hianimeAnimeSeasons.static
-export type HianimeAnimeType = typeof hianimeAnimeType.static
-export type HianimeAnimeEpisodesResponse = typeof hianimeEpisodesResponse.static
+export type HianimeAnimeFormat = typeof hianimeAnimeFormat.static
 export type AnilistToHiAnime = typeof anilistToHiAnime.static
 
 export type HianimeApiResponse<T> = {

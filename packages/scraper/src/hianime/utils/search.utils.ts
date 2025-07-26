@@ -1,9 +1,8 @@
 import { HIANIME_FILTERS_MAP } from "./filters.mapper";
-import type { HianimeAnime, HianimeAnimeEpisodes, HianimeAnimeTitle, HianimeDate, HianimeGenre, HianimeType } from "../types/anime";
+import type { HianimeAnime, HianimeAnimeTitle, HianimeDate, HianimeFormat, HianimeGenre } from "../types/anime";
 import type { CheerioAPI } from "cheerio";
 import { hianimeConfig } from "./config";
-import type { HianimeSearchProps } from "../scrapers/search.scraper";
-import type { HianimeFilterKeys, HianimeSearchFilters } from "../types/search";
+import type { HianimeAnimeEpisodes, HianimeFilterKeys, HianimeSearchFilters, HianimeSearchProps } from "../types/search";
 
 export function getHianimeSearchDateFilterValue({
     category,
@@ -27,8 +26,8 @@ export function getHianimeSearchGenresFilterValue({
     value: HianimeGenre[]
 }) {
     return value
-        .map((genre: HianimeGenre) => HIANIME_FILTERS_MAP["GENRE"][genre as keyof typeof HIANIME_FILTERS_MAP.GENRE])
-        .join(",");
+      .map((genre: HianimeGenre) => HIANIME_FILTERS_MAP["GENRE"][genre as keyof typeof HIANIME_FILTERS_MAP.GENRE])
+      .join(",");
 }
 
 export function getHianimeSearchFilterValue({
@@ -42,8 +41,8 @@ export function getHianimeSearchFilterValue({
     if (!rawValue) return undefined;
     
     switch (key) {
-        case "type": {
-            const val = HIANIME_FILTERS_MAP["TYPE"][rawValue as keyof typeof HIANIME_FILTERS_MAP.TYPE] ?? 0;
+        case "format": {
+            const val = HIANIME_FILTERS_MAP["FORMAT"][rawValue as keyof typeof HIANIME_FILTERS_MAP.FORMAT] ?? 0;
             return val === 0 ? undefined : `${val}`;
         }
         case "status": {
@@ -108,10 +107,10 @@ export function extractHianimeAnimes($: CheerioAPI) {
       ?.text()
       ?.trim();
 
-    const type = $(item)
+    const format = $(item)
       .find(".film-detail .fd-infor .fdi-item:nth-of-type(1)")
       ?.text()
-      ?.trim() as HianimeType;
+      ?.trim() as HianimeFormat;
 
     const episodes = {
       sub:
@@ -139,7 +138,7 @@ export function extractHianimeAnimes($: CheerioAPI) {
       title,
       poster,
       duration,
-      type,
+      format,
       episodes
     })
   })
@@ -167,10 +166,10 @@ export function getHianimeSearchUrl({
       continue;
     }
 
-    if (key === "start_date" || key === "end_date") {
-      const isStartDate = key == 'start_date'
+    if (key === "startDate" || key === "endDate") {
+      const isStartDate = key == 'startDate'
       const category = isStartDate ? "s" : "e"
-      const date = isStartDate ? filters.start_date : filters.end_date;
+      const date = isStartDate ? filters.startDate : filters.endDate;
       if(!date) continue;
 
       const dates = getHianimeSearchDateFilterValue({
@@ -187,9 +186,9 @@ export function getHianimeSearchUrl({
 
     const filterVal = getHianimeSearchFilterValue({
       key: key as HianimeFilterKeys,
-      rawValue: filters[key as keyof Omit<HianimeSearchFilters, 'genres' | 'start_date' | 'end_date'>] || ""
+      rawValue: filters[key as keyof Omit<HianimeSearchFilters, 'genres' | 'startDate' | 'endDate'>] || ""
     });
-    filterVal && url.searchParams.set(key, filterVal);
+    filterVal && url.searchParams.set(key == 'format' ? 'type' : key, filterVal);
   }
 
   return url

@@ -9,5 +9,5 @@ test("returns episodes data", async () => {
 
     expect(anilistData).not.toBeEmpty()
     expect(info.id).not.toBeEmpty()
-    expect(episodes.episodes).not.toBeEmpty()
+    expect(episodes).not.toBeEmpty()
 });

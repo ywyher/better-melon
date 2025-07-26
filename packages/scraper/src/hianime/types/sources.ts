@@ -38,8 +38,8 @@ export type HianimeSource = {
 }
 
 export type HianimTimeSegment = {
-  start: string;
-  end: boolean;
+  start: number;
+  end: number;
 }
 
 export type HianimeGetSourcesApiResponse = {

@@ -6,17 +6,17 @@ test("hianime search", async () => {
   const results = await hianime.search({
     q: 'steins;gate',
     filters: {
-      status: 'FINISHED_AIRING',
+      status: 'FINISHED',
       language: 'SUB',
       sort: 'MOST_WATCHED',
-      type: 'TV',
+      format: 'TV',
       genres: ["SCI_FI"],
-      start_date: {
+      startDate: {
         day: 6,
         month: 4,
         year: 2011
       },
-      end_date: {
+      endDate: {
         day: 14,
         month: 9,
         year: 2011

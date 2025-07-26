@@ -1,7 +1,7 @@
 import Hianime from '@repo/scraper';
 import { redis } from "bun";
 import { AnilistAnimeData, AnilistAnimeFormat, AnilistAnimeStatus } from "../types/anilist";
-import { AnilistToHiAnime, HianimeAnimeData, HianimeAnimeEpisode, HianimeAnimeEpisodeSources, HianimeAnimeEpisodesResponse, hianimeAnimeResponse, HianimeAnimeResponse, hianimeAnimeStatus, HianimeAnimeStatus, hianimeAnimeType, HianimeAnimeType, HianimeApiResponse, HianimeSearchResponse } from "../types/hianime";
+import { AnilistToHiAnime, HianimeAnimeData, HianimeAnimeEpisode, HianimeAnimeEpisodeSources, hianimeAnimeFormat, HianimeAnimeFormat, HianimeAnimeResponse, hianimeAnimeStatus, HianimeAnimeStatus } from "../types/hianime";
 import { getAnilistAnime } from "./anilist";
 import { cacheKeys } from "../lib/constants/cache";
 
@@ -17,24 +17,24 @@ async function mapAnilistToHianime(anilistData: AnilistAnimeData): Promise<Anili
     const endDate = anilistData.endDate;
     const title = anilistData.title.english.toLowerCase().replace(/\s+/g, '+');
     
-    const formatMapping: Record<AnilistAnimeFormat, HianimeAnimeType | null> = {
-      "TV": "tv",
-      "TV_SHORT": "tv",
-      "MOVIE": "movie",
-      "SPECIAL": "special",
-      "OVA": "ova",
-      "ONA": "ona",
-      "MUSIC": "music",
+    const formatMapping: Record<AnilistAnimeFormat, HianimeAnimeFormat | null> = {
+      "TV": "TV",
+      "TV_SHORT": null,
+      "MOVIE": "MOVIE",
+      "SPECIAL": "SPECIAL",
+      "OVA": "OVA",
+      "ONA": "ONA",
+      "MUSIC": "MUSIC",
     };
-    const mappedType = formatMapping[format];
-    if (!mappedType) {
-      throw new Error(`Invalid type: ${format}. Valid HiAnime types are: ${Object.keys(hianimeAnimeType.enum).join(', ')}`)
+    const mappedFormat = formatMapping[format];
+    if (!mappedFormat) {
+      throw new Error(`Invalid format: ${format}. Valid HiAnime types are: ${Object.keys(hianimeAnimeFormat.enum).join(', ')}`)
     }
 
     const statusMapping: Record<AnilistAnimeStatus, HianimeAnimeStatus | null> = {
-      'FINISHED': 'finished-airing',
-      "RELEASING": 'currently-airing',
-      'NOT_YET_RELEASED': 'not-yet-aired',
+      'FINISHED': 'FINISHED',
+      "RELEASING": 'RELEASING',
+      'NOT_YET_RELEASED': 'NOT_YET_RELEASED',
       'CANCELLED': null,
       "HIATUS": null
     }
@@ -46,10 +46,10 @@ async function mapAnilistToHianime(anilistData: AnilistAnimeData): Promise<Anili
     const result = {
       q: title.replace('+', ' '),
       success: true,
-      type: mappedType,
+      format: mappedFormat,
       status: mappedStatus,
-      startDate: `${startDate.year}-${startDate.month}-${startDate.day}`,
-      endDate: mappedStatus == 'finished-airing' ? `${endDate.year}-${endDate.month}-${endDate.day}` : null
+      startDate,
+      endDate: status == 'FINISHED' ? endDate : null
     }
 
     const endTime = performance.now();
@@ -73,26 +73,25 @@ export async function getHianimeAnimeInfo(anilistData: AnilistAnimeData): Promis
     }
     
     const mapped = await mapAnilistToHianime(anilistData);
-    const { endDate, q, startDate, status, type } = mapped;
-
-    console.log(type)
-
-    const { animes } = await hianime.search(q, 1, {
-      type,
-      status,
-      start_date: startDate,
-      end_date: endDate ? endDate : undefined,
-      language: 'sub'
+    const { endDate, q, startDate, status, format } = mapped;
+    
+    const { animes } = await hianime.search({
+      q,
+      page: 1,
+      filters: {
+        format,
+        startDate,
+        endDate: endDate ?? undefined,
+        language: 'SUB',
+        status,
+      }
     })
 
     if (!animes?.length) {
       throw new Error(`No anime found on HiAnime for: ${q}`);
     }
 
-    const anime = {
-      ...animes[0],
-      type: animes[0].type?.toLowerCase(),
-    } as HianimeAnimeData
+    const anime = animes[0] as HianimeAnimeData
 
     await redis.set(cacheKey, JSON.stringify(anime), "EX", 3600);
     console.log(`Cached hianime data for ID: ${anilistData.id}`);
@@ -103,23 +102,21 @@ export async function getHianimeAnimeInfo(anilistData: AnilistAnimeData): Promis
   }
 }
 
-export async function getHianimeAnimeEpisodes(animeId: HianimeAnimeData['id']): Promise<HianimeAnimeEpisodesResponse> {
+export async function getHianimeAnimeEpisodes(animeId: HianimeAnimeData['id']): Promise<HianimeAnimeEpisode[]> {
   try {
     const cacheKey = `${cacheKeys.hianime.episodes(animeId)}`;
     const cachedData = await redis.get(cacheKey);
     if (cachedData) {
-      console.log(`Cache hit for hianime anime ID: ${animeId}`);
-      return JSON.parse(cachedData as string) as HianimeAnimeEpisodesResponse;
+      console.log(`Cache hit for hianime anime episode ID: ${animeId}`);
+      return JSON.parse(cachedData as string) as HianimeAnimeEpisode[];
     }
     
-    const data = await hianime.getEpisodes(animeId) as HianimeAnimeEpisodesResponse
-
-    if (!data?.episodes?.length) {
+    const episodes = await hianime.getEpisodes({ animeId })
+    if (!episodes.length) {
       throw new Error(`No episodes found on HiAnime for: ${animeId}`);
     }
-    
-    await redis.set(cacheKey, JSON.stringify(data), "EX", 3600);
-    return data;
+    await redis.set(cacheKey, JSON.stringify(episodes), "EX", 3600);
+    return episodes;
   } catch (error) {
     throw new Error(`${error instanceof Error ? error.message : 'Failed to fetch hianime anime episode streaming links: Unknown error'}`);
   }
@@ -128,22 +125,26 @@ export async function getHianimeAnimeEpisodes(animeId: HianimeAnimeData['id']): 
 export async function getHianimeAnimeEpisodeSources(episodes: HianimeAnimeEpisode[], episodeNumber: string): Promise<HianimeAnimeEpisodeSources> {
   try {
     const episode = episodes.find(e => e.number === Number(episodeNumber));
-    if(!episode) throw new Error("Couldn't find hianime anime episode data")
+    if(!episode) throw new Error(`Couldn't find hianime anime episode`)
 
-    const cacheKey = `${cacheKeys.hianime.sources(episode.episodeId)}`;
+    const cacheKey = `${cacheKeys.hianime.sources(episode.id)}`;
     const cachedData = await redis.get(cacheKey);
     if (cachedData) {
-      console.log(`Cache hit for hianime anime ID: ${episode.episodeId}`);
+      console.log(`Cache hit for hianime anime episode sources episodeID: ${episode.id}`);
       return JSON.parse(cachedData as string) as HianimeAnimeEpisodeSources;
     }
     
-    const data = await hianime.getEpisodeSources(episode.episodeId, 'hd-1', 'sub') as HianimeAnimeEpisodeSources
-    if (!data.sources?.length) {
-      throw new Error(`No episodes found on HiAnime for: ${episode.episodeId}`);
+    const sources = await hianime.getEpisodeSources({
+      episodeId: episode.id,
+      server: undefined,
+      fallback: true
+    })
+    if (!sources) {
+      throw new Error(`No episodes found on HiAnime for: ${episode.id}`);
     }
 
-    await redis.set(cacheKey, JSON.stringify(data), "EX", 300);
-    return data;
+    await redis.set(cacheKey, JSON.stringify(sources), "EX", 300);
+    return sources;
   } catch (error) {
     throw new Error(`${error instanceof Error ? error.message : 'Failed to fetch hianime anime episode streaming links: Unknown error'}`);
   }
@@ -166,14 +167,12 @@ export async function getHianimeAnime(anilistId: string, episodeNumber: string):
     console.log(`Successfully fetched hianime info for ID: ${animeData.id}`);
     
     console.log('Fetching episodes data...');
-    const { episodes } = await getHianimeAnimeEpisodes(animeData.id);
+    const episodes = await getHianimeAnimeEpisodes(animeData.id);
     console.log('Successfully fetched episodes data');
 
     console.log('Fetching streaming links...');
     const sources = await getHianimeAnimeEpisodeSources(episodes, episodeNumber);
     console.log('Successfully fetched streaming links');
-
-    console.log(sources)
 
     return {
       details: anilistAnimeData,

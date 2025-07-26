@@ -1,5 +1,5 @@
-export type HianimeType = "MOVIE" | "TV" | "ONA" | "OVA" | "SPECIAL" | "MUSIC"
-export type HianimeStatus = "FINISHED_AIRING" | "CURRENTLY_AIRING" | "NOT_YET_AIRED";
+export type HianimeFormat = "MOVIE" | "TV" | "ONA" | "OVA" | "SPECIAL" | "MUSIC"
+export type HianimeStatus = "FINISHED" | "RELEASING" | "NOT_YET_RELEASED";
 export type HianimeRated = "G" | "PG" | "PG-13" | "R" | "R+" | "Rx"
 export type HianimeScore = "APPALLING" | "HORRIBLE" | "VERY_BAD" | "BAD" | "AVERAGE" | "FINE" | "GOOD" | "VERY_GOOD" | "GREAT" | "MASTERPIECE"
 export type HianimeSeason = "SPRING" | "SUMMER" | "FALL" | "WINTER"
@@ -22,7 +22,7 @@ export type HianimeAnime = {
   title: HianimeAnimeTitle;
   poster: string;
   duration: string;
-  type: HianimeType;
+  format: HianimeFormat;
   episodes: {
     sub: number;
     dub: number;

@@ -20,7 +20,6 @@ export const anime = new Elysia({ prefix: 'anime' })
         const anime = await getHianimeAnime(anilistId, episodeNumber);
         const SubtitleFiles = await getSubtitleFiles(anime.details, episodeNumber);
 
-
         const fetchEnd = performance.now()
         console.log(`Fetched data in ${(fetchEnd - fetchStart).toFixed(2)}ms`);
   

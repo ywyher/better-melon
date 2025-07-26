@@ -7,7 +7,7 @@ export type Dictionary = (
   | { index: 'jmnedict'; entries: JMnedictWord[] }
   | { index: 'kanjidic2'; entries: Kanjidic2Character[] }
 )[]
-  
+
 export type Index = 'jmdict' | 'jmnedict' | 'kanjidic2'
 
 /**

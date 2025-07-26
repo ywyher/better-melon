@@ -1,4 +1,5 @@
 import { t } from "elysia";
+import { date } from ".";
 
 export const anilistAnimeStatus = t.UnionEnum([
   "CANCELLED",
@@ -81,12 +82,6 @@ export const anilistAnimeTitle = t.Object({
   native: t.Optional(t.String()),
 })
 
-export const anilistAnimeDate = t.Object({
-  day: t.Number(),
-  month: t.Number(),
-  year: t.Number(),
-})
-
 export const anilistNextAiringEpisode = t.Object({
   episode: t.Number(),
   timeUntilAiring: t.Number()
@@ -108,8 +103,8 @@ export const anilistAnimeData = t.Object({
   }),
   title: anilistAnimeTitle,
   status: anilistAnimeStatus,
-  startDate: anilistAnimeDate,
-  endDate: anilistAnimeDate,
+  startDate: date,
+  endDate: date,
   description: t.String(),
   episodes: t.Number(),
   nextAiringEpisode: t.Nullable(anilistNextAiringEpisode),
@@ -130,7 +125,6 @@ export type AnilistAnimeFormat = typeof anilistAnimeFormat.static
 export type AnilistAnimeSource = typeof anilistAnimeSource.static
 export type AnilistAnimeSort = typeof anilistAnimeSort.static
 export type AnilistAnimeTitle = typeof anilistAnimeTitle.static
-export type AnilistAnimeDate = typeof anilistAnimeDate.static
 export type AnilistNextAiringEpisode = typeof anilistNextAiringEpisode.static
 
 export type AnilistAnimeResponse<T> = {
