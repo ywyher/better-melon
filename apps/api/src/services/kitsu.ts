@@ -1,9 +1,10 @@
 import { redis } from "bun";
-import { AnilistAnimeData, AnilistAnimeStatus } from "../types/anilist";
+import { AnilistAnimeData } from "../types/anilist";
 import { KitsuApiResponse, KitsuAnimeInfo, KitsuAnimeEpisode, KitsuAnimeStatus, AnilistToKitsu, kitsuAnimeStatus, KitsuAnimeEpisodesReponse } from "../types/kitsu";
 import { env } from "../lib/env";
 import { makeRequest } from "../utils/utils";
 import { cacheKeys } from "../lib/constants/cache";
+import { AnilistAnimeStatus } from "@better-melon/shared/types";
 
 async function mapAnilistToKitsu(anilistData: AnilistAnimeData): Promise<AnilistToKitsu> {
   const startTime = performance.now();
@@ -49,7 +50,7 @@ async function mapAnilistToKitsu(anilistData: AnilistAnimeData): Promise<Anilist
 
 export async function getKitsuAnimeInfo(anilistData: AnilistAnimeData): Promise<KitsuAnimeInfo> {
   try {
-    const cacheKey = cacheKeys.kitsu.info(anilistData.id);
+    const cacheKey = cacheKeys.kitsu.info(String(anilistData.id));
     const cachedData = await redis.get(cacheKey);
     if (cachedData) {
       console.log(`Cache hit for kitsu anime ID: ${anilistData.id}`);
@@ -172,7 +173,7 @@ export async function getKitsuAnimeEpisodes({
           }
 
           if (!processedEpisode.attributes.thumbnail) {
-            const fallbackImage = anilistData.bannerImage || anilistData.coverImage.large;
+            const fallbackImage = anilistData.bannerImage || anilistData.coverImage.extraLarge || anilistData.coverImage.large;
             if (fallbackImage) {
               processedEpisode.attributes.thumbnail = {
                 original: fallbackImage,

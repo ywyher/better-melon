@@ -1,7 +1,7 @@
 import ky from "ky";
 import { hianimeConfig } from "../utils/config";
 import { load } from "cheerio";
-import type { GetEpisodeServersProps, HianimeEpiosdeServersApiReponse, HianimeEpisodeServer, HianimeServerName } from "../types/servers";
+import type { GetEpisodeServersProps, HianimeEpiosdeServersApiReponse, HianimeEpisodeServer, HianimeServerName } from "../types/server";
 
 export async function getHianimeEpisodeServers({
   episodeId

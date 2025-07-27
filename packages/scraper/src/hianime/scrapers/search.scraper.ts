@@ -1,8 +1,8 @@
 import ky from "ky";
 import { extractHianimeAnimes, getHianimeSearchUrl } from "../utils/search.utils";
 import { load } from "cheerio";
-import type { HianimeSearchResponse } from "../types";
 import type { HianimeSearchProps } from "../types/search";
+import type { HianimeSearchResponse } from "@better-melon/shared/types";
 
 export async function hianimeSearch({ 
   q,

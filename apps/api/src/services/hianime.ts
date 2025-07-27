@@ -1,13 +1,14 @@
 import Hianime from '@repo/scraper';
 import { redis } from "bun";
-import { AnilistAnimeData, AnilistAnimeFormat, AnilistAnimeStatus } from "../types/anilist";
-import { AnilistToHiAnime, HianimeAnimeData, HianimeAnimeEpisode, HianimeAnimeEpisodeSources, hianimeAnimeFormat, HianimeAnimeFormat, HianimeAnimeResponse, hianimeAnimeStatus, HianimeAnimeStatus } from "../types/hianime";
+import { AnilistAnime } from "../types/anilist";
+import { AnilistToHiAnime, HianimeResponse } from "../types/hianime";
 import { getAnilistAnime } from "./anilist";
 import { cacheKeys } from "../lib/constants/cache";
+import { AnilistFormat, AnilistStatus, HianimeAnime, HianimeEpisode, HianimeEpisodeSources, hianimeFormat, HianimeFormat, hianimeStatus, HianimeStatus } from '@better-melon/shared/types';
 
 const hianime = new Hianime()
 
-async function mapAnilistToHianime(anilistData: AnilistAnimeData): Promise<AnilistToHiAnime> {
+async function mapAnilistToHianime(anilistData: AnilistAnime): Promise<AnilistToHiAnime> {
   const startTime = performance.now();
   
   try {
@@ -17,7 +18,7 @@ async function mapAnilistToHianime(anilistData: AnilistAnimeData): Promise<Anili
     const endDate = anilistData.endDate;
     const title = anilistData.title.english.toLowerCase().replace(/\s+/g, '+');
     
-    const formatMapping: Record<AnilistAnimeFormat, HianimeAnimeFormat | null> = {
+    const formatMapping: Record<AnilistFormat, HianimeFormat | null> = {
       "TV": "TV",
       "TV_SHORT": null,
       "MOVIE": "MOVIE",
@@ -28,10 +29,10 @@ async function mapAnilistToHianime(anilistData: AnilistAnimeData): Promise<Anili
     };
     const mappedFormat = formatMapping[format];
     if (!mappedFormat) {
-      throw new Error(`Invalid format: ${format}. Valid HiAnime types are: ${Object.keys(hianimeAnimeFormat.enum).join(', ')}`)
+      throw new Error(`Invalid format: ${format}. Valid Hianime types are: ${Object.keys(hianimeFormat.enum).join(', ')}`)
     }
 
-    const statusMapping: Record<AnilistAnimeStatus, HianimeAnimeStatus | null> = {
+    const statusMapping: Record<AnilistStatus, HianimeStatus | null> = {
       'FINISHED': 'FINISHED',
       "RELEASING": 'RELEASING',
       'NOT_YET_RELEASED': 'NOT_YET_RELEASED',
@@ -40,7 +41,7 @@ async function mapAnilistToHianime(anilistData: AnilistAnimeData): Promise<Anili
     }
     const mappedStatus = statusMapping[status];
     if (!mappedStatus) {
-      throw new Error(`Invalid status: ${status}. Valid HiAnime statuss are: ${Object.keys(hianimeAnimeStatus.enum).join(', ')}`)
+      throw new Error(`Invalid status: ${status}. Valid HiAnime statuss are: ${Object.keys(hianimeStatus.enum).join(', ')}`)
     }
 
     const result = {
@@ -63,13 +64,13 @@ async function mapAnilistToHianime(anilistData: AnilistAnimeData): Promise<Anili
   }
 }
 
-export async function getHianimeAnimeInfo(anilistData: AnilistAnimeData): Promise<HianimeAnimeData> {
+export async function getHianimeAnimeInfo(anilistData: AnilistAnime): Promise<HianimeAnime> {
   try {
     const cacheKey = `${cacheKeys.hianime.info(anilistData.id)}`;
     const cachedData = await redis.get(cacheKey);
     if (cachedData) {
       console.log(`Cache hit for hianime anime ID: ${anilistData.id}`);
-      return JSON.parse(cachedData as string) as HianimeAnimeData;
+      return JSON.parse(cachedData as string) as HianimeAnime;
     }
     
     const mapped = await mapAnilistToHianime(anilistData);
@@ -79,6 +80,7 @@ export async function getHianimeAnimeInfo(anilistData: AnilistAnimeData): Promis
       q,
       page: 1,
       filters: {
+        // other filters may change between hinaime and anilist so we dont use them
         format,
         startDate,
         endDate: endDate ?? undefined,
@@ -91,7 +93,7 @@ export async function getHianimeAnimeInfo(anilistData: AnilistAnimeData): Promis
       throw new Error(`No anime found on HiAnime for: ${q}`);
     }
 
-    const anime = animes[0] as HianimeAnimeData
+    const anime = animes[0] as HianimeAnime
 
     await redis.set(cacheKey, JSON.stringify(anime), "EX", 3600);
     console.log(`Cached hianime data for ID: ${anilistData.id}`);
@@ -102,13 +104,13 @@ export async function getHianimeAnimeInfo(anilistData: AnilistAnimeData): Promis
   }
 }
 
-export async function getHianimeAnimeEpisodes(animeId: HianimeAnimeData['id']): Promise<HianimeAnimeEpisode[]> {
+export async function getHianimeAnimeEpisodes(animeId: HianimeAnime['id']): Promise<HianimeEpisode[]> {
   try {
     const cacheKey = `${cacheKeys.hianime.episodes(animeId)}`;
     const cachedData = await redis.get(cacheKey);
     if (cachedData) {
       console.log(`Cache hit for hianime anime episode ID: ${animeId}`);
-      return JSON.parse(cachedData as string) as HianimeAnimeEpisode[];
+      return JSON.parse(cachedData as string) as HianimeEpisode[];
     }
     
     const episodes = await hianime.getEpisodes({ animeId })
@@ -122,7 +124,7 @@ export async function getHianimeAnimeEpisodes(animeId: HianimeAnimeData['id']): 
   }
 }
 
-export async function getHianimeAnimeEpisodeSources(episodes: HianimeAnimeEpisode[], episodeNumber: string): Promise<HianimeAnimeEpisodeSources> {
+export async function getHianimeAnimeEpisodeSources(episodes: HianimeEpisode[], episodeNumber: string): Promise<HianimeEpisodeSources> {
   try {
     const episode = episodes.find(e => e.number === Number(episodeNumber));
     if(!episode) throw new Error(`Couldn't find hianime anime episode`)
@@ -131,7 +133,7 @@ export async function getHianimeAnimeEpisodeSources(episodes: HianimeAnimeEpisod
     const cachedData = await redis.get(cacheKey);
     if (cachedData) {
       console.log(`Cache hit for hianime anime episode sources episodeID: ${episode.id}`);
-      return JSON.parse(cachedData as string) as HianimeAnimeEpisodeSources;
+      return JSON.parse(cachedData as string) as HianimeEpisodeSources;
     }
     
     const sources = await hianime.getEpisodeSources({
@@ -150,7 +152,7 @@ export async function getHianimeAnimeEpisodeSources(episodes: HianimeAnimeEpisod
   }
 }
 
-export async function getHianimeAnime(anilistId: string, episodeNumber: string): Promise<HianimeAnimeResponse> {
+export async function getHianimeAnime(anilistId: AnilistAnime['id'], episodeNumber: string): Promise<HianimeResponse> {
   console.log(`Starting getHianimeAnime for anilistId: ${anilistId}, episodeNumber: ${episodeNumber}`);
   
   try {

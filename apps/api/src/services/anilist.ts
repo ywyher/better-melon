@@ -1,19 +1,20 @@
-import { AnilistAnimeData, AnilistAnimeDyanmicData, AnilistAnimeResponse, AnilistAnimeStaticData } from "../types/anilist"
 import { makeRequest } from "../utils/utils";
 import { env } from "../lib/env";
 import { redis } from "bun";
 import { cacheKeys } from "../lib/constants/cache";
+import { AnilistDyanmicData, AnilistStaticData, AnilistResponse } from "@better-melon/shared/types";
+import { AnilistAnime } from "../types/anilist";
 
-async function getAnilistAnimeStaticData({ anilistId }: { anilistId: AnilistAnimeData['id'] }): Promise<AnilistAnimeStaticData> {
+async function getAnilistAnimeStaticData({ anilistId }: { anilistId: AnilistAnime['id'] }): Promise<AnilistStaticData<AnilistAnime>> {
   try {
     const cacheKey = `${cacheKeys.anilist.staticData(anilistId)}`;
     const cachedData = await redis.get(cacheKey);
     if (cachedData) {
       console.log(`Cache hit for anilist static anime data ID: ${anilistId}`);
-      return JSON.parse(cachedData as string) as AnilistAnimeData;
+      return JSON.parse(cachedData as string) as AnilistAnime;
     }
     
-    const { data: { data: anilistAnimeData } } = await makeRequest<AnilistAnimeResponse<AnilistAnimeStaticData>>(
+    const { data: { data: anilistAnime } } = await makeRequest<AnilistResponse<"data", { Media: AnilistStaticData<AnilistAnime> }>>(
       env.ANILIST_API_URL,
       {
         benchmark: true,
@@ -27,22 +28,12 @@ async function getAnilistAnimeStaticData({ anilistId }: { anilistId: AnilistAnim
             query {
               Media(id: ${anilistId}) {
                 id
-                idMal
-                bannerImage
-                coverImage {
-                  large
-                  medium
-                }
+                format
                 title {
                   english
                   romaji
                   native
                 }
-                format
-                description
-                genres
-                season
-                seasonYear
                 startDate {
                   year
                   month
@@ -53,8 +44,6 @@ async function getAnilistAnimeStaticData({ anilistId }: { anilistId: AnilistAnim
                   month
                   day
                 }
-                averageScore
-                isAdult
               } 
             }
           `,
@@ -62,19 +51,19 @@ async function getAnilistAnimeStaticData({ anilistId }: { anilistId: AnilistAnim
       }, 
     );
 
-    const animeData = anilistAnimeData.Media;
+    const anime = anilistAnime.Media;
     
-    await redis.set(cacheKey, JSON.stringify(animeData), 'EX', 3600);
+    await redis.set(cacheKey, JSON.stringify(anime), 'EX', 3600);
     
-    return animeData;
+    return anime;
   } catch (error) {
     throw new Error(`${error instanceof Error ? error.message : 'Failed to fetch anilist data: Unknown error'}`)
   }
 }
 
-async function getAnilistAnimeDynamicData({ anilistId }: { anilistId: AnilistAnimeData['id'] }): Promise<AnilistAnimeDyanmicData> {
+async function getAnilistAnimeDynamicData({ anilistId }: { anilistId: AnilistAnime['id'] }): Promise<AnilistDyanmicData<AnilistAnime>> {
   try {
-    const { data: { data: anilistAnimeData } } = await makeRequest<AnilistAnimeResponse<AnilistAnimeDyanmicData>>(
+    const { data: { data: anilistAnimeData } } = await makeRequest<AnilistResponse<"data", { Media: AnilistDyanmicData<AnilistAnime> }>>(
       env.ANILIST_API_URL,
       {
         benchmark: true,
@@ -91,6 +80,7 @@ async function getAnilistAnimeDynamicData({ anilistId }: { anilistId: AnilistAni
                 episodes
                 nextAiringEpisode {
                   episode
+                  airingAt
                   timeUntilAiring
                 }
               }
@@ -107,7 +97,7 @@ async function getAnilistAnimeDynamicData({ anilistId }: { anilistId: AnilistAni
   }
 }
 
-export async function getAnilistAnime(anilistId: AnilistAnimeData['id']): Promise<AnilistAnimeData> {
+export async function getAnilistAnime(anilistId: AnilistAnime['id']): Promise<AnilistAnime> {
   const staticData = await getAnilistAnimeStaticData({ anilistId })
   const dynamicData = await getAnilistAnimeDynamicData({ anilistId })
 

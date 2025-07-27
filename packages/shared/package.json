@@ -1,8 +1,11 @@
 {
-  "name": "@better-melon/types",
-  "module": "index.ts",
+  "name": "@better-melon/shared",
+  "main": "./src/index.ts",
   "type": "module",
   "private": true,
+  "exports": {
+    "./types": "./src/types/index.ts"
+  },
   "devDependencies": {
     "@types/bun": "latest"
   },

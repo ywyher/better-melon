@@ -2,11 +2,11 @@ import { getHianimeEpisodes } from "./scrapers/episodes.scraper";
 import { hianimeSearch } from "./scrapers/search.scraper";
 import { getHianimeEpisodeServers } from "./scrapers/servers.scraper";
 import { getHianimeEpisodeSources } from "./scrapers/sources.scraper";
-import type { HianimeSearchResponse } from "./types";
-import type { GetHianimeEpisodesProps, HianimeAnimeEpisode } from "./types/episodes";
+import type { HianimeEpisode, HianimeSearchResponse, HianimeEpisodeSources } from "@better-melon/shared/types";
+import type { GetHianimeEpisodesProps } from "./types/episode";
 import type { HianimeSearchProps } from "./types/search";
-import type { GetEpisodeServersProps } from "./types/servers";
-import type { GetHianimeEpisodeSourcesProps, HianimeEpisodeSources } from "./types/sources";
+import type { GetEpisodeServersProps } from "./types/server";
+import type { GetHianimeEpisodeSourcesProps } from "./types/source";
 
 export default class Hianime {
   async search({ q, page = 1, filters = {} }: HianimeSearchProps): Promise<HianimeSearchResponse> {
@@ -23,7 +23,7 @@ export default class Hianime {
     return getHianimeEpisodeServers({ episodeId });
   }
 
-  async getEpisodes({ animeId }: GetHianimeEpisodesProps): Promise<HianimeAnimeEpisode[]> {
+  async getEpisodes({ animeId }: GetHianimeEpisodesProps): Promise<HianimeEpisode[]> {
     return getHianimeEpisodes({ animeId });
   }
 

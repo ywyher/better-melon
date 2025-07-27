@@ -3,12 +3,12 @@ import { getHianimeAnime } from "../services/hianime";
 import { getSubtitleFiles } from "../services/subtitle";
 import { createError } from "../utils/utils";
 import { animeProvider } from "../types";
-import { anilistAnimeData } from "../types/anilist";
-import { hianimeAnimeEpisodeSources } from "../types/hianime";
 import { subtitleFile } from "../types/jiamku";
 import { getKitsuAnimeEpisodes, getKitsuAnimeInfo } from "../services/kitsu";
 import { getAnilistAnime } from "../services/anilist";
 import { kitsuAnimeEpisodesReponse } from "../types/kitsu";
+import { anilistAnime } from "../types/anilist";
+import { hianimeEpisodeSources } from "@better-melon/shared/types";
 
 export const anime = new Elysia({ prefix: 'anime' })
   .get('/:anilistId/:episodeNumber/:provider',
@@ -38,7 +38,7 @@ export const anime = new Elysia({ prefix: 'anime' })
     },
     {
       params: t.Object({
-        anilistId: t.String(),
+        anilistId: t.Number(),
         episodeNumber: t.String(),
         provider: animeProvider,
       }),
@@ -46,8 +46,8 @@ export const anime = new Elysia({ prefix: 'anime' })
         success: t.Boolean(),
         data: t.Optional(t.Object({
           provider: animeProvider,
-          details: anilistAnimeData,
-          sources: hianimeAnimeEpisodeSources,
+          details: anilistAnime,
+          sources: hianimeEpisodeSources,
           subtitles: t.Array(subtitleFile)
         })),
         message: t.Optional(t.String())
@@ -83,7 +83,7 @@ export const anime = new Elysia({ prefix: 'anime' })
     },
     {
       params: t.Object({
-        anilistId: t.String(),
+        anilistId: t.Number(),
       }),
       response: t.Object({
         success: t.Boolean(),

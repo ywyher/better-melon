@@ -1,11 +1,12 @@
 import ky from "ky"
 import { load } from "cheerio"
 import { hianimeConfig } from "../utils/config"
-import type { GetHianimeEpisodesProps, HianimeAnimeEpisode, HianimeEpiosdeListApiReponse } from "../types/episodes"
+import type { GetHianimeEpisodesProps, HianimeEpiosdeListApiReponse } from "../types/episode"
+import type { HianimeEpisode } from "@better-melon/shared/types"
 
 export async function getHianimeEpisodes({
   animeId
-}: GetHianimeEpisodesProps): Promise<HianimeAnimeEpisode[]> {
+}: GetHianimeEpisodesProps): Promise<HianimeEpisode[]> {
   const id = animeId.split('-').pop() // steinsgate-3 => 3
 
   try {
@@ -20,7 +21,7 @@ export async function getHianimeEpisodes({
     ).json()
     const $ = load(content.html)
 
-    const episodes: HianimeAnimeEpisode[] = [];
+    const episodes: HianimeEpisode[] = [];
   
     $('.detail-infor-content .ssl-item').each((_, item) => {
       episodes.push({

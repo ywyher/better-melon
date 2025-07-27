@@ -125,9 +125,10 @@ export const GET_ANIME_DYNAMIC_DATA = gql`
     Media(id: $id) {
       status
       episodes
-      streamingEpisodes {
-        title
-        thumbnail
+      nextAiringEpisode {
+        episode
+        airingAt
+        timeUntilAiring
       }
     } 
   }

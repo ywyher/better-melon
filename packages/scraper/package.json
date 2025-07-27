@@ -18,6 +18,7 @@
     "typescript": "^5"
   },
   "dependencies": {
+    "@better-melon/shared": "workspace:*",
     "@types/crypto-js": "^4.2.2",
     "cheerio": "^1.1.2",
     "crypto-js": "^4.2.0",

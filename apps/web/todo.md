@@ -1,3 +1,5 @@
+check if search functioanlity works for romanjin and native
+
 maybe change the player loading strategy to idle
 
 header search component uses a custom query, change it to the global one

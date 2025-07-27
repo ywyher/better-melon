@@ -1,7 +1,7 @@
-import type { HianimeAnimeEpisode } from "./episodes";
+import type { HianimeEpisode } from "@better-melon/shared/types";
 
 export type GetEpisodeServersProps = {
-  episodeId: HianimeAnimeEpisode['id']
+  episodeId: HianimeEpisode['id']
 }
 
 export type HianimeEpiosdeServersApiReponse = {

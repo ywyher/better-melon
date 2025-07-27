@@ -12,6 +12,7 @@
     "studio": "bunx drizzle-kit studio"
   },
   "dependencies": {
+    "@better-melon/shared": "workspace:*",
     "@apollo/client": "^3.13.8",
     "@aws-sdk/client-s3": "^3.848.0",
     "@aws-sdk/s3-request-presigner": "^3.848.0",

@@ -1,15 +1,15 @@
 import { HIANIME_FILTERS_MAP } from "./filters.mapper";
-import type { HianimeAnime, HianimeAnimeTitle, HianimeDate, HianimeFormat, HianimeGenre } from "../types/anime";
 import type { CheerioAPI } from "cheerio";
 import { hianimeConfig } from "./config";
-import type { HianimeAnimeEpisodes, HianimeFilterKeys, HianimeSearchFilters, HianimeSearchProps } from "../types/search";
+import type { HianimeFilterKeys, HianimeSearchProps } from "../types/search";
+import type { AnimeDate, HianimeAnime, HianimeFormat, HianimeGenre, HianimeSearchFilters, HianimeTitle } from "@better-melon/shared/types";
 
 export function getHianimeSearchDateFilterValue({
     category,
     value    
 }: {
     category: 's' | 'e'
-    value: HianimeDate
+    value: AnimeDate
 }) {
     const { day, month, year } = value
     
@@ -73,7 +73,7 @@ export function getHianimeSearchFilterValue({
     }
 }
 
-export function extractHianimeAnimes($: CheerioAPI) {
+export function extractHianimeAnimes($: CheerioAPI): Partial<HianimeAnime>[] {
   const items = $("#main-content .tab-content .film_list-wrap .flw-item")
 
   const animes: Partial<HianimeAnime>[] = [];
@@ -95,7 +95,7 @@ export function extractHianimeAnimes($: CheerioAPI) {
           .find(".film-detail .film-name .dynamic-name")
           ?.attr("data-jname")
           ?.trim() || undefined,
-    } as HianimeAnimeTitle;
+    } as HianimeTitle;
 
     const poster = $(item)
       .find(".film-poster .film-poster-img")
@@ -131,7 +131,10 @@ export function extractHianimeAnimes($: CheerioAPI) {
             .split(" ")
             .pop()
         ) || undefined
-    } as HianimeAnimeEpisodes;
+    } as {
+      sub: number
+      dub: number
+    };
 
     animes.push({
       id: animeId,

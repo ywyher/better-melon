@@ -1,19 +1,18 @@
 import ky from "ky";
 import { hianimeConfig } from "../utils/config";
-import { extractHianimeToken } from "../utils/sources.utils";
+import { extractHianimeToken } from "../utils/source.utils";
 import { AES, enc } from "crypto-js";
 import type { 
   GetHianimeEpisodeSourcesProps,
   HianimeEpiosdeSourcesApiResponse, 
-  HianimeEpisodeSources, 
   HianimeGetSourcesApiResponse, 
   HianimeGetSourcesFallbackApiResponse 
-} from "../types/sources";
-import type { HianimeAnimeEpisode } from "../types/episodes";
-import type { HianimeEpisodeServer } from "../types/servers";
+} from "../types/source";
+import type { HianimeEpisodeServer } from "../types/server";
+import type { HianimeEpisode, HianimeEpisodeSources } from "@better-melon/shared/types";
 
 async function getDefaultEpisodeSources(
-  episodeId: HianimeAnimeEpisode['id'],
+  episodeId: HianimeEpisode['id'],
   server: HianimeEpisodeServer
 ): Promise<HianimeEpisodeSources> {
   const [sourcesData, key]: [HianimeEpiosdeSourcesApiResponse, string] = await Promise.all([
@@ -53,7 +52,7 @@ async function getDefaultEpisodeSources(
 }
 
 async function getFallbackEpisodeSources(
-  episodeId: HianimeAnimeEpisode['id'],
+  episodeId: HianimeEpisode['id'],
 ): Promise<HianimeEpisodeSources> {
   const iframe = `${hianimeConfig.url.fallback}/stream/s-2/${episodeId}/sub`;
   
@@ -78,7 +77,7 @@ async function getFallbackEpisodeSources(
 
 
   const sources: HianimeEpisodeSources = {
-    type: 'sub',
+    type: 'SUB',
     sources: {
       ...data.sources,
       type: 'hls'

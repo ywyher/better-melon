@@ -3,7 +3,7 @@
 import { load } from "cheerio"
 import ky from "ky"
 import { hianimeConfig } from "./config"
-import type { ExtractHianimeTokenResults } from "../types/sources";
+import type { ExtractHianimeTokenResults } from "../types/source";
 
 // export async function getHianimeEpiosdesSourcesFromHianime
 

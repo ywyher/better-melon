@@ -2,7 +2,6 @@ import { meili } from "../lib/meilisearch";
 import { JMdictSearchResponse } from "../types/jmdict";
 import { getJMdictSearchQueries } from "../utils/jmdict";
 import { mergeResultsByIndex } from "../utils/dictionary";
-import { Index } from "../types/meilisearch";
 
 export async function searchJMdict(query: string): Promise<JMdictSearchResponse> {
   const jmdictQueries = getJMdictSearchQueries(query)

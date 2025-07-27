@@ -10,7 +10,7 @@ services:
       - MEILI_MASTER_KEY=75nFiVJ7bmro3eDT
       - MEILI_HTTP_PAYLOAD_SIZE_LIMIT=209715200
     volumes:
-      - ./meili_data:/meili_data
+      - meili_data:/data
     restart: always
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:7700/health"]
@@ -58,4 +58,6 @@ volumes:
   redis_data:
     driver: local
   postgres_data:
+    driver: local
+  meili_data:
     driver: local
