@@ -36,6 +36,10 @@ export type Anime = {
   trailer: AnilistTrailer
 }
 
+export type AnimeEpisode = Pick<Anime, 
+  | 'id'
+>
+
 export type AnimeBasic = Pick<Anime, 'id' | 'title' | 'coverImage' | 'status'>
 export type AnimeDynamic = Pick<Anime, 'id' | 'episodes' | 'nextAiringEpisode' | 'status'>
 

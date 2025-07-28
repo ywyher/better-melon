@@ -5,10 +5,11 @@ import { chunkArray } from '@/lib/utils/utils';
 import { useSubtitleStore } from '@/lib/stores/subtitle-store';
 import { useQueries } from '@tanstack/react-query';
 import { pitchQueries } from '@/lib/queries/pitch';
+import { Anime } from '@/types/anime';
 
 type PitchAccentChunksProps = {
   japaneseCues: SubtitleCue[];
-  animeId: string;
+  animeId: Anime['id'];
   shouldFetch: boolean
 }
 

@@ -8,7 +8,6 @@ import { usePrefetchEpisode } from '@/lib/hooks/use-prefetch-episode';
 import { useLayoutEffect, useMemo } from 'react';
 import PlayerSection from '@/app/watch/[id]/[ep]/_components/sections/player-section';
 import ControlsSection from '@/app/watch/[id]/[ep]/_components/sections/controls-section';
-import PanelSection from '@/app/watch/[id]/[ep]/_components/sections/panel-section';
 import { useDefinitionStore } from '@/lib/stores/definition-store';
 import { SubtitlesNotAvailableError } from '@/lib/errors/player';
 import MissingSubtitlesDialog from '@/app/watch/[id]/[ep]/_components/missing-subtitles-dialog';
@@ -16,10 +15,11 @@ import { useSubtitleStore } from '@/lib/stores/subtitle-store';
 import { useUIStateStore } from '@/lib/stores/ui-state-store';
 import { useWatchData } from '@/lib/hooks/use-watch-data';
 import { defaultSubtitleSettings } from '@/app/settings/subtitle/_subtitle-settings/constants';
+import PanelSection from '@/app/watch/[id]/[ep]/_components/sections/panel-section';
 
 export default function WatchPage() {
   const params = useParams();
-  const animeId = params.id as string;
+  const animeId = Number(params.id);
   const episodeNumber = Number(params.ep as string);
   const isMedium = useIsMedium();
 
@@ -103,9 +103,9 @@ export default function WatchPage() {
         <ControlsSection />
       </div>
       {/* Side panel (visible based on state) */}
-      {/* {shouldShowPanel && (
+      {shouldShowPanel && (
         <PanelSection />
-      )} */}
+      )}
     </div>
   );
 }

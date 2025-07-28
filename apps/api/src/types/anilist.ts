@@ -1,18 +1,17 @@
 import { Static, t } from "elysia";
-import { date } from ".";
-import { anilistCoverImage, anilistFormat, anilistStatus, anilistTitle, anilistNextAiringEpisode } from "@better-melon/shared/types"
+import { anilistCoverImage, anilistFormat, anilistStatus, anilistTitle, anilistNextAiringEpisode, animeDate } from "@better-melon/shared/types"
 
 export const anilistAnime = t.Object({
   id: t.Number(),
-  bannerImage: t.Nullable(t.String()),
-  coverImage: anilistCoverImage,
   title: anilistTitle,
   format: anilistFormat,
   status: anilistStatus,
-  startDate: date,
-  endDate: date,
+  bannerImage: t.Nullable(t.String()),
+  coverImage: anilistCoverImage,
   episodes: t.Number(),
   nextAiringEpisode: t.Nullable(anilistNextAiringEpisode),
+  startDate: animeDate,
+  endDate: animeDate,
 })
 
 export type AnilistAnime = Static<typeof anilistAnime>

@@ -8,7 +8,6 @@ import '@vidstack/react/player/styles/default/layouts/video.css';
 
 import { useCallback, useEffect, useRef, useState, useMemo, memo } from "react";
 import { usePlayerStore } from "@/lib/stores/player-store";
-import type { SkipTime } from '@/types/anime';
 import SkipButton from '@/app/watch/[id]/[ep]/_components/player/skip-button';
 import PlayerSkeleton from '@/app/watch/[id]/[ep]/_components/player/player-skeleton';
 import { useThrottledCallback } from 'use-debounce';
@@ -20,6 +19,7 @@ import { env } from '@/lib/env/client';
 import DefinitionCard from '@/components/definition-card/definition-card';
 import { usePlaybackSettingsStore } from '@/lib/stores/playback-settings-store';
 import { useWatchDataStore } from '@/lib/stores/watch-store';
+import { AnimeSkipTime } from '@/types/anime';
 
 const MemoizedPlayerSkeleton = memo(PlayerSkeleton);
 const MemoizedSkipButton = memo(SkipButton);
@@ -33,7 +33,7 @@ export default function Player() {
     const [videoSrc, setVideoSrc] = useState("");
     const [vttUrl, setVttUrl] = useState<string>('');
     const [isInitialized, setIsInitialized] = useState(false);
-    const [skipTimes, setSkipTimes] = useState<SkipTime[]>([])
+    const [skipTimes, setSkipTimes] = useState<AnimeSkipTime[]>([])
     const [canSkip, setCanSkip] = useState(false)
     const isTransitioning = useRef(false);
 
@@ -63,9 +63,9 @@ export default function Player() {
     }, [setPlayer]);
 
     useEffect(() => {
-      if(!sources || !sources.sources[0]) return;
+      if(!sources || !sources.sources.file) return;
 
-      const url = `${env.NEXT_PUBLIC_PROXY_URL}?url=${sources.sources[0].url}`
+      const url = `${env.NEXT_PUBLIC_PROXY_URL}?url=${sources.sources.file}`
       setVideoSrc(url)
       setIsInitialized(true);
       setLoadingDuration({ start: new Date(), end: undefined })
@@ -80,14 +80,14 @@ export default function Player() {
                     startTime: sources.intro.start,
                     endTime: sources.intro.end,
                 },
-                skipType: 'OP' as SkipTime['skipType']
+                skipType: 'OP' as AnimeSkipTime['skipType']
             },
             {
                 interval: {
                     startTime: sources.outro.start,
                     endTime: sources.outro.end,
                 },
-                skipType: 'OT' as SkipTime['skipType']
+                skipType: 'OT' as AnimeSkipTime['skipType']
             }
         ];
 
@@ -179,17 +179,17 @@ export default function Player() {
     }, [vttUrl]);
 
     useEffect(() => {
-        console.log({
-            videoSrc,
-            metadata
+        console.log(`tst`, {
+            isVideoReady,
+            isInitialized
         })
-    }, [videoSrc, metadata])
+    }, [isVideoReady, isInitialized])
 
     return (
         <div className="relative w-full aspect-video">
-            {(!isVideoReady || !isInitialized) && (
+            {(!isInitialized) && (
               <>
-                <MemoizedPlayerSkeleton isLoading={!isVideoReady || !isInitialized} />
+                <MemoizedPlayerSkeleton isLoading={!isInitialized} />
               </>
             )}
             <div className={containerClassName}>

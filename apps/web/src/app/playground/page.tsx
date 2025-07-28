@@ -19,7 +19,8 @@ import EnabledTranscriptions from "@/app/watch/[id]/[ep]/_components/settings/en
 export default function Playground() {
   return (
     <>
-      <AnimeListPlayground />
+      <ProxyPlayground />
+      {/* <AnimeListPlayground /> */}
       {/* <AnimeDataPlayground /> */}
       {/* <EpisodesListPlayground /> */}
       {/* <EnabledTranscriptions
@@ -31,7 +32,6 @@ export default function Playground() {
       {/* <WatchDataPlayground /> */}
       {/* <TranscriptionsHookPlayground /> */}
       {/* <TranscriptionsPlayground /> */}
-      {/* <ProxyPlayground /> */}
       {/* <RubyPlayground /> */}
       {/* <SubtitleFileSelectorPlayground /> */}
       {/* <DefinitionPlayground /> */}

@@ -8,11 +8,12 @@ import { defaultWordSettings } from '@/app/settings/word/constants';
 import { defaultSubtitleStyles } from '@/components/subtitle/styles/constants';
 import { getContainerStyles, getTokenStyles } from '@/lib/utils/styles';
 import { EpisodeData } from '@/types/episode';
+import { Anime } from '@/types/anime';
 
 // Define the types for our store data
 interface WatchDataState {
   // Essentials
-  animeId: string;
+  animeId: Anime['id'];
   episodeNumber: number;
 
   // Episode data
@@ -62,7 +63,7 @@ interface WatchDataState {
 }
 
 const initialState = {
-  animeId: '0',
+  animeId: 0,
   episodeNumber: 0,
 
   episodeData: null,

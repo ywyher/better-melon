@@ -1,6 +1,7 @@
 import { cacheKeys } from "@/lib/constants/cache";
 import { setCache } from "@/lib/db/mutations";
 import { getCache, getPitchAccent } from "@/lib/db/queries";
+import { Anime } from "@/types/anime";
 import { NHKEntry } from "@/types/nhk";
 import { createQueryKeys } from "@lukemorales/query-key-factory";
 
@@ -12,7 +13,7 @@ export const pitchQueries = createQueryKeys('anime', {
     accentChunk: (
       chunk: string[],
       chunkIndex: number, 
-      animeId: string,
+      animeId: Anime['id'],
       subtitleFileName: string,
       delayBetweenRequests: number
     ) => ({

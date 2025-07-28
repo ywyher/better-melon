@@ -50,6 +50,7 @@ export interface JMdict extends JMdictDictionaryMetadata {
      */
     words: JMdictWord[];
 }
+
 /**
  * JMdict entry/word
  */

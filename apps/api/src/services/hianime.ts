@@ -20,12 +20,15 @@ async function mapAnilistToHianime(anilistData: AnilistAnime): Promise<AnilistTo
     
     const formatMapping: Record<AnilistFormat, HianimeFormat | null> = {
       "TV": "TV",
-      "TV_SHORT": null,
       "MOVIE": "MOVIE",
       "SPECIAL": "SPECIAL",
       "OVA": "OVA",
       "ONA": "ONA",
       "MUSIC": "MUSIC",
+      "TV_SHORT": null,
+      "MANGA": null,
+      'NOVEL': null,
+      'ONE_SHOT': null
     };
     const mappedFormat = formatMapping[format];
     if (!mappedFormat) {
@@ -129,7 +132,7 @@ export async function getHianimeAnimeEpisodeSources(episodes: HianimeEpisode[], 
     const episode = episodes.find(e => e.number === Number(episodeNumber));
     if(!episode) throw new Error(`Couldn't find hianime anime episode`)
 
-    const cacheKey = `${cacheKeys.hianime.sources(episode.id)}`;
+    const cacheKey = `${cacheKeys.hianime.sources(String(episode.id))}`;
     const cachedData = await redis.get(cacheKey);
     if (cachedData) {
       console.log(`Cache hit for hianime anime episode sources episodeID: ${episode.id}`);

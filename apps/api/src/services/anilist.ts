@@ -4,9 +4,8 @@ import { redis } from "bun";
 import { cacheKeys } from "../lib/constants/cache";
 import { AnilistDyanmicData, AnilistStaticData, AnilistResponse } from "@better-melon/shared/types";
 import { AnilistAnime } from "../types/anilist";
-import { getNextAiringEpisodeTTL } from "@better-melon/shared/utils";
 
-async function getAnilistAnimeStaticData({ anilistId }: { anilistId: AnilistAnime['id'] }): Promise<AnilistStaticData<AnilistAnime>> {
+async function getAnilistStaticData({ anilistId }: { anilistId: AnilistAnime['id'] }): Promise<AnilistStaticData<AnilistAnime>> {
   try {
     const cacheKey = `${cacheKeys.anilist.static(anilistId)}`;
     const cachedData = await redis.get(cacheKey);
@@ -29,11 +28,17 @@ async function getAnilistAnimeStaticData({ anilistId }: { anilistId: AnilistAnim
             query {
               Media(id: ${anilistId}) {
                 id
-                format
                 title {
                   english
                   romaji
                   native
+                }
+                format
+                bannerImage
+                coverImage {
+                  medium
+                  large
+                  extraLarge
                 }
                 startDate {
                   year
@@ -53,7 +58,6 @@ async function getAnilistAnimeStaticData({ anilistId }: { anilistId: AnilistAnim
     );
 
     const anime = anilistAnime.Media;
-    
     await redis.set(cacheKey, JSON.stringify(anime), 'EX', 3600);
     
     return anime;
@@ -62,7 +66,7 @@ async function getAnilistAnimeStaticData({ anilistId }: { anilistId: AnilistAnim
   }
 }
 
-async function getAnilistAnimeDynamicData({ anilistId }: { anilistId: AnilistAnime['id'] }): Promise<AnilistDyanmicData<AnilistAnime>> {
+async function getAnilistDynamicData({ anilistId }: { anilistId: AnilistAnime['id'] }): Promise<AnilistDyanmicData<AnilistAnime>> {
   try {
     // const cacheKey = `${cacheKeys.anilist.dynamic(anilistId)}`;
     // const cachedData = await redis.get(cacheKey);
@@ -109,8 +113,8 @@ async function getAnilistAnimeDynamicData({ anilistId }: { anilistId: AnilistAni
 }
 
 export async function getAnilistAnime(anilistId: AnilistAnime['id']): Promise<AnilistAnime> {
-  const staticData = await getAnilistAnimeStaticData({ anilistId })
-  const dynamicData = await getAnilistAnimeDynamicData({ anilistId })
+  const staticData = await getAnilistStaticData({ anilistId })
+  const dynamicData = await getAnilistDynamicData({ anilistId })
 
   return {
     ...staticData,

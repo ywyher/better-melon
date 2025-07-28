@@ -32,6 +32,6 @@ export const cacheKeys = {
   },
   
   pitch: {
-    accent: (animeId: string, filename: string, chunk: number) => `pitch:accent:${animeId}:${filename}:${chunk}`
+    accent: (animeId: Anime['id'], filename: string, chunk: number) => `pitch:accent:${animeId}:${filename}:${chunk}`
   }
 }
