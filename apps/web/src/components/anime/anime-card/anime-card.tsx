@@ -3,18 +3,20 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import AnimeCardFooter from "@/components/anime/anime-card/footer";
 import AnimeCardContent from "@/components/anime/anime-card/content";
-import type { Anime, AnimeCoverImage, AnimeFormat, AnimeRelatoinType, AnimeStatus, AnimeTitle } from "@/types/anime";
 import { cn } from "@/lib/utils/utils";
+import { AnilistCoverImage, AnilistFormat, AnilistStatus, AnilistTitle } from "@better-melon/shared/types";
+import { Anime } from "@/types/anime";
+import { AnilistRelationType } from "@/types/anilist";
 
 type AnimeCardProps = {
   id: Anime['id'];
-  title: AnimeTitle;
-  coverImage: AnimeCoverImage;
-  status: AnimeStatus;
-  format: AnimeFormat;
+  title: AnilistTitle;
+  coverImage: AnilistCoverImage;
+  status: AnilistStatus;
+  format: AnilistFormat;
   seasonYear: Anime["seasonYear"]
   averageScore: Anime['averageScore']
-  relationType?: AnimeRelatoinType
+  relationType?: AnilistRelationType
   className?: string
 }
 

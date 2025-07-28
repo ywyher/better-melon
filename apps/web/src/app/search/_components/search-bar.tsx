@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
-import { useQueryState } from "nuqs";
+import { parseAsInteger, useQueryState } from "nuqs";
 import { useState } from "react";
 
 type SearchBarProps = {
@@ -13,11 +13,13 @@ export default function SearchBar({
 }: SearchBarProps) {
   const [query, setQuery] = useQueryState('query')
   const [value, setValue] = useState(query || "")
+  const [, setPage] = useQueryState('page', parseAsInteger.withDefault(1))
   
   const handleSubmit = () => {
     setQuery(value ? value : null)
+    setPage(null)
     onApply({
-      search: value ? value : undefined
+      query: value ? value : undefined,
     })
   }
 

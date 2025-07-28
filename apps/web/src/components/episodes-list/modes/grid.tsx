@@ -15,7 +15,7 @@ interface GridViewProps {
 export default function GridView({ episodes, currentEpisode, animeId, router }: GridViewProps) {
   return (
     <div className="grid grid-cols-4 md:grid-cols-5 gap-2">
-      {episodes.map((ep, idx) => {
+      {episodes.map((ep) => {
         const number = ep.attributes.number
         const isActive = number == currentEpisode;
         
@@ -23,7 +23,7 @@ export default function GridView({ episodes, currentEpisode, animeId, router }: 
           <Button
             key={number}
             variant="ghost"
-            onClick={() => console.log(`/watch/${animeId}/${number}`)}
+            onClick={() => router.push(`/watch/${animeId}/${number}`)}
             className={cn(
               "hover:scale-105 transition-all",
               "rounded-lg bg-primary-foreground",

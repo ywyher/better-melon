@@ -1,8 +1,8 @@
 import TopTrendingActionButtons from "@/components/home/top-trending/action-buttons";
 import { removeHtmlTags } from "@/lib/utils/subtitle";
-import { Anime } from "@/types/anime";
+import { AnimeTopTrending } from "@/types/anime";
 
-export default function TopTrendingContent({ anime }: { anime: Anime }) {
+export default function TopTrendingContent({ anime }: { anime: AnimeTopTrending }) {
   return (
     <div className="absolute inset-0 flex items-end justify-center lg:justify-start z-[4]">
       <div className="p-4 sm:p-6 lg:p-10 lg:px-14 space-y-3 sm:space-y-4 max-w-2xl">

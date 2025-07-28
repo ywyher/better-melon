@@ -1,5 +1,6 @@
 import { ImageSkeleton } from "@/components/image-skeleton";
-import { Anime, AnimeCoverImage } from "@/types/anime";
+import { Anime } from "@/types/anime";
+import { AnilistCoverImage } from "@better-melon/shared/types";
 import Image from "next/image";
 
 export default function AnimeCardCoverImage({ 
@@ -8,7 +9,7 @@ export default function AnimeCardCoverImage({
   imageLoading, 
   setImageLoading 
 }: {
-  coverImage: AnimeCoverImage;
+  coverImage: AnilistCoverImage;
   id: Anime['id'];
   imageLoading: boolean;
   setImageLoading: (loading: boolean) => void;
@@ -17,7 +18,7 @@ export default function AnimeCardCoverImage({
     <>
       {imageLoading && <ImageSkeleton />}
       <Image
-        src={coverImage.extraLarge || coverImage.large}
+        src={coverImage?.extraLarge || coverImage?.large}
         alt={String(id)}
         fill
         className="rounded-sm transition-all object-cover"

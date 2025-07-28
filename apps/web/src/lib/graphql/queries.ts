@@ -1,28 +1,75 @@
 import { gql } from "@apollo/client";
 
 export const GET_ANIME = gql`
-  query($id: Int!) {
+  query GetAnime(
+    $id: Int!
+
+    $withTitle: Boolean = false
+    $withCoverImage: Boolean = false
+    $withFormat: Boolean = false
+    $withStatus: Boolean = false
+    $withSeason: Boolean = false
+    $withSeasonYear: Boolean = false
+    
+    $withGenres: Boolean = false
+    $withAverageScore: Boolean = false
+    $withBannerImage: Boolean = false
+    $withDescription: Boolean = false
+    $withEpisodes: Boolean = false
+    $withDuration: Boolean = false
+    $withStartDate: Boolean = false
+    $withEndDate: Boolean = false
+    $withNextAiringEpisode: Boolean = false
+    $withStudios: Boolean = false
+    $withCharacters: Boolean = false
+    $withRelations: Boolean = false
+    $withRecommendations: Boolean = false
+    $withTrailer: Boolean = false
+  ) {
     Media(id: $id) {
+      # Core fields - ALWAYS included (no @include needed)
       id
-      idMal
-      bannerImage
-      format
-      episodes
-      title {
+      title @include(if: $withTitle) {
         romaji
         english
+        native
       }
-      nextAiringEpisode {
-        episode
-        airingAt
-        timeUntilAiring
-      }
-      coverImage {
+      coverImage @include(if: $withCoverImage) {
         large
         extraLarge
         medium
       }
-      studios {
+      format @include(if: $withFormat)
+      status @include(if: $withStatus)
+      season @include(if: $withSeason)
+      seasonYear @include(if: $withSeasonYear)
+      
+      bannerImage @include(if: $withBannerImage)
+      description @include(if: $withDescription)
+      episodes @include(if: $withEpisodes)
+      duration @include(if: $withDuration)
+      genres @include(if: $withGenres)
+      averageScore @include(if: $withAverageScore)
+      
+      startDate @include(if: $withStartDate) {
+        day
+        month
+        year
+      }
+      
+      endDate @include(if: $withEndDate) {
+        day
+        month
+        year
+      }
+      
+      nextAiringEpisode @include(if: $withNextAiringEpisode) {
+        episode
+        airingAt
+        timeUntilAiring
+      }
+      
+      studios @include(if: $withStudios) {
         edges {
           isMain
           node {
@@ -31,7 +78,8 @@ export const GET_ANIME = gql`
           }
         }
       }
-      characters {
+      
+      characters @include(if: $withCharacters) {
         edges {
           node {
             name {
@@ -55,25 +103,27 @@ export const GET_ANIME = gql`
           }
         }
       }
-      relations {
+      
+      relations @include(if: $withRelations) {
         edges {
           relationType
           node {
             id
+            title {
+              english
+            }
             coverImage {
               medium
               large
               extraLarge
-            }
-            title {
-              english
             }
             status
             format
           }
         }
       }
-      recommendations {
+      
+      recommendations @include(if: $withRecommendations) {
         edges {
           node {
             mediaRecommendation {
@@ -94,43 +144,13 @@ export const GET_ANIME = gql`
           }
         }
       }
-      trailer {
+      
+      trailer @include(if: $withTrailer) {
         thumbnail
         id
         site
       }
-      startDate {
-        day
-        month
-        year
-      }
-      endDate {
-        day
-        month
-        year
-      }
-      description
-      genres
-      status
-      season
-      seasonYear
-      duration
-      averageScore
     }
-  }
-`;
-
-export const GET_ANIME_DYNAMIC_DATA = gql`
-  query($id: Int!) {
-    Media(id: $id) {
-      status
-      episodes
-      nextAiringEpisode {
-        episode
-        airingAt
-        timeUntilAiring
-      }
-    } 
   }
 `;
 
@@ -175,9 +195,12 @@ export const GET_ANIME_IN_LIST = gql`
 
 export const GET_ANIME_LIST = gql`
   query GetAnimeList(
+    # Pagination
     $page: Int = 1
     $perPage: Int = 10
-    $sort: [MediaSort] = [POPULARITY_DESC, SCORE_DESC]
+    
+    # Filters
+    $sorts: [MediaSort] = [POPULARITY_DESC, SCORE_DESC]
     $status: MediaStatus
     $genres: [String]
     $tags: [String]
@@ -188,21 +211,22 @@ export const GET_ANIME_LIST = gql`
     $source: MediaSource
     $countryOfOrigin: CountryCode
     $averageScore: Int
-    $search: String
+    $query: String
     
-    $includeDescription: Boolean = true
-    $includeBanner: Boolean = false
-    $includeMediumCover: Boolean = false
-    $includeLargeCover: Boolean = true
-    $includeExtraLargeCover: Boolean = false
-    $includeSeasonYear: Boolean = true
-    $includeAverageScore: Boolean = true
-    $includeStatus: Boolean = true
-    $includeGenres: Boolean = true
-    $includeTags: Boolean = true
-    $includeSeason: Boolean = true
-    $includePopularity: Boolean = false
-    $includeEpisodes: Boolean = false
+    # metadata
+    $withTitle: Boolean = false
+    $withCoverImage: Boolean = false
+    $withFormat: Boolean = false
+    $withDescription: Boolean = false
+    $withBannerImage: Boolean = false
+    $withSeason: Boolean = false
+    $withSeasonYear: Boolean = false
+    $withAverageScore: Boolean = false
+    $withStatus: Boolean = false
+    $withGenres: Boolean = false
+    $withTags: Boolean = false
+    $withPopularity: Boolean = false
+    $withEpisodes: Boolean = false
   ) {
     Page(page: $page, perPage: $perPage) {
       pageInfo {
@@ -211,7 +235,7 @@ export const GET_ANIME_LIST = gql`
       }
       media(
         type: ANIME
-        sort: $sort
+        sort: $sorts
         status: $status
         genre_in: $genres
         tag_in: $tags
@@ -222,30 +246,39 @@ export const GET_ANIME_LIST = gql`
         source: $source
         countryOfOrigin: $countryOfOrigin
         averageScore: $averageScore
-        search: $search
+        search: $query
       ) {
+        # Core fields - ALWAYS included
         id
-        format
-        title {
+
+        # Metadata
+        title @include(if: $withTitle) {
           english
+          native
+          romaji
         }
-        bannerImage @include(if: $includeBanner)
-        coverImage {
-          medium @include(if: $includeMediumCover)
-          large @include(if: $includeLargeCover)
-          extraLarge @include(if: $includeExtraLargeCover)
+        
+        coverImage @include(if: $withCoverImage) {
+          medium
+          large
+          extraLarge
         }
-        description(asHtml: false) @include(if: $includeDescription)
-        seasonYear @include(if: $includeSeasonYear)
-        averageScore @include(if: $includeAverageScore)
-        status @include(if: $includeStatus)
-        genres @include(if: $includeGenres)
-        tags @include(if: $includeTags) {
+        
+        format @include(if: $withFormat)
+        
+        bannerImage @include(if: $withBannerImage)
+        description(asHtml: false) @include(if: $withDescription)
+        season @include(if: $withSeason)
+        seasonYear @include(if: $withSeasonYear)
+        averageScore @include(if: $withAverageScore)
+        status @include(if: $withStatus)
+        genres @include(if: $withGenres)
+        
+        tags @include(if: $withTags) {
           name
         }
-        season @include(if: $includeSeason)
-        popularity @include(if: $includePopularity)
-        episodes @include(if: $includeEpisodes)
+        popularity @include(if: $withPopularity)
+        episodes @include(if: $withEpisodes)
       }
     }
   }

@@ -4,74 +4,44 @@ import ResetPasswordHandler from "@/components/reset-password-handler";
 import TopTrending from "@/components/home/top-trending/top-trending";
 import AnimeList from "@/components/home/anime-list/anime-list";
 import { Award, Clock, Heart, LucideIcon, TrendingUp } from "lucide-react";
-import { AnimeInListVariables } from "@/types/anime";
+import { AnimeListQueryVariableKeys, AnimeListQueryVariables } from "@/types/anime";
+import { queryVariables } from "@/lib/constants/anime";
 
-const animeListConfigs: {
+const animeLists: {
   title: string;
+  name: AnimeListQueryVariableKeys
   icon: LucideIcon;
-  variables: AnimeInListVariables
+  variables: AnimeListQueryVariables
 }[] = [
   {
     title: "Trending",
+    name: 'trending',
     icon: TrendingUp,
-    variables: {
-      sort: 'TRENDING_DESC',
-      includeExtraLargeCover: true,
-      includeSeasonYear: true,
-      includeStatus: true,
-      includeAverageScore: true,
-      perPage: 10,
-    }
+    variables: queryVariables.list.trending({})
   },
   {
     title: "Most Popular",
+    name: 'popular',
     icon: Award,
-    variables: {
-      sort: 'POPULARITY_DESC',
-      includeExtraLargeCover: true,
-      includeSeasonYear: true,
-      includeStatus: true,
-      includeAverageScore: true,
-      perPage: 10
-    }
+    variables: queryVariables.list.popular({})
   },
   {
-    title: "Most Favorite",
+    title: "Most Favourite",
+    name: 'favourite',
     icon: Heart,
-    variables: {
-      sort: 'FAVOURITES_DESC',
-      includeExtraLargeCover: true,
-      includeSeasonYear: true,
-      includeStatus: true,
-      includeAverageScore: true,
-      perPage: 10
-    }
+    variables: queryVariables.list.favourite({})
   },
   {
     title: "Top Airing",
+    name: 'topAiring',
     icon: TrendingUp,
-    variables: {
-      sort: 'TRENDING_DESC',
-      status: 'RELEASING',
-      includeExtraLargeCover: true,
-      includeSeasonYear: true,
-      includeStatus: true,
-      includeAverageScore: true,
-      perPage: 10
-    }
+    variables: queryVariables.list.topAiring({})
   },
   {
     title: "Top Upcoming",
+    name: 'topUpcoming',
     icon: Clock,
-    variables: {
-      sort: 'POPULARITY_DESC',
-      status: 'NOT_YET_RELEASED',
-      includeExtraLargeCover: true,
-      includeSeasonYear: true,
-      includeStatus: true,
-      includeAverageScore: true,
-      perPage: 10
-    }
+    variables: queryVariables.list.topUpcoming({})
   }
 ];
 
@@ -83,12 +53,13 @@ export default function Home() {
         flex flex-col gap-20
       ">
         <TopTrending />
-        {animeListConfigs.map((config) => (
+        {animeLists.map((list) => (
           <AnimeList
-            key={config.title}
-            title={config.title}
-            icon={config.icon}
-            variables={config.variables}
+            key={list.name}
+            title={list.title}
+            name={list.name}
+            icon={list.icon}
+            variables={list.variables}
           />
         ))}
       </div>

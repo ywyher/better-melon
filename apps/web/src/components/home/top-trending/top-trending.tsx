@@ -4,14 +4,13 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
-import { AnilistResponse } from "@/types/anilist"
 import { useRef, useState } from "react"
 import AutoPlay from "embla-carousel-autoplay"
-import { useQuery, UseQueryResult } from "@tanstack/react-query"
-import { animeQueries } from "@/lib/queries/anime"
-import { Anime } from "@/types/anime"
 import TopTrendingSkeleton from "@/components/home/top-trending/skeleton"
 import TopTrendingSlide from "@/components/home/top-trending/slide"
+import { useAnimeList } from "@/lib/hooks/use-anime-list"
+import { queryVariables } from "@/lib/constants/anime"
+import { AnimeTopTrending } from "@/types/anime"
 
 export default function TopTrending() {
   const [imageLoading, setImageLoading] = useState<boolean>(true);
@@ -19,16 +18,10 @@ export default function TopTrending() {
     AutoPlay({ delay: 5000, stopOnInteraction: true })
   );
 
-  const { 
-    data, 
-    isLoading, 
-    error,
-  }: UseQueryResult<AnilistResponse<"Page", { media: Anime[] }>, Error> = useQuery({
-    ...animeQueries.topTrending(),
-    staleTime: 24 * 60 * 60 * 1000,
-    gcTime: 48 * 60 * 60 * 1000,
-    retry: 3,
-  });
+  const { data, isLoading, error } = useAnimeList<AnimeTopTrending[]>({
+    name: "topTrending",
+    variables: queryVariables.list.topTrending({})
+  })
 
   if (isLoading || error) return <TopTrendingSkeleton />;
 

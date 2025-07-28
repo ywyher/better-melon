@@ -1,9 +1,9 @@
-import { AnimeCoverImage, AnimeTitle } from "@/types/anime";
+import { AnilistCoverImage, AnilistTitle } from "@better-melon/shared/types";
 import Image from "next/image";
 
 export default function HeroCoverImage({ coverImage, title, episodes, duration }: {
-  coverImage: AnimeCoverImage;
-  title: AnimeTitle;
+  coverImage: AnilistCoverImage;
+  title: AnilistTitle;
   episodes: number;
   duration: number;
 }) {

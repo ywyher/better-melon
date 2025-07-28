@@ -1,7 +1,8 @@
 import type { Static } from "@sinclair/typebox";
-import type { anilistCoverImage, anilistFormat, anilistGenre, anilistSeason, anilistSort, anilistSource, anilistStatus, anilistTitle, anilistNextAiringEpisode } from "./schema"
+import type { anilistCoverImage, anilistFormat, anilistGenre, anilistSeason, anilistSort, anilistSource, anilistStatus, anilistTitle, anilistNextAiringEpisode, anilistTag } from "./schema"
 
 export type AnilistStatus = Static<typeof anilistStatus>
+export type AnilistTag = Static<typeof anilistTag>
 export type AnilistGenre = Static<typeof anilistGenre>
 export type AnilistSeason = Static<typeof anilistSeason>
 export type AnilistFormat = Static<typeof anilistFormat>

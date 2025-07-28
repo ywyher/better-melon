@@ -1,38 +1,31 @@
-import { AnimeInList, AnimeInListVariables } from "@/types/anime";
+import { AnimeInListHome, AnimeListQueryVariableKeys, AnimeListQueryVariables } from "@/types/anime";
 import { LucideIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { animeQueries } from "@/lib/queries/anime";
-import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { AnimeListSkeleton } from "@/components/home/anime-list/skeleton";
 import AnimeListHeader from "@/components/home/anime-list/header";
 import AnimeListScrollArea from "@/components/home/anime-list/scroll-area";
-import type { AnilistResponse } from "@/types/anilist";
+import { useAnimeList } from "@/lib/hooks/use-anime-list";
 
 type AnimeListProps = {
   title: string;
+  name: AnimeListQueryVariableKeys
   icon: LucideIcon;
-  variables: AnimeInListVariables;
+  variables: AnimeListQueryVariables;
 }
 
 export default function AnimeList({
   title,
+  name,
   icon,
   variables
 }: AnimeListProps) {
-  const { 
-    data, 
-    isLoading, 
-    error,
-  }: UseQueryResult<AnilistResponse<"Page", { media: AnimeInList[] }>, Error> = useQuery({
-    ...animeQueries.list(variables),
-    staleTime: 24 * 60 * 60 * 1000,
-    gcTime: 48 * 60 * 60 * 1000,
-    retry: 3,
-  });
-
+  const { data, error, isLoading } = useAnimeList<AnimeInListHome[]>({
+    name,
+    variables
+  })
   const router = useRouter();
   const handleMoreClick = () => {
-    router.push(`/search?query=&sort=${variables.sort}`);
+    router.push(`/search?query=&sorts=${variables.sorts}`);
   };
 
   if (isLoading || error) return <AnimeListSkeleton />;
@@ -44,10 +37,12 @@ export default function AnimeList({
         title={title}
         onViewAllClick={handleMoreClick}
       />
-      <AnimeListScrollArea
-        animeList={data!.Page.media}
-        onMoreClick={handleMoreClick}
-      />
+      {data?.Page.media && (
+        <AnimeListScrollArea
+          animeList={data.Page.media}
+          onMoreClick={handleMoreClick}
+        />
+      )}
     </div>
   );
 }

@@ -1,14 +1,14 @@
 import AnimeCard from "@/components/anime/anime-card/anime-card"
-import { Anime } from "@/types/anime"
+import { AnimeDetails } from "@/types/anime"
 
 type DetailsRecommendationsProps = {
-  anime: Anime
+  anime: AnimeDetails
 }
 
 export default function DetailsRecommendations({ anime }: DetailsRecommendationsProps) {
   return (
     <div className="
-      grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 
+      grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4
       gap-4 md:gap-5 items-center justify-center
     ">        
       {anime.recommendations.edges.map((e) => (

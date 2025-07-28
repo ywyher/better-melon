@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { ArrowUpDown, Search as SearchIcon } from "lucide-react"
+import { Search as SearchIcon } from "lucide-react"
 import {
   CommandDialog,
   CommandEmpty,
@@ -11,10 +11,10 @@ import {
   CommandList,
 } from "@/components/ui/command"
 import { Button } from "@/components/ui/button"
-import { gql, useQuery } from "@apollo/client"
+import { useQuery } from "@apollo/client"
 import { Anime } from "@/types/anime"
-import SearchItem from "@/components/header/search/search-item"
-import SearchItemSkeleton from "@/components/header/search/search-item-skeleton" // Import the skeleton component
+import SearchItem from "@/components/quick-search/search-item"
+import SearchItemSkeleton from "@/components/quick-search/search-item-skeleton" // Import the skeleton component
 import { useDebounce } from "use-debounce"
 import { useRouter } from "next/navigation"
 import { useIsSmall } from "@/lib/hooks/use-media-query"
@@ -27,62 +27,11 @@ import {
 } from "@/components/ui/drawer"
 import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils/utils"
+import { GET_ANIME_LIST } from "@/lib/graphql/queries"
+import ViewAll from "@/components/quick-search/view-all"
+import { queryVariables } from "@/lib/constants/anime"
 
-const GET_ANIMES = gql`
-  query GetAnimes($search: String) {
-    Page(perPage: 8) {
-      pageInfo {
-        hasNextPage
-      }
-      media(
-        type: ANIME,
-        sort: [POPULARITY_DESC, SCORE_DESC],
-        search: $search
-      ) {
-        id
-        title {
-          english
-        }
-        status
-        coverImage {
-          large
-        }
-        seasonYear
-      }
-    }
-  }
-`;
-
-const ViewAll = ({ navigateToSearch, query }: { navigateToSearch: (query: string) => void, query: string }) => {
-  return (
-    <div className="border-t p-0 bg-background mt-auto">
-      <div 
-        className="flex flex-row items-center w-full justify-between cursor-pointer p-2 rounded hover:bg-accent"
-        onClick={() => navigateToSearch(query)}
-      >
-        <div className="flex items-center gap-2 w-full">
-          <span>View all</span>
-        </div>
-        <div className="hidden md:flex flex-row gap-2 justify-end w-full text-xs text-muted-foreground">
-          <div className="flex flex-row gap-2">
-            <span className="rounded border px-1"><ArrowUpDown size={16} /></span>
-            <p>navigate,{" "}</p>
-          </div>
-          <div className="flex flex-row gap-2">
-            <span className="rounded border px-1">Enter</span> 
-            <p>select,{" "}</p>
-          </div>
-          <div className="flex flex-row gap-2">
-            <span className="rounded border px-1">Esc</span>
-            <p>close</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-export default function Search({ className = "" }: { className?: string }) {
+export default function QuickSearch({ className = "" }: { className?: string }) {
   const [open, setOpen] = React.useState(false)
   const [inputValue, setInputValue] = React.useState("")
   const [isTyping, setIsTyping] = React.useState(false)
@@ -90,10 +39,8 @@ export default function Search({ className = "" }: { className?: string }) {
   const isSmall = useIsSmall()
   const router = useRouter()
   
-  const { data, loading, error } = useQuery(GET_ANIMES, {
-    variables: {
-      search: debouncedValue
-    },
+  const { data, loading, error } = useQuery(GET_ANIME_LIST, {
+    variables: queryVariables.list.quickSearch({ query: debouncedValue }),
     skip: !debouncedValue,
   });
 

@@ -2,7 +2,8 @@ import AnimeCardCoverImage from "@/components/anime/anime-card/cover-image";
 import AnimeCardOverlay from "@/components/anime/anime-card/overlay";
 import AnimeCardTitle from "@/components/anime/anime-card/title";
 import { CardContent } from "@/components/ui/card";
-import { Anime, AnimeCoverImage, AnimeStatus, AnimeTitle } from "@/types/anime";
+import { Anime } from "@/types/anime";
+import { AnilistCoverImage, AnilistStatus, AnilistTitle } from "@better-melon/shared/types";
 
 export default function AnimeCardContent({ 
   coverImage, 
@@ -13,11 +14,11 @@ export default function AnimeCardContent({
   title 
 }: {
   id: Anime['id'];
-  coverImage: AnimeCoverImage;
+  coverImage: AnilistCoverImage;
   imageLoading: boolean;
   setImageLoading: (loading: boolean) => void;
-  status: AnimeStatus;
-  title: AnimeTitle;
+  status: AnilistStatus;
+  title: AnilistTitle;
 }) {
   return (
     <CardContent className="p-0 flex flex-col gap-3">

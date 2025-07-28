@@ -1,4 +1,5 @@
-import { Anime, AnimeInListVariables, AnimeSort } from "@/types/anime";
+import { sortObject } from "@/lib/utils/utils";
+import { Anime, AnimeListQueryVariableKeys, AnimeListQueryVariables, AnimeQueryVariableKeys, AnimeQueryVariables } from "@/types/anime";
 
 export const cacheKeys = {
   subtitle: ({
@@ -12,12 +13,21 @@ export const cacheKeys = {
   }) => `subtitle:${animeId}:${episodeNumber}:${name}`,
   
   anime: {
-    staticData: (animeId: string) => `anime:static-data:${animeId}`,
-    topTrending: () => `anime:top-trending`,
-    list: (variables: AnimeInListVariables) => {
-      // Sort entries by key to ensure consistent ordering
-      const sortedEntries = Object.entries(variables).sort(([a], [b]) => a.localeCompare(b));
-      return `anime:list:${sortedEntries.flat().join(',')}`;
+    data: ({
+      animeId,
+      name,
+      variables
+    }: {
+      animeId: Anime['id'],
+      name: AnimeQueryVariableKeys
+      variables: AnimeQueryVariables
+    }) => {
+      const sorted = sortObject({ object: variables, output: 'string' })
+      return `anime:data:${animeId}:${name}:${sorted}`;
+    },
+    
+    list: ({ name, variables }: { variables: AnimeListQueryVariables, name: AnimeListQueryVariableKeys }) => {
+      return `anime:list:${name}:${sortObject({ object: variables, output: 'string' })}`;
     },
   },
   

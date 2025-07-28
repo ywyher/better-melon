@@ -1,6 +1,7 @@
 import AnimeCardInfoBadge from "@/components/anime/anime-card/info-badge";
 import { CardFooter } from "@/components/ui/card";
-import { AnimeFormat, AnimeRelatoinType } from "@/types/anime";
+import { AnilistRelationType } from "@/types/anilist";
+import { AnilistFormat } from "@better-melon/shared/types";
 import { Star } from "lucide-react";
 
 export default function AnimeCardFooter({ 
@@ -9,10 +10,10 @@ export default function AnimeCardFooter({
   averageScore,
   relationType
 }: {
-  format: AnimeFormat;
+  format: AnilistFormat;
   seasonYear: number | null;
   averageScore: number | null;
-  relationType?: AnimeRelatoinType
+  relationType?: AnilistRelationType
 }) {
   return (
     <CardFooter className="flex flex-row gap-2 pl-1">

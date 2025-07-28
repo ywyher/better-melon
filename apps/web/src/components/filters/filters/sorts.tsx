@@ -1,15 +1,15 @@
 import FilterField from "@/components/filters/filed";
 import MultipleSelector from "@/components/multiple-selector";
-import { animeSort } from "@/lib/constants/anime";
+import { animeSorts } from "@/lib/constants/anime";
 import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
 
-export default function SortFilter() {
-    const [sort, setSort] = useQueryState('sort', parseAsArrayOf(parseAsString))
+export default function SortsFilter() {
+    const [sorts, setSorts] = useQueryState('sorts', parseAsArrayOf(parseAsString))
 
     return (
-        <FilterField label="Sort">
+        <FilterField label="Sorts">
             <MultipleSelector 
-                options={animeSort.map((sort) => {
+                options={animeSorts.map((sort) => {
                     return {
                         value: sort,
                         label: sort.charAt(0).toUpperCase() + sort.slice(1)
@@ -18,9 +18,9 @@ export default function SortFilter() {
                 placeholder="Select Sorting Option(s)"
                 onChange={(selections) => {
                     const selectedValues = selections.map((selection) => selection.value);
-                    setSort(selectedValues ? selectedValues : null);
+                    setSorts(selectedValues ? selectedValues : null);
                 }}
-                value={sort?.map((sort) => {
+                value={sorts?.map((sort) => {
                     return {
                         value: sort,
                         label: sort.charAt(0).toUpperCase() + sort.slice(1)

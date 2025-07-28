@@ -1,7 +1,8 @@
 import { ImageSkeleton } from "@/components/image-skeleton";
 import { cn } from "@/lib/utils/utils";
-import { Anime, AnimeTitle } from "@/types/anime";
+import { Anime } from "@/types/anime";
 import { KitsuAnimeEpisode } from "@/types/kitsu";
+import { AnilistTitle } from "@better-melon/shared/types";
 import { Play } from "lucide-react";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import Image from "next/image";
@@ -12,7 +13,7 @@ interface ImageViewProps {
   currentEpisode: number;
   animeId: Anime['id'];
   router: AppRouterInstance;
-  animeTitle: AnimeTitle;
+  animeTitle: AnilistTitle;
   animeBanner: Anime['bannerImage']
   spoilerMode?: boolean;
 }

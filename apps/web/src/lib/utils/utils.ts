@@ -1,10 +1,11 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { S3Client } from "@aws-sdk/client-s3";
-import { Anime, AnimeDate, AnimeEpisodeMetadata } from "@/types/anime";
+import { Anime } from "@/types/anime";
 import { MediaPlayerInstance } from "@vidstack/react";
 import { defaultGeneralSettings } from "@/lib/constants/settings";
 import _ from 'lodash';
+import { EpisodeMetadata } from "@/types/episode";
 
 export const s3 = new S3Client({
   region: "auto",
@@ -142,7 +143,7 @@ export const downloadBase64Image = (base64Data: string, fileName: string, fileTy
  * @param animeMetadata - Object containing anime episode metadata
  * @returns The pattern with placeholders replaced by actual values
  */
-export const mapScreenshotNamingPatternValues = (pattern: string, animeMetadata: AnimeEpisodeMetadata): string => {
+export const mapScreenshotNamingPatternValues = (pattern: string, animeMetadata: EpisodeMetadata): string => {
   const randomString = Math.random().toString(36).substring(2, 6);
   const timestamp = Date.now();
   
@@ -196,3 +197,20 @@ export const arraysEqual = (a: unknown[], b: unknown[]) => {
   if (a.length !== b.length) return false;
   return a.every((val, index) => val === b[index]);
 };
+
+export function sortObject({
+  object,
+  output = 'object'
+}:{ 
+  object: Record<string, any> | undefined
+  output?: 'array' | 'object' | 'string'
+}) {
+  if (!object) return {};
+  const sortedEntries = Object.entries(object).sort(([a], [b]) => a.localeCompare(b));
+  if (output === 'array') {
+    return sortedEntries.map(([key, value]) => ({ key, value }));
+  } else if (output === 'string') {
+    return sortedEntries.map(([key, value]) => `${key}:${value}`).join(',').trim();
+  }
+  return Object.fromEntries(sortedEntries);
+}

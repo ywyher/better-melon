@@ -1,14 +1,13 @@
-import { useState } from "react";
 import AnimeStatusIndicator from "@/components/anime/status-indicator";
 import { stripText } from "@/lib/utils/utils";
-import { AnimeStatus, AnimeTitle } from "@/types/anime";
+import { AnilistStatus, AnilistTitle } from "@better-melon/shared/types";
 
 export default function AnimeCardTitle({ 
   status, 
   title 
 }: {
-  status: AnimeStatus;
-  title: AnimeTitle;
+  status: AnilistStatus;
+  title: AnilistTitle;
 }) {
   // const [isHovered, setIsHovered] = useState(false);
 

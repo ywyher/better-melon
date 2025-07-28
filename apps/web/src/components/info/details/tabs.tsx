@@ -8,7 +8,7 @@ import DetailsRelations from "@/components/info/details/relations"
 import DetailsTabTrigger from "@/components/info/details/tab-trigger"
 import DetailsTrailer from "@/components/info/details/trailer"
 import { Tabs, TabsContent, TabsList } from "@/components/ui/tabs"
-import { Anime } from "@/types/anime"
+import { Anime, AnimeDetails } from "@/types/anime"
 import { Film, Info, Link, PersonStanding, Star, TvMinimalPlay } from "lucide-react"
 import { useState } from "react"
 
@@ -48,7 +48,7 @@ const tabs = [
 ]
 
 type DetailsTabsProps = {
-  anime: Anime
+  anime: AnimeDetails
 }
 
 export default function DetailsTabs({ anime }: DetailsTabsProps) {

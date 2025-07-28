@@ -1,11 +1,11 @@
 import AnimeCard from "@/components/anime/anime-card/anime-card"
-import { Anime } from "@/types/anime"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { AnimeDetails } from "@/types/anime"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 import { excludeRelations } from "@/lib/constants/anime"
 import { AlertCircle } from "lucide-react"
 
 type DetailsRelationsProps = {
-  anime: Anime
+  anime: AnimeDetails
 }
 
 export default function DetailsRelations({ anime }: DetailsRelationsProps) {
@@ -14,7 +14,7 @@ export default function DetailsRelations({ anime }: DetailsRelationsProps) {
       <Alert variant="destructive" className="bg-secondary">
         <AlertCircle />
         <AlertDescription className="font-bold">
-          This page exclude relations that aren't anime like manage, novels and so on
+          This page exclude relations that aren't animes like mangas, novels and so on
         </AlertDescription>
       </Alert>
       <div className="

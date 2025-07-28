@@ -1,11 +1,11 @@
 import { Badge } from "@/components/ui/badge";
-import { AnimeFormat } from "@/types/anime";
+import { AnilistFormat } from "@better-melon/shared/types";
 import { Calendar, Camera, Film, Star } from "lucide-react";
 
 export default function HeroStatsBar({ averageScore, seasonYear, format, episodes }: {
   averageScore: number;
   seasonYear: number;
-  format: AnimeFormat;
+  format: AnilistFormat;
   episodes: number;
 }) {
   return (

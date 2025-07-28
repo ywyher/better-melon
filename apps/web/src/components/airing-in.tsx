@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { AnimeNextAiringEpisode } from '@/types/anime';
 import { format } from 'date-fns';
+import { AnilistNextAiringEpisode } from '@better-melon/shared/types';
 
 type AiringInProps = {
-  nextAiringEpisode: AnimeNextAiringEpisode;
+  nextAiringEpisode: AnilistNextAiringEpisode;
 };
 
 export default function AiringIn({ nextAiringEpisode }: AiringInProps) {

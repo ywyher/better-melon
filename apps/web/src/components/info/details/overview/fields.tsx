@@ -1,11 +1,11 @@
 'use client'
 
 import { convertFuzzyDateToDate } from "@/lib/utils/utils"
-import { Anime } from "@/types/anime"
+import { Anime, AnimeDetails } from "@/types/anime"
 import { format } from "date-fns"
 
 type DetailsOverviewProps = {
-  anime: Anime
+  anime: AnimeDetails
 }
 
 const overviewFields: {

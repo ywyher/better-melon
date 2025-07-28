@@ -3,13 +3,12 @@ import FormatFilter from "@/components/filters/filters/format";
 import GenresFilter from "@/components/filters/filters/genres";
 import IsAdultFilter from "@/components/filters/filters/is-adult";
 import SeasonFilter from "@/components/filters/filters/season";
-import SortFilter from "@/components/filters/filters/sort";
+import SortsFilter from "@/components/filters/filters/sorts";
 import SourceFilter from "@/components/filters/filters/source";
 import StatusFilter from "@/components/filters/filters/status";
 import TagsFilter from "@/components/filters/filters/tags";
 import YearFilter from "@/components/filters/filters/year";
 import { AccordionContent } from "@/components/ui/accordion";
-import { CardContent } from "@/components/ui/card";
 
 export default function FiltersContent() {
   return (
@@ -17,13 +16,13 @@ export default function FiltersContent() {
     <AccordionContent className="h-fit flex flex-col gap-5">
         <GenresFilter />
         <TagsFilter />
+        <SortsFilter />
         <StatusFilter />
         <YearFilter />
         <FormatFilter />
         <SeasonFilter />
         <IsAdultFilter />
         <SourceFilter />
-        <SortFilter />
         <CountryFilter />
     </AccordionContent>
   )

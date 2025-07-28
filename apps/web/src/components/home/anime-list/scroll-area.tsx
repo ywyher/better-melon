@@ -1,13 +1,13 @@
 import AnimeCard from "@/components/anime/anime-card/anime-card";
 import MoreCard from "@/components/more-card";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { AnimeInList } from "@/types/anime";
+import { AnimeInListHome } from "@/types/anime";
 
 export default function AnimeListScrollArea({ 
   animeList, 
   onMoreClick 
 }: {
-  animeList: AnimeInList[];
+  animeList: AnimeInListHome[];
   onMoreClick: () => void;
 }) {
   return (

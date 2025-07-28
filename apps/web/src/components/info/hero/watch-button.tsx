@@ -1,8 +1,9 @@
 import { Button } from "@/components/ui/button";
+import { Anime } from "@/types/anime";
 import { Play } from "lucide-react";
 import Link from "next/link";
 
-export function HeroWatchButton({ id }: { id: string | number }) {
+export function HeroWatchButton({ id }: { id: Anime["id"] }) {
   return (
     <Button
       className="

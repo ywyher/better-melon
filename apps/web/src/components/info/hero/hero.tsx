@@ -3,11 +3,11 @@
 import { HeroBackground } from "@/components/info/hero/background";
 import { HeroContent } from "@/components/info/hero/content";
 import { HeroSkeleton } from "@/components/info/hero/skeleton";
-import { Anime, AnimeCoverImage, AnimeFormat, AnimeTitle } from "@/types/anime"
+import { AnimeInfoHero } from "@/types/anime"
 import { useState } from "react";
 
 export type HeroProps = {
-  anime: Anime
+  anime: AnimeInfoHero
   isLoading: boolean
 }
 
@@ -22,9 +22,9 @@ export default function Hero({
   return (
     <div className="relative w-full min-h-[800px] lg:min-h-[500px]">
       <HeroBackground 
-        bannerImage={anime.bannerImage}
-        coverImage={anime.coverImage}
         id={anime.id}
+        bannerImage={anime.bannerImage || ""}
+        coverImage={anime.coverImage}
         imageLoading={imageLoading}
         setImageLoading={setImageLoading}
       />

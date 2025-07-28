@@ -1,8 +1,8 @@
 import Character from "@/components/anime/character/character"
-import { Anime } from "@/types/anime"
+import { AnimeDetails } from "@/types/anime"
 
 type DetailsCharactersProps = {
-  anime: Anime
+  anime: AnimeDetails
 }
 
 export default function DetailsCharacters({ anime }: DetailsCharactersProps) {

@@ -4,10 +4,11 @@ import { redis } from "bun";
 import { cacheKeys } from "../lib/constants/cache";
 import { AnilistDyanmicData, AnilistStaticData, AnilistResponse } from "@better-melon/shared/types";
 import { AnilistAnime } from "../types/anilist";
+import { getNextAiringEpisodeTTL } from "@better-melon/shared/utils";
 
 async function getAnilistAnimeStaticData({ anilistId }: { anilistId: AnilistAnime['id'] }): Promise<AnilistStaticData<AnilistAnime>> {
   try {
-    const cacheKey = `${cacheKeys.anilist.staticData(anilistId)}`;
+    const cacheKey = `${cacheKeys.anilist.static(anilistId)}`;
     const cachedData = await redis.get(cacheKey);
     if (cachedData) {
       console.log(`Cache hit for anilist static anime data ID: ${anilistId}`);
@@ -63,7 +64,14 @@ async function getAnilistAnimeStaticData({ anilistId }: { anilistId: AnilistAnim
 
 async function getAnilistAnimeDynamicData({ anilistId }: { anilistId: AnilistAnime['id'] }): Promise<AnilistDyanmicData<AnilistAnime>> {
   try {
-    const { data: { data: anilistAnimeData } } = await makeRequest<AnilistResponse<"data", { Media: AnilistDyanmicData<AnilistAnime> }>>(
+    // const cacheKey = `${cacheKeys.anilist.dynamic(anilistId)}`;
+    // const cachedData = await redis.get(cacheKey);
+    // if (cachedData) {
+    //   console.log(`Cache hit for anilist dynamic anime data ID: ${anilistId}`);
+    //   return JSON.parse(cachedData as string) as AnilistAnime;
+    // }
+
+    const { data: { data: anilistAnime } } = await makeRequest<AnilistResponse<"data", { Media: AnilistDyanmicData<AnilistAnime> }>>(
       env.ANILIST_API_URL,
       {
         benchmark: true,
@@ -90,8 +98,11 @@ async function getAnilistAnimeDynamicData({ anilistId }: { anilistId: AnilistAni
       }, 
     );
 
-    const animeData = anilistAnimeData.Media;
-    return animeData;
+    const anime = anilistAnime.Media;
+    // const ttl = getNextAiringEpisodeTTL(anime.nextAiringEpisode || undefined);
+    // await redis.set(cacheKey, JSON.stringify(anime), 'EX', ttl);
+
+    return anime;
   } catch (error) {
     throw new Error(`${error instanceof Error ? error.message : 'Failed to fetch anilist data: Unknown error'}`)
   }

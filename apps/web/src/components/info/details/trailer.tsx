@@ -4,10 +4,10 @@ import { MediaPlayer, MediaProvider, Poster } from '@vidstack/react';
 import { DefaultAudioLayout, defaultLayoutIcons, DefaultVideoLayout } from '@vidstack/react/player/layouts/default';
 import '@vidstack/react/player/styles/default/theme.css';
 import '@vidstack/react/player/styles/default/layouts/video.css';
-import { Anime } from "@/types/anime"
+import { AnimeDetails } from "@/types/anime"
 
 type DetailsTrailerProps = {
-  anime: Anime
+  anime: AnimeDetails
 }
 
 export default function DetailsTrailer({ anime }: DetailsTrailerProps) {

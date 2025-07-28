@@ -2,10 +2,10 @@ import EpisodesList from "@/components/episodes-list/episodes-list";
 import DetailsHeader from "@/components/info/details/header";
 import DetailsSkeleton from "@/components/info/details/skeleton";
 import DetailsTabs from "@/components/info/details/tabs";
-import { Anime } from "@/types/anime";
+import { AnimeDetails } from "@/types/anime";
 
 type DetailsProps = {
-  anime: Anime
+  anime: AnimeDetails
   isLoading: boolean
 }
 

@@ -1,5 +1,7 @@
 'use client'
 
+import AnimeDataPlayground from "@/app/playground/_components/anime-data";
+import AnimeListPlayground from "@/app/playground/_components/anime-list";
 import DefinitionPlayground from "@/app/playground/_components/definition";
 import EpisodesListPlayground from "@/app/playground/_components/episodes-list";
 import IsTranscriptionsCachedPlayground from "@/app/playground/_components/is-transcriptions-cached";
@@ -17,7 +19,9 @@ import EnabledTranscriptions from "@/app/watch/[id]/[ep]/_components/settings/en
 export default function Playground() {
   return (
     <>
-      <EpisodesListPlayground />
+      <AnimeListPlayground />
+      {/* <AnimeDataPlayground /> */}
+      {/* <EpisodesListPlayground /> */}
       {/* <EnabledTranscriptions
         playerSettings={defaultPlayerSettings}
         syncSettings="never"

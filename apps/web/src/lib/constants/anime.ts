@@ -1,6 +1,173 @@
-import { AnimeCountry, AnimeFormat, AnimeGenre, AnimeRelatoinType, AnimeSeason, AnimeSort, AnimeSource, AnimeStatus } from "@/types/anime"
+import { AnilistCountry, AnilistRelationType } from "@/types/anilist"
+import { Anime, AnimeQueryVariables, AnimeListQueryVariables } from "@/types/anime";
+import { SearchFilters } from "@/types/search";
+import { AnilistFormat, AnilistGenre, AnilistSeason, AnilistSort, AnilistSource, AnilistStatus, AnilistTag } from "@better-melon/shared/types"
 
-export const animeGenres: AnimeGenre[] = [
+export const queryVariables = {
+  anime: {
+    basic: ({ id }: { id: Anime['id'] }): AnimeQueryVariables => ({ 
+      id,
+      withTitle: true,
+      withCoverImage: true,
+      withStatus: true,
+    }),
+  
+    dynamic: ({ id }: { id: Anime['id'] }): AnimeQueryVariables => ({
+      id,
+      withStatus: true,
+      withEpisodes: true,
+      withNextAiringEpisode: true
+    }),
+  
+    infoHero: ({ id }: { id: Anime['id'] }): AnimeQueryVariables => ({
+      id,
+      withTitle: true,
+      withBannerImage: true,
+      withCoverImage: true,
+      withAverageScore: true,
+      withStatus: true,
+      withSeasonYear: true,
+      withFormat: true,
+      withEpisodes: true,
+      withGenres: true,
+      withDuration: true,
+    }),
+  
+    details: ({ id }: { id: Anime['id'] }): AnimeQueryVariables => ({
+      id,
+      withTitle: true,
+      withStatus: true,
+      withCoverImage: true,
+      withSeason: true,
+      withSeasonYear: true,
+      withAverageScore: true,
+      withEpisodes: true,
+      withFormat: true,
+      withDuration: true,
+      withNextAiringEpisode: true,
+      withBannerImage: true,
+      withGenres: true,
+      withDescription: true,
+      withStudios: true,
+      withStartDate: true,
+      withEndDate: true,
+      withCharacters: true,
+      withRelations: true,
+      withRecommendations: true,
+      withTrailer: true,
+    }),
+  
+    info: ({ id }: { id: Anime['id'] }): AnimeQueryVariables => ({
+      ...queryVariables.anime.infoHero({ id }),
+      ...queryVariables.anime.details({ id }),
+    }),
+  },
+  list: {
+    search: ({ 
+      query, 
+      page, 
+      sorts, 
+      genres, 
+      tags, 
+      status, 
+      seasonYear, 
+      format, 
+      season, 
+      isAdult, 
+      source, 
+      countryOfOrigin, 
+      averageScore 
+    }: SearchFilters): AnimeListQueryVariables => ({
+      // Search & pagination
+      query: query || undefined,
+      page: Number(page) || 1,
+      perPage: 15,
+      
+      // Filters - only include if they have actual values
+      ...(sorts && { sorts }),
+      ...(genres && { genres }),
+      ...(tags && { tags }),
+      ...(status && { status }),
+      ...(seasonYear && { seasonYear: Number(seasonYear) }),
+      ...(format && { format }),
+      ...(season && { season }),
+      ...(typeof isAdult === 'boolean' && { isAdult }),
+      ...(source && { source }),
+      ...(countryOfOrigin && { countryOfOrigin }),
+      ...(averageScore && { averageScore: Number(averageScore) }),
+      
+      // Metadata - always included
+      withTitle: true,
+      withCoverImage: true,
+      withStatus: true,
+      withAverageScore: true,
+      withSeasonYear: true,
+      withFormat: true,
+    }),
+    quickSearch: ({ query, page = 1, perPage = 10 }: { query: string, page?: number, perPage?: number }): AnimeListQueryVariables => ({ 
+      query,
+      withTitle: true,
+      withCoverImage: true,
+      withStatus: true,
+    }),
+    topTrending: ({ page = 1, perPage = 10 }: { page?: number, perPage?: number }): AnimeListQueryVariables => ({ 
+      sorts: ['TRENDING_DESC'],
+      withTitle: true,
+      withStatus: true,
+      withCoverImage: true,
+      withBannerImage: true,
+      withSeasonYear: true,
+      withDescription: true,
+      withFormat: true,
+      withAverageScore: true
+    }),
+    trending: ({ page = 1, perPage = 10 }: { page?: number, perPage?: number }): AnimeListQueryVariables => ({ 
+      sorts: ['TRENDING_DESC'],
+      withTitle: true,
+      withFormat: true,
+      withStatus: true,
+      withCoverImage: true,
+      withSeasonYear: true,
+      withAverageScore: true
+    }),
+    popular: ({ page = 1, perPage = 10 }: { page?: number, perPage?: number }): AnimeListQueryVariables => ({ 
+      sorts: ['POPULARITY_DESC'],
+      withTitle: true,
+      withStatus: true,
+      withCoverImage: true,
+      withSeasonYear: true,
+      withAverageScore: true
+    }),
+    favourite: ({ page = 1, perPage = 10 }: { page?: number, perPage?: number }): AnimeListQueryVariables => ({ 
+      sorts: ['FAVOURITES_DESC'],
+      withTitle: true,
+      withStatus: true,
+      withCoverImage: true,
+      withSeasonYear: true,
+      withAverageScore: true
+    }),
+    topAiring: ({ page = 1, perPage = 10 }: { page?: number, perPage?: number }): AnimeListQueryVariables => ({ 
+      sorts: ['TRENDING_DESC'],
+      status: 'RELEASING',
+      withTitle: true,
+      withStatus: true,
+      withCoverImage: true,
+      withSeasonYear: true,
+      withAverageScore: true
+    }),
+    topUpcoming: ({ page = 1, perPage = 10 }: { page?: number, perPage?: number }): AnimeListQueryVariables => ({ 
+      sorts: ['POPULARITY_DESC'],
+      status: 'NOT_YET_RELEASED',
+      withTitle: true,
+      withStatus: true,
+      withCoverImage: true,
+      withSeasonYear: true,
+      withAverageScore: true
+    }),
+  }
+};
+
+export const animeGenres: AnilistGenre[] = [
     "Action",
     "Adventure",
     "Comedy",
@@ -22,7 +189,7 @@ export const animeGenres: AnimeGenre[] = [
     "Thriller",
 ]
 
-export const animeStatuses: AnimeStatus[] = [
+export const animeStatuses: AnilistStatus[] = [
     "CANCELLED",
     "FINISHED",
     "HIATUS",
@@ -30,7 +197,7 @@ export const animeStatuses: AnimeStatus[] = [
     "RELEASING"
 ]
 
-export const animeFormats: AnimeFormat[] = [
+export const animeFormats: AnilistFormat[] = [
     "TV",
     "TV_SHORT",
     "MOVIE",
@@ -43,14 +210,14 @@ export const animeFormats: AnimeFormat[] = [
     "ONE_SHOT",
 ]
 
-export const animeSeasons: AnimeSeason[] = [
+export const animeSeasons: AnilistSeason[] = [
     "FALL",
     "SPRING",
     "SUMMER",
     "WINTER"
 ]
 
-export const animeSources: AnimeSource[] = [
+export const animeSources: AnilistSource[] = [
     "ORIGINAL",
     "MANGA",
     "LIGHT_NOVEL",
@@ -68,7 +235,7 @@ export const animeSources: AnimeSource[] = [
     "PICTURE_BOOK",
 ]
 
-export const animeSort: AnimeSort[] = [
+export const animeSorts: AnilistSort[] = [
     "ID",	
     "ID_DESC",	
     "TITLE_ROMAJI",	
@@ -109,7 +276,7 @@ export const animeSort: AnimeSort[] = [
 ]
 
 export const animeCountries: {
-    value: AnimeCountry,
+    value: AnilistCountry,
     label: string
 }[] = [
     {
@@ -130,9 +297,9 @@ export const animeCountries: {
     }
 ];
 
-export const excludeRelations: AnimeRelatoinType[] = ['ADAPTATION', 'CHARACTER', 'SOURCE', "ALTERNATIVE"]
+export const excludeRelations: AnilistRelationType[] = ['ADAPTATION', 'CHARACTER', 'SOURCE', "ALTERNATIVE"]
 
-export const animeTags = [ 
+export const animeTags: AnilistTag[] = [
   "4-koma",
   "Achromatic",
   "Achronological Order",
@@ -185,7 +352,7 @@ export const animeTags = [
   "Body Swapping",
   "Bowling",
   "Boxing",
-  "Boys' Love",
+  "Boys Love",
   "Bullying",
   "Butler",
   "Calligraphy",
@@ -434,7 +601,7 @@ export const animeTags = [
   "Tanks",
   "Tanned Skin",
   "Teacher",
-  "Teens' Love",
+  "Teens Love",
   "Tennis",
   "Terrorism",
   "Time Loop",

@@ -2,9 +2,9 @@ import HeroCoverImage from "@/components/info/hero/cover-image";
 import GenreTags from "@/components/genre-tags";
 import HeroStatsBar from "@/components/info/hero/stats";
 import { HeroWatchButton } from "@/components/info/hero/watch-button";
-import { Anime } from "@/types/anime";
+import { AnimeInfoHero } from "@/types/anime";
 
-export function HeroContent({ anime }: { anime: Anime }) {
+export function HeroContent({ anime }: { anime: AnimeInfoHero }) {
   return (
     <div className="
       absolute inset-0 z-10

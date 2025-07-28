@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useCallback, useRef } from "react";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import { Anime, AnimeNextAiringEpisode, AnimeTitle } from "@/types/anime";
+import { Anime } from "@/types/anime";
 import useEpisodesList from "@/lib/hooks/use-episodes-list";
 import GridView from "@/components/episodes-list/modes/grid";
 import ImageView from "@/components/episodes-list/modes/image";
@@ -17,10 +17,11 @@ import { cn } from "@/lib/utils/utils";
 import EpisodesListSkeleton from "@/components/episodes-list/skeleton";
 import { Separator } from "@/components/ui/separator";
 import AiringIn from "@/components/airing-in";
+import { AnilistNextAiringEpisode, AnilistTitle } from "@better-melon/shared/types";
 
 type EpisodesListProps = {
-  nextAiringEpisode: AnimeNextAiringEpisode | null
-  animeTitle: AnimeTitle
+  nextAiringEpisode: AnilistNextAiringEpisode | null
+  animeTitle: AnilistTitle
   animeBanner: Anime['bannerImage']
   className?: string
 }
@@ -28,7 +29,7 @@ type EpisodesListProps = {
 export default function EpisodesList({ nextAiringEpisode, animeTitle, animeBanner, className = "" }: EpisodesListProps) {
   const params = useParams<{ id: string, ep: string }>();
   const router = useRouter();
-  const animeId = params.id
+  const animeId = Number(params.id)
   const currentEpisode = Number(params.ep)
   
   const {

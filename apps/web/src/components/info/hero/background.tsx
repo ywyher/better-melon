@@ -1,11 +1,12 @@
 import { ImageSkeleton } from "@/components/image-skeleton";
 import { cn } from "@/lib/utils/utils";
-import { Anime, AnimeCoverImage } from "@/types/anime";
+import { Anime } from "@/types/anime";
+import { AnilistCoverImage } from "@better-melon/shared/types";
 import Image from "next/image";
 
 export function HeroBackground({ bannerImage, coverImage, id, imageLoading, setImageLoading }: {
   bannerImage: string;
-  coverImage: AnimeCoverImage
+  coverImage: AnilistCoverImage
   id: Anime['id'];
   imageLoading: boolean;
   setImageLoading: (loading: boolean) => void;

@@ -7,7 +7,7 @@ export default function TagsFilter() {
     const [tags, setTags] = useQueryState('tags', parseAsArrayOf(parseAsString))
 
     return (
-        <FilterField label="Genres">
+        <FilterField label="Tags">
             <MultipleSelector 
                 options={animeTags.map((tag) => {
                     return {

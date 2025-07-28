@@ -1,12 +1,13 @@
 import { redis } from "bun";
-import { AnilistAnimeData } from "../types/anilist";
 import { KitsuApiResponse, KitsuAnimeInfo, KitsuAnimeEpisode, KitsuAnimeStatus, AnilistToKitsu, kitsuAnimeStatus, KitsuAnimeEpisodesReponse } from "../types/kitsu";
 import { env } from "../lib/env";
 import { makeRequest } from "../utils/utils";
 import { cacheKeys } from "../lib/constants/cache";
-import { AnilistAnimeStatus } from "@better-melon/shared/types";
+import { AnilistAnime } from "../types/anilist";
+import { AnilistStatus } from "@better-melon/shared/types";
+import { getNextAiringEpisodeTTL } from "@better-melon/shared/utils";
 
-async function mapAnilistToKitsu(anilistData: AnilistAnimeData): Promise<AnilistToKitsu> {
+async function mapAnilistToKitsu(anilistData: AnilistAnime): Promise<AnilistToKitsu> {
   const startTime = performance.now();
   
   try {
@@ -15,7 +16,7 @@ async function mapAnilistToKitsu(anilistData: AnilistAnimeData): Promise<Anilist
     const endDate = anilistData.endDate;
     const title = anilistData.title.english.toLowerCase().replace(/\s+/g, '+');
     
-    const statusMapping: Record<AnilistAnimeStatus, KitsuAnimeStatus | null> = {
+    const statusMapping: Record<AnilistStatus, KitsuAnimeStatus | null> = {
       'FINISHED': 'finished',
       "RELEASING": 'current',
       'NOT_YET_RELEASED': 'unreleased',
@@ -48,7 +49,7 @@ async function mapAnilistToKitsu(anilistData: AnilistAnimeData): Promise<Anilist
   }
 }
 
-export async function getKitsuAnimeInfo(anilistData: AnilistAnimeData): Promise<KitsuAnimeInfo> {
+export async function getKitsuAnimeInfo(anilistData: AnilistAnime): Promise<KitsuAnimeInfo> {
   try {
     const cacheKey = cacheKeys.kitsu.info(String(anilistData.id));
     const cachedData = await redis.get(cacheKey);
@@ -101,7 +102,7 @@ export async function getKitsuAnimeEpisodes({
   offset
 }: {
   kitsuAnimeId: KitsuAnimeInfo['id']
-  anilistData: AnilistAnimeData
+  anilistData: AnilistAnime
   limit?: number
   offset?: number
 }): Promise<KitsuAnimeEpisodesReponse> {
@@ -242,9 +243,7 @@ export async function getKitsuAnimeEpisodes({
     };
 
     // Set cache TTL based on nextAiringEpisode
-    const cacheTtl = anilistData.nextAiringEpisode 
-      ? Math.max(anilistData.nextAiringEpisode.timeUntilAiring, 60) // Minimum 60 seconds to avoid too frequent updates
-      : 3600;
+    const cacheTtl = getNextAiringEpisodeTTL(anilistData.nextAiringEpisode || undefined)
 
     await redis.set(cacheKey, JSON.stringify(result), "EX", cacheTtl);
     console.log(`Cached kitsu episodes for anime ID: ${kitsuAnimeId} with TTL: ${cacheTtl}s (limit: ${limit || 'all'}, offset: ${startOffset})`);

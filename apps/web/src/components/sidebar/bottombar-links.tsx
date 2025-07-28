@@ -1,10 +1,10 @@
 "use client"
 
+import QuickSearch from "@/components/quick-search/quick-search"
 import { cn } from "@/lib/utils/utils"
 import { Home, LucideProps, Settings, User } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import Search from "@/components/header/search/search"
 import { ForwardRefExoticComponent, RefAttributes } from "react"
 
 type Link = {
@@ -66,7 +66,7 @@ export default function BottombarLinks() {
       {/* First part of the links */}
       {linksPart1.map((l, idx) => renderLink(l, idx, true))}
       
-      <Search className={cn(
+      <QuickSearch className={cn(
           "w-full h-full",
           "flex-1 md:w-full",
           "flex flex-col gap-1 items-center justify-center",

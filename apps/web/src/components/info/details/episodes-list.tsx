@@ -1,7 +1,7 @@
 import EpisodesList from "@/components/episodes-list/episodes-list";
-import { Anime } from "@/types/anime";
+import { AnimeDetails } from "@/types/anime";
 
-export default function DetailsEpisodesList({ anime }: { anime: Anime }) {
+export default function DetailsEpisodesList({ anime }: { anime: AnimeDetails }) {
   return <EpisodesList 
     animeBanner={anime.bannerImage}
     animeTitle={anime.title}

@@ -1,14 +1,14 @@
 import TopTrendingBackground from "@/components/home/top-trending/background";
 import TopTrendingContent from "@/components/home/top-trending/content";
 import { CarouselItem } from "@/components/ui/carousel";
-import { Anime } from "@/types/anime";
+import { AnimeTopTrending } from "@/types/anime";
 
 export default function TopTrendingSlide({ 
   anime, 
   imageLoading, 
   setImageLoading 
 }: { 
-  anime: Anime;
+  anime: AnimeTopTrending;
   imageLoading: boolean;
   setImageLoading: (loading: boolean) => void;
 }) {

@@ -3,10 +3,10 @@
 import GenreTags from "@/components/genre-tags"
 import DetailsOverviewFields from "@/components/info/details/overview/fields"
 import { removeHtmlTags } from "@/lib/utils/subtitle"
-import { Anime } from "@/types/anime"
+import { AnimeDetails } from "@/types/anime"
 
 type DetailsOverviewProps = {
-  anime: Anime
+  anime: AnimeDetails
 }
 
 export default function DetailsOverview({ anime }: DetailsOverviewProps) {

@@ -1,18 +1,19 @@
-import { AnilistAnimeData } from "../../types/anilist";
-import { HianimeAnimeData, HianimeAnimeEpisode } from "../../types/hianime";
+import { HianimeAnime } from "@better-melon/shared/types";
+import { AnilistAnime } from "../../types/anilist";
 import { KitsuAnimeInfo } from "../../types/kitsu";
 
 export const cacheKeys = {
   anilist: {
-    staticData: (anilistId: AnilistAnimeData['id']) => `anilist:static-data:${anilistId}`
+    static: (anilistId: AnilistAnime['id']) => `anilist:static:${anilistId}`,
+    dynamic: (anilistId: AnilistAnime['id']) => `anilist:dynamic:${anilistId}`
   },
   hianime: {
-    info: (animeId: AnilistAnimeData['id']) => `hianime:info:${animeId}`,
-    episodes: (animeId: HianimeAnimeData['id']) => `hianime:episodes:${animeId}`,
-    sources: (episodeId: HianimeAnimeEpisode['id']) => `hianime:sources:${episodeId}`
+    info: (animeId: AnilistAnime['id']) => `hianime:info:${animeId}`,
+    episodes: (animeId: HianimeAnime['id']) => `hianime:episodes:${animeId}`,
+    sources: (episodeId: HianimeAnime['id']) => `hianime:sources:${episodeId}`
   },
   subtitle: {
-    entries: (animeId: AnilistAnimeData['id']) => `subtitle:entries:${animeId}`,
+    entries: (animeId: AnilistAnime['id']) => `subtitle:entries:${animeId}`,
     files: (entryId: number, episodeNumber: string) => `subtitle:files:${entryId}:${episodeNumber}`
   },
   kitsu: {

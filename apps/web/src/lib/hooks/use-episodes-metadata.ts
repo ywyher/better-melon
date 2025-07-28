@@ -1,7 +1,7 @@
 import { animeQueries } from "@/lib/queries/anime"
 import { Anime } from "@/types/anime"
 import { ApiResponse } from "@/types/api"
-import { KitsuAnimeEpisode, KitsuAnimeEpisodesReponse } from "@/types/kitsu"
+import { KitsuAnimeEpisodesReponse } from "@/types/kitsu"
 import { useQuery, UseQueryResult } from "@tanstack/react-query"
 
 type UseEpisodesMetadataProps = {

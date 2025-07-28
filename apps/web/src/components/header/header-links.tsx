@@ -1,4 +1,4 @@
-import Search from "@/components/header/search/search";
+import QuickSearch from "@/components/quick-search/quick-search";
 import { Button } from "@/components/ui/button";
 import { Play, Settings, TvMinimalPlay } from "lucide-react";
 import Link from "next/link";
@@ -6,7 +6,7 @@ import Link from "next/link";
 export default function HeaderLinks() {
     return (
         <div className="flex flex-row gap-2">
-            <Search />
+            <QuickSearch />
             <Link href={'/search'}>
                 <Button
                     variant="ghost"

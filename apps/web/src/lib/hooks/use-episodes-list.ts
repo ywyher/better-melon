@@ -1,7 +1,7 @@
 import useEpisodesMetadata from "@/lib/hooks/use-episodes-metadata"
 import { useUIStateStore } from "@/lib/stores/ui-state-store"
 import { Anime } from "@/types/anime"
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useCallback, useMemo, useState } from "react"
 
 type UseEpisodesListProps = {
   animeId: Anime['id']

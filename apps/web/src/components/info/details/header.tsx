@@ -1,7 +1,7 @@
-import { Anime, AnimeTitle } from "@/types/anime"
+import { AnilistTitle } from "@better-melon/shared/types"
 
 type DetailsHeaderProps = {
-  title: AnimeTitle
+  title: AnilistTitle
 }
 
 export default function DetailsHeader({

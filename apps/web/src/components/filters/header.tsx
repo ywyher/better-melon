@@ -11,7 +11,7 @@ interface FiltersHeaderProps {
 export default function FiltersHeader({ onApply }: FiltersHeaderProps) {
   const [genres, setGenres] = useQueryState('genres', parseAsArrayOf(parseAsString))
   const [tags, setTags] = useQueryState('tags', parseAsArrayOf(parseAsString))
-  const [sort, setSort] = useQueryState('sort', parseAsArrayOf(parseAsString))
+  const [sorts, setSorts] = useQueryState('sorts', parseAsArrayOf(parseAsString))
   const [status, setStatus] = useQueryState('status')
   const [year, setYear] = useQueryState('year')
   const [format, setFormat] = useQueryState('format')
@@ -26,7 +26,7 @@ export default function FiltersHeader({ onApply }: FiltersHeaderProps) {
   const activeFilters = [
     genres?.length ? 1 : 0,
     tags?.length ? 1 : 0,
-    sort?.length ? 1 : 0,
+    sorts?.length ? 1 : 0,
     status ? 1 : 0,
     year ? 1 : 0,
     format ? 1 : 0,
@@ -41,7 +41,7 @@ export default function FiltersHeader({ onApply }: FiltersHeaderProps) {
     e.stopPropagation()
     setGenres(null)
     setTags(null)
-    setSort(null)
+    setSorts(null)
     setStatus(null)
     setYear(null)
     setFormat(null)
@@ -56,7 +56,7 @@ export default function FiltersHeader({ onApply }: FiltersHeaderProps) {
     onApply({
       genres: undefined,
       tags: undefined,
-      sort: undefined,
+      sorts: undefined,
       status: undefined,
       year: undefined,
       format: undefined,
