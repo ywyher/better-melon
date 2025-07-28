@@ -1,6 +1,6 @@
 'use client'
 
-import { useParams, useRouter } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { SkipBack, SkipForward } from "lucide-react"
 import { Anime } from "@/types/anime"

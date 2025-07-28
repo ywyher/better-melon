@@ -1,7 +1,7 @@
 import { animeQueries } from "@/lib/queries/anime"
 import { Anime } from "@/types/anime"
 import { ApiResponse } from "@/types/api"
-import { KitsuAnimeEpisodesReponse } from "@better-melon/shared/types"
+import { KitsuEpisodesReponse } from "@better-melon/shared/types"
 import { useQuery, UseQueryResult } from "@tanstack/react-query"
 
 type UseEpisodesMetadataProps = {
@@ -15,7 +15,7 @@ export default function useEpisodesMetadata({ animeId, limit, offset }: UseEpiso
     data,
     isLoading,
     error
-  }: UseQueryResult<ApiResponse<KitsuAnimeEpisodesReponse>, Error> = useQuery({
+  }: UseQueryResult<ApiResponse<KitsuEpisodesReponse>, Error> = useQuery({
     ...animeQueries.episodesMetadata({ animeId, limit, offset })
   })
 

@@ -1,13 +1,13 @@
 import { create } from 'zustand';
-import { AnimeEpisodeData } from '@/types/anime';
 import { SettingsForEpisode } from '@/types/settings';
-import { PitchLookup, Subtitle, TranscriptionQuery, TranscriptionsLookup, TranscriptionStyles, WordsLookup } from '@/app/watch/[id]/[ep]/types';
+import { PitchLookup, TranscriptionQuery, TranscriptionsLookup, TranscriptionStyles, WordsLookup } from '@/app/watch/[id]/[ep]/types';
 import { defaultGeneralSettings } from '@/lib/constants/settings';
 import { defaultPlayerSettings } from '@/app/settings/player/constants';
 import { defaultSubtitleSettings } from '@/app/settings/subtitle/_subtitle-settings/constants';
 import { defaultWordSettings } from '@/app/settings/word/constants';
 import { defaultSubtitleStyles } from '@/components/subtitle/styles/constants';
 import { getContainerStyles, getTokenStyles } from '@/lib/utils/styles';
+import { EpisodeData } from '@/types/episode';
 
 // Define the types for our store data
 interface WatchDataState {
@@ -16,7 +16,7 @@ interface WatchDataState {
   episodeNumber: number;
 
   // Episode data
-  episodeData: AnimeEpisodeData | null;
+  episodeData: EpisodeData | null;
   episodesLength: number;
   
   // Settings

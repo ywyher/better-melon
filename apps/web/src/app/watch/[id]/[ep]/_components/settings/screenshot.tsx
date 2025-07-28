@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import { GeneralSettings } from "@/lib/db/schema";
 import { usePlayerStore } from "@/lib/stores/player-store";
 import { downloadBase64Image, mapScreenshotNamingPatternValues, takeSnapshot } from "@/lib/utils/utils";
-import { AnimeEpisodeMetadata } from "@/types/anime";
 import { Camera } from "lucide-react";
 import { toast } from "sonner";
 import { useState } from "react";
@@ -19,12 +18,13 @@ import { Label } from "@/components/ui/label";
 import { defaultGeneralSettings, screenshotFormats } from "@/lib/constants/settings";
 import { SelectInput } from "@/components/form/select-input";
 import TooltipWrapper from "@/components/tooltip-wrapper";
+import { EpisodeMetadata } from "@/types/episode";
 
 type ScreenshotProps = {
   namingPattern: GeneralSettings['screenshotNamingPattern']
   namingDialog: GeneralSettings['screenshotNamingDialog']
   format: GeneralSettings['screenshotFormat']
-  animeMetadata: AnimeEpisodeMetadata
+  animeMetadata: EpisodeMetadata
 }
 
 export default function Screenshot({

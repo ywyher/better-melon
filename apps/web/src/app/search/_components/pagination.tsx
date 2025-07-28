@@ -1,4 +1,3 @@
-import { AnimePageInfo } from "@/types/anime"
 import {
   Pagination,
   PaginationContent,
@@ -6,9 +5,10 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination"
+import { AnilistPageInfo } from "@/types/anilist"
 
 type SearchPaginationProps = {
-  pageInfo?: AnimePageInfo
+  pageInfo?: AnilistPageInfo
   currentPage: number
   onPageChange: (page: number) => void
 }

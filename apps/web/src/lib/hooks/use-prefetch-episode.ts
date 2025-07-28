@@ -5,13 +5,14 @@ import { usePrefetchPitchAccent } from "@/lib/hooks/use-prefetch-pitch-accent";
 import { usePrefetchSubtitleStyles } from "@/lib/hooks/use-prefetch-subtitle-styles";
 import { usePrefetchSubtitleTranscriptions } from "@/lib/hooks/use-prefetch-subtitle-transcriptions";
 import { usePlayerStore } from "@/lib/stores/player-store";
-import { AnimeEpisodeData } from "@/types/anime";
+import { Anime } from "@/types/anime";
+import { EpisodeData } from "@/types/episode";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 type PrefetchEpisodeProps = {
-  animeId: string,
+  animeId: Anime['id'],
   episodeNumber: number,
-  episodeData: AnimeEpisodeData | undefined,
+  episodeData: EpisodeData | undefined,
   episodesLength: number,
   preferredFormat: SubtitleSettings["preferredFormat"],
 }

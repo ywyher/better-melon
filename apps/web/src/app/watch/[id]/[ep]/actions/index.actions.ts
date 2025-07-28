@@ -1,9 +1,10 @@
 'use server'
 
 import { env } from "@/lib/env/client";
-import { AnimeEpisodeData, AnimeProvider } from "@/types/anime";
+import { AnimeProvider } from "@/types/anime";
+import { EpisodeData } from "@/types/episode";
 
-export async function getEpisodeData(animeId: string, episodeNumber: number, provider: AnimeProvider): Promise<AnimeEpisodeData> {
+export async function getEpisodeData(animeId: string, episodeNumber: number, provider: AnimeProvider): Promise<EpisodeData> {
   try {
     const dataRaw = await fetch(
       `${env.NEXT_PUBLIC_API_URL}/anime/${animeId}/${episodeNumber}/${provider}`
@@ -14,7 +15,7 @@ export async function getEpisodeData(animeId: string, episodeNumber: number, pro
     }
     const { data, message, success } = await dataRaw.json() as {
       success: boolean,
-      data: Omit<AnimeEpisodeData, 'metadata'>,
+      data: Omit<EpisodeData, 'metadata'>,
       message: string,
     };
 

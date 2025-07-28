@@ -4,7 +4,6 @@ import { SubtitleSettings } from "@/lib/db/schema";
 import { FileSelectionError } from "@/lib/errors/player";
 import { DelayStore } from "@/lib/stores/delay-store";
 import { getExtension } from "@/lib/utils/utils";
-import { Anime, AnimeEpisodeSources, SkipTime, SubtitleTrack } from "@/types/anime";
 import { ActiveSubtitleFile, Ruby, SubtitleFile, SubtitleFormat, SubtitleToken } from "@/types/subtitle";
 import Kuroshiro from "@sglkc/kuroshiro";
 import CustomKuromojiAnalyzer from "@/lib/subtitle/custom-kuromoji-analyzer";
@@ -15,6 +14,8 @@ import { parseSrt } from "@/lib/subtitle/parsers/srt";
 import { parseVtt } from "@/lib/subtitle/parsers/vtt";
 import { parseAss } from "@/lib/subtitle/parsers/ass";
 import { franc } from 'franc-min'
+import { Anime, AnimeSkipTime } from "@/types/anime";
+import { EpisodeSubtitleTrack } from "@/types/episode";
 
 export function getSubtitleCacheKey({
   source,
@@ -76,11 +77,11 @@ export const getEnglishSubtitleUrl = ({
   // url
   match
 }: {
-  files: SubtitleTrack[]
+  files: EpisodeSubtitleTrack[]
   match: string | null
 }) => {
   return files.find(
-    (s: SubtitleTrack) => 
+    (s: EpisodeSubtitleTrack) => 
       s.lang === 'English' && (!match || s.url == match)
   )?.url || "";
 }
@@ -241,7 +242,7 @@ function formatTime(seconds: number): string {
 }
 
 type GenerateWebVTTFromSkipTimesProps = {
-  skipTimes: SkipTime[];
+  skipTimes: AnimeSkipTime[];
   totalDuration: number;
   episode: {
     title: string;
@@ -258,10 +259,10 @@ export function generateWebVTTFromSkipTimes({
     let previousEndTime = 0;
 
     const sortedSkipTimes = skipTimes.sort(
-        (a: SkipTime, b: SkipTime) => a.interval.startTime - b.interval.startTime,
+        (a: AnimeSkipTime, b: AnimeSkipTime) => a.interval.startTime - b.interval.startTime,
     );
 
-    sortedSkipTimes.forEach((skipTime: SkipTime, index: number) => {
+    sortedSkipTimes.forEach((skipTime: AnimeSkipTime, index: number) => {
         const { startTime, endTime } = skipTime.interval;
         const skipType =
         skipTime.skipType.toUpperCase() === 'OP' ? 'Opening' : 'Outro';

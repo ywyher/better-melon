@@ -1,6 +1,6 @@
-import { AnilistAnime, AnimeProvider } from "@/types/anime";
+import { Anime, AnimeProvider } from "@/types/anime";
 import { SubtitleFile } from "@/types/subtitle";
-import { AnilistAnimeTitle } from "@better-melon/shared/anilist/type";
+import { AnilistTitle } from "@better-melon/shared/types";
 
 export type EpisodesListViewMode = "grid" | "list" | "image"
 
@@ -32,7 +32,7 @@ export type EpisodeSources = {
 
 export type EpisodeMetadata = {
   number: number;
-  title: AnilistAnimeTitle['english'];
+  title: AnilistTitle['english'];
   image: string;
   description?: string;
   thumbnails?: EpisodeSubtitleTrack;
@@ -40,7 +40,7 @@ export type EpisodeMetadata = {
 
 export type EpisodeData = {
   provider: AnimeProvider;
-  details: AnilistAnime;
+  details: Anime;
   metadata: EpisodeMetadata;
   sources: EpisodeSources;
   subtitles: SubtitleFile[]

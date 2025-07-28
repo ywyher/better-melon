@@ -12,9 +12,10 @@ import { useWords } from "@/lib/hooks/use-words";
 import { usePlayerStore } from "@/lib/stores/player-store";
 import { useWatchDataStore } from "@/lib/stores/watch-store";
 import { hasChanged } from "@/lib/utils/utils";
+import { Anime } from "@/types/anime";
 import { useEffect, useMemo, useRef, useState } from "react";
 
-export const useWatchData = (animeId: string, episodeNumber: number) => {
+export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
   const isVideoReady = usePlayerStore((state) => state.isVideoReady);
   const loadStartTimeRef = useRef<number>(performance.now());
   const [hasInitialized, setHasInitialized] = useState<boolean>(false)
@@ -42,7 +43,7 @@ export const useWatchData = (animeId: string, episodeNumber: number) => {
     isCached,
     isLoading: isTranscriptionsCachedLoading
   } = useIsTranscriptionsCached({
-    animeId: "97986",
+    animeId,
     episodeNumber: 9
   })
 

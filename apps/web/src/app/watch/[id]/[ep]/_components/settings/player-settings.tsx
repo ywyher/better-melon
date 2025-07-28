@@ -4,14 +4,14 @@ import EnabledTranscriptions from "@/app/watch/[id]/[ep]/_components/settings/en
 import PlaybackToggles from "@/app/watch/[id]/[ep]/_components/settings/playback-toggles";
 import Screenshot from "@/app/watch/[id]/[ep]/_components/settings/screenshot";
 import type { GeneralSettings, SubtitleSettings, PlayerSettings as TPlayerSettings } from "@/lib/db/schema/index"
-import { AnimeEpisodeMetadata } from "@/types/anime";
 import ShowFurigana from "@/app/watch/[id]/[ep]/_components/settings/show-furigana";
+import { EpisodeMetadata } from "@/types/episode";
 
 type PlayerSettingsProps = {
     generalSettings: GeneralSettings
     playerSettings: TPlayerSettings
     subtitelSettings: SubtitleSettings
-    animeMetadata: AnimeEpisodeMetadata
+    animeMetadata: EpisodeMetadata
 }
 
 export default function PlayerSettings({ 

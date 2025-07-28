@@ -1,12 +1,12 @@
 import FilterField from "@/components/filters/filed";
 import { Combobox } from "@/components/ui/combobox";
 import { animeFormats } from "@/lib/constants/anime";
-import { AnimeFormat } from "@/types/anime";
+import { AnilistFormat } from "@better-melon/shared/types";
 import { parseAsStringEnum, useQueryState } from "nuqs";
 
 export default function FormatFilter() {
     const [format, setFormat] = useQueryState('format',
-        parseAsStringEnum<AnimeFormat>(animeFormats)
+        parseAsStringEnum<AnilistFormat>(animeFormats)
     )
 
     return (
@@ -14,7 +14,7 @@ export default function FormatFilter() {
             {animeFormats && (
                 <Combobox
                     options={animeFormats}
-                    onChange={(e) => setFormat((e ? e : null) as AnimeFormat)}
+                    onChange={(e) => setFormat((e ? e : null) as AnilistFormat)}
                     placeholder="Select a format"
                     defaultValue={format || ""}
                 />

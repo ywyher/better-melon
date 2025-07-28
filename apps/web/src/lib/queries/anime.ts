@@ -5,9 +5,8 @@ import { env } from "@/lib/env/client";
 import { GET_ANIME, GET_ANIME_LIST } from "@/lib/graphql/queries";
 import { sortObject } from "@/lib/utils/utils";
 import { Anime, AnimeListQueryVariableKeys, AnimeQueryVariableKeys, AnimeQueryVariables, AnimeListQueryVariables } from "@/types/anime";
-import { KitsuAnimeEpisodesReponse } from "@better-melon/shared/types";
 import { createQueryKeys } from "@lukemorales/query-key-factory";
-import { AnilistResponse } from "@better-melon/shared/types";
+import { AnilistResponse, KitsuEpisodesReponse } from "@better-melon/shared/types";
 import { ApiResponse } from "@/types/api";
 
 export const animeQueries = createQueryKeys('anime', {
@@ -101,7 +100,7 @@ export const animeQueries = createQueryKeys('anime', {
         const raw = await fetch(`${env.NEXT_PUBLIC_API_URL}/anime/${animeId}/episodes?limit=${limit}&offset=${offset}`)
         if(!raw.ok) throw new Error(`Error while fetching anime episodes metadata: ${raw.statusText}`)
 
-        const data: ApiResponse<KitsuAnimeEpisodesReponse> = await raw.json()
+        const data: ApiResponse<KitsuEpisodesReponse> = await raw.json()
         return data;
       } catch (error) {
         const msg = error instanceof Error ? error.message : "Failed to fetch anime data"

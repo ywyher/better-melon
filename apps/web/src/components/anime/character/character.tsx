@@ -1,9 +1,9 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils/utils";
-import { AnimeChracter } from "@/types/anime";
+import { AnilistChracter } from "@/types/anilist";
 import Image from "next/image";
 
-type CharacterProps = { character: AnimeChracter, className?: string }
+type CharacterProps = { character: AnilistChracter, className?: string }
 
 export default function Character({ character, className }: CharacterProps) {
   const voiceActor = character.voiceActors?.[0];

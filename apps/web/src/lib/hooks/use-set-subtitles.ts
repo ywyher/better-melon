@@ -1,13 +1,13 @@
 import { SubtitlesNotAvailableError } from "@/lib/errors/player";
 import { useSubtitleStore } from "@/lib/stores/subtitle-store";
 import { getActiveSubtitleFile, getEnglishSubtitleUrl } from "@/lib/utils/subtitle";
-import { AnimeEpisodeData, AnimeEpisodeSources, SubtitleTrack } from "@/types/anime";
+import { EpisodeData } from "@/types/episode";
 import { SettingsForEpisode } from "@/types/settings";
 import { CachedFiles } from "@/types/subtitle";
 import { useEffect, useState } from "react";
 
 type UseSetSubtitlesProps = {
-  episodeData: AnimeEpisodeData | null | undefined, 
+  episodeData: EpisodeData | null | undefined, 
   settings: SettingsForEpisode | null | undefined, 
   episodeNumber: number
   cachedFiles: CachedFiles

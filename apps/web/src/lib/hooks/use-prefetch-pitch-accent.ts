@@ -1,18 +1,19 @@
-import { useMemo, useEffect } from 'react';
+import { useMemo } from 'react';
 import { useQueries } from '@tanstack/react-query';
 import { SubtitleCue } from '@/types/subtitle';
 import { chunkArray } from '@/lib/utils/utils';
 import { getActiveSubtitleFile } from '@/lib/utils/subtitle';
 import { SubtitleSettings } from '@/lib/db/schema';
 import { pitchQueries } from '@/lib/queries/pitch';
-import { AnimeEpisodeData } from '@/types/anime';
+import { Anime } from '@/types/anime';
 import { pitchAccentConfig } from '@/lib/hooks/use-pitch-accent-chunks';
 import { NetworkCondition } from '@/types';
+import { EpisodeData } from '@/types/episode';
 
 type PrefetchPitchAccentProps = {
-  animeId: string,
+  animeId: Anime['id'],
   episodeNumber: number,
-  episodeData: AnimeEpisodeData | undefined,
+  episodeData: EpisodeData | undefined,
   japaneseCues: SubtitleCue[] | undefined,
   preferredFormat: SubtitleSettings["preferredFormat"],
   networkCondition: NetworkCondition,

@@ -3,13 +3,14 @@ import { subtitleQueries } from "@/lib/queries/subtitle";
 import { useSubtitleStore } from "@/lib/stores/subtitle-store";
 import { getActiveSubtitleFile, getEnglishSubtitleUrl } from "@/lib/utils/subtitle";
 import { NetworkCondition } from "@/types";
-import { Anime, AnimeEpisodeData } from "@/types/anime";
+import { Anime } from "@/types/anime";
+import { EpisodeData } from "@/types/episode";
 import { ActiveSubtitleFile, SubtitleTranscription } from "@/types/subtitle";
 import { useQueries } from "@tanstack/react-query";
 import { useEffect, useMemo } from "react";
 
 type PrefetchSubtitleTranscriptionsProps = {
-  episodeData: AnimeEpisodeData | undefined,
+  episodeData: EpisodeData | undefined,
   preferredFormat: SubtitleSettings["preferredFormat"],
   isReady: boolean,
   isLastEpisode: boolean,
@@ -51,7 +52,10 @@ export function usePrefetchSubtitleTranscriptions({
       
       try {
         activeSubtitleFile = episodeData ? 
-          getActiveSubtitleFile(episodeData.subtitles ?? [], preferredFormat) : 
+          getActiveSubtitleFile({
+            files: episodeData.subtitles ?? [],
+            preferredFormat,
+          }) : 
           undefined;
       } catch (error) {
         activeSubtitleFile = undefined;
@@ -59,7 +63,9 @@ export function usePrefetchSubtitleTranscriptions({
       
       try {
         englishSubtitleUrl = episodeData ? 
-          getEnglishSubtitleUrl(episodeData.sources?.tracks ?? []) : 
+          getEnglishSubtitleUrl({
+            files: episodeData.sources?.tracks ?? []
+          }) : 
           '';
       } catch (error) {
         englishSubtitleUrl = '';
