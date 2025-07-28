@@ -6,9 +6,8 @@ import { animeProvider } from "../types";
 import { subtitleFile } from "../types/jiamku";
 import { getKitsuAnimeEpisodes, getKitsuAnimeInfo } from "../services/kitsu";
 import { getAnilistAnime } from "../services/anilist";
-import { kitsuAnimeEpisodesReponse } from "../types/kitsu";
 import { anilistAnime } from "../types/anilist";
-import { hianimeEpisodeSources } from "@better-melon/shared/types";
+import { hianimeEpisodeSources, kitsuEpisodesReponse } from "@better-melon/shared/types";
 
 export const anime = new Elysia({ prefix: 'anime' })
   .get('/:anilistId/:episodeNumber/:provider',
@@ -87,7 +86,7 @@ export const anime = new Elysia({ prefix: 'anime' })
       }),
       response: t.Object({
         success: t.Boolean(),
-        data: t.Optional(kitsuAnimeEpisodesReponse),
+        data: t.Optional(kitsuEpisodesReponse),
         message: t.Optional(t.String())
       }),
       query: t.Object({

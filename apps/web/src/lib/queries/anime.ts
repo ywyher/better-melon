@@ -5,7 +5,7 @@ import { env } from "@/lib/env/client";
 import { GET_ANIME, GET_ANIME_LIST } from "@/lib/graphql/queries";
 import { sortObject } from "@/lib/utils/utils";
 import { Anime, AnimeListQueryVariableKeys, AnimeQueryVariableKeys, AnimeQueryVariables, AnimeListQueryVariables } from "@/types/anime";
-import { KitsuAnimeEpisodesReponse } from "@/types/kitsu";
+import { KitsuAnimeEpisodesReponse } from "@better-melon/shared/types";
 import { createQueryKeys } from "@lukemorales/query-key-factory";
 import { AnilistResponse } from "@better-melon/shared/types";
 import { ApiResponse } from "@/types/api";

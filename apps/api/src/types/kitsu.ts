@@ -1,5 +1,6 @@
 import { t } from "elysia";
 import { datePattern } from ".";
+import { kitsuTitles } from "@better-melon/shared/types"
 
 export const kitsuAnimeDimensions = t.Object({
   width: t.Number(),
@@ -20,13 +21,6 @@ export const anilistToKitsu = t.Object({
   status: kitsuAnimeStatus,
   startDate: t.String({ pattern: datePattern }),
   endDate: t.Nullable(t.String({ pattern: datePattern })),
-})
-
-export const kitsuAnimeTitles = t.Object({
-  en: t.String(),
-  en_jp: t.String(),
-  en_us: t.String(),
-  ja_jp: t.String(),
 })
 
 export const kitsuAnimePoster = t.Object({
@@ -80,7 +74,7 @@ export const kitsuAnimeAttributes = t.Object({
   synopsis: t.Nullable(t.String()),
   description: t.Nullable(t.String()),
   coverImageTopOffset: t.Number(),
-  titles: t.Partial(kitsuAnimeTitles),
+  titles: t.Partial(kitsuTitles),
   canonicalTitle: t.Nullable(t.String()),
   abbreviatedTitles: t.Array(t.String()),
   ratingFrequencies: t.Any(),
@@ -116,53 +110,13 @@ export const kitsuAnimeInfo = t.Object({
   relationships: t.Any()
 })
 
-export const kitsuAnimeEpisodeThumbnail = t.Object({
-  original: t.String(),
-})
-
-export const kitsuAnimeEpisodeAttributes = t.Object({
-  synopsis: t.Nullable(t.String()),
-  description: t.Nullable(t.String()),
-  titles: t.Partial(kitsuAnimeTitles),
-  canonicalTitle: t.Nullable(t.String()),
-  seasonNumber: t.Nullable(t.Number()),
-  number: t.Number(),
-  relativeNumber: t.Nullable(t.Number()),
-  airdate: t.Nullable(t.String()),
-  length: t.Number(), // duration
-  thumbnail: t.Nullable(kitsuAnimeEpisodeThumbnail),
-  createdAt: t.String(),
-  updatedAt: t.String(),
-})
-
-export const kitsuAnimeEpisode = t.Object({
-  id: t.String(),
-  type: t.Literal("episodes"),
-  links: t.Object({
-    self: t.String()
-  }),
-  attributes: kitsuAnimeEpisodeAttributes,
-  relationships: t.Any()
-})
-
-export const kitsuAnimeEpisodesReponse = t.Object({
-  episodes: t.Array(kitsuAnimeEpisode),
-  count: t.Number()
-})
-
-export type KitsuAnimeEpisodesReponse = typeof kitsuAnimeEpisodesReponse.static
 export type KitsuAnimeAttributes = typeof kitsuAnimeAttributes.static
 export type KitsuAnimeInfo = typeof kitsuAnimeInfo.static
 export type KitsuAnimeStatus = typeof kitsuAnimeStatus.static
 export type KitsuAnimeDimensions = typeof kitsuAnimeDimensions.static
-export type KitsuAnimeTitles = typeof kitsuAnimeTitles.static
 export type KitsuAnimePoster = typeof kitsuAnimePoster.static
 export type KitsuAnimeCover = typeof kitsuAnimeCover.static
 export type AnilistToKitsu = typeof anilistToKitsu.static
-
-export type KitsuAnimeEpisodeThumbnail = typeof kitsuAnimeEpisodeThumbnail.static
-export type KitsuAnimeEpisodeAttributes = typeof kitsuAnimeEpisodeAttributes.static
-export type KitsuAnimeEpisode = typeof kitsuAnimeEpisode.static
 
 export type KitsuApiResponse<T> = {
   data: T

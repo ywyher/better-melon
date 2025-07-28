@@ -3,7 +3,7 @@ import { getHianimeAnimeEpisodes, getHianimeAnimeInfo } from "../../src/services
 import { getAnilistAnime } from "../../src/services/anilist";
 
 test("returns episodes data", async () => {
-    const anilistData = await getAnilistAnime('9253')
+    const anilistData = await getAnilistAnime(9253)
     const info = await getHianimeAnimeInfo(anilistData)
     const episodes = await getHianimeAnimeEpisodes(info.id)
 

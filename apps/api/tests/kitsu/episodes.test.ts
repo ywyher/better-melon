@@ -3,7 +3,7 @@ import { getKitsuAnimeEpisodes, getKitsuAnimeInfo } from "../../src/services/kit
 import { getAnilistAnime } from "../../src/services/anilist";
 
 test("returns anime episodes data from kitsu", async () => {
-    const anilistData = await getAnilistAnime('21')
+    const anilistData = await getAnilistAnime(21)
     const info = await getKitsuAnimeInfo(anilistData)
     const { episodes } = await getKitsuAnimeEpisodes({
         kitsuAnimeId: info.id,

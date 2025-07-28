@@ -12,3 +12,8 @@ export * from './hianime/sources/schema'
 export * from './hianime/sources/type'
 export * from './hianime/search/schema'
 export * from './hianime/search/type'
+
+export * from './kitsu/anime/schema'
+export * from './kitsu/anime/type'
+export * from './kitsu/episode/schema'
+export * from './kitsu/episode/type'

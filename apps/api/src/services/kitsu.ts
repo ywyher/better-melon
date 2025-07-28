@@ -1,10 +1,10 @@
 import { redis } from "bun";
-import { KitsuApiResponse, KitsuAnimeInfo, KitsuAnimeEpisode, KitsuAnimeStatus, AnilistToKitsu, kitsuAnimeStatus, KitsuAnimeEpisodesReponse } from "../types/kitsu";
+import { KitsuApiResponse, KitsuAnimeInfo, KitsuAnimeStatus, AnilistToKitsu, kitsuAnimeStatus } from "../types/kitsu";
 import { env } from "../lib/env";
 import { makeRequest } from "../utils/utils";
 import { cacheKeys } from "../lib/constants/cache";
 import { AnilistAnime } from "../types/anilist";
-import { AnilistStatus } from "@better-melon/shared/types";
+import { AnilistStatus, KitsuEpisode, KitsuEpisodesReponse } from "@better-melon/shared/types";
 import { getNextAiringEpisodeTTL } from "@better-melon/shared/utils";
 
 async function mapAnilistToKitsu(anilistData: AnilistAnime): Promise<AnilistToKitsu> {
@@ -105,7 +105,7 @@ export async function getKitsuAnimeEpisodes({
   anilistData: AnilistAnime
   limit?: number
   offset?: number
-}): Promise<KitsuAnimeEpisodesReponse> {
+}): Promise<KitsuEpisodesReponse> {
   try {
     const kitsuLimit = 20; // Maximum allowed by Kitsu API
     const startOffset = offset ?? 0;
@@ -119,16 +119,16 @@ export async function getKitsuAnimeEpisodes({
     
     if (cachedData) {
       console.log(`Cache hit for kitsu episodes, anime ID: ${kitsuAnimeId}, limit: ${limit || 'all'}, offset: ${startOffset}`);
-      return JSON.parse(cachedData as string) as KitsuAnimeEpisodesReponse;
+      return JSON.parse(cachedData as string) as KitsuEpisodesReponse;
     }
 
-    const allEpisodes: KitsuAnimeEpisode[] = [];
+    const allEpisodes: KitsuEpisode[] = [];
     let currentOffset = startOffset;
     let hasMorePages = true;
     let totalKitsuCount: number | undefined; // Store the total count from Kitsu (all episodes)
 
     while (hasMorePages) {
-      const { data: { data, meta } } = await makeRequest<KitsuApiResponse<KitsuAnimeEpisode[]>>(`
+      const { data: { data, meta } } = await makeRequest<KitsuApiResponse<KitsuEpisode[]>>(`
         ${env.KITSU_API_URL}/anime/${kitsuAnimeId}/episodes?page[limit]=${kitsuLimit}&page[offset]=${currentOffset}
       `, {
         name: 'kitsu-anime-episodes',
@@ -237,7 +237,7 @@ export async function getKitsuAnimeEpisodes({
       currentAiredCount = allEpisodes.length;
     }
 
-    const result: KitsuAnimeEpisodesReponse = {
+    const result: KitsuEpisodesReponse = {
       episodes: allEpisodes,
       count: currentAiredCount,
     };
