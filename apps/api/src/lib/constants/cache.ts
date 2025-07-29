@@ -10,6 +10,7 @@ export const cacheKeys = {
   hianime: {
     info: (animeId: AnilistAnime['id']) => `hianime:info:${animeId}`,
     episodes: (animeId: HianimeAnime['id']) => `hianime:episodes:${animeId}`,
+    servers: (episodeId: HianimeAnime['id']) => `hianime:servers:${episodeId}`,
     sources: (episodeId: HianimeAnime['id']) => `hianime:sources:${episodeId}`
   },
   subtitle: {

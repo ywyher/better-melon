@@ -21,7 +21,7 @@ export default function Details({ anime, isLoading }: DetailsProps) {
         <div className="flex-1 max-h-[80vh]">
           <DetailsTabs anime={anime} />
         </div>
-        <div className="hidden xl:block  max-w-full xl:max-w-[500px] h-[80vh]">
+        <div className="max-w-full xl:max-w-[500px] h-[80vh]">
           {anime.status != 'NOT_YET_RELEASED' && (
             <EpisodesList
               nextAiringEpisode={anime.nextAiringEpisode}

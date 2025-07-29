@@ -112,7 +112,7 @@ async function getAnilistDynamicData({ anilistId }: { anilistId: AnilistAnime['i
   }
 }
 
-export async function getAnilistAnime(anilistId: AnilistAnime['id']): Promise<AnilistAnime> {
+export async function getAnilistAnime({ anilistId }: { anilistId: AnilistAnime['id'] }): Promise<AnilistAnime> {
   const staticData = await getAnilistStaticData({ anilistId })
   const dynamicData = await getAnilistDynamicData({ anilistId })
 

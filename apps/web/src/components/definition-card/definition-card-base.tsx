@@ -8,12 +8,14 @@ import { useDefinitionStore } from "@/lib/stores/definition-store";
 import { cn } from "@/lib/utils/utils";
 import { useDraggable } from "@dnd-kit/core";
 import { createPortal } from "react-dom";
+import { usePlayerStore } from "@/lib/stores/player-store";
 
 export default function DefinitionCardBase() {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: 'definition-card',
   });
 
+  const player = usePlayerStore((state) => state.player)
   const token = useDefinitionStore((state) => state.token)
   const position = useDefinitionStore((state) => state.position)
   const isExpanded = useDefinitionStore((state) => state.isExpanded)
@@ -37,9 +39,10 @@ export default function DefinitionCardBase() {
       className={cn(
         "flex flex-col gap-5 min-w-[300px] p-3 z-50",
         isExpanded ?
-          "fixed top-[var(--header-height)] left-1/2 -translate-x-1/2 h-[calc(98vh-var(--header-height))] w-full container mx-auto max-h-none overflow-y-scroll"
-        :
-          "absolute top-5 left-1/2 -translate-x-1/2 cursor-move shadow-lg",
+          player.current?.state.fullscreen ?
+            "fixed top-2 left-1/2 -translate-x-1/2 h-[calc(98vh-var(--header-height))] w-full container mx-auto max-h-none overflow-y-scroll"
+            : "fixed top-[var(--header-height)] left-1/2 -translate-x-1/2 h-[calc(98vh-var(--header-height))] w-full container mx-auto max-h-none overflow-y-scroll"
+        : "absolute top-5 left-1/2 -translate-x-1/2 cursor-move shadow-lg",
       )}
     >
       <DefinitionCardHeader
@@ -54,11 +57,13 @@ export default function DefinitionCardBase() {
     </Card>
   );
 
-  // When expanded, render to document body via portal
   if (isExpanded && typeof document !== 'undefined') {
-    return createPortal(cardContent, document.body);
+    if(player?.current?.state.fullscreen && player.current.el) {
+      return createPortal(cardContent, player.current.el);
+    } else {
+      return createPortal(cardContent, document.body);
+    }
   }
 
-  // Normal rendering within the MediaPlayer
   return cardContent;
 }

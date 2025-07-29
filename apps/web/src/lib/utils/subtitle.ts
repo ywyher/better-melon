@@ -15,7 +15,7 @@ import { parseVtt } from "@/lib/subtitle/parsers/vtt";
 import { parseAss } from "@/lib/subtitle/parsers/ass";
 import { franc } from 'franc-min'
 import { Anime, AnimeSkipTime } from "@/types/anime";
-import { EpisodeSubtitleTrack } from "@/types/episode";
+import { HianimeEpisodeSourcesTrack } from "@better-melon/shared/types";
 
 export function getSubtitleCacheKey({
   source,
@@ -77,13 +77,13 @@ export const getEnglishSubtitleUrl = ({
   // url
   match
 }: {
-  files: EpisodeSubtitleTrack[]
-  match: string | null
+  files: HianimeEpisodeSourcesTrack[]
+  match?: string | null
 }) => {
   return files.find(
-    (s: EpisodeSubtitleTrack) => 
-      s.lang === 'English' && (!match || s.url == match)
-  )?.url || "";
+    (s: HianimeEpisodeSourcesTrack) => 
+      s.label === 'English' && (!match || s.file == match)
+  )?.file || "";
 }
 
 export function removeTags(content: string) {
@@ -365,6 +365,7 @@ export function getSubtitleFormat(
 export function isTokenExcluded(token: SubtitleToken) {
   return excludedPos.includes(token.pos)
   || excludedPos.includes(token.pos_detail_1) // for numbers
+  || excludedPos.includes(token.surface_form) // for ♬～
 }
 
 export const getTranscriptionsLookupKey = (from: number, to: number, delay: number = 0) => {

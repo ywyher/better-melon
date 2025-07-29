@@ -1,3 +1,5 @@
+add more options for the delay like custom inputs
+
 check if search functioanlity works for romanjin and native
 
 maybe change the player loading strategy to idle

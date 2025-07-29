@@ -46,10 +46,10 @@ export function usePrefetchPitchAccent({
     if (!episodeData) return '';
     
     try {
-      const activeSubtitleFile = getActiveSubtitleFile(
-        episodeData.subtitles ?? [], 
+      const activeSubtitleFile = getActiveSubtitleFile({
+        files: episodeData.subtitles ?? [], 
         preferredFormat
-      );
+      });
       return activeSubtitleFile?.file.name || '';
     } catch {
       return '';
@@ -69,13 +69,13 @@ export function usePrefetchPitchAccent({
   const queries = useQueries({
     queries: chunks.map((chunk, index) => {
       return {
-        ...pitchQueries.accentChunk(
+        ...pitchQueries.accentChunk({
           chunk, 
-          index, 
+          chunkIndex: index, 
           animeId, 
           subtitleFileName,
-          pitchAccentConfig.delayBetweenRequests,
-        ),
+          delayBetweenRequests: pitchAccentConfig.delayBetweenRequests,
+        }),
         staleTime: 1000 * 60 * 60,
         enabled: !!shouldFetchPitchAccentChunks
       }

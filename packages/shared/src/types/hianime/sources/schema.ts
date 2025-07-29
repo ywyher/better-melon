@@ -28,6 +28,5 @@ export const hianimeEpisodeSources = t.Object({
   tracks: t.Array(hianimeEpisodeSourcesTrack),
   intro: hianimeEpisodeSourcesTimeSegment,
   outro: hianimeEpisodeSourcesTimeSegment,
-  iframe: t.String(),
   serverId: t.Number()
 })

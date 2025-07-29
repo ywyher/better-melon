@@ -1,7 +1,8 @@
 import ky from "ky";
 import { hianimeConfig } from "../utils/config";
 import { load } from "cheerio";
-import type { GetEpisodeServersProps, HianimeEpiosdeServersApiReponse, HianimeEpisodeServer, HianimeServerName } from "../types/server";
+import type { GetEpisodeServersProps, HianimeEpiosdeServersApiReponse } from "../types/server";
+import type { HianimeEpisodeServers, HianimeServerName } from "@better-melon/shared/types";
 
 export async function getHianimeEpisodeServers({
   episodeId
@@ -12,11 +13,7 @@ export async function getHianimeEpisodeServers({
 
   const $ = load(content.html)
 
-  const servers: {
-    sub: HianimeEpisodeServer[],
-    dub: HianimeEpisodeServer[],
-    raw: HianimeEpisodeServer[]
-  } = {
+  const servers: HianimeEpisodeServers = {
     sub: [],
     dub: [],
     raw: []

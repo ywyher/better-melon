@@ -22,7 +22,8 @@ export function useWords({
   } = useQuery({
     ...settingsQueries.words({ status }),
     staleTime: 1000 * 60 * 5,
-    enabled: !!shouldFetch
+    enabled: !!shouldFetch,
+    refetchOnWindowFocus: false
   });
 
   useEffect(() => {

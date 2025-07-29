@@ -1,4 +1,4 @@
-import React, { memo, useMemo } from 'react';
+import React, { memo, useEffect, useMemo } from 'react';
 import { SubtitleToken } from '@/types/subtitle';
 import { TranscriptionStyleSet } from '@/app/watch/[id]/[ep]/types';
 import { RubyText } from '@/components/ruby-text';

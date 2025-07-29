@@ -224,7 +224,7 @@ export default function Player() {
                     </MediaProvider>
                     <DefaultAudioLayout icons={defaultLayoutIcons} />
                     <DefaultVideoLayout
-                        thumbnails={`${env.NEXT_PUBLIC_PROXY_URL}?url=${metadata?.thumbnails?.url}`}
+                        thumbnails={`${env.NEXT_PUBLIC_PROXY_URL}?url=${metadata?.thumbnails?.file}`}
                         icons={defaultLayoutIcons} 
                     />
                     <MemoizedSkipButton

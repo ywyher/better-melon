@@ -6,7 +6,7 @@ import { Grid, List, Image as ImageIcon, Eye, EyeOff, Search } from "lucide-reac
 import { useParams, useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { Anime } from "@/types/anime";
 import useEpisodesList from "@/lib/hooks/use-episodes-list";
@@ -62,6 +62,10 @@ export default function EpisodesList({ nextAiringEpisode, animeTitle, animeBanne
       return element.getBoundingClientRect().height || 60;
     }, [episodes])
   });
+
+  useEffect(() => {
+    console.log(`episodes`, episodes)
+  }, [episodes])
 
   if(isLoading || !episodes) return <EpisodesListSkeleton viewMode={episodesListViewMode} />
 

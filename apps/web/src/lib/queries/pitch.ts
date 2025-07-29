@@ -10,21 +10,28 @@ export const pitchQueries = createQueryKeys('anime', {
       queryKey: ['accent', query],
       queryFn: async () => await getPitchAccent(query)
     }),
-    accentChunk: (
+    accentChunk: ({
+      chunk,
+      chunkIndex,
+      animeId,
+      subtitleFileName,
+      delayBetweenRequests,
+    }: {
       chunk: string[],
       chunkIndex: number, 
       animeId: Anime['id'],
       subtitleFileName: string,
       delayBetweenRequests: number
-    ) => ({
+    }) => ({
         queryKey: ['accent-chunk', animeId, subtitleFileName, chunkIndex],
         queryFn: async (): Promise<NHKEntry[]> => {
           const query = chunk.join(',').replace(/[\/\\]/g, '');
+          const cacheKey = cacheKeys.pitch.accent(animeId, subtitleFileName, chunkIndex)
 
           try {
-            const cache = await getCache(cacheKeys.pitch.accent(animeId, subtitleFileName, chunkIndex));
+            const cache = await getCache(cacheKey);
             if (cache) {
-              const cachedEntries = JSON.parse(JSON.parse(cache));
+              const cachedEntries = JSON.parse(cache);
               if (Array.isArray(cachedEntries)) {
                 return cachedEntries;
               }
@@ -40,9 +47,10 @@ export const pitchQueries = createQueryKeys('anime', {
 
           // Fetch from API
           const entries = await getPitchAccent(query);
-          
+
           // Cache the result
-          await setCache(cacheKeys.pitch.accent(animeId, subtitleFileName, chunkIndex), JSON.stringify(entries));
+          setCache(cacheKey, entries)
+            .catch(err => console.error('Cache write failed:', err));
           return entries;
         },
     }),

@@ -4,21 +4,17 @@ import { extractHianimeToken } from "../utils/source.utils";
 import { AES, enc } from "crypto-js";
 import type { 
   GetHianimeEpisodeSourcesProps,
-  HianimeEpiosdeSourcesApiResponse, 
-  HianimeGetSourcesApiResponse, 
-  HianimeGetSourcesFallbackApiResponse 
+  HianimeEncryptedEpisodeSources,
+  HianimeEpiosdeSourcesApiResponse,
+  HianimeEpiosodeSourcesFallbackResponse, 
 } from "../types/source";
-import type { HianimeEpisodeServer } from "../types/server";
-import type { HianimeEpisode, HianimeEpisodeSources } from "@better-melon/shared/types";
+import type { HianimeEpisode, HianimeEpisodeServer, HianimeEpisodeSource, HianimeEpisodeSources } from "@better-melon/shared/types";
 
 async function getDefaultEpisodeSources(
   episodeId: HianimeEpisode['id'],
   server: HianimeEpisodeServer
-): Promise<HianimeEpisodeSources> {
-  const [sourcesData, key]: [HianimeEpiosdeSourcesApiResponse, string] = await Promise.all([
-    ky.get(`${hianimeConfig.url.ajax}/episode/sources?id=${server.dataId}`).json<HianimeEpiosdeSourcesApiResponse>(),
-    ky.get("https://raw.githubusercontent.com/itzzzme/megacloud-keys/refs/heads/main/key.txt").text()
-  ]);
+): Promise<HianimeEncryptedEpisodeSources> {
+  const sourcesData: HianimeEpiosdeSourcesApiResponse = await ky.get(`${hianimeConfig.url.ajax}/episode/sources?id=${server.dataId}`).json<HianimeEpiosdeSourcesApiResponse>()
 
   const link = sourcesData.link;
   if (!link) throw new Error("Missing link in sourcesData");
@@ -40,8 +36,14 @@ async function getDefaultEpisodeSources(
     sourceId
   });
 
-  const data: HianimeGetSourcesApiResponse = await ky.get(`${baseUrl}/getSources?id=${sourceId}&_k=${token}`).json();
-  
+  const data: HianimeEncryptedEpisodeSources = await ky.get(`${baseUrl}/getSources?id=${sourceId}&_k=${token}`).json();
+
+  return data;
+}
+
+async function decryptHianimeEpisodeSources(data: HianimeEncryptedEpisodeSources): Promise<HianimeEpisodeSource> {
+  const key = await ky.get("https://raw.githubusercontent.com/itzzzme/megacloud-keys/refs/heads/main/key.txt").text()
+
   const encrypted = data.sources;
   if (!encrypted) throw new Error("Encrypted source missing");
 
@@ -66,7 +68,7 @@ async function getFallbackEpisodeSources(
   const epiosdeFallbackId = dataIdMatch?.[1];
   if (!epiosdeFallbackId) throw new Error("Could not extract data-id for fallback");
 
-  const data: HianimeGetSourcesFallbackApiResponse = await ky.get(
+  const data: HianimeEpiosodeSourcesFallbackResponse = await ky.get(
     `${hianimeConfig.url.fallback}/stream/getSources?id=${epiosdeFallbackId}`,
     {
       headers: {
@@ -85,7 +87,6 @@ async function getFallbackEpisodeSources(
     tracks: data.tracks ?? [],
     intro: data.intro ?? null,
     outro: data.outro ?? null,
-    iframe,
     serverId: Number(data.server) ?? 0,
   };
 
@@ -98,12 +99,41 @@ export async function getHianimeEpisodeSources({
   fallback = false,
 }: GetHianimeEpisodeSourcesProps): Promise<HianimeEpisodeSources> {
   if (fallback) {
-    return getFallbackEpisodeSources(episodeId);
+    const main = await getDefaultEpisodeSources(episodeId, server!);
+    const fallback = await getFallbackEpisodeSources(episodeId);
+
+    return {
+      type: "SUB",
+      sources: fallback.sources,
+      intro: main.intro,
+      outro: main.outro,
+      tracks: main.tracks,
+      serverId: fallback.serverId,
+    }
   }
 
   try {
-    return await getDefaultEpisodeSources(episodeId, server!);
+    const encrypted = await getDefaultEpisodeSources(episodeId, server!);
+    const decrypted = await decryptHianimeEpisodeSources(encrypted)
+    return {
+      type: 'SUB',
+      sources: decrypted,
+      intro: encrypted.intro,
+      outro: encrypted.outro,
+      tracks: encrypted.tracks,
+      serverId: encrypted.server,
+    }
   } catch (error) {
-    return getFallbackEpisodeSources(episodeId);
+    const main = await getDefaultEpisodeSources(episodeId, server!);
+    const fallback = await getFallbackEpisodeSources(episodeId);
+
+    return {
+      type: "SUB",
+      sources: fallback.sources,
+      intro: main.intro,
+      outro: main.outro,
+      tracks: main.tracks,
+      serverId: fallback.serverId,
+    }
   }
 }

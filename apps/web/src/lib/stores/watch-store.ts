@@ -11,7 +11,7 @@ import { EpisodeData } from '@/types/episode';
 import { Anime } from '@/types/anime';
 
 // Define the types for our store data
-interface WatchDataState {
+export type WatchDataState = {
   // Essentials
   animeId: Anime['id'];
   episodeNumber: number;
@@ -60,6 +60,8 @@ interface WatchDataState {
 
   // Reset function for episode changes
   resetWatchData: () => void;
+
+  batchUpdate: (updates: Partial<WatchDataState>) => void;
 }
 
 const initialState = {
@@ -125,4 +127,11 @@ export const useWatchDataStore = create<WatchDataState>((set, get) => ({
   resetWatchData: () => set({
     ...initialState,
   }),
+
+  batchUpdate: (updates: Partial<WatchDataState>) => {
+    set((state) => ({
+      ...state,
+      ...updates
+    }));
+  },
 }));

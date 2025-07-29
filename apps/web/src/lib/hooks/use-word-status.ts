@@ -1,10 +1,10 @@
 import { handleWord } from "@/app/settings/word/_known-words/actions";
+import { WordsLookup } from "@/app/watch/[id]/[ep]/types";
 import { Word } from "@/lib/db/schema";
 import { wordQueries } from "@/lib/queries/word";
 import { useWatchDataStore } from "@/lib/stores/watch-store";
 import { useQuery } from "@tanstack/react-query";
-import { generateId } from "better-auth";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 type WordStatusProps = {
@@ -17,6 +17,7 @@ export function useWordStatus({
   const [isActionLoading, setIsActionLoading] = useState<boolean>(false);
   const [newStatus, setNewStatus] = useState<Word['status'] | undefined>(undefined)
   const wordsLookup = useWatchDataStore((state) => state.wordsLookup)
+  const setWordsLookup = useWatchDataStore((state) => state.setWordsLookup)
 
   const { data: wordData, isLoading: isWordDataLoading } = useQuery(wordQueries.word(word, newStatus))
 
@@ -28,19 +29,16 @@ export function useWordStatus({
       if(error) throw new Error(error);
 
       if(wordsLookup) {
-        const exists = wordsLookup.get(word)
-
+        const newWordsLookup = new Map(wordsLookup);
+        const exists = newWordsLookup.get(word);
+        
         if(exists) {
-          wordsLookup.set(word, {
-            word: exists.word,
-            status
-          });
-        }else {
-          wordsLookup.set(word, {
-            word,
-            status,
-          })
+          newWordsLookup.set(word, { word: exists.word, status });
+        } else {
+          newWordsLookup.set(word, { word, status });
         }
+        
+        setWordsLookup(newWordsLookup);
       }
 
       setNewStatus(status)
@@ -52,6 +50,10 @@ export function useWordStatus({
       setIsActionLoading(false)
     }
   }
+
+  useEffect(() => {
+    console.log(`wordsLookup`,wordsLookup)
+  }, [wordsLookup])
 
   return {
     status: wordData?.word?.status,

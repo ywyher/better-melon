@@ -35,7 +35,7 @@ export async function getEpisodeData(animeId: Anime['id'], episodeNumber: number
         title: data.details.title.english,
         image: data.details.coverImage.extraLarge || data.details.coverImage.large,
         description: data.details.description,
-        thumbnails: data.sources.tracks.find(t => t.lang == 'thumbnails')
+        thumbnails: data.sources.tracks.find(t => t.kind == 'thumbnails')
       }
     };
   } catch (error) {

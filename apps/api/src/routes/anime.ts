@@ -17,7 +17,7 @@ export const anime = new Elysia({ prefix: 'anime' })
       console.log('*-----------------------------------------------------------------------------------*')
       try {
         const anime = await getHianimeAnime(anilistId, episodeNumber);
-        const SubtitleFiles = await getSubtitleFiles(anime.details, episodeNumber);
+        const SubtitleFiles = await getSubtitleFiles({ anilistData: anime.details, episodeNumber });
 
         const fetchEnd = performance.now()
         console.log(`Fetched data in ${(fetchEnd - fetchStart).toFixed(2)}ms`);
@@ -57,8 +57,8 @@ export const anime = new Elysia({ prefix: 'anime' })
       const fetchStart = performance.now()
 
       try {
-        const anilistData = await getAnilistAnime(anilistId)
-        const anime = await getKitsuAnimeInfo(anilistData);
+        const anilistData = await getAnilistAnime({ anilistId })
+        const anime = await getKitsuAnimeInfo({ anilistData });
         const { count, episodes } = await getKitsuAnimeEpisodes({
           kitsuAnimeId: anime.id,
           anilistData,

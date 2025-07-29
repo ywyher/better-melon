@@ -1,7 +1,7 @@
 import { SubtitleStyles } from "@/lib/db/schema"
 import { CSSProperties } from "react"
 
-export const excludedPos = ['数', '記号']
+export const excludedPos = ['数', '記号', '♬～']
 export const subtitleTranscriptions = ['japanese', 'hiragana', 'katakana', 'romaji', 'english'] as const
 export const subtitleFormats = [
   "vtt",

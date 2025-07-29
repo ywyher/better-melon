@@ -1,57 +1,43 @@
 'use client'
 
+import useIsTranscriptionsCached from "@/lib/hooks/use-is-transcriptions-cached";
 import { useEpisodeData } from "@/lib/hooks/use-episode-data";
 import { useInitializeTokenizer } from "@/lib/hooks/use-initialize-tokenizer";
-import useIsTranscriptionsCached from "@/lib/hooks/use-is-transcriptions-cached";
 import { usePitchAccentChunks } from "@/lib/hooks/use-pitch-accent-chunks";
 import { useSetSubtitles } from "@/lib/hooks/use-set-subtitles";
 import { useSettingsForEpisode } from "@/lib/hooks/use-settings-for-episode";
 import { useSubtitleStyles } from "@/lib/hooks/use-subtitle-styles";
 import { useSubtitleTranscriptions } from "@/lib/hooks/use-subtitle-transcriptions";
 import { useWords } from "@/lib/hooks/use-words";
-import { usePlayerStore } from "@/lib/stores/player-store";
-import { useWatchDataStore } from "@/lib/stores/watch-store";
+import { useWatchDataStore, WatchDataState } from "@/lib/stores/watch-store";
 import { hasChanged } from "@/lib/utils/utils";
 import { Anime } from "@/types/anime";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useDelayStore } from "@/lib/stores/delay-store";
 
 export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
-  const isVideoReady = usePlayerStore((state) => state.isVideoReady);
   const loadStartTimeRef = useRef<number>(performance.now());
-  const [hasInitialized, setHasInitialized] = useState<boolean>(false)
+  const [hasInitialized, setHasInitialized] = useState<boolean>(false);
   const [totalDuration, setTotalDuration] = useState<number>(0);
+  const setDelay = useDelayStore((state) => state.setDelay)
 
-  // Get store actions
-  const {
-    setAnimeId,
-    setEpisodeNumber,
-    setEpisodeData,
-    setEpisodesLength,
-    setSettings,
-    setTranscriptions,
-    setTranscriptionsLookup,
-    setStyles,
-    setPitchLookup,
-    setWordsLookup,
-    setIsLoading,
-    setLoadingDuration
-  } = useWatchDataStore();
+  const store = useWatchDataStore();
+  const currentStoreState = useWatchDataStore.getState();
 
-  const store = useWatchDataStore.getState(); // use this to read current store values (won't trigger re-renders)
   const {
     cachedFiles,
-    isCached,
+    isCached: isTranscriptionsCached,
     isLoading: isTranscriptionsCachedLoading
   } = useIsTranscriptionsCached({
     animeId,
-    episodeNumber: 9
-  })
+    episodeNumber
+  });
 
   const shouldInitializeTokenizer = useMemo(() => {
-    return (!isCached && !isTranscriptionsCachedLoading) || hasInitialized;
-  }, [isCached, isTranscriptionsCachedLoading, hasInitialized])
-  
-  const { isInitialized } = useInitializeTokenizer({ shouldInitialize: shouldInitializeTokenizer });
+    return (!isTranscriptionsCached && !isTranscriptionsCachedLoading) || hasInitialized;
+  }, [isTranscriptionsCached, isTranscriptionsCachedLoading, hasInitialized]);
+
+  const { isInitialized: isTokenizerInitialized } = useInitializeTokenizer({ shouldInitialize: shouldInitializeTokenizer });
 
   const {
     episodeData,
@@ -62,6 +48,13 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
     refetch: refetchEpisodeData
   } = useEpisodeData(animeId, episodeNumber);
 
+  const {
+    settings,
+    isLoading: isSettingsLoading,
+    error: settingsError,
+    loadingDuration: settingsLoadingDuration
+  } = useSettingsForEpisode();
+
   const { 
     transcriptions, 
     isLoading: isTranscriptionsLoading,
@@ -69,17 +62,11 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
     error: transcriptionsError,
     loadingDuration: transcriptionsLoadingDuration,
   } = useSubtitleTranscriptions({
-    shouldFetch: isCached || isInitialized,
+    // isTranscriptionsCached => since we wont need the tokenizer so its faster
+    shouldFetch: isTranscriptionsCached || isTokenizerInitialized,
     animeId,
     episodeNumber
   });
-
-  const {
-    settings,
-    isLoading: isSettingsLoading,
-    error: settingsError,
-    loadingDuration: settingsLoadingDuration
-  } = useSettingsForEpisode()
 
   const { 
     styles, 
@@ -97,7 +84,7 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
     animeId,
     japaneseCues: transcriptions?.find(t => t.transcription == 'japanese')?.cues || [],
     shouldFetch: settings?.wordSettings.pitchColoring || false
-  })
+  });
   
   const { 
     wordsLookup,
@@ -120,39 +107,127 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
     cachedFiles
   });
 
+  useEffect(() => {
+    const updates: Partial<WatchDataState> = {};
+    
+    if (hasChanged(animeId, currentStoreState.animeId)) {
+      updates.animeId = animeId;
+      setDelay({
+        english: 0,
+        japanese: 0
+      })
+    }
+    
+    if (hasChanged(episodeNumber, currentStoreState.episodeNumber)) {
+      updates.episodeNumber = episodeNumber;
+    }
+    
+    if (hasChanged(episodeData, currentStoreState.episodeData)) {
+      updates.episodeData = episodeData;
+    }
+    
+    if (hasChanged(episodesLength, currentStoreState.episodesLength)) {
+      updates.episodesLength = episodesLength;
+    }
+    
+    if (hasChanged(settings, currentStoreState.settings)) {
+      updates.settings = settings;
+    }
+    
+    if (hasChanged(transcriptions, currentStoreState.transcriptions)) {
+      updates.transcriptions = transcriptions;
+    }
+    
+    if (hasChanged(transcriptionsLookup, currentStoreState.transcriptionsLookup)) {
+      updates.transcriptionsLookup = transcriptionsLookup;
+    }
+    
+    if (hasChanged(styles, currentStoreState.styles)) {
+      updates.styles = styles;
+    }
+    
+    if (hasChanged(pitchLookup, currentStoreState.pitchLookup)) {
+      updates.pitchLookup = pitchLookup;
+    }
+    
+    if (hasChanged(wordsLookup, currentStoreState.wordsLookup)) {
+      updates.wordsLookup = wordsLookup;
+    }
+
+    // Only update if there are actual changes
+    if (Object.keys(updates).length > 0) {
+      console.log('Batch updating store with:', Object.keys(updates));
+      store.batchUpdate(updates);
+    }
+  }, [
+    animeId,
+    episodeNumber,
+    episodeData,
+    episodesLength,
+    settings,
+    transcriptions,
+    transcriptionsLookup,
+    styles,
+    pitchLookup,
+    wordsLookup,
+    store.batchUpdate
+  ]);
+
   const isLoading = useMemo(() => {
     return (
-      isEpisodeDataLoading
-      || isSettingsLoading 
-      || isWordsLoading
-      // || !isVideoReady
-      // so when the user add other transcriptions later we don't show the loading state
-      || (isPitchAccentLoading && !hasInitialized)
-      || (isTranscriptionsLoading && !hasInitialized)
-      || (isStylesLoading && !hasInitialized)
+      isEpisodeDataLoading ||
+      isSettingsLoading ||
+      isWordsLoading ||
+      (isTranscriptionsLoading && !hasInitialized) ||
+      (isStylesLoading && !hasInitialized)
     );
-  }, [isEpisodeDataLoading, isTranscriptionsLoading, isStylesLoading, isPitchAccentLoading, isSettingsLoading, isWordsLoading]);
-
-  useEffect(() => {
-    console.log(`isLoading`, {
-      isEpisodeDataLoading,
-      isSettingsLoading ,
-      isWordsLoading,
-      isPitchAccentLoading: (isPitchAccentLoading && !hasInitialized),
-      isTranscriptionsLoading: (isTranscriptionsLoading && !hasInitialized),
-      isStylesLoading: (isStylesLoading && !hasInitialized),
-      isVideoReady
-    })
   }, [
     isEpisodeDataLoading,
-    isStylesLoading ,
-    isSettingsLoading ,
+    isSettingsLoading,
     isWordsLoading,
     isPitchAccentLoading,
     isTranscriptionsLoading,
-    hasInitialized,
     isStylesLoading,
-  ])
+    hasInitialized
+  ]);
+
+  useEffect(() => {
+    if (hasChanged(isLoading, currentStoreState.isLoading)) {
+      store.setIsLoading(isLoading);
+    }
+    
+    if (!isLoading && !hasInitialized) {
+      setHasInitialized(true);
+    }
+  }, [isLoading, hasInitialized, store.setIsLoading]);
+
+  useEffect(() => {
+    if (!isLoading &&
+        episodeDataLoadingDuration >= 0 &&
+        transcriptionsLoadingDuration >= 0 &&
+        settingsLoadingDuration >= 0 &&
+        stylesLoadingDuration >= 0 && 
+        wordsLoadingDuration >= 0 &&
+        pitchAccentLoadingDuration >= 0 
+    ) {
+      const loadEndTime = performance.now();
+      const elapsed = loadEndTime - loadStartTimeRef.current;
+      
+      if (hasChanged(elapsed, currentStoreState.loadingDuration)) {
+        setTotalDuration(elapsed);
+        store.setLoadingDuration(elapsed);
+      }
+    }
+  }, [
+    isLoading,
+    episodeDataLoadingDuration,
+    transcriptionsLoadingDuration,
+    settingsLoadingDuration,
+    stylesLoadingDuration,
+    wordsLoadingDuration,
+    pitchAccentLoadingDuration,
+    store.setLoadingDuration
+  ]);
 
   const errors = useMemo(() => {
     return [
@@ -163,112 +238,15 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
       subtitlesError,
       wordsError,
       pitchAccentError
-    ].filter(Boolean)
-  }, [episodeDataError, transcriptionsError, settingsError, stylesError, subtitlesError]);
-
-  useEffect(() => {
-    if (animeId && hasChanged(animeId, store.animeId)) {
-      setAnimeId(animeId);
-    }
-  }, [episodeData]);
-
-  useEffect(() => {
-    if (episodeNumber && hasChanged(episodeNumber, store.episodeNumber)) {
-      setEpisodeNumber(episodeNumber);
-    }
-  }, [episodeData]);
-
-  useEffect(() => {
-    if (episodeData && hasChanged(episodeData, store.episodeData)) {
-      setEpisodeData(episodeData);
-    }
-  }, [episodeData]);
-
-  useEffect(() => {
-    if (episodesLength !== store.episodesLength) {
-      setEpisodesLength(episodesLength);
-    }
-  }, [episodesLength]);
-
-  useEffect(() => {
-    if (settings && hasChanged(settings, store.settings)) {
-      setSettings(settings);
-    }
-  }, [settings]);
-
-  useEffect(() => {
-    if (transcriptions && hasChanged(transcriptions, store.transcriptions)) {
-      setTranscriptions(transcriptions);
-    }
-  }, [transcriptions]);
-
-  useEffect(() => {
-    if (transcriptionsLookup && hasChanged(transcriptionsLookup, store.transcriptionsLookup)) {
-      setTranscriptionsLookup(transcriptionsLookup);
-    }
-  }, [transcriptionsLookup]);
-
-  useEffect(() => {
-    if (styles && hasChanged(styles, store.styles)) {
-      setStyles(styles);
-    }
-  }, [styles]);
-
-
-  useEffect(() => {
-    if (pitchLookup && hasChanged(pitchLookup, store.pitchLookup)) {
-      setPitchLookup(pitchLookup);
-    }
-  }, [pitchLookup]);
-
-  useEffect(() => {
-    if (wordsLookup && hasChanged(wordsLookup, store.wordsLookup)) {
-      setWordsLookup(wordsLookup);
-    }
-  }, [wordsLookup]);
-
-  useEffect(() => {
-    if (isLoading !== store.isLoading) {
-      setIsLoading(isLoading);
-    }
-  }, [isLoading]);
-
-  useEffect(() => {
-    if (!isLoading && !hasInitialized) {
-      setHasInitialized(true);
-    }
-  }, [isLoading, hasInitialized]);
-
-  useEffect(() => {
-    if (totalDuration !== store.loadingDuration) {
-      setLoadingDuration(totalDuration);
-    }
-  }, [totalDuration]);
-
-  useEffect(() => {
-    if (!isLoading &&
-      isVideoReady &&
-      episodeDataLoadingDuration >= 0 &&
-      transcriptionsLoadingDuration >= 0 &&
-      settingsLoadingDuration >= 0 &&
-      stylesLoadingDuration >= 0 && 
-      wordsLoadingDuration >= 0 &&
-      pitchAccentLoadingDuration >=0 
-    ) {
-      const loadEndTime = performance.now();
-      const elapsed = loadEndTime - loadStartTimeRef.current;
-      setTotalDuration(elapsed);
-      setLoadingDuration(elapsed);
-    }
+    ].filter(Boolean);
   }, [
-    isLoading,
-    isVideoReady,
-    episodeDataLoadingDuration,
-    transcriptionsLoadingDuration,
-    settingsLoadingDuration,
-    stylesLoadingDuration,
-    episodeNumber,
-    setLoadingDuration
+    episodeDataError,
+    transcriptionsError,
+    settingsError,
+    stylesError,
+    subtitlesError,
+    wordsError,
+    pitchAccentError
   ]);
 
   return {
@@ -324,5 +302,5 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
     isLoading,
     errors,
     loadStartTimeRef
-  }
+  };
 };

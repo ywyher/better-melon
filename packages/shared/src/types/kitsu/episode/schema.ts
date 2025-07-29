@@ -12,7 +12,7 @@ export const kitsuEpisodeAttributes = t.Object({
   canonicalTitle: t.Optional(t.String()),
   seasonNumber: t.Optional(t.Number()),
   number: t.Number(),
-  relativeNumber: t.Optional(t.Number()),
+  relativeNumber: t.Optional(t.Union([t.Number(), t.Null()])),
   airdate: t.Optional(t.String()),
   length: t.Number(), // duration
   thumbnail: t.Optional(kitsuEpisodeThumbnail),

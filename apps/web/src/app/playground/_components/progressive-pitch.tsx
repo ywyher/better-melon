@@ -1,13 +1,13 @@
 'use client'
 
-import { useSubtitleTranscriptions } from "@/lib/hooks/use-subtitle-transcriptions";
-import { useEffect } from "react";
 import { usePitchAccentChunks } from "@/lib/hooks/use-pitch-accent-chunks";
 import { Loader2 } from "lucide-react";
-import { useSubtitleStore } from "@/lib/stores/subtitle-store";
 import SubtitleFileSelector from "@/app/watch/[id]/[ep]/_components/subtitle-file-selector";
-import { useSettingsForEpisode } from "@/lib/hooks/use-settings-for-episode";
-import { useInitializeTokenizer } from "@/lib/hooks/use-initialize-tokenizer";
+import transcriptions from "./transcriptions.json";
+import { TranscriptionQuery } from "@/app/watch/[id]/[ep]/types";
+import { useSubtitleStore } from "@/lib/stores/subtitle-store";
+import { useEffect } from "react";
+
 
 export default function ProgressivePitchPlayground() {
   const setActiveSubtitleFile = useSubtitleStore((state) => state.setActiveSubtitleFile);
@@ -26,27 +26,27 @@ export default function ProgressivePitchPlayground() {
     });
   }, [setActiveTranscriptions, setActiveSubtitleFile]);
 
-  const { isInitialized } = useInitializeTokenizer()
-  const { transcriptions, isLoading: isTranscriptionsLoading } = useSubtitleTranscriptions({
-    isTokenizerInitialized: isInitialized,
-    animeId: '9253',
-    episodeNumber: 2
+  const { pitchLookup, isLoading: isPitchLoading, loadingDuration } = usePitchAccentChunks({
+    animeId: 9253,
+    japaneseCues: (transcriptions as TranscriptionQuery[])?.find(t => t.transcription == 'japanese')?.cues || [],
+    shouldFetch: true
   })
-  const { settings } = useSettingsForEpisode()
-  const { pitchLookup } = usePitchAccentChunks({
-    animeId: '9253',
-    japaneseCues: transcriptions?.find(t => t.transcription == 'japanese')?.cues || [],
-    shouldFetch: settings?.wordSettings.pitchColoring || false
-  })
+
+  useEffect(() => {
+    console.log(`pitchLookup`, pitchLookup)
+  }, [pitchLookup])
+
 
   return (
     <div className="flex flex-col justify-between gap-10">
       <SubtitleFileSelector />
-      {isTranscriptionsLoading && (
+      {isPitchLoading ? (
         <div className="flex flex-row gap-2">
           <Loader2 className="animate-spin" />
-          <p>Transcriptions Loading</p>
+          <p>Pitch Loading</p>
         </div>
+      ): (
+        <>Loading Duration: {loadingDuration}</>
       )}
     </div>
   );

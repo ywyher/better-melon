@@ -9,31 +9,39 @@ import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 
 export async function ensureAuthenticated() {
-    const headersList = await headers();
-    const currentUser = await auth.api.getSession({ headers: headersList });
-
-    let userId: string;
-
-    if (!currentUser || !currentUser.user.id) {
-        const anon = await auth.api.signInAnonymous();
+    try {
+        const headersList = await headers();
+        const currentUser = await auth.api.getSession({ headers: headersList });
         
-        if (!anon?.user?.id) {
-            return {
-                userId: null,
-                message: null,
-                error: "Not authenticated nor were we able to authenticate you as an anonymous user. Please register."
-            };
+        let userId: string;
+        
+        if (!currentUser || !currentUser.user.id) {
+            const anon = await auth.api.signInAnonymous();
+            
+            if (!anon?.user?.id) {
+                return {
+                    userId: null,
+                    message: null,
+                    error: "Not authenticated nor were we able to authenticate you as an anonymous user. Please register."
+                };
+            }
+            
+            userId = anon.user.id;
+        } else {
+            userId = currentUser.user.id;
         }
-
-        userId = anon.user.id;
-    } else {
-        userId = currentUser.user.id;
-    }
-
-    return {
-        userId: userId,
-        error: null,
-        message: null,
+    
+        return {
+            userId: userId,
+            error: null,
+            message: null,
+        }
+    } catch(error) {
+        return {
+            userId: null,
+            error: error instanceof Error ? error.message : 'Failed to ensure user authentication',
+            message: null,
+        }
     }
 }
 

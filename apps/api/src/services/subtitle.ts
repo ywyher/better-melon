@@ -1,11 +1,11 @@
 import { redis } from "bun";
 import { env } from "../lib/env";
-import { AnilistAnimeData } from "../types/anilist";
 import { makeRequest } from "../utils/utils";
 import { cacheKeys } from "../lib/constants/cache";
 import { SubtitleEntry, SubtitleFile } from "../types/jiamku";
+import { AnilistAnime } from "../types/anilist";
 
-export async function getSubtitleEntries(anilistId: string, shouldCache: boolean = true): Promise<SubtitleEntry[]> {
+export async function getSubtitleEntries({ anilistId, shouldCache = true }: { anilistId: AnilistAnime['id'], shouldCache: boolean }): Promise<SubtitleEntry[]> {
   try {
     const cacheKey = `${cacheKeys.subtitle.entries(anilistId)}`;
     if (shouldCache) {
@@ -39,11 +39,11 @@ export async function getSubtitleEntries(anilistId: string, shouldCache: boolean
   }
 }
 
-export async function getSubtitleFiles(anilistData: AnilistAnimeData, episodeNumber: string): Promise<SubtitleFile[]> {
+export async function getSubtitleFiles({ anilistData, episodeNumber }: { anilistData: AnilistAnime, episodeNumber: string }): Promise<SubtitleFile[]> {
   try {
     const shouldCache = anilistData.status !== "RELEASING";
     
-    const entries = await getSubtitleEntries(String(anilistData.id), shouldCache);
+    const entries = await getSubtitleEntries({ anilistId: anilistData.id, shouldCache });
     
     if (!entries?.length) {
       throw new Error(`No subtitle entries found for anime: ${anilistData.id}`);

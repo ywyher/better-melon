@@ -36,7 +36,7 @@ export default function PanelPlayground() {
   const { 
     pitchLookup,
   } = usePitchAccentChunks({
-    animeId: '9253',
+    animeId: 9253,
     japaneseCues: transcriptions?.find(t => t.transcription == 'japanese')?.cues || [],
     shouldFetch: true
   })

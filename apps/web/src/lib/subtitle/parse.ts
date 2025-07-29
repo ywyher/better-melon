@@ -411,7 +411,7 @@ export async function parseSubtitlesFile({
   transcription: SubtitleTranscription;
   animeId: Anime['id'];
   episodeNumber: number
-}): Promise<any> {
+}): Promise<SubtitleCue[] | undefined> {
   try {
     if(!animeId || !episodeNumber) throw new Error("Anime Id and Episode Number must be defined")
 

@@ -1,4 +1,4 @@
-import type { HianimeEpisode, HianimeEpisodeSourcesTimeSegment, HianimeEpisodeSourcesTrack } from "@better-melon/shared/types";
+import type { HianimeEpisode, HianimeEpisodeSource, HianimeEpisodeSourcesTimeSegment, HianimeEpisodeSourcesTrack } from "@better-melon/shared/types";
 import type { HianimeEpisodeServer } from "./server";
 
 export type GetHianimeEpisodeSourcesProps = {
@@ -25,11 +25,6 @@ export type ExtractHianimeTokenResults = {
   string: string;
 }
 
-export type HianimeSource = {
-  file: string;
-  type: string;
-}
-
 export type HianimeGetSourcesApiResponse = {
   sources: string;
   tracks: HianimeEpisodeSourcesTrack[];
@@ -39,10 +34,19 @@ export type HianimeGetSourcesApiResponse = {
   encrypted: boolean;
 }
 
-export type HianimeGetSourcesFallbackApiResponse = {
-  sources: HianimeSource;
+export type HianimeEpiosodeSourcesFallbackResponse = {
+  sources: HianimeEpisodeSource;
   tracks: HianimeEpisodeSourcesTrack[];
   intro: HianimeEpisodeSourcesTimeSegment
   outro: HianimeEpisodeSourcesTimeSegment
   server: HianimeEpisodeServer['id']
+}
+
+export type HianimeEncryptedEpisodeSources = {
+  sources: string;
+  tracks: HianimeEpisodeSourcesTrack[];
+  encrypted: boolean;
+  intro: HianimeEpisodeSourcesTimeSegment;
+  outro: HianimeEpisodeSourcesTimeSegment;
+  server: number // serverId
 }

@@ -66,14 +66,14 @@ function SubtitleCueBase({
 
             return (
                 <CueToken
-                    key={idx}
-                    showFurigana={showFurigana}
-                    accent={accent}
-                    token={token}
-                    index={idx}
-                    transcription={cue.transcription}
-                    isActive={activeToken?.id === token.id}
-                    onTokenClick={() => handleTokenClick(japaneseToken || token, cue.from, cue.to)}
+                  key={idx}
+                  showFurigana={showFurigana}
+                  accent={accent}
+                  token={token}
+                  index={idx}
+                  transcription={cue.transcription}
+                  isActive={activeToken?.id === token.id}
+                  onTokenClick={() => handleTokenClick(japaneseToken || token, cue.from, cue.to)}
                 />
             )
           }) : null}        

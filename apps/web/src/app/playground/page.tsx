@@ -19,7 +19,7 @@ import EnabledTranscriptions from "@/app/watch/[id]/[ep]/_components/settings/en
 export default function Playground() {
   return (
     <>
-      <ProxyPlayground />
+      {/* <ProxyPlayground /> */}
       {/* <AnimeListPlayground /> */}
       {/* <AnimeDataPlayground /> */}
       {/* <EpisodesListPlayground /> */}
@@ -28,7 +28,7 @@ export default function Playground() {
         syncSettings="never"
       /> */}
       {/* <IsTranscriptionsCachedPlayground /> */}
-      {/* <ProgressivePitchPlayground /> */}
+      <ProgressivePitchPlayground />
       {/* <WatchDataPlayground /> */}
       {/* <TranscriptionsHookPlayground /> */}
       {/* <TranscriptionsPlayground /> */}

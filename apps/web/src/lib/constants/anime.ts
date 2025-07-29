@@ -133,6 +133,7 @@ export const queryVariables = {
     popular: ({ page = 1, perPage = 10 }: { page?: number, perPage?: number }): AnimeListQueryVariables => ({ 
       sorts: ['POPULARITY_DESC'],
       withTitle: true,
+      withFormat: true,
       withStatus: true,
       withCoverImage: true,
       withSeasonYear: true,
@@ -149,6 +150,7 @@ export const queryVariables = {
     topAiring: ({ page = 1, perPage = 10 }: { page?: number, perPage?: number }): AnimeListQueryVariables => ({ 
       sorts: ['TRENDING_DESC'],
       status: 'RELEASING',
+      withFormat: true,
       withTitle: true,
       withStatus: true,
       withCoverImage: true,
@@ -158,6 +160,7 @@ export const queryVariables = {
     topUpcoming: ({ page = 1, perPage = 10 }: { page?: number, perPage?: number }): AnimeListQueryVariables => ({ 
       sorts: ['POPULARITY_DESC'],
       status: 'NOT_YET_RELEASED',
+      withFormat: true,
       withTitle: true,
       withStatus: true,
       withCoverImage: true,

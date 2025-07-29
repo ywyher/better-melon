@@ -25,7 +25,6 @@ export function usePitchAccentChunks({
 }: PitchAccentChunksProps) {
   const activeSubtitleFile = useSubtitleStore((state) => state.activeSubtitleFile)
   const hookStartTime = useRef<number>(performance.now());
-  const [pitchLookup, setPitchLookup] = useState<Map<string, NHKEntry>>(new Map());
   const [loadingDuration, setLoadingDuration] = useState<number>(0);
 
   const chunks = useMemo(() => {
@@ -44,15 +43,16 @@ export function usePitchAccentChunks({
   const queryConfig = useMemo(() => ({
     queries: chunks.map((chunk, index) => {
       return {
-        ...pitchQueries.accentChunk(
+        ...pitchQueries.accentChunk({
           chunk,
-          index,
+          chunkIndex: index,
           animeId, 
-          activeSubtitleFile?.file.name || "",
-          pitchAccentConfig.delayBetweenRequests
-        ),
+          subtitleFileName: activeSubtitleFile?.file.name || "",
+          delayBetweenRequests: pitchAccentConfig.delayBetweenRequests
+        }),
         staleTime: 1000 * 60 * 60,
         enabled: !!activeSubtitleFile && !!animeId && !!chunk.length && !!shouldFetch,
+        refetchOnWindowFocus: false
       }
     })
   }), [chunks, activeSubtitleFile, animeId]);
@@ -75,7 +75,8 @@ export function usePitchAccentChunks({
     };
   }, [queries]);
 
-  useEffect(() => {
+  const pitchLookup = useMemo(() => {
+    if(queries.some(q => q.isLoading)) return new Map()
     const newLookup = new Map<string, NHKEntry>();
     
     queries.forEach(query => {
@@ -88,7 +89,7 @@ export function usePitchAccentChunks({
       }
     });
 
-    setPitchLookup(newLookup);
+    return newLookup;
   }, [queries.map(q => q.data).join(',')]); // Stable dependency
 
   useEffect(() => {

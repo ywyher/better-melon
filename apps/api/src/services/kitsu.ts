@@ -7,7 +7,7 @@ import { AnilistAnime } from "../types/anilist";
 import { AnilistStatus, KitsuEpisode, KitsuEpisodesReponse } from "@better-melon/shared/types";
 import { getNextAiringEpisodeTTL } from "@better-melon/shared/utils";
 
-async function mapAnilistToKitsu(anilistData: AnilistAnime): Promise<AnilistToKitsu> {
+async function mapAnilistToKitsu({ anilistData }: { anilistData: AnilistAnime }): Promise<AnilistToKitsu> {
   const startTime = performance.now();
   
   try {
@@ -49,7 +49,7 @@ async function mapAnilistToKitsu(anilistData: AnilistAnime): Promise<AnilistToKi
   }
 }
 
-export async function getKitsuAnimeInfo(anilistData: AnilistAnime): Promise<KitsuAnimeInfo> {
+export async function getKitsuAnimeInfo({ anilistData }: { anilistData: AnilistAnime }): Promise<KitsuAnimeInfo> {
   try {
     const cacheKey = cacheKeys.kitsu.info(String(anilistData.id));
     const cachedData = await redis.get(cacheKey);
@@ -58,7 +58,7 @@ export async function getKitsuAnimeInfo(anilistData: AnilistAnime): Promise<Kits
       return JSON.parse(cachedData as string) as KitsuAnimeInfo;
     }
 
-    const mapped = await mapAnilistToKitsu(anilistData);
+    const mapped = await mapAnilistToKitsu({ anilistData });
     const { endDate, q, startDate, status } = mapped;
 
     const { data: { data } } = await makeRequest<KitsuApiResponse<KitsuAnimeInfo[]>>(`

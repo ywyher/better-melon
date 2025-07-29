@@ -56,11 +56,12 @@ export const useSubtitleTranscriptions = ({
           (isEnglish && !!englishSubtitleUrl) || 
           (!isEnglish && !!activeSubtitleFile)
         ),
+        refetchOnWindowFocus: false,
       };
     })
   }), [englishSubtitleUrl, activeSubtitleFile, activeTranscriptions, shouldFetch]);
 
-  const queries = useQueries(queryConfig);
+  const queries = useQueries({ ...queryConfig });
 
   useEffect(() => {
     const allQueriesFinished = queries.every(

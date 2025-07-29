@@ -41,8 +41,8 @@ function DelaySlider({ label, value, step, onChange }: DelaySliderProps) {
         <div className="flex-1">
           <Slider
             value={progress}
-            min={-30}
-            max={30}
+            min={-300}
+            max={300}
             step={step}
             onValueChange={handleValueChange}
             onPointerUp={handleCommit}

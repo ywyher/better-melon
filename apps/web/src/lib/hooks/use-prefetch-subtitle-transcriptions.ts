@@ -64,7 +64,7 @@ export function usePrefetchSubtitleTranscriptions({
       try {
         englishSubtitleUrl = episodeData ? 
           getEnglishSubtitleUrl({
-            files: episodeData.sources?.tracks ?? []
+            files: episodeData.sources?.tracks ?? [],
           }) : 
           '';
       } catch (error) {

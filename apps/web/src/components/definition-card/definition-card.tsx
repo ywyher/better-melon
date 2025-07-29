@@ -9,7 +9,6 @@ import {
 } from '@dnd-kit/core';
 import DefinitionCardBase from '@/components/definition-card/definition-card-base';
 import { useDefinitionStore } from '@/lib/stores/definition-store';
-import { useEffect } from 'react';
 
 export default function DefinitionCard() { 
   const setPosition = useDefinitionStore((state) => state.setPosition)

@@ -87,12 +87,12 @@ export default function SubtitleCuesList({
               if (activeCueIndex !== activeIndex) {
                   setActiveIndex(activeCueIndex);
                   
-                  if (autoScroll) {
-                      rowVirtualizer.scrollToIndex(activeCueIndex, { 
-                          align: 'center',
-                          behavior: 'smooth'
-                      });
-                  }
+                if (autoScroll) {
+                  rowVirtualizer.scrollToIndex(activeCueIndex, { 
+                      align: 'center',
+                      behavior: 'smooth'
+                  });
+                }
               }
           }
       } else if (activeCueIdRef.current !== -1) {
@@ -155,25 +155,26 @@ export default function SubtitleCuesList({
           position: 'relative',
         }}
       >   
-        {/* Direct rendering without container component */}
-        {rowVirtualizer.getVirtualItems().map((row) => {
-          const cue = cues[row.index];
-          const japaneseCue = japaneseCues?.[row.index]
+          <>
+            {rowVirtualizer.getVirtualItems().map((row) => {
+              const cue = cues[row.index];
+              const japaneseCue = japaneseCues?.[row.index]
 
-          if (!cue) return null;
-          
-          return (
-            <SubtitleCue
-              key={`${row.key}-${cue.id}`}
-              cue={cue}
-              japaneseCue={japaneseCue}
-              index={row.index}
-              isActive={activeCueIdRef.current === cue.id}
-              size={row.size}
-              start={row.start}
-            />
-          );
-        })}
+              if (!cue) return null;
+              
+              return (
+                <SubtitleCue
+                  key={`${row.key}-${cue.id}`}
+                  cue={cue}
+                  japaneseCue={japaneseCue}
+                  index={row.index}
+                  isActive={activeCueIdRef.current === cue.id}
+                  size={row.size}
+                  start={row.start}
+                />
+              );
+            })}
+          </>
       </TabsContent>
     </div>
   )
