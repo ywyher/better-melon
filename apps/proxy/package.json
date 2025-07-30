@@ -1,0 +1,17 @@
+{
+  "name": "proxy",
+  "version": "1.0.50",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "bun run --watch src/index.ts"
+  },
+  "dependencies": {
+    "@t3-oss/env-core": "^0.13.8",
+    "elysia": "latest",
+    "zod": "^4.0.5"
+  },
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  "module": "src/index.js"
+}
