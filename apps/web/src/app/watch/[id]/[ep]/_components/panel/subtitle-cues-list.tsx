@@ -24,7 +24,7 @@ export default function SubtitleCuesList({
   return (
     <div 
       ref={scrollAreaRef} 
-      className="overflow-y-auto h-[80vh] w-full"
+      className="overflow-y-auto h-[75vh] w-full"
       style={{
         opacity: isLoading ? 0.8 : 1,
       }}

@@ -14,7 +14,7 @@ export function useSubtitleCuesList({ cues, selectedTranscription }: UseSubtitle
   const playerSettings = useWatchDataStore((state) => state.settings.playerSettings)
 
   const [activeIndex, setActiveIndex] = useState<number>(-1);
-  const [autoScroll, setAutoScroll] = useState<boolean>(playerSettings.autoScrollToCue); // Use setting
+  const [autoScroll, setAutoScroll] = useState<boolean>(playerSettings.autoScrollToCue);
   
   const activeCueIdRef = useRef<number>(-1);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
@@ -24,19 +24,11 @@ export function useSubtitleCuesList({ cues, selectedTranscription }: UseSubtitle
   const player = usePlayerStore((state) => state.player);
   const delay = useDelayStore((state) => state.delay);
 
-  useEffect(() => {
-    setAutoScroll(playerSettings.autoScrollToCue);
-  }, [playerSettings.autoScrollToCue]);
-
-  useEffect(() => {
-    rowVirtualizer.measure()
-  }, [selectedTranscription])
-
   // Dynamic size estimation based on transcription type
   const estimateSize = useMemo(() => {
     return (index: number) => {
       const cue = cues?.[index];
-      if (!cue) return 60;
+      if (!cue) return 80;
       
       if (selectedTranscription === 'japanese') {
         return 110;
@@ -47,7 +39,7 @@ export function useSubtitleCuesList({ cues, selectedTranscription }: UseSubtitle
         return 80;
       }
       
-      return 60;
+      return 80;
     };
   }, [cues, selectedTranscription]);
 
@@ -55,45 +47,59 @@ export function useSubtitleCuesList({ cues, selectedTranscription }: UseSubtitle
       count: cues?.length || 0,
       getScrollElement: () => scrollAreaRef.current,
       estimateSize: estimateSize,
-      overscan: 5,
+      overscan: 0,
       measureElement: (element: Element) => {
         return element.getBoundingClientRect().height || 60;
       },
   });
 
   const findActiveCue = useCallback((currentTime: number) => {
-      if (!cues?.length || !playerSettings.autoScrollToCue) return;
+      if (!cues?.length) return null;
       
       const activeCueIndex = cues.findIndex(cue => 
         currentTime >= (cue.from + delay.japanese) && currentTime <= (cue.to + delay.japanese)
       );
       
       if (activeCueIndex !== -1) {
-          const activeCue = cues[activeCueIndex];
+          return {
+            cue: cues[activeCueIndex],
+            index: activeCueIndex
+          };
+      }
+      
+      return null;
+  }, [cues, delay.japanese]);
+
+  const handleAutoScroll = useCallback((activeCueIndex: number) => {
+    if (!autoScroll || !playerSettings.autoScrollToCue) return;
+    
+    rowVirtualizer.scrollToIndex(activeCueIndex, { 
+        align: 'center',
+        behavior: 'smooth'
+    });
+  }, [autoScroll, playerSettings.autoScrollToCue, rowVirtualizer]);
+
+  const updateActiveCue = useCallback((currentTime: number) => {
+      if (!playerSettings.autoScrollToCue) return;
+      
+      const activeCueData = findActiveCue(currentTime);
+      
+      if (activeCueData) {
+          const { cue, index } = activeCueData;
           
-          if (activeCue.id !== activeCueIdRef.current) {
-              activeCueIdRef.current = activeCue.id;
+          if (cue.id !== activeCueIdRef.current) {
+              activeCueIdRef.current = cue.id;
               
-              if (activeCueIndex !== activeIndex) {
-                  setActiveIndex(activeCueIndex);
-                  
-                if (autoScroll) {
-                  rowVirtualizer.scrollToIndex(activeCueIndex, { 
-                      align: 'center',
-                      behavior: 'smooth'
-                  });
-                }
+              if (index !== activeIndex) {
+                setActiveIndex(index);
+                handleAutoScroll(index);
               }
           }
       } else if (activeCueIdRef.current !== -1) {
           activeCueIdRef.current = -1;
           setActiveIndex(-1);
       }
-
-      return {
-        activeCueIndex
-      }
-  }, [cues, delay.japanese, activeIndex, autoScroll, playerSettings.autoScrollToCue]);
+  }, [findActiveCue, activeIndex, handleAutoScroll, playerSettings.autoScrollToCue]);
 
   useEffect(() => {
     if(!player.current || !cues?.length) return;
@@ -102,27 +108,34 @@ export function useSubtitleCuesList({ cues, selectedTranscription }: UseSubtitle
         const now = Date.now();
         if (now - lastUpdateTimeRef.current > 250) {
           lastUpdateTimeRef.current = now;
-          const activeCue = findActiveCue(currentTime);
-          if(!activeCue) return;
-          rowVirtualizer.scrollToIndex(activeCue?.activeCueIndex || 0, { 
-            align: 'center',
-            behavior: 'smooth'
-          });
+          updateActiveCue(currentTime);
         }
     });
-  }, [player, cues, findActiveCue]);
+  }, [player, cues, updateActiveCue]);
   
   useEffect(() => {
     if (!player.current || !cues?.length) return;
-    console.log(`this one`)
+    rowVirtualizer.measure()
     
     const timeoutId = setTimeout(() => {
       const currentTime = player.current?.currentTime || 0;
-      findActiveCue(currentTime);
+      const activeCueData = findActiveCue(currentTime);
+      
+      if (activeCueData) {
+        // Update state immediately
+        activeCueIdRef.current = activeCueData.cue.id;
+        setActiveIndex(activeCueData.index);
+        
+        // Force scroll on transcription change regardless of autoScroll state
+        rowVirtualizer.scrollToIndex(activeCueData.index, { 
+          align: 'center',
+          behavior: 'smooth'
+        });
+      }
     }, 100);
     
     return () => clearTimeout(timeoutId);
-  }, [selectedTranscription, cues]);
+  }, [selectedTranscription, findActiveCue, rowVirtualizer]);
 
   const handleManualScroll = useCallback(() => {
     if (!playerSettings.autoScrollToCue) return

@@ -52,7 +52,6 @@ export const TranscriptionItem = React.memo<TranscriptionItemProps>(function Tra
     isTokenActive,
   } = useTranscriptionItem(transcription);
 
-  // Combine all memoized values into a single object to reduce hooks
   const memoizedData = useMemo(() => {
     const activeCues = activeSubtitles?.[transcription] || [];
     const japaneseTokens = activeSubtitles?.['japanese']?.[0]?.tokens || [];
@@ -95,7 +94,6 @@ export const TranscriptionItem = React.memo<TranscriptionItemProps>(function Tra
       style={containerStyles}
       className={containerClassName}
     >
-      {/* Drag Handle */}
       <div
         {...attributes}
         {...listeners}
