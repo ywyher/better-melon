@@ -185,6 +185,10 @@ export default function Player() {
         })
     }, [isVideoReady, isInitialized])
 
+    useEffect(() => {
+        console.log(`metadata`, metadata)
+    }, [metadata])
+
     return (
         <div className="relative w-full aspect-video">
             {(!isInitialized) && (

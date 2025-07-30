@@ -90,7 +90,7 @@ export default function SubtitleTranscriptions() {
       <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}
-          onDragEnd={(e) => console.log(e)}
+          onDragEnd={handleDragEnd}
       >
           <SortableContext 
               items={[...settings.subtitleSettings.transcriptionOrder]}

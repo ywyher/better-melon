@@ -2,7 +2,6 @@ import React, { memo, useCallback, useMemo } from 'react';
 import { SubtitleToken } from '@/types/subtitle';
 import { TranscriptionStyleSet } from '@/app/watch/[id]/[ep]/types';
 import { useTokenStyles } from '@/lib/hooks/use-token-styles';
-import DOMPurify from 'dompurify';
 
 interface RegularTokenProps {
   token: SubtitleToken;

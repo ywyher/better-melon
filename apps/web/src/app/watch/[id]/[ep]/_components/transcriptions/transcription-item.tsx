@@ -54,7 +54,6 @@ export const TranscriptionItem = React.memo<TranscriptionItemProps>(function Tra
 
   const memoizedData = useMemo(() => {
     const activeCues = activeSubtitles?.[transcription] || [];
-    const japaneseTokens = activeSubtitles?.['japanese']?.[0]?.tokens || [];
     
     const sortableStyles = {
       transform: CSS.Transform.toString(transform),
@@ -73,13 +72,24 @@ export const TranscriptionItem = React.memo<TranscriptionItemProps>(function Tra
 
     return {
       activeCues,
-      japaneseTokens,
       containerStyles,
       containerClassName,
     };
   }, [activeSubtitles, transcription, transform, transition, styles.containerStyle.default]);
 
-  const { activeCues, japaneseTokens, containerStyles, containerClassName } = memoizedData;
+  const { activeCues, containerStyles, containerClassName } = memoizedData;
+
+  const memoizedTokens = useMemo(() => {
+    const activeCues = activeSubtitles?.[transcription] || [];
+      return activeCues.map(cue => ({
+        cue,
+        tokens: cue.tokens?.map((token, tokenIdx) => ({
+          ...token,
+          key: `${token.id}-${tokenIdx}`,
+          japaneseToken: activeSubtitles?.['japanese']?.[0]?.tokens?.find((t) => t.id === token.id)
+      })) || []
+    }));
+  }, [activeSubtitles, transcription]);
 
   const handleTokenClick = useCallback((cueId: number, token: SubtitleToken) => {
     const cue = activeCues.find(c => c.id === cueId);
@@ -101,20 +111,24 @@ export const TranscriptionItem = React.memo<TranscriptionItemProps>(function Tra
       >
         <GripVertical className={GRIP_CLASSES} />
       </div>
-      {activeCues.map((cue, idx) => (
-        <Fragment key={`${transcription}-${cue.id || idx}`}>
-          <TokenRenderer
-            cue={cue}
-            transcription={transcription}
-            styles={styles}
-            furiganaStyles={furiganaStyles}
-            onTokenClick={handleTokenClick}
-            onTokenMouseEnter={handleTokenMouseEnter}
-            onTokenMouseLeave={handleTokenMouseLeave}
-            isTokenActive={isTokenActive}
-            getTokenAccent={getTokenAccent}
-            japaneseTokens={japaneseTokens}
-          />
+      {memoizedTokens.map(({ cue, tokens }) => (
+        <Fragment key={`${transcription}-${cue.id}`}>
+          {tokens.map((token) => (
+            <TokenRenderer
+              key={token.key}
+              cue={cue}
+              token={token}
+              transcription={transcription}
+              styles={styles}
+              furiganaStyles={furiganaStyles}
+              onTokenClick={handleTokenClick}
+              onTokenMouseEnter={handleTokenMouseEnter}
+              onTokenMouseLeave={handleTokenMouseLeave}
+              isTokenActive={isTokenActive}
+              getTokenAccent={getTokenAccent}
+              japaneseToken={token.japaneseToken}
+            />
+          ))}
         </Fragment>
       ))}
     </div>

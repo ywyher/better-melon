@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useMemo } from 'react';
-import { SubtitleToken } from '@/types/subtitle';
+import { Ruby, SubtitleToken } from '@/types/subtitle';
 import { TranscriptionStyleSet } from '@/app/watch/[id]/[ep]/types';
 import { RubyText } from '@/components/ruby-text';
 import { parseRuby } from '@/lib/utils/subtitle';
@@ -17,6 +17,15 @@ interface JapaneseTokenProps {
   onTokenMouseLeave: () => void;
 }
 
+const rubyPairsCache = new Map();
+
+const getCachedRubyPairs = (surfaceForm: string): Ruby[] => {
+  if (!rubyPairsCache.has(surfaceForm)) {
+    rubyPairsCache.set(surfaceForm, parseRuby(surfaceForm, true));
+  }
+  return rubyPairsCache.get(surfaceForm);
+};
+
 export const JapaneseToken = memo<JapaneseTokenProps>(({
   token,
   isActive,
@@ -30,7 +39,7 @@ export const JapaneseToken = memo<JapaneseTokenProps>(({
   const showFurigana = useWatchDataStore((state) => state.settings.subtitleSettings.showFurigana);
   const { getTokenStyles, getContainerStyles, getLearningStatusStyles } = useTokenStyles();
   
-  const rubyPairs = useMemo(() => parseRuby(token.surface_form, true), [token.surface_form]);
+  const rubyPairs = useMemo(() => getCachedRubyPairs(token.surface_form), [token.surface_form]);
   
   const tokenStyle = useMemo(() => getTokenStyles(isActive, accent, styles), [getTokenStyles, isActive, accent, styles]);
   const containerStyle = useMemo(() => getContainerStyles(isActive, styles), [getContainerStyles, isActive, styles]);
