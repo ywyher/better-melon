@@ -89,29 +89,6 @@ export const TranscriptionItem = React.memo<TranscriptionItemProps>(function Tra
     }
   }, [activeCues, handleActivate]);
 
-  // Memoize the TokenRenderer props to prevent unnecessary re-renders
-  const tokenRendererProps = useMemo(() => ({
-    transcription,
-    styles,
-    furiganaStyles,
-    onTokenClick: handleTokenClick,
-    onTokenMouseEnter: handleTokenMouseEnter,
-    onTokenMouseLeave: handleTokenMouseLeave,
-    isTokenActive,
-    getTokenAccent,
-    japaneseTokens,
-  }), [
-    transcription,
-    styles,
-    furiganaStyles,
-    handleTokenClick,
-    handleTokenMouseEnter,
-    handleTokenMouseLeave,
-    isTokenActive,
-    getTokenAccent,
-    japaneseTokens,
-  ]);
-
   return (
     <div
       ref={setNodeRef}
@@ -126,12 +103,19 @@ export const TranscriptionItem = React.memo<TranscriptionItemProps>(function Tra
       >
         <GripVertical className={GRIP_CLASSES} />
       </div>
-      
       {activeCues.map((cue, idx) => (
         <Fragment key={`${transcription}-${cue.id || idx}`}>
           <TokenRenderer
             cue={cue}
-            {...tokenRendererProps}
+            transcription={transcription}
+            styles={styles}
+            furiganaStyles={furiganaStyles}
+            onTokenClick={handleTokenClick}
+            onTokenMouseEnter={handleTokenMouseEnter}
+            onTokenMouseLeave={handleTokenMouseLeave}
+            isTokenActive={isTokenActive}
+            getTokenAccent={getTokenAccent}
+            japaneseTokens={japaneseTokens}
           />
         </Fragment>
       ))}

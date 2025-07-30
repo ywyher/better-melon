@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback } from 'react';
 import { useDefinitionStore } from '@/lib/stores/definition-store';
 import { useDelayStore } from '@/lib/stores/delay-store';
 import { useWatchDataStore } from '@/lib/stores/watch-store';
@@ -13,7 +13,6 @@ export const useTranscriptionItem = (transcription: SubtitleTranscription) => {
   
   const activeToken = useDefinitionStore((state) => state.token);
   const setSentences = useDefinitionStore((state) => state.setSentences);
-  const storeSentences = useDefinitionStore((state) => state.sentences);
   const setToken = useDefinitionStore((state) => state.setToken);
   const storeToken = useDefinitionStore((state) => state.token);
 
@@ -65,7 +64,7 @@ export const useTranscriptionItem = (transcription: SubtitleTranscription) => {
       const sentences = getSentencesForCue(transcriptionsLookup, from, to, delay);
       setSentences(sentences);
     }
-  }, [storeToken, storeSentences, setToken, setSentences, transcription, definitionTrigger, pitchLookup, transcriptionsLookup, delay]);
+  }, [storeToken, setToken, setSentences, transcription, definitionTrigger, transcriptionsLookup, delay]);
 
   const getTokenAccent = useCallback((token: SubtitleToken): PitchAccents | null => {
     const pitch = pitchLookup.get(token.original_form);

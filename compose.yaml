@@ -38,7 +38,7 @@ services:
 
   postgres:
     image: postgres:latest
-    container_name: postgres
+    container_name: better-melon
     ports:
       - "5432:5432"
     restart: always

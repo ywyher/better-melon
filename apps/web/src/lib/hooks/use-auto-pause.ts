@@ -4,7 +4,7 @@ import { usePlayerStore } from "@/lib/stores/player-store";
 import { useWatchDataStore } from "@/lib/stores/watch-store";
 import { SubtitleCue, SubtitleTranscription } from "@/types/subtitle";
 import { useMediaState } from "@vidstack/react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 type UseAutoPauseProps = {
   activeSubtitles: Record<SubtitleTranscription, SubtitleCue[]>
@@ -24,20 +24,17 @@ export default function useAutoPause({
   const processedPausePoints = useRef<Set<number>>(new Set());
   const unPauseTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Memoize Japanese cue extraction
-  const getJapaneseCue = useCallback((subtitles: Record<SubtitleTranscription, SubtitleCue[]>) => {
-    const japaneseCues = subtitles.japanese;
+  const japaneseCue = useMemo(() => {
+    const japaneseCues = activeSubtitles?.japanese;
     return japaneseCues && japaneseCues.length > 0 ? japaneseCues[0] : null;
-  }, []);
+  }, [activeSubtitles?.japanese]);
 
-  // Calculate pause point from active Japanese cue
   useEffect(() => {
-    if (!player.current || !activeSubtitles || !pauseOnCue) {
+    if (!player.current || !pauseOnCue) {
       setPauseAt(null);
       return;
     }
 
-    const japaneseCue = getJapaneseCue(activeSubtitles);
     if (japaneseCue) {
       // - 0.3 so the japanese subtitle won't have disappeared by the time the player paused
       const newPauseAt = japaneseCue.to + delay.japanese - 0.3;
@@ -45,7 +42,7 @@ export default function useAutoPause({
     } else {
       setPauseAt(null);
     }
-  }, [activeSubtitles, player, delay.japanese, pauseOnCue, getJapaneseCue]);
+  }, [japaneseCue, player, delay.japanese, pauseOnCue]);
 
   // Handle pausing logic
   useEffect(() => {
@@ -53,13 +50,13 @@ export default function useAutoPause({
       return;
     }
 
-    const adjustedCurrentTime = currentTime + delay.japanese;
-    const PAUSE_WINDOW = 0.1;
+    const PAUSE_WINDOW = 0.15;
     const PAUSE_BUFFER = 0.05; // Small buffer to prevent re-pausing after auto-unpause
     
     // Check if we're in the pause window
-    const inPauseWindow = adjustedCurrentTime >= pauseAt && 
-                         adjustedCurrentTime < pauseAt + PAUSE_WINDOW;
+    // DONT ADD DELAY TO CURRENTTIME
+    const inPauseWindow = currentTime >= pauseAt && 
+                         currentTime < pauseAt + PAUSE_WINDOW;
     
     // Check if we haven't already processed this pause point
     const pausePointKey = Math.round(pauseAt * 10) / 10; // Round to 1 decimal place for consistency
@@ -94,19 +91,11 @@ export default function useAutoPause({
     }
     
     // Clean up processed pause points when we're far from the pause point
-    if (adjustedCurrentTime > pauseAt + PAUSE_WINDOW + PAUSE_BUFFER) {
+    if (currentTime > pauseAt + PAUSE_WINDOW + PAUSE_BUFFER) {
       processedPausePoints.current.delete(pausePointKey);
     }
-    
-    return () => {
-      if (unPauseTimeoutRef.current) {
-        clearTimeout(unPauseTimeoutRef.current);
-        unPauseTimeoutRef.current = null;
-      }
-    };
   }, [pauseAt, currentTime, delay.japanese, pauseOnCue, player, cuePauseDuration]);
 
-  // Cleanup on unmount
   useEffect(() => {
     return () => {
       if (unPauseTimeoutRef.current) {
@@ -114,5 +103,5 @@ export default function useAutoPause({
       }
       processedPausePoints.current.clear();
     };
-  }, []);
+  }, []); // Empty dependency array - this should only run on mount/unmount
 }

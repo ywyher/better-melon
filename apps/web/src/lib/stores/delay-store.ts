@@ -9,7 +9,7 @@ export type DelayStore = {
 export const useDelayStore = create<DelayStore>()(
   (set) => ({
     delay: {
-      japanese: 0,
+      japanese: -118,
       english: 0
     },
     setDelay: (delay: DelayStore['delay']) => set({ delay }),
@@ -17,7 +17,7 @@ export const useDelayStore = create<DelayStore>()(
     reset: () => {
       set({
         delay: {
-          japanese: 0,
+          japanese: -118,
           english: 0,
         }
       })
