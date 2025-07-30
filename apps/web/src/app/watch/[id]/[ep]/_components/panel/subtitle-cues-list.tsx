@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { TabsContent } from "@/components/ui/tabs";
 import { SubtitleCue as TSubtitleCue, SubtitleTranscription } from "@/types/subtitle";
 import { useVirtualizer } from "@tanstack/react-virtual";
@@ -43,22 +43,22 @@ export default function SubtitleCuesList({
   }, [selectedTranscription])
 
   // Dynamic size estimation based on transcription type
-  const estimateSize = useCallback((index: number) => {
-    const cue = cues?.[index];
-    if (!cue) return 60;
-    
-    // Furigana needs more space for stacked text
-    if (selectedTranscription === 'japanese') {
-      return 110; // Increased height for furigana
-    }
-    
-    // Check if the content is particularly long and might wrap
-    const contentLength = cue.content?.length || 0;
-    if (contentLength > 50) {
-      return 80; // Extra space for long content that might wrap
-    }
-    
-    return 60; // Default size
+  const estimateSize = useMemo(() => {
+    return (index: number) => {
+      const cue = cues?.[index];
+      if (!cue) return 60;
+      
+      if (selectedTranscription === 'japanese') {
+        return 110;
+      }
+      
+      const contentLength = cue.content?.length || 0;
+      if (contentLength > 50) {
+        return 80;
+      }
+      
+      return 60;
+    };
   }, [cues, selectedTranscription]);
 
   const rowVirtualizer = useVirtualizer({
@@ -99,7 +99,7 @@ export default function SubtitleCuesList({
           activeCueIdRef.current = -1;
           setActiveIndex(-1);
       }
-  }, [cues, delay.japanese, activeIndex, activeCueIdRef, autoScroll, rowVirtualizer, playerSettings.autoScrollToCue]);
+  }, [cues, delay.japanese, activeIndex, autoScroll, playerSettings.autoScrollToCue]); // Removed rowVirtualizer dependency
 
   useEffect(() => {
     if(!player.current || !cues?.length) return;
@@ -164,7 +164,7 @@ export default function SubtitleCuesList({
               
               return (
                 <SubtitleCue
-                  key={`${row.key}-${cue.id}`}
+                  key={`${selectedTranscription}-${row.key}-${cue.id}`}
                   cue={cue}
                   japaneseCue={japaneseCue}
                   index={row.index}

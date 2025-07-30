@@ -1,5 +1,4 @@
-import type { HianimeEpisode, HianimeEpisodeSource, HianimeEpisodeSourcesTimeSegment, HianimeEpisodeSourcesTrack } from "@better-melon/shared/types";
-import type { HianimeEpisodeServer } from "./server";
+import type { HianimeEpisode, HianimeEpisodeServer, HianimeEpisodeSource, HianimeEpisodeSourcesTimeSegment, HianimeEpisodeSourcesTrack } from "@better-melon/shared/types";
 
 export type GetHianimeEpisodeSourcesProps = {
   episodeId: HianimeEpisode['id'];

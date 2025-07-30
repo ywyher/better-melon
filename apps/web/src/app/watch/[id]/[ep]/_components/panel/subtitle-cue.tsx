@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { cn } from "@/lib/utils/utils";
-import type { SubtitleCue as TSubtitleCue } from "@/types/subtitle";
 import { Button } from "@/components/ui/button";
 import { Clipboard, Play } from "lucide-react";
 import { useSubtitleCue } from '@/lib/hooks/use-subtitle-cue';
 import { CueToken } from '@/components/token/cue-token';
+import type { SubtitleCue as TSubtitleCue } from "@/types/subtitle";
 
 type SubtitleCueProps = { 
   index: number;
@@ -16,26 +16,29 @@ type SubtitleCueProps = {
   start: number;
 }
 
-function SubtitleCueBase({ 
+const SubtitleCue = React.memo(({ 
   isActive,
   cue,
   japaneseCue,
   className = "",
   size,
   start,
-}: SubtitleCueProps) {
+}: SubtitleCueProps) => {
   const { activeToken, handleSeek, handleTokenClick, handleCopy, getTokenAccent, showFurigana } = useSubtitleCue();
 
+  // Memoize the style object
+  const containerStyle = useMemo(() => ({
+    position: 'absolute' as const,
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: `${size}px`,
+    transform: `translateY(${start}px)`,
+  }), [size, start]);
+  
   return (
     <div 
-      style={{
-        position: 'absolute' as const,
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: `${size}px`,
-        transform: `translateY(${start}px)`,
-      }}
+      style={containerStyle}
       className={cn(
         "group flex cursor-pointer items-center border-l-2 border-b-2 border-b-primary border-l-transparent transition-all hover:bg-muted/50",
         isActive && "border-l-primary bg-muted",
@@ -70,7 +73,6 @@ function SubtitleCueBase({
                   showFurigana={showFurigana}
                   accent={accent}
                   token={token}
-                  index={idx}
                   transcription={cue.transcription}
                   isActive={activeToken?.id === token.id}
                   onTokenClick={() => handleTokenClick(japaneseToken || token, cue.from, cue.to)}
@@ -81,8 +83,16 @@ function SubtitleCueBase({
       </div>
     </div>
   );
-}
-
-const SubtitleCue = SubtitleCueBase;
+}, (prevProps, nextProps) => {
+  return (
+    prevProps.isActive === nextProps.isActive &&
+    prevProps.cue.id === nextProps.cue.id &&
+    prevProps.size === nextProps.size &&
+    prevProps.start === nextProps.start &&
+    prevProps.japaneseCue?.id === nextProps.japaneseCue?.id &&
+    // compare the actual cue content/tokens which change with transcription
+    JSON.stringify(prevProps.cue.tokens) === JSON.stringify(nextProps.cue.tokens)
+  );
+});
 
 export default SubtitleCue;
