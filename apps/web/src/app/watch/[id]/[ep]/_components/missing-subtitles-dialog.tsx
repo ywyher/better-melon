@@ -10,7 +10,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Anime } from "@/types/anime";
-import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction } from "react";
 

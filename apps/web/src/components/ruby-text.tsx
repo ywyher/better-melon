@@ -55,13 +55,18 @@ export const RubyText = memo<RubyTextProps>(({
     const baseFontSize = hasBaseStyle ? (Number(baseTextStyle.fontSize) || 24) : 24;
     const dynamicMargin = Math.max(baseFontSize * 0.5, 10);
 
+    // Handle margin conflicts properly
+    const computedRubyStyle = { ...DEFAULT_STYLES.ruby, ...rubyTextStyle };
+    
+    // If rubyTextStyle has a margin shorthand, don't override marginBottom
+    // Otherwise, set the dynamic marginBottom
+    if (!('margin' in rubyTextStyle)) {
+      computedRubyStyle.marginBottom = `${dynamicMargin}px`;
+    }
+
     return {
       baseStyle: hasBaseStyle ? baseTextStyle : DEFAULT_STYLES.base,
-      rubyStyle: {
-        ...DEFAULT_STYLES.ruby,
-        ...rubyTextStyle,
-        marginBottom: `${dynamicMargin}px`
-      },
+      rubyStyle: computedRubyStyle,
       containerStyle: hasBaseStyle ? {} : DEFAULT_STYLES.container,
       isMinimal: false
     };

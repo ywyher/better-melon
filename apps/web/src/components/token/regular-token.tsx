@@ -45,7 +45,7 @@ export const RegularToken = memo<RegularTokenProps>(({
   // }, [token.surface_form]);
 
   return (
-    <div style={isActive ? containerStyle : { display: 'flex' }}>
+    <div style={containerStyle}>
       <span
         style={tokenStyle}
         onClick={onTokenClick}

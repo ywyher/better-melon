@@ -24,7 +24,6 @@ import { AnimeSkipTime } from '@/types/anime';
 const MemoizedPlayerSkeleton = memo(PlayerSkeleton);
 const MemoizedSkipButton = memo(SkipButton);
 const MemoizedDefinitionCard = memo(DefinitionCard);
-const MemoizedSubtitleTranscriptions = memo(SubtitleTranscriptions);
 
 export default function Player() {
     const router = useRouter()
@@ -237,7 +236,7 @@ export default function Player() {
                         currentTime={player.current?.currentTime || 0}
                         skipTimes={skipTimes}
                     />
-                    <MemoizedSubtitleTranscriptions />
+                    <SubtitleTranscriptions />
                     <MemoizedDefinitionCard />
                 </MediaPlayer>
             </div>

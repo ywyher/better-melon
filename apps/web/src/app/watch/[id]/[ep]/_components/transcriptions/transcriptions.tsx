@@ -4,14 +4,14 @@ import { TranscriptionItem } from "@/app/watch/[id]/[ep]/_components/transcripti
 import { usePlayerStore } from "@/lib/stores/player-store";
 import { closestCenter, DndContext, KeyboardSensor, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from "@dnd-kit/sortable";
-import { useCallback, useMemo } from "react";
+import { memo, useCallback, useMemo } from "react";
 import { useWatchDataStore } from "@/lib/stores/watch-store";
 import { useActiveSubtitles } from "@/lib/hooks/use-active-subtitles";
 import { useMediaState } from "@vidstack/react";
 import { useTranscriptionOrder } from "@/lib/hooks/use-transcriptions-order";
 import useAutoPause from "@/lib/hooks/use-auto-pause";
 
-export default function SubtitleTranscriptions() {
+const SubtitleTranscriptions = memo(function SubtitleTranscriptions() {
   const player = usePlayerStore((state) => state.player);
 
   const styles = useWatchDataStore((state) => state.styles)
@@ -115,4 +115,6 @@ export default function SubtitleTranscriptions() {
       </DndContext>
     </div>
   );
-}
+});
+
+export default SubtitleTranscriptions;

@@ -1,17 +1,14 @@
 "use client"
 
 import ToggleButton from "@/components/toggle-button";
-import { useEffect, useState } from "react";
-import { GeneralSettings, SubtitleSettings } from "@/lib/db/schema";
-import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { showSyncSettingsToast } from "@/components/sync-settings-toast";
 import { settingsQueries } from "@/lib/queries/settings";
-import { SyncStrategy } from "@/types";
 import { useWatchDataStore } from "@/lib/stores/watch-store";
 import { handleSubtitleSettings } from "@/app/settings/subtitle/_subtitle-settings/actions";
 import { defaultSubtitleSettings } from "@/app/settings/subtitle/_subtitle-settings/constants";
 import { useSyncSettings } from "@/lib/hooks/use-sync-settings";
+import { useEffect, useState } from "react";
+import { GeneralSettings, SubtitleSettings } from "@/lib/db/schema";
 
 export default function ShowFurigana({ subtitleSettings, syncSettings }: { subtitleSettings: SubtitleSettings, syncSettings: GeneralSettings['syncSettings'] }) {
     const [isLoading, setIsLoading] = useState<boolean>(false)
