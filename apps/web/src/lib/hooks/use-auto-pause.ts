@@ -1,5 +1,4 @@
 import { useDelayStore } from "@/lib/stores/delay-store";
-import { usePlaybackSettingsStore } from "@/lib/stores/playback-settings-store";
 import { usePlayerStore } from "@/lib/stores/player-store";
 import { useSettingsStore } from "@/lib/stores/settings-store";
 import { SubtitleCue, SubtitleTranscription } from "@/types/subtitle";
@@ -16,7 +15,7 @@ export default function useAutoPause({
   const [pauseAt, setPauseAt] = useState<number | null>(null);
   const player = usePlayerStore((state) => state.player);
   const delay = useDelayStore((state) => state.delay);
-  const pauseOnCue = usePlaybackSettingsStore((state) => state.pauseOnCue);
+  const pauseOnCue = useSettingsStore((settings) => settings.player.pauseOnCue);
   const currentTime = useMediaState('currentTime', player);
   const cuePauseDuration = useSettingsStore((settings) => settings.player.cuePauseDuration);
 

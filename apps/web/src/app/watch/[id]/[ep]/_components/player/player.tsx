@@ -17,9 +17,9 @@ import { generateWebVTTFromSkipTimes } from '@/lib/utils/subtitle';
 import SubtitleTranscriptions from '@/app/watch/[id]/[ep]/_components/transcriptions/transcriptions';
 import { env } from '@/lib/env/client';
 import DefinitionCard from '@/components/definition-card/definition-card';
-import { usePlaybackSettingsStore } from '@/lib/stores/playback-settings-store';
 import { AnimeSkipTime } from '@/types/anime';
 import { useEpisodeStore } from '@/lib/stores/episode-store';
+import { useSettingsStore } from '@/lib/stores/settings-store';
 
 const MemoizedPlayerSkeleton = memo(PlayerSkeleton);
 const MemoizedSkipButton = memo(SkipButton);
@@ -39,9 +39,9 @@ export default function Player() {
     const setPlayer = usePlayerStore((state) => state.setPlayer);
     const isVideoReady = usePlayerStore((state) => state.isVideoReady);
     const setIsVideoReady = usePlayerStore((state) => state.setIsVideoReady);
-    const autoSkip = usePlaybackSettingsStore((state) => state.autoSkip);
-    const autoNext = usePlaybackSettingsStore((state) => state.autoNext);
-    const autoPlay = usePlaybackSettingsStore((state) => state.autoPlay);
+    const autoSkip = useSettingsStore((settings) => settings.player.autoSkip);
+    const autoNext = useSettingsStore((settings) => settings.player.autoNext);
+    const autoPlay = useSettingsStore((settings) => settings.player.autoPlay);
 
     const sources = useEpisodeStore((state) => state.episodeData?.sources)
     const metadata = useEpisodeStore((state) => state.episodeData?.metadata)

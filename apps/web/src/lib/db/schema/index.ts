@@ -106,8 +106,7 @@ export const subtitleSettings = pgTable("subtitle_settings", {
   
   preferredFormat: subtitleFormatEnum('preferred_format'),
   matchPattern: text("match_pattern"), // fileNameMatchPattern
-  transcriptionOrder: text('transcription_order').array(),
-  // .default(["hiragana","katakana","romaji","japanese","english"])
+  transcriptionOrder: text('transcription_order').array().default(["hiragana","katakana","romaji","japanese","english"]),
 
   definitionTrigger: definitionTriggerEnum('definition_trigger').notNull().default('click'),
   showFurigana: boolean('furigana').default(true).notNull(),
