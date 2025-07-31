@@ -3,26 +3,22 @@
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { SkipBack, SkipForward } from "lucide-react"
-import { Anime } from "@/types/anime"
+import { useEpisodeStore } from "@/lib/stores/episode-store"
 
 type EpisodeNavigationsProps = { 
     direction: 'next' | 'previous',
-    episodesLength: number
-    nextAiringEpisode?: number
-    episodeNumber: number
-    animeId: Anime['id']
 }
 
 export default function EpisodeNavigations({ 
     direction, 
-    episodesLength,
-    nextAiringEpisode,
-    animeId,
-    episodeNumber
 }: EpisodeNavigationsProps) {
     const router = useRouter();
-
     const isNext = direction === 'next';
+
+    const animeId = useEpisodeStore((state) => state.animeId)
+    const episodesLength = useEpisodeStore((state) => state.episodesLength)
+    const episodeNumber = useEpisodeStore((state) => state.episodeNumber)
+    const nextAiringEpisode = useEpisodeStore((state) => state.episodeData?.details.nextAiringEpisode)
 
     const handleClick = () => {
         const currentEp = Number(episodeNumber);

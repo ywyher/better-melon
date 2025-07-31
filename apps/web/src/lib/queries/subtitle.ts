@@ -1,5 +1,7 @@
-import { StyleTranscription } from "@/app/watch/[id]/[ep]/types";
+import { StyleTranscription, TranscriptionStyleSet } from "@/app/watch/[id]/[ep]/types";
 import { getMultipleTranscriptionsStyles } from "@/components/subtitle/styles/actions";
+import { defaultSubtitleStyles } from "@/components/subtitle/styles/constants";
+import { SubtitleStyles } from "@/lib/db/schema";
 import { SubtitleStylesStore } from "@/lib/stores/subtitle-styles-store";
 import { parseSubtitlesFile } from "@/lib/subtitle/parse";
 import { convertToKana, getSubtitleFormat, getSubtitleSource } from "@/lib/utils/subtitle";
@@ -91,53 +93,24 @@ export const subtitleQueries = createQueryKeys('subtitle', {
     };
   },
   }),
-  styles: ({ transcriptionsToFetch, checkedTranscriptions, handleSubtitleStylesInStore, getStylesFromStore, setLoadingDuration }: {
+  styles: ({ transcriptionsToFetch, setLoadingDuration }: {
     transcriptionsToFetch: StyleTranscription[];
-    checkedTranscriptions: RefObject<Set<StyleTranscription>>;
-    handleSubtitleStylesInStore: SubtitleStylesStore['handleStyles']
-    getStylesFromStore: SubtitleStylesStore['getStyles'];
     setLoadingDuration?: Dispatch<SetStateAction<number>>
   }) => ({
-    queryKey: ['subtitle', 'styles', transcriptionsToFetch,],
+    queryKey: ['subtitle', 'styles', transcriptionsToFetch],
     queryFn: async () => {
-      if (transcriptionsToFetch.length === 0) return {};
-    
       const start = performance.now();
       const stylesMap = await getMultipleTranscriptionsStyles(transcriptionsToFetch);
-
-      // Store fetched styles in the Zustand store, but only for transcriptions
-      // that actually have styles in the database
-      Object.entries(stylesMap).forEach(([transcription, styles]) => {
-        // Handle default state if it exists
-        if (styles.default) {
-          handleSubtitleStylesInStore(
-            transcription as StyleTranscription,
-            styles.default,
-            'default'
-          );
-        }
-        
-        // Handle active state if it exists
-        if (styles.active) {
-          handleSubtitleStylesInStore(
-            transcription as StyleTranscription,
-            styles.active,
-            'active'
-          );
-        }
-      });
-
-      // Mark all checked transcriptions, even those without styles
-      transcriptionsToFetch.forEach(transcription => {
-        checkedTranscriptions.current.add(transcription);
-      });
       
       const end = performance.now();
       const duration = end - start;
       if(setLoadingDuration) setLoadingDuration(duration);
-      (`~Subtitle styles fetched and stored in ${duration.toFixed(2)}ms for ${transcriptionsToFetch.length} transcriptions`);
+      console.log(`~Subtitle styles fetched in ${duration.toFixed(2)}ms for ${transcriptionsToFetch.length} transcriptions`);
       
-      return stylesMap;
+      return stylesMap as Record<StyleTranscription, {
+        active: SubtitleStyles;
+        default: SubtitleStyles;
+      }>;
     }
   }),
   toKana: (sentence: string) => ({

@@ -1,6 +1,7 @@
+import { StyleTranscription } from "@/app/watch/[id]/[ep]/types";
 import { SubtitleStyles } from "@/lib/db/schema";
 
-export const defaultSubtitleStyles: {
+const DEFAULT_SETTINGS: {
     default: SubtitleStyles,
     active: SubtitleStyles
 } = {
@@ -41,5 +42,47 @@ export const defaultSubtitleStyles: {
         state: 'active',
         createdAt: null,
         updatedAt: null
+    }
+}
+
+export const defaultSubtitleStyles: Record<StyleTranscription, {
+    default: SubtitleStyles,
+    active: SubtitleStyles
+}> = {
+    all: {
+        default: DEFAULT_SETTINGS.default,
+        active: DEFAULT_SETTINGS.active,
+    },
+    japanese: {
+        default: DEFAULT_SETTINGS.default,
+        active: DEFAULT_SETTINGS.active,
+    },
+    hiragana: {
+        default: DEFAULT_SETTINGS.default,
+        active: DEFAULT_SETTINGS.active,
+    },
+    katakana: {
+        default: DEFAULT_SETTINGS.default,
+        active: DEFAULT_SETTINGS.active,
+    },
+    romaji: {
+        default: DEFAULT_SETTINGS.default,
+        active: DEFAULT_SETTINGS.active,
+    },
+    english: {
+        default: DEFAULT_SETTINGS.default,
+        active: DEFAULT_SETTINGS.active,
+    },
+    furigana: {
+        default: {
+            ...DEFAULT_SETTINGS.default,
+            fontSize: 25,
+            margin: 10
+        },
+        active: {
+            ...DEFAULT_SETTINGS.active,
+            fontSize: 25,
+            margin: 10
+        },
     }
 };

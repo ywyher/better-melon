@@ -3,7 +3,7 @@
 import SubtitleTranscriptionSelector from "@/components/subtitle/subtitle-transcription-selector";
 import { GeneralSettings, SubtitleStyles as TSubtitleStyles } from "@/lib/db/schema";
 import { useQuery } from "@tanstack/react-query"
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import SubtitleStylesControls from "@/components/subtitle/styles/subtitle-styles-controls";
 import { settingsQueries } from "@/lib/queries/settings";
 import { useSubtitleStylesStore } from "@/lib/stores/subtitle-styles-store";
@@ -36,7 +36,7 @@ export default function SubtitleStyles({ syncSettings: propSyncStrategy, source 
   });
 
   const storeStyles = useSubtitleStylesStore((state) =>
-    source === 'store' ? state.getStyles(selectedTranscription, selectedState) : (selectedState == 'default' ? defaultSubtitleStyles.default : defaultSubtitleStyles.active)
+    source === 'store' ? state.getStyles(selectedTranscription, selectedState) : (selectedState == 'default' ? defaultSubtitleStyles[selectedTranscription].default : defaultSubtitleStyles[selectedTranscription].active)
   );
 
   const styles = useMemo(() => {
@@ -62,7 +62,7 @@ export default function SubtitleStyles({ syncSettings: propSyncStrategy, source 
 
   const shouldShowDeleteButton = useMemo(() => {
     const currentStyles = source === 'database' ? remoteStyles : storeStyles;
-    const defaultStyles = selectedState === 'active' ? defaultSubtitleStyles.active : defaultSubtitleStyles.default;
+    const defaultStyles = selectedState === 'active' ? defaultSubtitleStyles[selectedTranscription].active : defaultSubtitleStyles[selectedTranscription].default;
     
     return currentStyles && JSON.stringify(currentStyles) !== JSON.stringify(defaultStyles);
   }, [source, remoteStyles, storeStyles, selectedState]);

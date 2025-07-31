@@ -8,7 +8,7 @@ import { useWatchDataStore } from "@/lib/stores/watch-store";
 import { hasChanged } from "@/lib/utils/utils";
 import { useSubtitleStyles } from "@/lib/hooks/use-subtitle-styles";
 import { usePitchAccentChunks } from "@/lib/hooks/use-pitch-accent-chunks";
-import SubtitlePanel from "@/app/watch/[id]/[ep]/_components/panel/panel";
+import SubtitlePanel from "@/app/watch/[id]/[ep]/components/panel/panel";
 import DefinitionCard from "@/components/definition-card/definition-card";
 
 export default function PanelPlayground() {

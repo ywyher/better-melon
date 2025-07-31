@@ -8,7 +8,6 @@ import { usePlayerStore } from '@/lib/stores/player-store';
 export function useActiveSubtitles(transcriptions: TranscriptionQuery[]) {
   const player = usePlayerStore((state) => state.player)
   const currentTime = useMediaState('currentTime', player);
-  // const currentTime = 10
   const delay = useDelayStore((state) => state.delay)
 
   const getActiveSubtitleSets = useCallback(() => {

@@ -1,17 +1,14 @@
 import React, { memo, useMemo } from 'react';
 import { Ruby, SubtitleToken } from '@/types/subtitle';
-import { TranscriptionStyleSet } from '@/app/watch/[id]/[ep]/types';
 import { RubyText } from '@/components/ruby-text';
 import { parseRuby } from '@/lib/utils/subtitle';
-import { useTokenStyles } from '@/lib/hooks/use-token-styles';
 import { useSettingsStore } from '@/lib/stores/settings-store';
+import { useTokenStyles } from '@/lib/hooks/use-token-styles';
 
 interface JapaneseTokenProps {
   token: SubtitleToken;
   isActive: boolean;
   accent: any;
-  styles: TranscriptionStyleSet;
-  furiganaStyles: TranscriptionStyleSet;
   onTokenClick: () => void;
   onTokenMouseEnter: () => void;
   onTokenMouseLeave: () => void;
@@ -30,8 +27,6 @@ export const JapaneseToken = memo<JapaneseTokenProps>(({
   token,
   isActive,
   accent,
-  styles,
-  furiganaStyles,
   onTokenClick,
   onTokenMouseEnter,
   onTokenMouseLeave,
@@ -41,19 +36,28 @@ export const JapaneseToken = memo<JapaneseTokenProps>(({
   
   const rubyPairs = useMemo(() => getCachedRubyPairs(token.surface_form), [token.surface_form]);
   
-  const tokenStyle = useMemo(() => getTokenStyles(isActive, accent, styles), [getTokenStyles, isActive, accent, styles]);
-  const containerStyle = useMemo(() => getContainerStyles(isActive, styles), [getContainerStyles, isActive, styles]);
-  const learningStatusStyle = useMemo(() => getLearningStatusStyles(token), [getLearningStatusStyles, token]);
+  const tokenStyle = useMemo(() => {
+    return getTokenStyles({ isActive, accent, transcription: 'japanese' })
+  },[getTokenStyles, isActive, accent]);
+
+  const containerStyle = useMemo(() => {
+    return getContainerStyles({ isActive, transcription: 'japanese' })
+  }, [getContainerStyles, isActive]);
+
+  const learningStatusStyle = useMemo(() => {
+    return getLearningStatusStyles(token)
+  }, [getLearningStatusStyles, token]);
   
-  const baseTextStyle = tokenStyle;
   const baseBackgroundStyle = useMemo(() => 
     isActive ? containerStyle : { display: 'flex' }, 
     [isActive, containerStyle]
   );
-  const rubyTextStyle = useMemo(() => 
-    isActive ? furiganaStyles.tokenStyles.active : furiganaStyles.tokenStyles.default,
-    [isActive, furiganaStyles.tokenStyles.active, furiganaStyles.tokenStyles.default]
-  );
+
+  const rubyTextStyle = useMemo(() => getTokenStyles({
+    isActive,
+    accent,
+    transcription: 'furigana'
+  }), [getTokenStyles, isActive, accent])
 
   return (
     <div
@@ -71,7 +75,7 @@ export const JapaneseToken = memo<JapaneseTokenProps>(({
             baseText={baseText}
             rubyText={rubyText || ""}
             showFurigana={showFurigana}
-            baseTextStyle={baseTextStyle}
+            baseTextStyle={tokenStyle}
             rubyTextStyle={rubyTextStyle}
             baseBackgroundStyle={baseBackgroundStyle}
           />

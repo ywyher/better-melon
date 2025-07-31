@@ -14,17 +14,16 @@ import { toast } from "sonner"
 import { useDebounce } from "use-debounce"
 import { arraysEqual } from "@/lib/utils/utils";
 import { useSyncSettings } from "@/lib/hooks/use-sync-settings";
+import { useSettingsStore } from "@/lib/stores/settings-store";
+import { useTranscriptionStore } from "@/lib/stores/transcription-store";
 
-type EnabledTranscriptionsSettingProps = {
-  playerSettings: PlayerSettings
-  syncSettings: GeneralSettings['syncSettings']
-}
-
-export default function EnabledTranscriptions({ playerSettings, syncSettings }: EnabledTranscriptionsSettingProps) {
-  const activeTranscriptions = useSubtitleStore((state) => state.activeTranscriptions)
-  const setActiveTranscriptions = useSubtitleStore((state) => state.setActiveTranscriptions)
+export default function EnabledTranscriptions() {
+  const activeTranscriptions = useTranscriptionStore((state) => state.activeTranscriptions)
+  const setActiveTranscriptions = useTranscriptionStore((state) => state.setActiveTranscriptions)
   const [selectedTranscriptions, setSelectedTranscriptions] = useState<SubtitleTranscription[]>([])
   const [debouncedTranscriptions] = useDebounce(selectedTranscriptions, 1000)
+  const syncSettings = useSettingsStore((settings) => settings.general.syncSettings)
+  const playerSettings = useSettingsStore((settings) => settings.player)
 
   const hasInitializedRef = useRef(false)
   const hasUserChangedRef = useRef(false)

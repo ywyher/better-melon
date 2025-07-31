@@ -1,4 +1,4 @@
-import React, { memo, useMemo } from 'react';
+import React, { memo, useEffect, useMemo } from 'react';
 
 interface RubyTextProps {
   baseText: string;
@@ -7,6 +7,7 @@ interface RubyTextProps {
   baseTextStyle?: React.CSSProperties;
   rubyTextStyle?: React.CSSProperties;
   baseBackgroundStyle?: React.CSSProperties;
+  baseRubyBackgroundStyle?: React.CSSProperties;
   onClick?: () => void;
   onMouseEnter?: () => void;
   onMouseLeave?: () => void;
@@ -32,6 +33,7 @@ export const RubyText = memo<RubyTextProps>(({
   baseTextStyle = {},
   rubyTextStyle = {},
   baseBackgroundStyle = {},
+  baseRubyBackgroundStyle = {},
   onClick,
   onMouseEnter,
   onMouseLeave,
@@ -53,15 +55,17 @@ export const RubyText = memo<RubyTextProps>(({
     }
 
     const baseFontSize = hasBaseStyle ? (Number(baseTextStyle.fontSize) || 24) : 24;
-    const dynamicMargin = Math.max(baseFontSize * 0.5, 10);
-
-    // Handle margin conflicts properly
-    const computedRubyStyle = { ...DEFAULT_STYLES.ruby, ...rubyTextStyle };
+    
+    const computedRubyStyle = { 
+      ...DEFAULT_STYLES.ruby, 
+      ...rubyTextStyle,
+    };
     
     // If rubyTextStyle has a margin shorthand, don't override marginBottom
     // Otherwise, set the dynamic marginBottom
     if (!('margin' in rubyTextStyle)) {
-      computedRubyStyle.marginBottom = `${dynamicMargin}px`;
+      const dynamicMargin = Math.max(baseFontSize * 0.5, 15);
+      computedRubyStyle.margin = `0 0 ${dynamicMargin}px 0`;
     }
 
     return {
@@ -100,26 +104,17 @@ export const RubyText = memo<RubyTextProps>(({
       )}
       
       <rp>(</rp>
-      
+    
       {rubyText && showFurigana && (
-        <rt style={computedStyles.rubyStyle}>
+        <rt 
+          style={computedStyles.rubyStyle}
+        >
           {rubyText}
         </rt>
       )}
       
       <rp>)</rp>
     </ruby>
-  );
-}, (prevProps, nextProps) => {
-  return (
-    prevProps.baseText === nextProps.baseText &&
-    prevProps.rubyText === nextProps.rubyText &&
-    prevProps.showFurigana === nextProps.showFurigana &&
-    prevProps.className === nextProps.className &&
-    JSON.stringify(prevProps.baseTextStyle) === JSON.stringify(nextProps.baseTextStyle) &&
-    JSON.stringify(prevProps.rubyTextStyle) === JSON.stringify(nextProps.rubyTextStyle) &&
-    JSON.stringify(prevProps.baseBackgroundStyle) === JSON.stringify(nextProps.baseBackgroundStyle) &&
-    JSON.stringify(prevProps.style) === JSON.stringify(nextProps.style)
   );
 });
 

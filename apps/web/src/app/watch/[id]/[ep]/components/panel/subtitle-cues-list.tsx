@@ -1,6 +1,6 @@
 import { TabsContent } from "@/components/ui/tabs";
 import { SubtitleCue as TSubtitleCue, SubtitleTranscription } from "@/types/subtitle";
-import SubtitleCue from "@/app/watch/[id]/[ep]/_components/panel/subtitle-cue";
+import SubtitleCue from "@/app/watch/[id]/[ep]/components/panel/subtitle-cue";
 import { useSubtitleCuesList } from "@/lib/hooks/use-subtitle-cues-list";
 
 type SubtitleCuesListProps = {

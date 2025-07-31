@@ -1,6 +1,7 @@
 import { TranscriptionQuery, TranscriptionsLookup, TranscriptionStyles } from "@/app/watch/[id]/[ep]/types";
 import { defaultSubtitleStyles } from "@/components/subtitle/styles/constants";
 import { getContainerStyles, getTokenStyles } from "@/lib/utils/styles";
+import { SubtitleTranscription } from "@/types/subtitle";
 import { create } from "zustand";
 
 export type TranscriptionStore = {
@@ -10,6 +11,9 @@ export type TranscriptionStore = {
   transcriptionsLookup: TranscriptionsLookup;
   setTranscriptionsLookup: (transcriptionsLookup: TranscriptionStore['transcriptionsLookup']) => void;
   
+  activeTranscriptions: SubtitleTranscription[];
+  setActiveTranscriptions: (transcriptions: SubtitleTranscription[]) => void;
+
   transcriptionsStyles: TranscriptionStyles;
   setTranscriptionsStyles: (styles: TranscriptionStore['transcriptionsStyles']) => void;
 
@@ -23,16 +27,23 @@ export const useTranscriptionStore = create<TranscriptionStore>()((set) => ({
   
   transcriptionsLookup: new Map(),
   setTranscriptionsLookup: (transcriptionsLookup) => set({ transcriptionsLookup }),
+
+  activeTranscriptions: ['japanese'],
+  setActiveTranscriptions: (activeTranscriptions) => set({ activeTranscriptions }),
   
   transcriptionsStyles: {
     all: {
-      tokenStyles: getTokenStyles(false, {
-        active: defaultSubtitleStyles.active,
-        default: defaultSubtitleStyles.default
+      tokenStyles: getTokenStyles({
+        shouldScaleFontDown: false,
+        styles: {
+          active: defaultSubtitleStyles['all'].active,
+          default: defaultSubtitleStyles['all'].default
+        },
+        transcription: 'all'
       }),
       containerStyle: getContainerStyles({
-        active: defaultSubtitleStyles.active,
-        default: defaultSubtitleStyles.default
+        active: defaultSubtitleStyles['all'].active,
+        default: defaultSubtitleStyles['all'].default
       })
     }
   },
@@ -42,15 +53,20 @@ export const useTranscriptionStore = create<TranscriptionStore>()((set) => ({
   reset: () => set({
     transcriptions: null,
     transcriptionsLookup: new Map(),
+    activeTranscriptions: ['japanese'],
     transcriptionsStyles: {
       all: {
-        tokenStyles: getTokenStyles(false, {
-          active: defaultSubtitleStyles.active,
-          default: defaultSubtitleStyles.default
+        tokenStyles: getTokenStyles({
+          shouldScaleFontDown: false,
+          styles: {
+            active: defaultSubtitleStyles['all'].active,
+            default: defaultSubtitleStyles['all'].default
+          },
+          transcription: 'all'
         }),
         containerStyle: getContainerStyles({
-          active: defaultSubtitleStyles.active,
-          default: defaultSubtitleStyles.default
+          active: defaultSubtitleStyles['all'].active,
+          default: defaultSubtitleStyles['all'].default
         })
       }
     }

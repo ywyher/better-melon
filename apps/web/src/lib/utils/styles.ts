@@ -1,26 +1,30 @@
+import { StyleTranscription } from "@/app/watch/[id]/[ep]/types";
 import { defaultSubtitleStyles } from "@/components/subtitle/styles/constants";
 import { SubtitleStyles } from "@/lib/db/schema";
 import { CSSProperties } from "react";
 
-export const getTokenStyles = (
+export const getTokenStyles = ({ shouldScaleFontDown, styles, transcription }: {
   shouldScaleFontDown: boolean, 
   styles: {
     active: Partial<SubtitleStyles>,
     default: Partial<SubtitleStyles>
-  }
-): { default: CSSProperties; active: CSSProperties } => {
+  },
+  transcription: StyleTranscription
+}): { default: CSSProperties; active: CSSProperties } => {
   const defaultFontSize = shouldScaleFontDown 
-   ? ((styles.default.fontSize || defaultSubtitleStyles.default.fontSize)/1.5)
-   : styles.default.fontSize || defaultSubtitleStyles.default.fontSize;
+   ? ((styles.default.fontSize || defaultSubtitleStyles[transcription].default.fontSize)/1.5)
+   : styles.default.fontSize || defaultSubtitleStyles[transcription].default.fontSize;
 
   const defaultStyle: CSSProperties = {
     fontSize: defaultFontSize,
-    fontFamily: styles.default.fontFamily || defaultSubtitleStyles.default.fontFamily,
-    color: styles.default.textColor ||  defaultSubtitleStyles.default.textColor,
-    opacity: styles.default.textOpacity ||  defaultSubtitleStyles.default.textOpacity,
-    fontWeight: styles.default.fontWeight ||  defaultSubtitleStyles.default.fontWeight,
+    fontFamily: styles.default.fontFamily || defaultSubtitleStyles[transcription].default.fontFamily,
+    color: styles.default.textColor ||  defaultSubtitleStyles[transcription].default.textColor,
+    opacity: styles.default.textOpacity ||  defaultSubtitleStyles[transcription].default.textOpacity,
+    fontWeight: styles.default.fontWeight ||  defaultSubtitleStyles[transcription].default.fontWeight,
     transition: 'all 0.15s ease',
-    margin: `0 ${styles.default.margin || defaultSubtitleStyles.default.margin}px`,
+    margin: transcription != 'furigana' 
+    ? `0 ${styles.default.margin || defaultSubtitleStyles[transcription].default.margin}px` 
+    : `0 0 ${styles.default.margin || defaultSubtitleStyles[transcription].default.margin}px 0`,
     cursor: 'pointer',
     textShadow: styles.default.textShadow === 'drop-shadow' 
       ? '1px 1px 2px rgba(0, 0, 0, 0.8)'
@@ -36,16 +40,18 @@ export const getTokenStyles = (
   };
   
   const activeFontSize = shouldScaleFontDown 
-    ? ((styles.active.fontSize || defaultSubtitleStyles.active.fontSize)/1.5)
-    : styles.active.fontSize || defaultSubtitleStyles.active.fontSize;
+    ? ((styles.active.fontSize || defaultSubtitleStyles[transcription].active.fontSize)/1.5)
+    : styles.active.fontSize || defaultSubtitleStyles[transcription].active.fontSize;
 
   const activeStyle: CSSProperties = {
     fontSize: activeFontSize,
-    fontFamily: styles.active.fontFamily || defaultSubtitleStyles.active.fontFamily,
-    color: styles.active.textColor || defaultSubtitleStyles.active.textColor,
-    opacity: styles.active.textOpacity || defaultSubtitleStyles.active.textOpacity,
-    fontWeight: styles.active.fontWeight || defaultSubtitleStyles.active.fontWeight,
-    margin: `0 ${styles.active.margin || defaultSubtitleStyles.active.margin}px`,
+    fontFamily: styles.active.fontFamily || defaultSubtitleStyles[transcription].active.fontFamily,
+    color: styles.active.textColor || defaultSubtitleStyles[transcription].active.textColor,
+    opacity: styles.active.textOpacity || defaultSubtitleStyles[transcription].active.textOpacity,
+    fontWeight: styles.active.fontWeight || defaultSubtitleStyles[transcription].active.fontWeight,
+    margin: transcription != 'furigana' 
+    ? `0 ${styles.default.margin || defaultSubtitleStyles[transcription].default.margin}px` 
+    : `0 0 ${styles.default.margin || defaultSubtitleStyles[transcription].default.margin}px 0`,
     cursor: 'pointer',
     textShadow: styles.active.textShadow === 'drop-shadow' 
       ? '1px 1px 2px rgba(0, 0, 0, 0.8)'

@@ -1,6 +1,7 @@
 import { SubtitleSettings } from "@/lib/db/schema";
 import { subtitleQueries } from "@/lib/queries/subtitle";
 import { useSubtitleStore } from "@/lib/stores/subtitle-store";
+import { useTranscriptionStore } from "@/lib/stores/transcription-store";
 import { getActiveSubtitleFile, getEnglishSubtitleUrl } from "@/lib/utils/subtitle";
 import { NetworkCondition } from "@/types";
 import { Anime } from "@/types/anime";
@@ -28,7 +29,7 @@ export function usePrefetchSubtitleTranscriptions({
   animeId,
   episodeNumber
 }: PrefetchSubtitleTranscriptionsProps) {
-  const storeActiveTranscriptions = useSubtitleStore((state) => state.activeTranscriptions) || [];
+  const storeActiveTranscriptions = useTranscriptionStore((state) => state.activeTranscriptions) || [];
 
   const activeTranscriptions: SubtitleTranscription[] = useMemo(() => {
     if (!storeActiveTranscriptions.includes('japanese')) {

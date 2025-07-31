@@ -8,13 +8,13 @@ import '@vidstack/react/player/styles/default/layouts/video.css';
 
 import { useCallback, useEffect, useRef, useState, useMemo, memo } from "react";
 import { usePlayerStore } from "@/lib/stores/player-store";
-import SkipButton from '@/app/watch/[id]/[ep]/_components/player/skip-button';
-import PlayerSkeleton from '@/app/watch/[id]/[ep]/_components/player/player-skeleton';
+import SkipButton from '@/app/watch/[id]/[ep]/components/player/skip-button';
+import PlayerSkeleton from '@/app/watch/[id]/[ep]/components/player/player-skeleton';
 import { useThrottledCallback } from 'use-debounce';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { generateWebVTTFromSkipTimes } from '@/lib/utils/subtitle';
-import SubtitleTranscriptions from '@/app/watch/[id]/[ep]/_components/transcriptions/transcriptions';
+import SubtitleTranscriptions from '@/app/watch/[id]/[ep]/components/transcriptions/transcriptions';
 import { env } from '@/lib/env/client';
 import DefinitionCard from '@/components/definition-card/definition-card';
 import { AnimeSkipTime } from '@/types/anime';
@@ -176,17 +176,6 @@ export default function Player() {
             if (vttUrl) URL.revokeObjectURL(vttUrl);
         };
     }, [vttUrl]);
-
-    useEffect(() => {
-        console.log(`tst`, {
-            isVideoReady,
-            isInitialized
-        })
-    }, [isVideoReady, isInitialized])
-
-    useEffect(() => {
-        console.log(`metadata`, metadata)
-    }, [metadata])
 
     return (
         <div className="relative w-full aspect-video">

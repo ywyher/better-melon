@@ -1,5 +1,5 @@
-import SubtitlePanel from "@/app/watch/[id]/[ep]/_components/panel/panel";
-import SettingsDialog from "@/app/watch/[id]/[ep]/_components/settings/settings-dialog";
+import SubtitlePanel from "@/app/watch/[id]/[ep]/components/panel/panel";
+import SettingsDialog from "@/app/watch/[id]/[ep]/components/settings/settings-dialog";
 import DialogWrapper from "@/components/dialog-wrapper";
 import { Button } from "@/components/ui/button";
 import { useUIStateStore } from "@/lib/stores/ui-state-store";

@@ -1,7 +1,7 @@
 import GoBack from '@/components/goback';
 import Player from "../player/player";
 import PlayerSkeleton from "../player/player-skeleton";
-import { TopControls } from '@/app/watch/[id]/[ep]/_components/sections/top-controls';
+import { TopControls } from '@/app/watch/[id]/[ep]/components/sections/top-controls';
 import { useWatchStore } from '@/lib/stores/watch-store';
 import { useEpisodeStore } from '@/lib/stores/episode-store';
 

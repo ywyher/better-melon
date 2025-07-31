@@ -18,34 +18,29 @@ import { Label } from "@/components/ui/label";
 import { defaultGeneralSettings, screenshotFormats } from "@/lib/constants/settings";
 import { SelectInput } from "@/components/form/select-input";
 import TooltipWrapper from "@/components/tooltip-wrapper";
-import { EpisodeMetadata } from "@/types/episode";
+import { useSettingsStore } from "@/lib/stores/settings-store";
+import { useEpisodeStore } from "@/lib/stores/episode-store";
 
-type ScreenshotProps = {
-  namingPattern: GeneralSettings['screenshotNamingPattern']
-  namingDialog: GeneralSettings['screenshotNamingDialog']
-  format: GeneralSettings['screenshotFormat']
-  animeMetadata: EpisodeMetadata
-}
-
-export default function Screenshot({
-  namingPattern,
-  namingDialog,
-  format,
-  animeMetadata,
-}: ScreenshotProps) {
+export default function Screenshot() {
   const player = usePlayerStore((state) => state.player);
+  const generalSettings = useSettingsStore((settings) => settings.general)
+  const animeMetadata = useEpisodeStore((state) => state.episodeData?.metadata)
+
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [customName, setCustomName] = useState("");
-  const [selectedFormat, setSelectedFormat] = useState(format);
+  const [selectedFormat, setSelectedFormat] = useState(generalSettings.screenshotFormat);
 
-  const handleScreenShot = (customFileName?: string, outputFormat = format) => {
-    if (!player.current) return;
+  const handleScreenShot = (customFileName?: string, outputFormat = generalSettings.screenshotFormat) => {
+    if (!player.current || !animeMetadata) return;
 
     let name;
     if (customFileName) {
       name = customFileName;
     } else {
-      name = mapScreenshotNamingPatternValues(namingPattern, animeMetadata);
+      name = mapScreenshotNamingPatternValues({
+        pattern: generalSettings.screenshotNamingPattern, 
+        animeMetadata
+      });
     }
 
     const data = takeSnapshot(player.current, outputFormat);
@@ -54,16 +49,17 @@ export default function Screenshot({
   };
 
   const openScreenshotDialog = () => {
-    setCustomName(mapScreenshotNamingPatternValues(
-      namingPattern || defaultGeneralSettings.screenshotNamingPattern, 
+    if(!animeMetadata) return
+    setCustomName(mapScreenshotNamingPatternValues({
+      pattern: generalSettings.screenshotNamingPattern || defaultGeneralSettings.screenshotNamingPattern,
       animeMetadata
-    ));
-    setSelectedFormat(format);
+    }));
+    setSelectedFormat(generalSettings.screenshotFormat);
     setIsDialogOpen(true);
   };
 
   const handleClick = () => {
-    if (namingDialog) {
+    if (generalSettings.screenshotNamingDialog) {
       openScreenshotDialog();
     } else {
       handleScreenShot();
@@ -84,7 +80,7 @@ export default function Screenshot({
         <Camera />
       </Button>
 
-      {namingDialog && (
+      {generalSettings.screenshotNamingDialog && (
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogContent className="sm:max-w-md">
             <DialogHeader className="flex flex-row gap-2">

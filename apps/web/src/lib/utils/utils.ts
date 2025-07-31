@@ -143,7 +143,12 @@ export const downloadBase64Image = (base64Data: string, fileName: string, fileTy
  * @param animeMetadata - Object containing anime episode metadata
  * @returns The pattern with placeholders replaced by actual values
  */
-export const mapScreenshotNamingPatternValues = (pattern: string, animeMetadata: EpisodeMetadata): string => {
+export const mapScreenshotNamingPatternValues = ({
+  animeMetadata,
+  pattern
+}: {
+  pattern: string, animeMetadata: EpisodeMetadata
+}): string => {
   const randomString = Math.random().toString(36).substring(2, 6);
   const timestamp = Date.now();
   

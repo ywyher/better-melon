@@ -9,16 +9,19 @@ import PanelPlayground from "@/app/playground/_components/panel";
 import ProgressivePitchPlayground from "@/app/playground/_components/progressive-pitch";
 import ProxyPlayground from "@/app/playground/_components/proxy";
 import RubyPlayground from "@/app/playground/_components/ruby";
+import StylesPlayground from "@/app/playground/_components/styles";
 import SubtitleFileSelectorPlayground from "@/app/playground/_components/subtitle-file-selector";
-import TranscriptionsPlayground from "@/app/playground/_components/transcriptions";
+import TranscriptionsStylesPlayground from "@/app/playground/_components/transcriptions-styles";
 import TranscriptionsHookPlayground from "@/app/playground/_components/transcriptions-hook";
 import WatchDataPlayground from "@/app/playground/_components/watch-data";
 import { defaultPlayerSettings } from "@/app/settings/player/constants";
-import EnabledTranscriptions from "@/app/watch/[id]/[ep]/_components/settings/enabled-transcriptions";
+import EnabledTranscriptions from "@/components/enabled-transcriptions";
 
 export default function Playground() {
   return (
     <>
+      <TranscriptionsStylesPlayground />
+      {/* <StylesPlayground /> */}
       {/* <ProxyPlayground /> */}
       {/* <AnimeListPlayground /> */}
       {/* <AnimeDataPlayground /> */}
@@ -28,7 +31,7 @@ export default function Playground() {
         syncSettings="never"
       /> */}
       {/* <IsTranscriptionsCachedPlayground /> */}
-      <ProgressivePitchPlayground />
+      {/* <ProgressivePitchPlayground /> */}
       {/* <WatchDataPlayground /> */}
       {/* <TranscriptionsHookPlayground /> */}
       {/* <TranscriptionsPlayground /> */}

@@ -22,17 +22,16 @@ export type SubtitleQuery = UseQueryResult<{
     cues: SubtitleCue[];
 }, Error>;
 
-export type StyleTranscription = SubtitleTranscription | 'furigana'
+export type StyleTranscription = SubtitleTranscription | 'furigana' | "all"
+
+export type StyleSet = {
+  default: CSSProperties;
+  active: CSSProperties;
+};
 
 export type TranscriptionStyleSet = {
-  tokenStyles: {
-    default: CSSProperties;
-    active: CSSProperties;
-  };
-  containerStyle: {
-    default: CSSProperties;
-    active: CSSProperties;
-  };
+  tokenStyles: StyleSet
+  containerStyle: StyleSet
 };
 
 export type TranscriptionStyles = { all: TranscriptionStyleSet } & Partial<Record<StyleTranscription, TranscriptionStyleSet>>;

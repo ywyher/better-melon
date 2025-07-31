@@ -7,7 +7,6 @@ import db from "@/lib/db";
 import { ensureAuthenticated } from "@/lib/db/mutations";
 import { SubtitleStyles, subtitleStyles } from "@/lib/db/schema";
 import { camelCaseToTitleCase } from "@/lib/utils/utils";
-import { SubtitleTranscription } from "@/types/subtitle";
 import { generateId } from "better-auth";
 import { and, eq, inArray } from "drizzle-orm";
 import { headers } from "next/headers";
@@ -17,9 +16,9 @@ export async function getMultipleTranscriptionsStyles(transcriptions: StyleTrans
   if (!session?.user.id) {
     // Return default styles for each requested transcription
     return transcriptions.reduce((acc, transcription) => {
-      acc[transcription] = defaultSubtitleStyles;
+      acc[transcription] = defaultSubtitleStyles[transcription];
       return acc;
-    }, {} as Record<StyleTranscription, typeof defaultSubtitleStyles>);
+    }, {} as Record<StyleTranscription, typeof defaultSubtitleStyles[StyleTranscription]>);
   }
 
   // Always include 'all' in our query since it's the fallback style
@@ -47,14 +46,14 @@ export async function getMultipleTranscriptionsStyles(transcriptions: StyleTrans
   // Ensure 'all' transcription has both default and active states
   if (stylesMap['all']) {
     if (!stylesMap['all'].default) {
-      stylesMap['all'].default = defaultSubtitleStyles.default;
+      stylesMap['all'].default = defaultSubtitleStyles['all'].default;
     }
     if (!stylesMap['all'].active) {
-      stylesMap['all'].active = defaultSubtitleStyles.active;
+      stylesMap['all'].active = defaultSubtitleStyles['all'].active;
     }
   } else {
     // If 'all' doesn't exist at all, set it to defaultSubtitleStyles
-    stylesMap['all'] = defaultSubtitleStyles;
+    stylesMap['all'] = defaultSubtitleStyles['all'];
   }
 
   return stylesMap as Record<StyleTranscription, typeof defaultSubtitleStyles>;
@@ -64,7 +63,7 @@ export async function getSubtitleStyles({ transcription, state }: { transcriptio
     const session = await auth.api.getSession({ headers: await headers() });
     
     if (!session?.user.id) {
-      return state == 'default' ? defaultSubtitleStyles.default : defaultSubtitleStyles.active;
+      return state == 'default' ? defaultSubtitleStyles[transcription].default : defaultSubtitleStyles[transcription].active;
     }
     
     const [styles] = await db.select().from(subtitleStyles)
@@ -77,7 +76,7 @@ export async function getSubtitleStyles({ transcription, state }: { transcriptio
     if(styles) {
       return styles
     }else {
-      return state == 'default' ? defaultSubtitleStyles.default : defaultSubtitleStyles.active
+      return state == 'default' ? defaultSubtitleStyles[transcription].default : defaultSubtitleStyles[transcription].active
     }
 }
 
@@ -105,7 +104,7 @@ export async function ensureSubtitlStylesExists({ transcription, state }: { tran
 
       const newStylesId = generateId();
 
-      const styles = state == 'default' ? defaultSubtitleStyles.default : defaultSubtitleStyles.active
+      const styles = state == 'default' ? defaultSubtitleStyles[transcription].default : defaultSubtitleStyles[transcription].active
 
       await db.insert(subtitleStyles).values({
           ...styles,

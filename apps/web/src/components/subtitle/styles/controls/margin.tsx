@@ -28,12 +28,16 @@ export default function MarginController({
       <div className="flex flex-row gap-2 items-center">
         <p>Margin</p>
         <TooltipWrapper>
-          Left and right space between words
+          {transcription == 'furigana' ? (
+            <>Vertical space between the furigana and the japanese text</>
+          ): (
+            <>Left and right space between words</>
+          )}
         </TooltipWrapper>
       </div>
       <SliderInput
         min={0}
-        max={10}
+        max={15}
         step={0.1}
         showValue={true}
         unit='px'

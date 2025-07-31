@@ -21,9 +21,13 @@ export function TranscriptionItem({ transcription, text }: TranscriptionItemProp
     transition,
   } = useSortable({ id: transcription });
   
-  const tokenStyles = getTokenStyles(true, {
-    default: defaultSubtitleStyles.default,
-    active: defaultSubtitleStyles.active
+  const tokenStyles = getTokenStyles({
+    shouldScaleFontDown: true,
+    styles: {
+      default: defaultSubtitleStyles[transcription].default,
+      active: defaultSubtitleStyles[transcription].active
+    },
+    transcription
   });
   
   const style = {

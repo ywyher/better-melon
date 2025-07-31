@@ -8,9 +8,6 @@ export type SubtitleStore = {
   englishSubtitleUrl: string | null;
   setEnglishSubtitleUrl: (url: string | null) => void;
   
-  activeTranscriptions: SubtitleTranscription[];
-  setActiveTranscriptions: (transcriptions: SubtitleTranscription[]) => void;
-  
   subtitleCues: SubtitleCue[];
   setSubtitleCues: (cues: SubtitleCue[]) => void;
 
@@ -24,16 +21,12 @@ export const useSubtitleStore = create<SubtitleStore>()((set) => ({
   englishSubtitleUrl: null,
   setEnglishSubtitleUrl: (englishSubtitleUrl) => set({ englishSubtitleUrl }),
   
-  activeTranscriptions: [],
-  setActiveTranscriptions: (activeTranscriptions) => set({ activeTranscriptions }),
-  
   subtitleCues: [],
   setSubtitleCues: (subtitleCues) => set({ subtitleCues }),
   
   reset: () => set({
     activeSubtitleFile: null,
     englishSubtitleUrl: null,
-    activeTranscriptions: ['japanese'],
     subtitleCues: [],
   }),
 }));

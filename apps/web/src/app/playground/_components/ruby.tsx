@@ -10,7 +10,7 @@ import { useInitializeTokenizer } from "@/lib/hooks/use-initialize-tokenizer";
 import { useSubtitleTranscriptions } from "@/lib/hooks/use-subtitle-transcriptions";
 import { useWatchDataStore } from "@/lib/stores/watch-store";
 import { hasChanged } from "@/lib/utils/utils";
-import SubtitleTranscriptions from "@/app/watch/[id]/[ep]/_components/transcriptions/transcriptions";
+import SubtitleTranscriptions from "@/app/watch/[id]/[ep]/components/transcriptions/transcriptions";
 import DefinitionCard from "@/components/definition-card/definition-card";
 
 export default function RubyPlayground() {

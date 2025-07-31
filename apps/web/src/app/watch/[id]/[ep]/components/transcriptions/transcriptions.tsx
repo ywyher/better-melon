@@ -1,6 +1,6 @@
 'use client'
 
-import { TranscriptionItem } from "@/app/watch/[id]/[ep]/_components/transcriptions/transcription-item";
+import { TranscriptionItem } from "@/app/watch/[id]/[ep]/components/transcriptions/transcription-item";
 import { usePlayerStore } from "@/lib/stores/player-store";
 import { closestCenter, DndContext, KeyboardSensor, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from "@dnd-kit/sortable";
@@ -59,33 +59,6 @@ const SubtitleTranscriptions = memo(function SubtitleTranscriptions() {
     bottom: `${getBottomPosition()}rem`
   }), [getBottomPosition]);
 
-  const transcriptionsWithStyles = useMemo(() => {
-    return order.map(transcription => {
-      if (!activeSubtitles?.[transcription]?.length) return null;
-
-      const tokenStyles =
-        transcriptionsStyles[transcription]?.tokenStyles
-        || transcriptionsStyles['all'].tokenStyles;
-
-      const containerStyle = 
-        transcriptionsStyles[transcription]?.containerStyle
-        || transcriptionsStyles["all"].containerStyle;
-
-      // Get furigana styles for ruby text
-      const furiganaStyles = {
-        tokenStyles: transcriptionsStyles['furigana']?.tokenStyles || transcriptionsStyles['all'].tokenStyles,
-        containerStyle: transcriptionsStyles['furigana']?.containerStyle || transcriptionsStyles['all'].containerStyle
-      };
-
-      return {
-        transcription,
-        tokenStyles,
-        containerStyle,
-        furiganaStyles,
-      };
-    }).filter(Boolean);
-  }, [order, activeSubtitles, transcriptionsStyles]);
-
   return (
     <div
       className="absolute left-1/2 transform -translate-x-1/2 flex items-center flex-col w-[100%]"
@@ -100,18 +73,13 @@ const SubtitleTranscriptions = memo(function SubtitleTranscriptions() {
               items={order}
               strategy={verticalListSortingStrategy}
           >
-              {transcriptionsWithStyles.map((t) => {
+              {order.filter((t) => activeSubtitles[t].length).map((t) => {
                 if(!t) return;
                 return (
                   <TranscriptionItem
-                    key={t.transcription}
-                    transcription={t.transcription}
-                    furiganaStyles={t.furiganaStyles}
+                    key={t}
+                    transcription={t}
                     activeSubtitles={activeSubtitles}
-                    styles={{
-                      tokenStyles: t.tokenStyles,
-                      containerStyle: t.containerStyle
-                    }}
                   />
                 );
               })}

@@ -3,7 +3,6 @@ import { SubtitleToken } from '@/types/subtitle';
 import { cn } from '@/lib/utils/utils';
 import { parseRuby } from '@/lib/utils/subtitle';
 import { RubyText } from '@/components/ruby-text';
-import DOMPurify from 'dompurify';
 import { useTokenStyles } from '@/lib/hooks/use-token-styles';
 import { PitchAccents } from '@/types/pitch';
 

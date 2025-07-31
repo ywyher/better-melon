@@ -2,7 +2,7 @@
 
 import { usePitchAccentChunks } from "@/lib/hooks/use-pitch-accent-chunks";
 import { Loader2 } from "lucide-react";
-import SubtitleFileSelector from "@/app/watch/[id]/[ep]/_components/subtitle-file-selector";
+import SubtitleFileSelector from "@/app/watch/[id]/[ep]/components/subtitles/subtitle-file-selector";
 import transcriptions from "./transcriptions.json";
 import { TranscriptionQuery } from "@/app/watch/[id]/[ep]/types";
 import { useSubtitleStore } from "@/lib/stores/subtitle-store";

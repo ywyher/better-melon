@@ -5,19 +5,17 @@ import { usePlayerStore } from "@/lib/stores/player-store";
 import { useSubtitleStylesStore } from "@/lib/stores/subtitle-styles-store";
 import { useQuery } from "@tanstack/react-query";
 import { useMediaState } from "@vidstack/react";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { getContainerStyles, getTokenStyles } from "@/lib/utils/styles";
-import { useSubtitleStore } from "@/lib/stores/subtitle-store";
 import { useUIStateStore } from "@/lib/stores/ui-state-store";
+import { useTranscriptionStore } from "@/lib/stores/transcription-store";
 
 export const useSubtitleStyles = () => {
-  const activeTranscriptions = useSubtitleStore((state) => state.activeTranscriptions);
+  const activeTranscriptions = useTranscriptionStore((state) => state.activeTranscriptions);
   const panelState = useUIStateStore((state) => state.panelState)
   const isFullscreen = useMediaState('fullscreen', usePlayerStore((state) => state.player));
   
-  const storeStyles = useSubtitleStylesStore((state) => state.styles);
   const handleSubtitleStylesInStore = useSubtitleStylesStore((state) => state.handleStyles);
-  const getStylesFromStore = useSubtitleStylesStore((state) => state.getStyles);
   
   // Track loading duration
   const [loadingDuration, setLoadingDuration] = useState<number>(0);
@@ -31,10 +29,9 @@ export const useSubtitleStyles = () => {
     
     if(activeTranscriptions.some(t => t == 'japanese')) {
       return ([...activeTranscriptions, 'furigana'] as StyleTranscription[]).filter(transcription => {
-        // Only check if we haven't already checked this transcription
         return !checkedTranscriptions.current.has(transcription);
       });
-    }else {
+    } else {
       return ([...activeTranscriptions] as StyleTranscription[]).filter(transcription => {
         return !checkedTranscriptions.current.has(transcription);
       });
@@ -43,35 +40,71 @@ export const useSubtitleStyles = () => {
 
   const shouldScaleFontDown = useMemo(() => {
     return !isFullscreen && panelState == 'visible'
-    // return false;
   }, [isFullscreen, panelState])
   
-  // Fetch styles from database only for transcriptions we haven't checked yet
-  const stylesQuery = useQuery({
+  // Fetch styles from database
+  const {
+    data: stylesMap,
+    isLoading,
+    error,
+    refetch
+  } = useQuery({
     ...subtitleQueries.styles({
-      handleSubtitleStylesInStore,
-      checkedTranscriptions,
-      getStylesFromStore,
-      setLoadingDuration,
       transcriptionsToFetch,
+      setLoadingDuration,
     }),
     staleTime: 1000 * 60 * 60,
     enabled: transcriptionsToFetch.length > 0,
     refetchOnWindowFocus: false
   });
 
+  useEffect(() => {
+    if (stylesMap) {
+      Object.entries(stylesMap).forEach(([transcription, styles]) => {
+        if (styles.default) {
+          handleSubtitleStylesInStore(
+            transcription as StyleTranscription,
+            styles.default,
+            'default'
+          );
+        }
+        
+        if (styles.active) {
+          handleSubtitleStylesInStore(
+            transcription as StyleTranscription,
+            styles.active,
+            'active'
+          );
+        }
+      });
+
+      transcriptionsToFetch.forEach(transcription => {
+        checkedTranscriptions.current.add(transcription);
+      });
+    }
+  }, [stylesMap, transcriptionsToFetch, handleSubtitleStylesInStore]);
+
   const styles = useMemo(() => {
-    const start = performance.now();
     const result = {} as TranscriptionStyles;
-    const defaultAllStyles = getStylesFromStore('all', 'default') || defaultSubtitleStyles.default;
-    const activeAllStyles = getStylesFromStore('all', 'active') || defaultSubtitleStyles.active;
+    
+    // Helper function to get styles - first from query data, then from defaults
+    const getStylesForTranscription = (transcription: StyleTranscription, state: 'default' | 'active') => {
+      return (stylesMap?.[transcription]?.[state] || defaultSubtitleStyles[transcription][state]);
+    };
+
+    const defaultAllStyles = getStylesForTranscription('all', 'default');
+    const activeAllStyles = getStylesForTranscription('all', 'active');
 
     if (!activeTranscriptions || activeTranscriptions.length === 0) {
       return { 
         all: {
-          tokenStyles: getTokenStyles(shouldScaleFontDown, {
-            active: activeAllStyles,
-            default: defaultAllStyles
+          tokenStyles: getTokenStyles({
+            shouldScaleFontDown, 
+            styles: {
+              active: activeAllStyles,
+              default: defaultAllStyles
+            },
+            transcription: 'all'
           }),
           containerStyle: getContainerStyles({
             active: activeAllStyles,
@@ -82,9 +115,13 @@ export const useSubtitleStyles = () => {
     }
     
     result.all = {
-      tokenStyles: getTokenStyles(shouldScaleFontDown, {
-        active: activeAllStyles,
-        default: defaultAllStyles
+      tokenStyles: getTokenStyles({
+        shouldScaleFontDown,
+        styles: {
+          active: activeAllStyles,
+          default: defaultAllStyles
+        },
+        transcription: 'all'
       }),
       containerStyle: getContainerStyles({
         active: activeAllStyles,
@@ -93,38 +130,38 @@ export const useSubtitleStyles = () => {
     };
 
     ([...activeTranscriptions, "furigana"] as StyleTranscription[]).forEach(transcription => {
-      const defaultStyleData = getStylesFromStore(transcription, 'default');
-      const activeStyleData = getStylesFromStore(transcription, 'active');
+      const defaultStyleData = getStylesForTranscription(transcription, 'default');
+      const activeStyleData = getStylesForTranscription(transcription, 'active');
 
-      if (
-        defaultStyleData || activeStyleData
-      ) {
-        const hasCustomDefault = defaultStyleData && JSON.stringify(defaultStyleData) !== JSON.stringify(defaultSubtitleStyles.default);
-        const hasCustomActive = activeStyleData && JSON.stringify(activeStyleData) !== JSON.stringify(defaultSubtitleStyles.active);
-        
-        if (hasCustomDefault || hasCustomActive) {
-          result[transcription] = {
-            tokenStyles: getTokenStyles(shouldScaleFontDown, {
+      const hasCustomDefault = defaultStyleData && JSON.stringify(defaultStyleData) !== JSON.stringify(defaultSubtitleStyles[transcription].default);
+      const hasCustomActive = activeStyleData && JSON.stringify(activeStyleData) !== JSON.stringify(defaultSubtitleStyles[transcription].active);
+      
+      if (hasCustomDefault || hasCustomActive) {
+        result[transcription] = {
+          tokenStyles: getTokenStyles({
+            shouldScaleFontDown,
+            styles: {
               active: activeStyleData,
               default: defaultStyleData
-            }),
-            containerStyle: getContainerStyles({
-              active: activeStyleData,
-              default: defaultStyleData
-            })
-          };
-        }
+            },
+            transcription
+          }),
+          containerStyle: getContainerStyles({
+            active: activeStyleData,
+            default: defaultStyleData
+          })
+        };
       }
     });
     
-    const end = performance.now();
     return result;
-  }, [activeTranscriptions, isFullscreen, storeStyles, getStylesFromStore, shouldScaleFontDown]);
+  }, [stylesMap, activeTranscriptions, shouldScaleFontDown]);
 
   return {
-    isLoading: stylesQuery.isLoading,
-    error: stylesQuery.error,
+    isLoading: isLoading,
+    error: error,
     styles: styles as TranscriptionStyles,
-    loadingDuration
+    loadingDuration,
+    refetch
   };
 };

@@ -1,6 +1,6 @@
 "use client"
 
-import SubtitleFileSelector from "@/app/watch/[id]/[ep]/_components/subtitle-file-selector";
+import SubtitleFileSelector from "@/app/watch/[id]/[ep]/components/subtitles/subtitle-file-selector";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CardHeader, CardTitle } from "@/components/ui/card";

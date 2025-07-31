@@ -39,7 +39,7 @@ export const useSubtitleStylesStore = create<SubtitleStylesStore>()((set, get) =
       return internalState.styles[transcription][state] as SubtitleStyles;
     }
     
-    const defaultStyle = state === 'default' ? defaultSubtitleStyles.default : defaultSubtitleStyles.active;
+    const defaultStyle = state === 'default' ? defaultSubtitleStyles[transcription].default : defaultSubtitleStyles[transcription].active;
     const styleWithEdits = {
       ...defaultStyle,
       id: generateId(),
@@ -95,7 +95,7 @@ export const useSubtitleStylesStore = create<SubtitleStylesStore>()((set, get) =
       return existingStyle;
     }
     
-    return state === 'default' ? defaultSubtitleStyles.default : defaultSubtitleStyles.active;
+    return state === 'default' ? defaultSubtitleStyles[transcription].default : defaultSubtitleStyles[transcription].active;
   },
   
   deleteStyles: (transcription: SubtitleStyles['transcription'], state?: SubtitleStyles['state']) => {

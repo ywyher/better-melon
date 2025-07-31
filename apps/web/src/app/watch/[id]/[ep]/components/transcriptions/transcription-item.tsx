@@ -1,6 +1,6 @@
 "use client"
 
-import React, { Fragment, useMemo, useCallback } from 'react';
+import React, { Fragment, useMemo, useCallback, useEffect } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { SubtitleToken, SubtitleTranscription } from '@/types/subtitle';
@@ -9,11 +9,10 @@ import { Subtitle, TranscriptionStyleSet } from '@/app/watch/[id]/[ep]/types';
 import { GripVertical } from 'lucide-react';
 import { useTranscriptionItem } from '@/lib/hooks/use-transcription-item';
 import TokenRenderer from '@/components/token/token-renderer';
+import { useTranscriptionStore } from '@/lib/stores/transcription-store';
 
 type TranscriptionItemProps = {
   transcription: SubtitleTranscription;
-  furiganaStyles: TranscriptionStyleSet;
-  styles: TranscriptionStyleSet;
   activeSubtitles: Subtitle;
 }
 
@@ -27,8 +26,6 @@ const GRIP_CLASSES = "w-4 h-4 text-muted-foreground";
 
 export const TranscriptionItem = React.memo<TranscriptionItemProps>(function TranscriptionItemOptimized({ 
   transcription,
-  furiganaStyles,
-  styles,
   activeSubtitles
 }) {
   const sortableConfig = useMemo(() => ({
@@ -52,6 +49,8 @@ export const TranscriptionItem = React.memo<TranscriptionItemProps>(function Tra
     isTokenActive,
   } = useTranscriptionItem(transcription);
 
+  const transcriptionsStyles = useTranscriptionStore((state) => state.transcriptionsStyles)
+
   const memoizedData = useMemo(() => {
     const activeCues = activeSubtitles?.[transcription] || [];
     
@@ -61,7 +60,7 @@ export const TranscriptionItem = React.memo<TranscriptionItemProps>(function Tra
     };
 
     const containerStyles = {
-      ...styles.containerStyle.default,
+      ...(transcriptionsStyles[transcription]?.containerStyle.default || transcriptionsStyles["all"].containerStyle.default),
       ...sortableStyles,
     };
 
@@ -75,7 +74,7 @@ export const TranscriptionItem = React.memo<TranscriptionItemProps>(function Tra
       containerStyles,
       containerClassName,
     };
-  }, [activeSubtitles, transcription, transform, transition, styles.containerStyle.default]);
+  }, [activeSubtitles, transcription, transform, transition, transcriptionsStyles]);
 
   const { activeCues, containerStyles, containerClassName } = memoizedData;
 
@@ -92,6 +91,10 @@ export const TranscriptionItem = React.memo<TranscriptionItemProps>(function Tra
   }, [activeSubtitles, transcription]);
 
   const handleTokenClick = useCallback((cueId: number, token: SubtitleToken) => {
+    console.log({
+      cueId, 
+      token
+    })
     const cue = activeCues.find(c => c.id === cueId);
     if (cue) {
       handleActivate(cue.from, cue.to, token, 'click');
@@ -119,8 +122,6 @@ export const TranscriptionItem = React.memo<TranscriptionItemProps>(function Tra
               cue={cue}
               token={token}
               transcription={transcription}
-              styles={styles}
-              furiganaStyles={furiganaStyles}
               onTokenClick={handleTokenClick}
               onTokenMouseEnter={handleTokenMouseEnter}
               onTokenMouseLeave={handleTokenMouseLeave}

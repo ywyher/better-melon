@@ -1,6 +1,7 @@
 import { TranscriptionQuery } from "@/app/watch/[id]/[ep]/types";
 import { subtitleQueries } from "@/lib/queries/subtitle";
 import { useSubtitleStore } from "@/lib/stores/subtitle-store";
+import { useTranscriptionStore } from "@/lib/stores/transcription-store";
 import { getTranscriptionsLookupKey } from "@/lib/utils/subtitle";
 import { Anime } from "@/types/anime";
 import { SubtitleCue, SubtitleTranscription } from "@/types/subtitle";
@@ -20,7 +21,7 @@ export const useSubtitleTranscriptions = ({
 }: UseSubtitleTranscriptionsProps) => {
   const englishSubtitleUrl = useSubtitleStore((state) => state.englishSubtitleUrl) || "";
   const activeSubtitleFile = useSubtitleStore((state) => state.activeSubtitleFile);
-  const storeActiveTranscriptions = useSubtitleStore((state) => state.activeTranscriptions) || [];
+  const storeActiveTranscriptions = useTranscriptionStore((state) => state.activeTranscriptions) || [];
 
   // Ensure 'japanese', 'english', and 'hiragana' are always included in the active transcriptions
   const activeTranscriptions: SubtitleTranscription[] = useMemo(() => {

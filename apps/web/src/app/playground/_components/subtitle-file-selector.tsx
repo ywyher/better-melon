@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useSubtitleStore } from "@/lib/stores/subtitle-store";
-import SubtitleFileSelector from "@/app/watch/[id]/[ep]/_components/subtitle-file-selector";
+import SubtitleFileSelector from "@/app/watch/[id]/[ep]/components/subtitles/subtitle-file-selector";
 import { useWatchDataStore } from "@/lib/stores/watch-store";
 import { useSubtitleTranscriptions } from "@/lib/hooks/use-subtitle-transcriptions";
 import { useInitializeTokenizer } from "@/lib/hooks/use-initialize-tokenizer";
