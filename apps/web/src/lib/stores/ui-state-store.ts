@@ -1,4 +1,4 @@
-import { EpisodesListViewMode } from "@/types/anime";
+import { EpisodesListViewMode } from "@/types/episode";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 

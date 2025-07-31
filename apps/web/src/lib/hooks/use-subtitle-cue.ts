@@ -3,20 +3,27 @@ import { usePlayerStore } from "@/lib/stores/player-store";
 import { useDefinitionStore } from "@/lib/stores/definition-store";
 import { useDelayStore } from "@/lib/stores/delay-store";
 import { useSubtitleStore } from "@/lib/stores/subtitle-store";
-import { useWatchDataStore } from "@/lib/stores/watch-store";
 import { SubtitleToken, SubtitleCue as TSubtitleCue } from "@/types/subtitle";
 import { getSentencesForCue, isTokenExcluded, removeHtmlTags } from "@/lib/utils/subtitle";
 import { toast } from "sonner";
 import { getPitchAccent } from "@/lib/utils/pitch";
 import { PitchAccents } from "@/types/pitch";
+import { useTranscriptionStore } from "@/lib/stores/transcription-store";
+import { useSettingsStore } from "@/lib/stores/settings-store";
+import { useLearningStore } from "@/lib/stores/learning-store";
 
 export const useSubtitleCue = () => {
   const player = usePlayerStore((state) => state.player);
+  
   const delay = useDelayStore((state) => state.delay);
+
   const activeSubtitleFile = useSubtitleStore((state) => state.activeSubtitleFile);
-  const transcriptionsLookup = useWatchDataStore((state) => state.transcriptionsLookup);
-  const showFurigana = useWatchDataStore((state) => state.settings.subtitleSettings.showFurigana);
-  const pitchLookup = useWatchDataStore((state) => state.pitchLookup);
+
+  const transcriptionsLookup = useTranscriptionStore((state) => state.transcriptionsLookup);
+
+  const showFurigana = useSettingsStore((settings) => settings.subtitle.showFurigana);
+
+  const pitchLookup = useLearningStore((state) => state.pitchLookup);
   
   const activeToken = useDefinitionStore((state) => state.token);
   const setSentences = useDefinitionStore((state) => state.setSentences);

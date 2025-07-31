@@ -12,15 +12,14 @@ import { SubtitleFile } from "@/types/subtitle";
 import { subtitleFormats } from "@/lib/constants/subtitle";
 import LocalFileSelector from "@/components/local-file-selector";
 import { useSubtitleStore } from "@/lib/stores/subtitle-store";
-import { useWatchDataStore } from "@/lib/stores/watch-store";
+import { useEpisodeStore } from "@/lib/stores/episode-store";
 
 export default function SubtitleFileSelector() {
     const [loading, setLoading] = useState<string | null>(null);
     const [open, setOpen] = useState(false);
     const activeSubtitleFile = useSubtitleStore((state) => state.activeSubtitleFile)
     const setActiveSubtitleFile = useSubtitleStore((state) => state.setActiveSubtitleFile)
-
-    const subtitleFiles = useWatchDataStore((state) => state.episodeData?.subtitles)
+    const subtitleFiles = useEpisodeStore((state) => state.episodeData?.subtitles)
 
     const handleSelectFile = async (file: SubtitleFile) => {
         if (file.name === activeSubtitleFile?.file.name) return;

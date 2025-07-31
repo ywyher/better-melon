@@ -5,18 +5,22 @@ import { usePlayerStore } from "@/lib/stores/player-store";
 import { closestCenter, DndContext, KeyboardSensor, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { memo, useCallback, useMemo } from "react";
-import { useWatchDataStore } from "@/lib/stores/watch-store";
 import { useActiveSubtitles } from "@/lib/hooks/use-active-subtitles";
 import { useMediaState } from "@vidstack/react";
 import { useTranscriptionOrder } from "@/lib/hooks/use-transcriptions-order";
 import useAutoPause from "@/lib/hooks/use-auto-pause";
+import { useTranscriptionStore } from "@/lib/stores/transcription-store";
+import { useSettingsStore } from "@/lib/stores/settings-store";
 
 const SubtitleTranscriptions = memo(function SubtitleTranscriptions() {
   const player = usePlayerStore((state) => state.player);
 
-  const styles = useWatchDataStore((state) => state.styles)
-  const settings = useWatchDataStore((state) => state.settings)
-  const transcriptions = useWatchDataStore((state) => state.transcriptions)
+  const transcriptionsStyles = useTranscriptionStore((state) => state.transcriptionsStyles)
+  const transcriptions = useTranscriptionStore((state) => state.transcriptions)
+
+  const subtitleSettings = useSettingsStore((settings) => settings.subtitle)
+  const syncSettings = useSettingsStore((settings) => settings.general.syncSettings)
+
   const {
     activeSubtitles
   } = useActiveSubtitles(transcriptions || [])
@@ -36,8 +40,8 @@ const SubtitleTranscriptions = memo(function SubtitleTranscriptions() {
   );
 
   const { handleDragEnd, order } = useTranscriptionOrder({
-    subtitleSettings: settings.subtitleSettings,
-    syncSettings: settings.generalSettings.syncSettings
+    subtitleSettings: subtitleSettings,
+    syncSettings: syncSettings
   })
 
   useAutoPause({ activeSubtitles })
@@ -60,17 +64,17 @@ const SubtitleTranscriptions = memo(function SubtitleTranscriptions() {
       if (!activeSubtitles?.[transcription]?.length) return null;
 
       const tokenStyles =
-        styles[transcription]?.tokenStyles
-        || styles['all'].tokenStyles;
+        transcriptionsStyles[transcription]?.tokenStyles
+        || transcriptionsStyles['all'].tokenStyles;
 
       const containerStyle = 
-        styles[transcription]?.containerStyle
-        || styles["all"].containerStyle;
+        transcriptionsStyles[transcription]?.containerStyle
+        || transcriptionsStyles["all"].containerStyle;
 
       // Get furigana styles for ruby text
       const furiganaStyles = {
-        tokenStyles: styles['furigana']?.tokenStyles || styles['all'].tokenStyles,
-        containerStyle: styles['furigana']?.containerStyle || styles['all'].containerStyle
+        tokenStyles: transcriptionsStyles['furigana']?.tokenStyles || transcriptionsStyles['all'].tokenStyles,
+        containerStyle: transcriptionsStyles['furigana']?.containerStyle || transcriptionsStyles['all'].containerStyle
       };
 
       return {
@@ -80,7 +84,7 @@ const SubtitleTranscriptions = memo(function SubtitleTranscriptions() {
         furiganaStyles,
       };
     }).filter(Boolean);
-  }, [order, activeSubtitles, styles]);
+  }, [order, activeSubtitles, transcriptionsStyles]);
 
   return (
     <div
@@ -93,7 +97,7 @@ const SubtitleTranscriptions = memo(function SubtitleTranscriptions() {
           onDragEnd={handleDragEnd}
       >
           <SortableContext 
-              items={[...settings.subtitleSettings.transcriptionOrder]}
+              items={order}
               strategy={verticalListSortingStrategy}
           >
               {transcriptionsWithStyles.map((t) => {

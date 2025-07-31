@@ -31,10 +31,10 @@ export default function PlayerSettings({
                     playerSettings={playerSettings as TPlayerSettings}
                     syncSettings={generalSettings.syncSettings}
                 />
-                <ShowFurigana 
+                {/* <ShowFurigana 
                     subtitleSettings={subtitelSettings}
                     syncSettings={generalSettings.syncSettings}
-                />
+                /> */}
                 <Screenshot
                     namingPattern={generalSettings.screenshotNamingPattern}
                     namingDialog={generalSettings.screenshotNamingDialog}

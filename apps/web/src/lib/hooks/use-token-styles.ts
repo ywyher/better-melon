@@ -1,22 +1,24 @@
 import { useCallback } from 'react';
-import { useWatchDataStore } from '@/lib/stores/watch-store';
 import { excludedPos, learningStatusesStyles } from '@/lib/constants/subtitle';
 import { SubtitleToken } from '@/types/subtitle';
 import { TranscriptionStyleSet } from '@/app/watch/[id]/[ep]/types';
 import { pitchAccentsStyles } from '@/lib/constants/pitch';
 import { PitchAccents } from '@/types/pitch';
+import { useSettingsStore } from '@/lib/stores/settings-store';
+import { wordSettings } from '@/lib/db/schema';
+import { useLearningStore } from '@/lib/stores/learning-store';
 
 export const useTokenStyles = () => {
-  const pitchColoring = useWatchDataStore((state) => state.settings.wordSettings.pitchColoring);
-  const learningStatus = useWatchDataStore((state) => state.settings.wordSettings.learningStatus);
-  const wordsLookup = useWatchDataStore((state) => state.wordsLookup);
+  const wordsSettings = useSettingsStore((settings) => settings.word);
+
+  const wordsLookup = useLearningStore((state) => state.wordsLookup);
 
   const getTokenStyles = useCallback((isActive: boolean, accent: PitchAccents | null, styles: TranscriptionStyleSet) => {
     const baseStyle = isActive ? styles.tokenStyles.active : styles.tokenStyles.default;
-    const pitchStyle = pitchColoring && !isActive && accent ? pitchAccentsStyles[accent] : undefined;
+    const pitchStyle = wordsSettings.pitchColoring && !isActive && accent ? pitchAccentsStyles[accent] : undefined;
     
     return pitchStyle ? { ...baseStyle, ...pitchStyle } : baseStyle;
-  }, [pitchColoring]);
+  }, [wordsSettings]);
 
   const getContainerStyles = useCallback((isActive: boolean, styles: TranscriptionStyleSet) => {
     return isActive ? styles.containerStyle.active : undefined;
@@ -26,7 +28,7 @@ export const useTokenStyles = () => {
     const word = wordsLookup.get(token.original_form);
     const status = word?.status;
     
-    if (learningStatus && !excludedPos.some(p => p === token.pos) && status) {
+    if (wordSettings.learningStatus && !excludedPos.some(p => p === token.pos) && status) {
       return learningStatusesStyles[status];
     }
     
@@ -35,12 +37,12 @@ export const useTokenStyles = () => {
     }
     
     return {};
-  }, [learningStatus, wordsLookup]);
+  }, [wordSettings, wordsLookup]);
 
   const getPitchStyles = useCallback((isActive: boolean, accent: PitchAccents | null) => {
     if(!accent) return;
-    return isActive ? undefined :pitchAccentsStyles[accent]
-  }, [pitchColoring])
+    return isActive ? undefined : pitchAccentsStyles[accent]
+  }, [])
 
   return {
     getTokenStyles,

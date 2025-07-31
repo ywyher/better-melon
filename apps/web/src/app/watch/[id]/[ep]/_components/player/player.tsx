@@ -18,8 +18,8 @@ import SubtitleTranscriptions from '@/app/watch/[id]/[ep]/_components/transcript
 import { env } from '@/lib/env/client';
 import DefinitionCard from '@/components/definition-card/definition-card';
 import { usePlaybackSettingsStore } from '@/lib/stores/playback-settings-store';
-import { useWatchDataStore } from '@/lib/stores/watch-store';
 import { AnimeSkipTime } from '@/types/anime';
+import { useEpisodeStore } from '@/lib/stores/episode-store';
 
 const MemoizedPlayerSkeleton = memo(PlayerSkeleton);
 const MemoizedSkipButton = memo(SkipButton);
@@ -43,11 +43,11 @@ export default function Player() {
     const autoNext = usePlaybackSettingsStore((state) => state.autoNext);
     const autoPlay = usePlaybackSettingsStore((state) => state.autoPlay);
 
-    const sources = useWatchDataStore((state) => state.episodeData?.sources)
-    const metadata = useWatchDataStore((state) => state.episodeData?.metadata)
-    const episodeNumber = useWatchDataStore((state) => state.episodeNumber)
-    const episodesLength = useWatchDataStore((state) => state.episodesLength)
-    const animeId = useWatchDataStore((state) => state.animeId)
+    const sources = useEpisodeStore((state) => state.episodeData?.sources)
+    const metadata = useEpisodeStore((state) => state.episodeData?.metadata)
+    const episodeNumber = useEpisodeStore((state) => state.episodeNumber)
+    const episodesLength = useEpisodeStore((state) => state.episodesLength)
+    const animeId = useEpisodeStore((state) => state.animeId)
 
     const [loadingDuration, setLoadingDuration] = useState<{
       start: Date | undefined,

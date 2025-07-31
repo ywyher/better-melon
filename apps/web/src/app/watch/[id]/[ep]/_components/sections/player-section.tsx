@@ -2,8 +2,8 @@ import GoBack from '@/components/goback';
 import Player from "../player/player";
 import PlayerSkeleton from "../player/player-skeleton";
 import { TopControls } from '@/app/watch/[id]/[ep]/_components/sections/top-controls';
-import { useWatchDataStore } from '@/lib/stores/watch-store';
-import { useEffect } from 'react';
+import { useWatchStore } from '@/lib/stores/watch-store';
+import { useEpisodeStore } from '@/lib/stores/episode-store';
 
 interface PlayerSectionProps {
   isMedium: boolean;
@@ -12,12 +12,8 @@ interface PlayerSectionProps {
 export default function PlayerSection({
   isMedium,
 }: PlayerSectionProps) {
-  const isLoading = useWatchDataStore((state) => state.isLoading)
-  const episodeData = useWatchDataStore((state) => state.episodeData)
-
-  useEffect(() => {
-    console.log(`player isLoading`, isLoading)
-  }, [isLoading])
+  const isLoading = useWatchStore((state) => state.isLoading)
+  const episodeData = useEpisodeStore((state) => state.episodeData)
 
   return (
     <>

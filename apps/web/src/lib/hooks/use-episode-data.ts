@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { playerQueries } from '@/lib/queries/player';
+import { episodeQueries } from '@/lib/queries/episode';
 import { Anime } from '@/types/anime';
 
 export function useEpisodeData(animeId: Anime['id'], episodeNumber: number) {
@@ -14,7 +14,7 @@ export function useEpisodeData(animeId: Anime['id'], episodeNumber: number) {
     error,
     refetch
   } = useQuery({
-    ...playerQueries.episodeData(animeId, episodeNumber),
+    ...episodeQueries.data(animeId, episodeNumber),
     staleTime: 1000 * 60 * 5,
     refetchOnWindowFocus: false,
   });

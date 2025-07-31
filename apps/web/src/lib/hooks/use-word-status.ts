@@ -1,8 +1,7 @@
 import { handleWord } from "@/app/settings/word/_known-words/actions";
-import { WordsLookup } from "@/app/watch/[id]/[ep]/types";
 import { Word } from "@/lib/db/schema";
 import { wordQueries } from "@/lib/queries/word";
-import { useWatchDataStore } from "@/lib/stores/watch-store";
+import { useLearningStore } from "@/lib/stores/learning-store";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -16,8 +15,8 @@ export function useWordStatus({
 }: WordStatusProps) {
   const [isActionLoading, setIsActionLoading] = useState<boolean>(false);
   const [newStatus, setNewStatus] = useState<Word['status'] | undefined>(undefined)
-  const wordsLookup = useWatchDataStore((state) => state.wordsLookup)
-  const setWordsLookup = useWatchDataStore((state) => state.setWordsLookup)
+  const wordsLookup = useLearningStore((state) => state.wordsLookup)
+  const setWordsLookup = useLearningStore((state) => state.setWordsLookup)
 
   const { data: wordData, isLoading: isWordDataLoading } = useQuery(wordQueries.word(word, newStatus))
 

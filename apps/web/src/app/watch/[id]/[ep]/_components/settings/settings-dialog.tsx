@@ -9,13 +9,13 @@ import DelayController from "@/app/watch/[id]/[ep]/_components/settings/delay-co
 import { Separator } from "@/components/ui/separator"
 import { useIsLarge } from "@/lib/hooks/use-media-query"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { useWatchDataStore } from "@/lib/stores/watch-store"
+import { useSettingsStore } from "@/lib/stores/settings-store"
   
 export default function SettingsDialog() {
     const [open, setOpen] = useState<boolean>(false)
     const isLarge = useIsLarge()
 
-    const generalSettings = useWatchDataStore((state) => state.settings.generalSettings)
+    const generalSettings = useSettingsStore((settings) => settings.general)
 
     return (
       <DialogWrapper

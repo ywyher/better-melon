@@ -1,10 +1,11 @@
-import { playerQueries } from "@/lib/queries/player";
+import { episodeQueries } from "@/lib/queries/episode";
 import { NetworkCondition } from "@/types";
+import { Anime } from "@/types/anime";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo } from "react";
 
 type PrefetchEpisodeDataProps = {
-  animeId: string,
+  animeId: Anime['id'],
   episodeNumber: number,
   isReady: boolean,
   isLastEpisode: boolean,
@@ -28,7 +29,7 @@ export function usePrefetchEpisodeData({
     isSuccess: episodeDataFetched,
     isFetching: isEpisodeDataFetching
   } = useQuery({
-    ...playerQueries.episodeData(animeId, episodeNumber),
+    ...episodeQueries.data(animeId, episodeNumber),
     staleTime: 1000 * 60 * 45,
     enabled: !!shouldFetchEpisodeData
   });

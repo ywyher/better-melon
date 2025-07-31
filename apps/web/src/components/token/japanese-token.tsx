@@ -3,8 +3,8 @@ import { Ruby, SubtitleToken } from '@/types/subtitle';
 import { TranscriptionStyleSet } from '@/app/watch/[id]/[ep]/types';
 import { RubyText } from '@/components/ruby-text';
 import { parseRuby } from '@/lib/utils/subtitle';
-import { useWatchDataStore } from '@/lib/stores/watch-store';
 import { useTokenStyles } from '@/lib/hooks/use-token-styles';
+import { useSettingsStore } from '@/lib/stores/settings-store';
 
 interface JapaneseTokenProps {
   token: SubtitleToken;
@@ -36,7 +36,7 @@ export const JapaneseToken = memo<JapaneseTokenProps>(({
   onTokenMouseEnter,
   onTokenMouseLeave,
 }) => {
-  const showFurigana = useWatchDataStore((state) => state.settings.subtitleSettings.showFurigana);
+  const showFurigana = useSettingsStore((settings) => settings.subtitle.showFurigana);
   const { getTokenStyles, getContainerStyles, getLearningStatusStyles } = useTokenStyles();
   
   const rubyPairs = useMemo(() => getCachedRubyPairs(token.surface_form), [token.surface_form]);

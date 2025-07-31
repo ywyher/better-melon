@@ -2,10 +2,10 @@
 
 import { Button } from "@/components/ui/button";
 import { usePlayerStore } from "@/lib/stores/player-store";
-import { SkipTime } from "@/types/anime";
 import { Dispatch, SetStateAction, useMemo } from "react";
 import { useMediaState } from "@vidstack/react";
 import { cn } from "@/lib/utils/utils";
+import { AnimeSkipTime } from "@/types/anime";
 
 export default function SkipButton({ 
     canSkip,
@@ -15,7 +15,7 @@ export default function SkipButton({
 }: { 
     canSkip: boolean;
     setCanSkip: Dispatch<SetStateAction<boolean>>
-    skipTimes: SkipTime[];
+    skipTimes: AnimeSkipTime[];
     currentTime: number
 }) {
     const player = usePlayerStore((state) => state.player);

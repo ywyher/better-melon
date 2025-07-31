@@ -1,6 +1,6 @@
 import { useDelayStore } from '@/lib/stores/delay-store';
 import { usePlayerStore } from '@/lib/stores/player-store';
-import { useWatchDataStore } from '@/lib/stores/watch-store';
+import { useSettingsStore } from '@/lib/stores/settings-store';
 import { SubtitleCue, SubtitleTranscription } from '@/types/subtitle';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -11,7 +11,7 @@ type UseSubtitleCuesListProps = {
 }
 
 export function useSubtitleCuesList({ cues, selectedTranscription }: UseSubtitleCuesListProps) {
-  const playerSettings = useWatchDataStore((state) => state.settings.playerSettings)
+  const playerSettings = useSettingsStore((settings) => settings.player)
 
   const [activeIndex, setActiveIndex] = useState<number>(-1);
   const [autoScroll, setAutoScroll] = useState<boolean>(playerSettings.autoScrollToCue);

@@ -23,7 +23,6 @@ export async function getEpisodeData(animeId: Anime['id'], episodeNumber: number
       throw new Error(message || 'API returned failure');
     }
 
-    // Verify the data structure before returning
     if (!data || !data.details) {
       throw new Error('Invalid data structure returned from API');
     }

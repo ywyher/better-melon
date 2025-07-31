@@ -1,10 +1,10 @@
 import { useDelayStore } from "@/lib/stores/delay-store";
 import { usePlaybackSettingsStore } from "@/lib/stores/playback-settings-store";
 import { usePlayerStore } from "@/lib/stores/player-store";
-import { useWatchDataStore } from "@/lib/stores/watch-store";
+import { useSettingsStore } from "@/lib/stores/settings-store";
 import { SubtitleCue, SubtitleTranscription } from "@/types/subtitle";
 import { useMediaState } from "@vidstack/react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 type UseAutoPauseProps = {
   activeSubtitles: Record<SubtitleTranscription, SubtitleCue[]>
@@ -18,7 +18,7 @@ export default function useAutoPause({
   const delay = useDelayStore((state) => state.delay);
   const pauseOnCue = usePlaybackSettingsStore((state) => state.pauseOnCue);
   const currentTime = useMediaState('currentTime', player);
-  const cuePauseDuration = useWatchDataStore((state) => state.settings.playerSettings.cuePauseDuration);
+  const cuePauseDuration = useSettingsStore((settings) => settings.player.cuePauseDuration);
 
   // Track processed pause points to prevent re-pausing
   const processedPausePoints = useRef<Set<number>>(new Set());

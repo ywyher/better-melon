@@ -1,12 +1,14 @@
 import { useState, useCallback } from 'react';
 import { useDefinitionStore } from '@/lib/stores/definition-store';
 import { useDelayStore } from '@/lib/stores/delay-store';
-import { useWatchDataStore } from '@/lib/stores/watch-store';
 import { SubtitleToken, SubtitleTranscription } from '@/types/subtitle';
 import { SubtitleSettings } from '@/lib/db/schema';
 import { getSentencesForCue, isTokenExcluded } from '@/lib/utils/subtitle';
 import { getPitchAccent } from '@/lib/utils/pitch';
 import { PitchAccents } from '@/types/pitch';
+import { useTranscriptionStore } from '@/lib/stores/transcription-store';
+import { useSettingsStore } from '@/lib/stores/settings-store';
+import { useLearningStore } from '@/lib/stores/learning-store';
 
 export const useTranscriptionItem = (transcription: SubtitleTranscription) => {
   const delay = useDelayStore((state) => state.delay);
@@ -16,13 +18,14 @@ export const useTranscriptionItem = (transcription: SubtitleTranscription) => {
   const setToken = useDefinitionStore((state) => state.setToken);
   const storeToken = useDefinitionStore((state) => state.token);
 
-  const showFurigana = useWatchDataStore((state) => state.settings.subtitleSettings.showFurigana);
-  const learningStatus = useWatchDataStore((state) => state.settings.wordSettings.learningStatus);
-  const pitchColoring = useWatchDataStore((state) => state.settings.wordSettings.pitchColoring);
-  const definitionTrigger = useWatchDataStore((state) => state.settings.subtitleSettings.definitionTrigger);
-  const pitchLookup = useWatchDataStore((state) => state.pitchLookup);
-  const wordsLookup = useWatchDataStore((state) => state.wordsLookup);
-  const transcriptionsLookup = useWatchDataStore((state) => state.transcriptionsLookup);
+  const pitchLookup = useLearningStore((state) => state.pitchLookup);
+  const wordsLookup = useLearningStore((state) => state.wordsLookup);
+  
+  const showFurigana = useSettingsStore((settings) => settings.subtitle.showFurigana);
+  const definitionTrigger = useSettingsStore((settings) => settings.subtitle.definitionTrigger);
+  const learningStatus = useSettingsStore((settings) => settings.word.learningStatus);
+  const pitchColoring = useSettingsStore((settings) => settings.word.pitchColoring);
+  const transcriptionsLookup = useTranscriptionStore((state) => state.transcriptionsLookup);
   
   const [hoveredTokenId, setHoveredTokenId] = useState<string | number | null>(null);
   const [hoveredCueId, setHoveredCueId] = useState<number | null>(null);

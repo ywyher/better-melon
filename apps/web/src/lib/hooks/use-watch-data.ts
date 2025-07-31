@@ -9,11 +9,15 @@ import { useSettingsForEpisode } from "@/lib/hooks/use-settings-for-episode";
 import { useSubtitleStyles } from "@/lib/hooks/use-subtitle-styles";
 import { useSubtitleTranscriptions } from "@/lib/hooks/use-subtitle-transcriptions";
 import { useWords } from "@/lib/hooks/use-words";
-import { useWatchDataStore, WatchDataState } from "@/lib/stores/watch-store";
 import { hasChanged } from "@/lib/utils/utils";
 import { Anime } from "@/types/anime";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useDelayStore } from "@/lib/stores/delay-store";
+import { useWatchStore } from "@/lib/stores/watch-store";
+import { useEpisodeStore } from "@/lib/stores/episode-store";
+import { useSettingsStore } from "@/lib/stores/settings-store";
+import { useTranscriptionStore } from "@/lib/stores/transcription-store";
+import { useLearningStore } from "@/lib/stores/learning-store";
 
 export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
   const loadStartTimeRef = useRef<number>(performance.now());
@@ -21,8 +25,17 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
   const [totalDuration, setTotalDuration] = useState<number>(0);
   const setDelay = useDelayStore((state) => state.setDelay)
 
-  const store = useWatchDataStore();
-  const currentStoreState = useWatchDataStore.getState();
+  const watchStore = useWatchStore();
+  const episodeStore = useEpisodeStore();
+  const settingsStore = useSettingsStore();
+  const transcriptionStore = useTranscriptionStore();
+  const learningStore = useLearningStore();
+
+  const currentWatchState = useWatchStore.getState();
+  const currentEpisodeState = useEpisodeStore.getState();
+  const currentSettingsState = useSettingsStore.getState();
+  const currentTranscriptionState = useTranscriptionStore.getState();
+  const currentLearningState = useLearningStore.getState();
 
   const {
     cachedFiles,
@@ -62,7 +75,6 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
     error: transcriptionsError,
     loadingDuration: transcriptionsLoadingDuration,
   } = useSubtitleTranscriptions({
-    // isTranscriptionsCached => since we wont need the tokenizer so its faster
     shouldFetch: isTranscriptionsCached || isTokenizerInitialized,
     animeId,
     episodeNumber
@@ -107,71 +119,105 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
     cachedFiles
   });
 
+  // Update episode store
   useEffect(() => {
-    const updates: Partial<WatchDataState> = {};
+    const updates: Partial<{
+      animeId: number;
+      episodeNumber: number;
+      episodeData: any;
+      episodesLength: number;
+    }> = {};
     
-    if (hasChanged(animeId, currentStoreState.animeId)) {
+    if (hasChanged(animeId, currentEpisodeState.animeId)) {
       updates.animeId = animeId;
       setDelay({
         english: 0,
         japanese: 0
-      })
+      });
     }
     
-    if (hasChanged(episodeNumber, currentStoreState.episodeNumber)) {
+    if (hasChanged(episodeNumber, currentEpisodeState.episodeNumber)) {
       updates.episodeNumber = episodeNumber;
     }
     
-    if (hasChanged(episodeData, currentStoreState.episodeData)) {
+    if (hasChanged(episodeData, currentEpisodeState.episodeData)) {
       updates.episodeData = episodeData;
     }
     
-    if (hasChanged(episodesLength, currentStoreState.episodesLength)) {
+    if (hasChanged(episodesLength, currentEpisodeState.episodesLength)) {
       updates.episodesLength = episodesLength;
     }
-    
-    if (hasChanged(settings, currentStoreState.settings)) {
-      updates.settings = settings;
+
+    // Only update if there are actual changes
+    if (Object.keys(updates).length > 0) {
+      console.log('Batch updating episode store with:', Object.keys(updates));
+      episodeStore.batchUpdate(updates);
     }
+  }, [animeId, episodeNumber, episodeData, episodesLength]);
+
+  // Update settings store
+  useEffect(() => {
+    if (hasChanged(settings, {
+      generalSettings: currentSettingsState.general,
+      playerSettings: currentSettingsState.player,
+      subtitleSettings: currentSettingsState.subtitle,
+      wordSettings: currentSettingsState.word,
+    })) {
+      if (settings) {
+        console.log('Batch updating settings store with:', Object.keys(settings));
+        settingsStore.batchUpdate(settings);
+      }
+    }
+  }, [settings]);
+
+  // Update transcription store
+  useEffect(() => {
+    const updates: Partial<{
+      transcriptions: any;
+      transcriptionsLookup: any;
+      transcriptionsStyles: any;
+    }> = {};
     
-    if (hasChanged(transcriptions, currentStoreState.transcriptions)) {
+    if (hasChanged(transcriptions, currentTranscriptionState.transcriptions)) {
       updates.transcriptions = transcriptions;
     }
     
-    if (hasChanged(transcriptionsLookup, currentStoreState.transcriptionsLookup)) {
+    if (hasChanged(transcriptionsLookup, currentTranscriptionState.transcriptionsLookup)) {
       updates.transcriptionsLookup = transcriptionsLookup;
     }
     
-    if (hasChanged(styles, currentStoreState.styles)) {
-      updates.styles = styles;
+    if (hasChanged(styles, currentTranscriptionState.transcriptionsStyles)) {
+      updates.transcriptionsStyles = styles;
     }
+
+    // Only update if there are actual changes
+    if (Object.keys(updates).length > 0) {
+      console.log('Batch updating transcription store with:', Object.keys(updates));
+      transcriptionStore.batchUpdate(updates);
+    }
+  }, [transcriptions, transcriptionsLookup, styles]);
+
+  // Update learning store
+  useEffect(() => {
+    const updates: Partial<{
+      pitchLookup: any;
+      wordsLookup: any;
+    }> = {};
     
-    if (hasChanged(pitchLookup, currentStoreState.pitchLookup)) {
+    if (hasChanged(pitchLookup, currentLearningState.pitchLookup)) {
       updates.pitchLookup = pitchLookup;
     }
     
-    if (hasChanged(wordsLookup, currentStoreState.wordsLookup)) {
+    if (hasChanged(wordsLookup, currentLearningState.wordsLookup)) {
       updates.wordsLookup = wordsLookup;
     }
 
     // Only update if there are actual changes
     if (Object.keys(updates).length > 0) {
-      console.log('Batch updating store with:', Object.keys(updates));
-      store.batchUpdate(updates);
+      console.log('Batch updating learning store with:', Object.keys(updates));
+      learningStore.batchUpdate(updates);
     }
-  }, [
-    animeId,
-    episodeNumber,
-    episodeData,
-    episodesLength,
-    settings,
-    transcriptions,
-    transcriptionsLookup,
-    styles,
-    pitchLookup,
-    wordsLookup,
-    store.batchUpdate
-  ]);
+  }, [pitchLookup, wordsLookup]);
 
   const isLoading = useMemo(() => {
     return (
@@ -191,15 +237,16 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
     hasInitialized
   ]);
 
+  // Update watch store
   useEffect(() => {
-    if (hasChanged(isLoading, currentStoreState.isLoading)) {
-      store.setIsLoading(isLoading);
+    if (hasChanged(isLoading, currentWatchState.isLoading)) {
+      watchStore.setIsLoading(isLoading);
     }
     
     if (!isLoading && !hasInitialized) {
       setHasInitialized(true);
     }
-  }, [isLoading, hasInitialized, store.setIsLoading]);
+  }, [isLoading, hasInitialized]);
 
   useEffect(() => {
     if (!isLoading &&
@@ -213,9 +260,9 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
       const loadEndTime = performance.now();
       const elapsed = loadEndTime - loadStartTimeRef.current;
       
-      if (hasChanged(elapsed, currentStoreState.loadingDuration)) {
+      if (hasChanged(elapsed, currentWatchState.loadingDuration)) {
         setTotalDuration(elapsed);
-        store.setLoadingDuration(elapsed);
+        watchStore.setLoadingDuration(elapsed);
       }
     }
   }, [
@@ -226,7 +273,6 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
     stylesLoadingDuration,
     wordsLoadingDuration,
     pitchAccentLoadingDuration,
-    store.setLoadingDuration
   ]);
 
   const errors = useMemo(() => {

@@ -3,8 +3,8 @@ import SettingsDialog from "@/app/watch/[id]/[ep]/_components/settings/settings-
 import DialogWrapper from "@/components/dialog-wrapper";
 import { Button } from "@/components/ui/button";
 import { useUIStateStore } from "@/lib/stores/ui-state-store";
-import { useWatchDataStore } from "@/lib/stores/watch-store";
-import { Captions, Loader2, PanelLeftClose, PanelLeftOpen, Search } from "lucide-react";
+import { useWatchStore } from "@/lib/stores/watch-store";
+import { Captions, Loader2, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 
 type TopControlsProps = {
   isMedium: boolean;
@@ -13,8 +13,8 @@ type TopControlsProps = {
 export function TopControls({ 
   isMedium,
 }: TopControlsProps) {
-  const isLoading = useWatchDataStore((state) => state.isLoading)
-  const loadingDuration = useWatchDataStore((state) => state.loadingDuration)
+  const isLoading = useWatchStore((state) => state.isLoading)
+  const loadingDuration = useWatchStore((state) => state.loadingDuration)
 
   const panelState = useUIStateStore((state) => state.panelState)
   const setPanelState = useUIStateStore((state) => state.setPanelState)

@@ -19,14 +19,7 @@ type PlaybackSetting = 'autoPlay' | 'autoNext' | 'autoSkip' | 'pauseOnCue';
 export default function PlaybackToggles({ playerSettings, syncSettings }: TogglesProps) {
     const [isLoading, setIsLoading] = useState<boolean>(false)
     
-    const autoPlay = usePlaybackSettingsStore((state) => state.autoPlay)
-    const setAutoPlay = usePlaybackSettingsStore((state) => state.setAutoPlay)
-    const autoNext = usePlaybackSettingsStore((state) => state.autoNext)
-    const setAutoNext = usePlaybackSettingsStore((state) => state.setAutoNext)
-    const autoSkip = usePlaybackSettingsStore((state) => state.autoSkip)
-    const setAutoSkip = usePlaybackSettingsStore((state) => state.setAutoSkip)
-    const pauseOnCue = usePlaybackSettingsStore((state) => state.pauseOnCue)
-    const setPauseOnCue = usePlaybackSettingsStore((state) => state.setPauseOnCue)
+    const { autoPlay, autoNext, autoSkip, pauseOnCue, setAutoPlay, setAutoNext, setAutoSkip, setPauseOnCue, updateAll } = usePlaybackSettingsStore();
 
     const { handleSync } = useSyncSettings({
         syncSettings,
@@ -42,18 +35,19 @@ export default function PlaybackToggles({ playerSettings, syncSettings }: Toggle
 
     useEffect(() => {
         if (playerSettings) {
-            setAutoPlay(playerSettings.autoPlay);
-            setAutoNext(playerSettings.autoNext);
-            setAutoSkip(playerSettings.autoSkip);
-            setPauseOnCue(playerSettings.pauseOnCue);
+            updateAll(playerSettings);
         }
-    }, [playerSettings, setAutoPlay, setAutoNext, setAutoSkip, setPauseOnCue]);
+    }, [playerSettings]);
     
+    const setters = {
+        autoNext: setAutoNext,
+        autoPlay: setAutoPlay,
+        autoSkip: setAutoSkip,
+        pauseOnCue: setPauseOnCue,
+    };
+
     const updateSettingState = (setting: PlaybackSetting, value: boolean) => {
-        if(setting === 'autoNext') setAutoNext(value)
-        if(setting === 'autoPlay') setAutoPlay(value)
-        if(setting === 'autoSkip') setAutoSkip(value)
-        if(setting === 'pauseOnCue') setPauseOnCue(value)
+        setters[setting](value);
     };
 
     const handleValueChange = async (setting: PlaybackSetting, value: boolean) => {

@@ -1,43 +1,42 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
-export type PlaybackSettingsStore = {
+export type PlaybackSettings = {
   autoPlay: boolean;
-  setAutoPlay: (autoPlay: boolean) => void;
-  
   autoSkip: boolean;
-  setAutoSkip: (autoSkip: boolean) => void;
-  
   autoNext: boolean;
-  setAutoNext: (autoNext: boolean) => void;
-  
   pauseOnCue: boolean;
+};
+
+export type PlaybackSettingsStore = PlaybackSettings & {
+  setAutoPlay: (autoPlay: boolean) => void;
+  setAutoSkip: (autoSkip: boolean) => void;
+  setAutoNext: (autoNext: boolean) => void;
   setPauseOnCue: (pauseOnCue: boolean) => void;
-  
+  updateAll: (settings: Partial<PlaybackSettings>) => void;
   reset: () => void;
+};
+
+const defaultSettings: PlaybackSettings = {
+  autoPlay: false,
+  autoSkip: false,
+  autoNext: false,
+  pauseOnCue: false,
 };
 
 export const usePlaybackSettingsStore = create<PlaybackSettingsStore>()(
   persist(
     (set) => ({
-      autoPlay: false,
+      ...defaultSettings,
+      
       setAutoPlay: (autoPlay) => set({ autoPlay }),
-      
-      autoSkip: false,
       setAutoSkip: (autoSkip) => set({ autoSkip }),
-      
-      autoNext: false,
       setAutoNext: (autoNext) => set({ autoNext }),
-      
-      pauseOnCue: false,
       setPauseOnCue: (pauseOnCue) => set({ pauseOnCue }),
       
-      reset: () => set({
-        autoPlay: false,
-        autoSkip: false,
-        autoNext: false,
-        pauseOnCue: false,
-      }),
+      updateAll: (settings) => set((state) => ({ ...state, ...settings })),
+      
+      reset: () => set(defaultSettings),
     }),
     {
       name: "playback-settings",

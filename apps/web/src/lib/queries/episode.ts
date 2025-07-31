@@ -3,9 +3,9 @@ import { Anime } from "@/types/anime";
 import { EpisodeData } from "@/types/episode";
 import { createQueryKeys } from "@lukemorales/query-key-factory";
 
-export const playerQueries = createQueryKeys('player', {
-    episodeData: (animeId: Anime['id'], episodeNumber: number) => ({
-        queryKey: ['episodesData', animeId, episodeNumber],
+export const episodeQueries = createQueryKeys('episode', {
+    data: (animeId: Anime['id'], episodeNumber: number) => ({
+        queryKey: ['episode-data', animeId, episodeNumber],
         queryFn: async (): Promise<EpisodeData> => {
           const episodeData = await getEpisodeData(animeId, episodeNumber, 'hianime')
 

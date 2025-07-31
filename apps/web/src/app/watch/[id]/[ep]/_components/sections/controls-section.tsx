@@ -3,13 +3,19 @@ import EpisodeNavigations from "@/app/watch/[id]/[ep]/_components/settings/episo
 import PlayerSettings from "@/app/watch/[id]/[ep]/_components/settings/player-settings";
 import SettingsSkeleton from "@/app/watch/[id]/[ep]/_components/settings/settings-skeleton";
 import { Separator } from "@/components/ui/separator";
-import { useWatchDataStore } from "@/lib/stores/watch-store";
+import { useEpisodeStore } from "@/lib/stores/episode-store";
+import { useSettingsStore } from "@/lib/stores/settings-store";
+import { useWatchStore } from "@/lib/stores/watch-store";
 
 export default function ControlsSection() {
-  const isLoading = useWatchDataStore((state) => state.isLoading)
-  const settings = useWatchDataStore((state) => state.settings)
-  const episodeData = useWatchDataStore((state) => state.episodeData)
-  const episodesLength = useWatchDataStore((state) => state.episodesLength)
+  const isLoading = useWatchStore((state) => state.isLoading)
+  
+  const subtitleSettings = useSettingsStore((settings) => settings.subtitle)
+  const playerSettings = useSettingsStore((settings) => settings.player)
+  const generalSettings = useSettingsStore((settings) => settings.general)
+  
+  const episodeData = useEpisodeStore((state) => state.episodeData)
+  const episodesLength = useEpisodeStore((state) => state.episodesLength)
 
   if (isLoading) {
     return (
@@ -25,9 +31,9 @@ export default function ControlsSection() {
       <div className="flex flex-col gap-10">
           <div className="flex flex-col gap-5">
               <PlayerSettings
-                subtitelSettings={settings.subtitleSettings}
-                playerSettings={settings.playerSettings} 
-                generalSettings={settings.generalSettings}
+                subtitelSettings={subtitleSettings}
+                playerSettings={playerSettings} 
+                generalSettings={generalSettings}
                 animeMetadata={episodeData.metadata}
               />
               <Separator />
