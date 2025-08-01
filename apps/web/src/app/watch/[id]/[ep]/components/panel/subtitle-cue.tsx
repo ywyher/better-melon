@@ -78,7 +78,7 @@ const SubtitleCue = React.memo(({
                   onTokenClick={() => handleTokenClick(japaneseToken || token, cue.from, cue.to)}
                 />
             )
-          }) : null}        
+          }) : null}
         </div>
       </div>
     </div>

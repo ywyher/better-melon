@@ -6,5 +6,7 @@ test("hianime anime episode servers", async () => {
   const episodeId = 213
   const servers = await hianime.getEpisodeServers({ episodeId })
 
+  console.log(servers)
+
   expect(servers).not.toBeEmpty()
 });

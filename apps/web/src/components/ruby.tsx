@@ -24,6 +24,7 @@ interface RubyProps {
   
   className?: string;
   styles?: React.CSSProperties;
+  autoMargin?: boolean
 }
 
 const DEFAULT_STYLES = {
@@ -67,6 +68,8 @@ const Ruby = memo<RubyProps>(({
   onMouseLeave,
   className,
   styles,
+
+  autoMargin = true,
 }) => {
   const isFullScreen = useMediaState('fullscreen')
 
@@ -110,10 +113,12 @@ const Ruby = memo<RubyProps>(({
       ...styles,
     };
     
-  const dynamicMarginEm = Math.max(
-    (isFullScreen ? 2 : 1),
-    Number(computedFuriganaStyle.text.margin) / Number(computedFuriganaStyle.text.fontSize));
-  computedFuriganaStyle.text.margin = `0 0 ${dynamicMarginEm}rem 0`;
+    if(autoMargin) {
+      const dynamicMarginEm = Math.max(
+        (isFullScreen ? 2 : 1),
+        Number(computedFuriganaStyle.text.margin) / Number(computedFuriganaStyle.text.fontSize));
+      computedFuriganaStyle.text.margin = `0 0 ${dynamicMarginEm}rem 0`;
+    }
 
     return {
       kanji: computedKanjiStyles,

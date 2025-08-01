@@ -362,10 +362,15 @@ export function getSubtitleFormat(
   return ext as SubtitleFormat;
 }
 
+function isNumericForm(text: string) {
+  // Match Arabic numerals, full-width numerals, and common numeric symbols
+  return /^[0-9０-９.,，．]+$/.test(text)
+}
+
 export function isTokenExcluded(token: SubtitleToken) {
   return excludedPos.includes(token.pos)
-  || excludedPos.includes(token.pos_detail_1) // for numbers
   || excludedPos.includes(token.surface_form) // for ♬～
+  || (token.pos_detail_1 === '数' && isNumericForm(token.surface_form)) // only numeric-form numbers
 }
 
 export const getTranscriptionsLookupKey = (from: number, to: number, delay: number = 0) => {

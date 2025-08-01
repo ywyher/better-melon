@@ -28,6 +28,19 @@ export default function DefinitionCardHeader({ token, entries }: DefinitionCardH
               key={pairIdx}
               kanji={kanji}
               furigana={furigana}
+
+              kanjiStyles={{
+                text: {
+                  fontSize: 20
+                }
+              }}
+              furiganaStyles={{
+                text: {
+                  fontSize: 15,
+                  margin: "0 0 10px 0"
+                }
+              }}
+              autoMargin={false}
             />
           )
         })}

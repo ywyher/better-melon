@@ -36,7 +36,6 @@ export const useSubtitleCue = () => {
 
   const handleTokenClick = useCallback((token: SubtitleToken, from: number, to: number) => {
     if (!token || !transcriptionsLookup || isTokenExcluded(token)) return;
-    console.log(token)
     
     if (activeToken && activeToken.id === token.id) {
       // If clicking on the same token, clear it and the sentence
