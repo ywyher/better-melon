@@ -1,7 +1,7 @@
 "use client"
 
-import EditProfile, { EditProfileSkeleton } from "@/app/profile/_components/edit-profile";
-import ProfileCard, { ProfileCardSkeleton } from "@/app/profile/_components/profile-card";
+import EditProfile, { EditProfileSkeleton } from "@/app/user/[username]/components/edit-profile";
+import ProfileCard, { ProfileCardSkeleton } from "@/app/user/[username]/components/profile-card";
 import { User } from "@/lib/db/schema";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { UpdatePassword } from "@/components/update-password";
@@ -13,7 +13,7 @@ export default function Profile() {
     const { data, isLoading } = useSession()
 
     if(isLoading) {
-        return <ProfileSkeleton />
+      return <ProfileSkeleton />
     }
 
     return (

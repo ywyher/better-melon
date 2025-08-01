@@ -7,13 +7,14 @@ import { getFileUrl } from "@/lib/utils/utils";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { CalendarIcon } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import ProfilePfp from "@/app/user/[username]/components/profile-pfp";
 
 type ProfileCardProps = { user: User }
 
 export default function ProfileCard({ user }: ProfileCardProps) {
   return (
     <Card className="w-full">
-      <CardHeader className="pb-2">
+      {/* <CardHeader className="pb-2">
         <div className="flex items-center gap-4">
           <div className="relative w-16 h-16 md:w-20 md:h-20">
             <Image
@@ -31,8 +32,9 @@ export default function ProfileCard({ user }: ProfileCardProps) {
             </div>
           </div>
         </div>
-      </CardHeader>
+      </CardHeader> */}
       <CardContent>
+        <ProfilePfp user={user} />
         {/* Additional user info could go here */}
       </CardContent>
     </Card>

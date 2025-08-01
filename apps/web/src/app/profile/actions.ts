@@ -1,6 +1,6 @@
 'use server'
 
-import { editProfileSchema } from "@/app/profile/_components/edit-profile";
+import { editProfileSchema } from "@/app/user/[username]/components/edit-profile";
 import db from "@/lib/db";
 import { User, user } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";

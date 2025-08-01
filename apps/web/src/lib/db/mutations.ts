@@ -45,6 +45,25 @@ export async function ensureAuthenticated() {
     }
 }
 
+export async function updateUser({ data, userId }: { data: User, userId: User['id'] }) { 
+    const [updatedUser] = await db.update(user).set({
+        ...data,
+        updatedAt: new Date()
+    }).where(eq(user.id, userId)).returning({ id: user.id })
+
+    if(!updatedUser.id) {
+        return {
+            message: null,
+            error: "Failed to edit user data..."
+        }
+    }
+
+    return {
+        message: "User data updated...",
+        error: null
+    }
+}
+
 export async function deleteUser({ userId }: { userId: User['id'] }) {
     const result = await db.delete(user).where(eq(user.id, userId))
 

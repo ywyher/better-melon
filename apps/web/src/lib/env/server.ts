@@ -14,6 +14,9 @@ export const env = createEnv({
     ANILIST_ID: z.string().min(1),
     ANILIST_SECRET: z.string().min(1),
     ANILIST_REDIRECT_URL: z.string().url(),
+
+    CATBOX_USER_HASH: z.string().min(1),
+    CATBOX_URL: z.string().url(),
     
     RESEND_FROM_EMAIL: z.string().email().optional(),
     RESEND_API_KEY: z.string().optional(),
