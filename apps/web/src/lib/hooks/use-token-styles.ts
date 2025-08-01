@@ -1,32 +1,50 @@
-import { useCallback } from 'react';
+// useTokenStyles.ts - Individual functions + combined function
+import { CSSProperties, useCallback } from 'react';
 import { excludedPos, learningStatusesStyles } from '@/lib/constants/subtitle';
 import { SubtitleToken } from '@/types/subtitle';
-import { StyleTranscription } from '@/app/watch/[id]/[ep]/types';
+import { StyleSet, StyleTranscription } from '@/app/watch/[id]/[ep]/types';
 import { pitchAccentsStyles } from '@/lib/constants/pitch';
 import { PitchAccents } from '@/types/pitch';
 import { useSettingsStore } from '@/lib/stores/settings-store';
-import { wordSettings } from '@/lib/db/schema';
 import { useLearningStore } from '@/lib/stores/learning-store';
-import { useTranscriptionStore } from '@/lib/stores/transcription-store';
+import { useSubtitleStylesStore } from '@/lib/stores/subtitle-styles-store';
+
+interface TokenStylesParams {
+  token: SubtitleToken;
+  isActive: boolean;
+  accent: PitchAccents | null;
+  transcription: StyleTranscription;
+}
+
+export interface TokenStyles {
+  token: CSSProperties;
+  container: CSSProperties;
+  learningStatus: CSSProperties;
+  furigana?: {
+    token: CSSProperties;
+    container: CSSProperties
+  };
+}
 
 export const useTokenStyles = () => {
   const wordsSettings = useSettingsStore((settings) => settings.word);
   const wordsLookup = useLearningStore((state) => state.wordsLookup);
-  const transcriptionsStyles = useTranscriptionStore((state) => state.transcriptionsStyles);
-  
+  const computedStyles = useSubtitleStylesStore((state) => state.computedStyles);
+
   const getTokenStyles = useCallback((
     { accent, isActive, transcription }: 
     { 
       isActive: boolean,
       accent: PitchAccents | null,
       transcription: StyleTranscription 
-    }) => {
-    const styles = transcriptionsStyles[transcription] 
-      || transcriptionsStyles['all']
+    }): CSSProperties => {
+    const styles = computedStyles?.[transcription] || computedStyles?.['all'];
+
+    if (!styles) return {};
       
     const baseStyle = isActive 
-      ? styles.tokenStyles.active 
-      : styles.tokenStyles.default;
+      ? styles.token.active 
+      : styles.token.default;
 
     const pitchStyle = wordsSettings.pitchColoring 
       && !isActive 
@@ -35,40 +53,77 @@ export const useTokenStyles = () => {
         : undefined;
     
     return pitchStyle ? { ...baseStyle, ...pitchStyle } : baseStyle;
-  }, [wordsSettings]);
+  }, [computedStyles, wordsSettings]);
 
-  const getContainerStyles = useCallback(({ isActive, transcription }: { isActive: boolean, transcription: StyleTranscription }) => {
-    const styles = transcriptionsStyles[transcription] 
-      || transcriptionsStyles['all']
-    return isActive 
-      ? styles.containerStyle.active 
-      : styles.containerStyle.default;
-  }, []);
+  const getContainerStyles = useCallback((
+    { isActive, transcription }: 
+    { 
+      isActive: boolean, 
+      transcription: StyleTranscription 
+    }): CSSProperties => {
+    const styles = computedStyles?.[transcription] || computedStyles?.['all'];
+    
+    if (!styles) return { display: '' };
+    
+    const containerStyle = isActive 
+      ? styles.container.active 
+      : styles.container.default;
+    
+    return isActive ? containerStyle : { display: '' };
+  }, [computedStyles]);
 
-  const getLearningStatusStyles = useCallback((token: SubtitleToken) => {
+  const getLearningStatusStyles = useCallback((token: SubtitleToken): CSSProperties => {
     const word = wordsLookup.get(token.original_form);
     const status = word?.status;
+    const isExcludedPos = excludedPos.some(p => p === token.pos);
     
-    if (wordSettings.learningStatus && !excludedPos.some(p => p === token.pos) && status) {
+    if (wordsSettings.learningStatus && !isExcludedPos && status) {
       return learningStatusesStyles[status];
     }
     
-    if (!excludedPos.some(p => p === token.pos)) {
+    if (!isExcludedPos) {
       return learningStatusesStyles['unknown'];
     }
     
     return {};
-  }, [wordSettings, wordsLookup]);
+  }, [wordsSettings, wordsLookup]);
 
-  const getPitchStyles = useCallback((isActive: boolean, accent: PitchAccents | null) => {
-    if(!accent) return;
-    return isActive ? undefined : pitchAccentsStyles[accent]
-  }, [])
+  const getPitchStyles = useCallback((
+    isActive: boolean, 
+    accent: PitchAccents | null
+  ): CSSProperties | undefined => {
+    if (!accent || isActive) return undefined;
+    return pitchAccentsStyles[accent];
+  }, []);
+
+  const getStyles = useCallback((params: TokenStylesParams): TokenStyles => {
+    const { token, isActive, accent, transcription } = params;
+    
+    const tokenStyle = getTokenStyles({ isActive, accent, transcription });
+    const containerStyle = getContainerStyles({ isActive, transcription });
+    const learningStatusStyle = getLearningStatusStyles(token);
+    
+    // Ruby text styles (for Japanese tokens)
+    const furiganaStyle = transcription === 'japanese' 
+      ? {
+        token: getTokenStyles({ isActive, accent, transcription: 'furigana' }),
+        container: getContainerStyles({ isActive, transcription: 'furigana' })
+      }
+      : undefined;
+
+    return {
+      token: tokenStyle,
+      container: containerStyle,
+      learningStatus: learningStatusStyle,
+      furigana: furiganaStyle,
+    };
+  }, [getTokenStyles, getContainerStyles, getLearningStatusStyles]);
 
   return {
     getTokenStyles,
     getContainerStyles,
     getLearningStatusStyles,
     getPitchStyles,
+    getStyles,
   };
 };

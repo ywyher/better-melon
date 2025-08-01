@@ -77,12 +77,12 @@ export const defaultSubtitleStyles: Record<StyleTranscription, {
         default: {
             ...DEFAULT_SETTINGS.default,
             fontSize: 25,
-            margin: 10
+            margin: 15
         },
         active: {
             ...DEFAULT_SETTINGS.active,
             fontSize: 25,
-            margin: 10
+            margin: 15
         },
     }
 };

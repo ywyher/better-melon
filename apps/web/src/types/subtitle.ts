@@ -1,19 +1,19 @@
 import { GeneralSettings, SubtitleStyles } from "@/lib/db/schema";
 
 export type Ruby = {
-  baseText: string;
-  rubyText: string;
+  kanji: string;
+  furigana: string;
 }
 
 export type SubtitleEntry = {
   id: number;
   name: string;
   flags: {
-      anime: boolean;
-      unverified: boolean;
-      external: boolean;
-      movie: boolean;
-      adult: boolean;
+    anime: boolean;
+    unverified: boolean;
+    external: boolean;
+    movie: boolean;
+    adult: boolean;
   };
   last_modified: string | Date;
   anilist_id: number;

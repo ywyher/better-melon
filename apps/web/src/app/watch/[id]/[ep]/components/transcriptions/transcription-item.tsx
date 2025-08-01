@@ -1,15 +1,15 @@
 "use client"
 
-import React, { Fragment, useMemo, useCallback, useEffect } from 'react';
+import React, { Fragment, useMemo, useCallback } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { SubtitleToken, SubtitleTranscription } from '@/types/subtitle';
 import { cn } from '@/lib/utils/utils';
-import { Subtitle, TranscriptionStyleSet } from '@/app/watch/[id]/[ep]/types';
+import { Subtitle } from '@/app/watch/[id]/[ep]/types';
 import { GripVertical } from 'lucide-react';
 import { useTranscriptionItem } from '@/lib/hooks/use-transcription-item';
 import TokenRenderer from '@/components/token/token-renderer';
-import { useTranscriptionStore } from '@/lib/stores/transcription-store';
+import { useSubtitleStylesStore } from '@/lib/stores/subtitle-styles-store';
 
 type TranscriptionItemProps = {
   transcription: SubtitleTranscription;
@@ -49,7 +49,7 @@ export const TranscriptionItem = React.memo<TranscriptionItemProps>(function Tra
     isTokenActive,
   } = useTranscriptionItem(transcription);
 
-  const transcriptionsStyles = useTranscriptionStore((state) => state.transcriptionsStyles)
+  const computedStyles = useSubtitleStylesStore((state) => state.computedStyles)
 
   const memoizedData = useMemo(() => {
     const activeCues = activeSubtitles?.[transcription] || [];
@@ -60,7 +60,7 @@ export const TranscriptionItem = React.memo<TranscriptionItemProps>(function Tra
     };
 
     const containerStyles = {
-      ...(transcriptionsStyles[transcription]?.containerStyle.default || transcriptionsStyles["all"].containerStyle.default),
+      ...(computedStyles?.[transcription]?.container.default || computedStyles?.["all"]?.container.default),
       ...sortableStyles,
     };
 
@@ -74,7 +74,7 @@ export const TranscriptionItem = React.memo<TranscriptionItemProps>(function Tra
       containerStyles,
       containerClassName,
     };
-  }, [activeSubtitles, transcription, transform, transition, transcriptionsStyles]);
+  }, [activeSubtitles, transcription, transform, transition, computedStyles]);
 
   const { activeCues, containerStyles, containerClassName } = memoizedData;
 
@@ -104,7 +104,9 @@ export const TranscriptionItem = React.memo<TranscriptionItemProps>(function Tra
   return (
     <div
       ref={setNodeRef}
-      style={containerStyles}
+      style={{
+        ...containerStyles,
+      }}
       className={containerClassName}
     >
       <div

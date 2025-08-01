@@ -1,21 +1,21 @@
 'use client';
 
+import PlayerSection from '@/app/watch/[id]/[ep]/components/sections/player-section';
+import MissingSubtitlesDialog from '@/app/watch/[id]/[ep]/components/subtitles/missing-subtitles-dialog';
+import ControlsSection from '@/app/watch/[id]/[ep]/components/sections/controls-section';
+import PanelSection from '@/app/watch/[id]/[ep]/components/sections/panel-section';
 import { useParams } from 'next/navigation';
 import { Indicator } from '@/components/indicator';
 import { usePlayerStore } from '@/lib/stores/player-store';
 import { useIsMedium } from '@/lib/hooks/use-media-query';
 import { usePrefetchEpisode } from '@/lib/hooks/use-prefetch-episode';
 import { useLayoutEffect, useMemo } from 'react';
-import PlayerSection from '@/app/watch/[id]/[ep]/components/sections/player-section';
-import ControlsSection from '@/app/watch/[id]/[ep]/components/sections/controls-section';
 import { useDefinitionStore } from '@/lib/stores/definition-store';
 import { SubtitlesNotAvailableError } from '@/lib/errors/player';
-import MissingSubtitlesDialog from '@/app/watch/[id]/[ep]/components/subtitles/missing-subtitles-dialog';
 import { useSubtitleStore } from '@/lib/stores/subtitle-store';
 import { useUIStateStore } from '@/lib/stores/ui-state-store';
 import { useWatchData } from '@/lib/hooks/use-watch-data';
 import { defaultSubtitleSettings } from '@/app/settings/subtitle/_subtitle-settings/constants';
-import PanelSection from '@/app/watch/[id]/[ep]/components/sections/panel-section';
 
 export default function WatchPage() {
   const params = useParams();

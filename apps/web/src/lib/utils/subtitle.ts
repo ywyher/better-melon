@@ -463,10 +463,10 @@ export const parseRuby = (html: string, includeNonRuby: boolean = true) => {
   const rubyElements = doc.querySelectorAll('ruby');
   
   if (rubyElements.length === 0) {
-    return [{ baseText: html, rubyText: "" }];
+    return [{ kanji: html, furigana: "" }];
   }
   
-  const rubyPairs: { baseText: string; rubyText: string }[] = [];
+  const rubyPairs: { kanji: string; furigana: string }[] = [];
   
   if (includeNonRuby) {
     const bodyElement = doc.body || doc.documentElement;
@@ -477,13 +477,13 @@ export const parseRuby = (html: string, includeNonRuby: boolean = true) => {
         // Non-ruby text node
         const text = node.textContent?.trim();
         if (text) {
-          rubyPairs.push({ baseText: text, rubyText: "" });
+          rubyPairs.push({ kanji: text, furigana: "" });
         }
       } else if (node.nodeType === Node.ELEMENT_NODE && node.nodeName === 'RUBY') {
         const rubyElement = node as Element;
         
         // everything except rt and rp elements
-        const baseText = Array.from(rubyElement.childNodes)
+        const kanji = Array.from(rubyElement.childNodes)
           .filter(childNode => childNode.nodeType === Node.TEXT_NODE || 
                              (childNode.nodeType === Node.ELEMENT_NODE && 
                               childNode.nodeName !== 'RT' && childNode.nodeName !== 'RP'))
@@ -492,15 +492,15 @@ export const parseRuby = (html: string, includeNonRuby: boolean = true) => {
         
         // rt elements
         const rtElement = rubyElement.querySelector('rt');
-        const rubyText = rtElement?.textContent ?? "";
+        const furigana = rtElement?.textContent ?? "";
         
-        rubyPairs.push({ baseText, rubyText });
+        rubyPairs.push({ kanji, furigana });
       }
     });
   } else {
     rubyElements.forEach(rubyElement => {
       // everything except rt elements
-      const baseText = Array.from(rubyElement.childNodes)
+      const kanji = Array.from(rubyElement.childNodes)
         .filter(node => node.nodeType === Node.TEXT_NODE || 
                        (node.nodeType === Node.ELEMENT_NODE && node.nodeName !== 'RT' && node.nodeName !== 'RP'))
         .map(node => node.textContent)
@@ -508,9 +508,9 @@ export const parseRuby = (html: string, includeNonRuby: boolean = true) => {
       
       // rt elements
       const rtElement = rubyElement.querySelector('rt');
-      const rubyText = rtElement?.textContent ?? "";
+      const furigana = rtElement?.textContent ?? "";
       
-      rubyPairs.push({ baseText, rubyText });
+      rubyPairs.push({ kanji, furigana });
     });
   }
   

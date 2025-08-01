@@ -20,8 +20,7 @@ export function usePrefetchSubtitleStyles({
   isLastEpisode,
   networkCondition
 }: PrefetchSubtitleStylesProps) {
-  const handleSubtitleStylesInStore = useSubtitleStylesStore((state) => state.handleStyles);
-  const getStylesFromStore = useSubtitleStylesStore((state) => state.getStyles);
+  const handleStyles = useSubtitleStylesStore((state) => state.handleStyles);
   const checkedTranscriptions = useRef<Set<SubtitleTranscription>>(new Set());
 
   const transcriptionsToFetch = useMemo(() => {
@@ -56,9 +55,8 @@ export function usePrefetchSubtitleStyles({
     isError: isStylesQueryError
   } = useQuery({
     ...subtitleQueries.styles({
-      handleSubtitleStylesInStore,
+      handleStyles,
       checkedTranscriptions,
-      getStylesFromStore,
       transcriptionsToFetch,
     }),
     enabled: queryEnabled,

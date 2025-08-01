@@ -1,3 +1,4 @@
+import SettingsDialog from "@/app/watch/[id]/[ep]/components/settings/settings-dialog";
 import { Button } from "@/components/ui/button";
 import { useSubtitleStyles } from "@/lib/hooks/use-subtitle-styles";
 import { useTranscriptionStore } from "@/lib/stores/transcription-store";
@@ -15,15 +16,23 @@ export default function StylesPlayground() {
     }
   }, [activeTranscriptions]);
 
-  const { styles, isLoading, refetch } = useSubtitleStyles()
+  const { rawStyles, computedStyles, isLoading, refetch } = useSubtitleStyles()
+
+  useEffect(() => {
+    console.log(`styles`, {
+      rawStyles,
+      computedStyles,
+    })
+  }, [computedStyles, rawStyles])
 
   return (
-    <div className="bg-white">
+    <div className="flex flex-row gap-5">
       <Button
         onClick={() => refetch()}
       >
         Refetch
       </Button>
+      <SettingsDialog />
     </div>
   )
 }

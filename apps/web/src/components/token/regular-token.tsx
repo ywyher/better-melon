@@ -1,12 +1,11 @@
-import React, { memo, useMemo } from 'react';
+import React, { memo } from 'react';
 import { SubtitleToken, SubtitleTranscription } from '@/types/subtitle';
-import { useTokenStyles } from '@/lib/hooks/use-token-styles';
+import { TokenStyles } from '@/lib/hooks/use-token-styles';
 
 interface RegularTokenProps {
   token: SubtitleToken;
-  isActive: boolean;
-  accent: any;
-  transcription: SubtitleTranscription;
+  styles: TokenStyles
+  transcription: SubtitleTranscription
   onTokenClick: () => void;
   onTokenMouseEnter: () => void;
   onTokenMouseLeave: () => void;
@@ -14,32 +13,21 @@ interface RegularTokenProps {
 
 export const RegularToken = memo<RegularTokenProps>(({
   token,
-  isActive,
-  accent,
+  styles,
   transcription,
   onTokenClick,
   onTokenMouseEnter,
   onTokenMouseLeave,
 }) => {
-  const { getTokenStyles, getContainerStyles } = useTokenStyles();
-  
-  const tokenStyle = useMemo(() => getTokenStyles({
-    isActive, accent, transcription
-  }), [getTokenStyles, isActive, accent]);
-
-  const containerStyle = useMemo(() => getContainerStyles({
-    isActive, transcription 
-  }), [getContainerStyles, isActive]);
-
-  const baseBackgroundStyle = useMemo(() => 
-    isActive ? containerStyle : { display: 'flex' }, 
-    [isActive, containerStyle]
-  );
-
   return (
-    <div style={baseBackgroundStyle}>
+    <div style={{
+      ...styles.container,
+    }}>
       <span
-        style={tokenStyle}
+        style={{
+          ...styles.token,
+          ...(transcription != 'english' ? styles.learningStatus : undefined)
+        }}
         onClick={onTokenClick}
         onMouseEnter={onTokenMouseEnter}
         onMouseLeave={onTokenMouseLeave}

@@ -2,41 +2,61 @@ import { defaultSubtitleStyles } from '@/components/subtitle/styles/constants';
 import { SubtitleStyles } from '@/lib/db/schema';
 import { generateId } from 'better-auth';
 import { create } from 'zustand';
+import { getContainerStyles, getTokenStyles } from '@/lib/utils/styles';
+import { StyleSet, StyleTranscription, TranscriptionStylesSet } from '@/app/watch/[id]/[ep]/types';
 
 export type SubtitleStylesStore = {
-  // Now stores { default: SubtitleStyles, active: SubtitleStyles } for each transcription
-  styles: Partial<Record<SubtitleStyles['transcription'], { default?: SubtitleStyles, active?: SubtitleStyles }>> | null;
+  // Raw styles from database/defaults
+  rawStyles: Partial<Record<StyleTranscription, Partial<StyleSet<SubtitleStyles>>>> | null;
+  
+  // Computed CSS styles - automatically managed
+  computedStyles: Partial<Record<StyleTranscription, TranscriptionStylesSet>> | null;
+  
+  // Current scaling factor for recomputation
+  shouldScaleFontDown: boolean;
   
   handleStyles: (
-    transcription: SubtitleStyles['transcription'],
+    transcription: StyleTranscription,
     updatedFields: Partial<SubtitleStyles>,
     state: SubtitleStyles['state']
   ) => void;
   
   ensureStylesExists: (
-    transcription: SubtitleStyles['transcription'],
+    transcription: StyleTranscription,
     state: SubtitleStyles['state']
   ) => SubtitleStyles;
   
-  getStyles: (
-    transcription: SubtitleStyles['transcription'],
+  getRawStyles: (
+    transcription: StyleTranscription,
     state: SubtitleStyles['state']
   ) => SubtitleStyles;
+  
+  getComputedStyles: (
+    transcription: StyleTranscription
+  ) => TranscriptionStylesSet | null;
+  
+  // Update scaling factor and recompute all styles
+  updateScaling: (shouldScaleFontDown: boolean) => void;
   
   deleteStyles: (
-    transcription: SubtitleStyles['transcription'],
-    state?: SubtitleStyles['state'] // Optional: delete specific state or entire transcription
+    transcription: StyleTranscription,
+    state?: SubtitleStyles['state']
   ) => void;
+  
+  // Internal helper to recompute styles for a transcription
+  _recomputeStyles: (transcription: StyleTranscription) => void;
 }
 
 export const useSubtitleStylesStore = create<SubtitleStylesStore>()((set, get) => ({
-  styles: null,
+  rawStyles: null,
+  computedStyles: null,
+  shouldScaleFontDown: false,
   
-  ensureStylesExists: (transcription: SubtitleStyles['transcription'], state: SubtitleStyles['state']) => {
+  ensureStylesExists: (transcription: StyleTranscription, state: SubtitleStyles['state']) => {
     const internalState = get();
 
-    if (internalState.styles?.[transcription]?.[state]) {
-      return internalState.styles[transcription][state] as SubtitleStyles;
+    if (internalState.rawStyles?.[transcription]?.[state]) {
+      return internalState.rawStyles[transcription][state] as SubtitleStyles;
     }
     
     const defaultStyle = state === 'default' ? defaultSubtitleStyles[transcription].default : defaultSubtitleStyles[transcription].active;
@@ -47,35 +67,40 @@ export const useSubtitleStylesStore = create<SubtitleStylesStore>()((set, get) =
     };
     
     set((internalState) => ({
-      styles: {
-        ...internalState.styles,
+      ...internalState,
+      rawStyles: {
+        ...internalState.rawStyles,
         [transcription]: {
-          ...internalState.styles?.[transcription],
+          ...internalState.rawStyles?.[transcription],
           [state]: styleWithEdits,
         }
       }
     }));
     
+    // Recompute after ensuring styles exist
+    get()._recomputeStyles(transcription);
+    
     return styleWithEdits;
   },
 
   handleStyles: (
-    transcription: SubtitleStyles['transcription'],
+    transcription: StyleTranscription,
     updatedFields: Partial<SubtitleStyles>,
     state: SubtitleStyles['state']
   ) => {
     get().ensureStylesExists(transcription, state);
     
     set((internalState) => {
-      if (!internalState.styles) return { styles: null };
+      if (!internalState.rawStyles) return internalState;
       
-      const currentStateStyle = internalState.styles[transcription]?.[state];
+      const currentStateStyle = internalState.rawStyles[transcription]?.[state];
       
       return {
-        styles: {
-          ...internalState.styles,
+        ...internalState,
+        rawStyles: {
+          ...internalState.rawStyles,
           [transcription]: {
-            ...internalState.styles[transcription],
+            ...internalState.rawStyles[transcription],
             [state]: {
               ...currentStateStyle,
               ...updatedFields,
@@ -85,12 +110,15 @@ export const useSubtitleStylesStore = create<SubtitleStylesStore>()((set, get) =
         }
       };
     });
+    
+    // Recompute after updating raw styles
+    get()._recomputeStyles(transcription);
   },
   
-  getStyles: (transcription: SubtitleStyles['transcription'], state: SubtitleStyles['state']) => {
+  getRawStyles: (transcription: StyleTranscription, state: SubtitleStyles['state']) => {
     const internalState = get();
     
-    const existingStyle = internalState.styles?.[transcription]?.[state];
+    const existingStyle = internalState.rawStyles?.[transcription]?.[state];
     if (existingStyle) {
       return existingStyle;
     }
@@ -98,28 +126,96 @@ export const useSubtitleStylesStore = create<SubtitleStylesStore>()((set, get) =
     return state === 'default' ? defaultSubtitleStyles[transcription].default : defaultSubtitleStyles[transcription].active;
   },
   
-  deleteStyles: (transcription: SubtitleStyles['transcription'], state?: SubtitleStyles['state']) => {
+  getComputedStyles: (transcription: StyleTranscription) => {
+    const internalState = get();
+    return internalState.computedStyles?.[transcription] || null;
+  },
+  
+  updateScaling: (shouldScaleFontDown: boolean) => {
+    const currentState = get();
+    
+    set((state) => ({
+      ...state,
+      shouldScaleFontDown
+    }));
+    
+    // Recompute all existing computed styles
+    if (currentState.rawStyles) {
+      Object.keys(currentState.rawStyles).forEach(transcription => {
+        get()._recomputeStyles(transcription as StyleTranscription);
+      });
+    }
+  },
+  
+  deleteStyles: (transcription: StyleTranscription, state?: SubtitleStyles['state']) => {
     set((internalState) => {
-      if (!internalState.styles || !internalState.styles[transcription]) {
-        return { styles: internalState.styles };
+      if (!internalState.rawStyles || !internalState.rawStyles[transcription]) {
+        return internalState;
       }
       
-      const newStylesMap = { ...internalState.styles };
+      const newRawStylesMap = { ...internalState.rawStyles };
+      const newComputedStyles = { ...internalState.computedStyles };
       
       if (state) {
-        const transcriptionStyles = { ...newStylesMap[transcription] };
+        const transcriptionStyles = { ...newRawStylesMap[transcription] };
         delete transcriptionStyles[state];
         
         if (Object.keys(transcriptionStyles).length === 0) {
-          delete newStylesMap[transcription];
+          delete newRawStylesMap[transcription];
+          if (newComputedStyles) {
+            delete newComputedStyles[transcription];
+          }
         } else {
-          newStylesMap[transcription] = transcriptionStyles;
+          newRawStylesMap[transcription] = transcriptionStyles;
+          // Recompute since we still have some styles
+          setTimeout(() => get()._recomputeStyles(transcription), 0);
         }
       } else {
-        delete newStylesMap[transcription];
+        delete newRawStylesMap[transcription];
+        if (newComputedStyles) {
+          delete newComputedStyles[transcription];
+        }
       }
       
-      return { styles: newStylesMap };
+      return { 
+        ...internalState,
+        rawStyles: newRawStylesMap,
+        computedStyles: newComputedStyles
+      };
     });
+  },
+  
+  _recomputeStyles: (transcription: StyleTranscription) => {
+    const currentState = get();
+    
+    const rawStyles = {
+      default: currentState.rawStyles?.[transcription]?.default || defaultSubtitleStyles[transcription].default,
+      active: currentState.rawStyles?.[transcription]?.active || defaultSubtitleStyles[transcription].active,
+    };
+
+    const tokenStyles = getTokenStyles({ 
+      shouldScaleFontDown: currentState.shouldScaleFontDown, 
+      styles: {
+        default: rawStyles.default,
+        active: rawStyles.active
+      }, 
+      transcription
+    });
+    
+    const containerStyles = getContainerStyles({
+      default: rawStyles.default,
+      active: rawStyles.active
+    });
+    
+    set((state) => ({
+      ...state,
+      computedStyles: {
+        ...state.computedStyles,
+        [transcription]: {
+          token: tokenStyles,
+          container: containerStyles,
+        }
+      }
+    }));
   },
 }));

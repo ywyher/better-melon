@@ -36,6 +36,7 @@ export default function SettingsToggles() {
     invalidateQueries: [
       settingsQueries.player._def,
       settingsQueries.subtitle._def,
+      settingsQueries.general._def,
       settingsQueries.forEpisode._def,
     ],
   });

@@ -24,17 +24,17 @@ export type SubtitleQuery = UseQueryResult<{
 
 export type StyleTranscription = SubtitleTranscription | 'furigana' | "all"
 
-export type StyleSet = {
-  default: CSSProperties;
-  active: CSSProperties;
+export type StyleSet<T> = {
+  default: T;
+  active: T;
 };
 
-export type TranscriptionStyleSet = {
-  tokenStyles: StyleSet
-  containerStyle: StyleSet
+export type TranscriptionStylesSet = {
+  token: StyleSet<CSSProperties>
+  container: StyleSet<CSSProperties>
 };
 
-export type TranscriptionStyles = { all: TranscriptionStyleSet } & Partial<Record<StyleTranscription, TranscriptionStyleSet>>;
+export type TranscriptionStyles = { all: TranscriptionStylesSet } & Partial<Record<StyleTranscription, TranscriptionStylesSet>>;
 
 export type StyleQuery = UseQueryResult<
   Partial<Record<SubtitleTranscription | 'all', SubtitleStyles | null>>,

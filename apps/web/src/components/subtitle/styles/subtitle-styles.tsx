@@ -36,7 +36,7 @@ export default function SubtitleStyles({ syncSettings: propSyncStrategy, source 
   });
 
   const storeStyles = useSubtitleStylesStore((state) =>
-    source === 'store' ? state.getStyles(selectedTranscription, selectedState) : (selectedState == 'default' ? defaultSubtitleStyles[selectedTranscription].default : defaultSubtitleStyles[selectedTranscription].active)
+    source === 'store' ? state.getRawStyles(selectedTranscription, selectedState) : (selectedState == 'default' ? defaultSubtitleStyles[selectedTranscription].default : defaultSubtitleStyles[selectedTranscription].active)
   );
 
   const styles = useMemo(() => {

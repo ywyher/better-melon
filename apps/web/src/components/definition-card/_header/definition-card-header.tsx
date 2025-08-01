@@ -4,7 +4,7 @@ import DefinitionCardHeaderAnki from "@/components/definition-card/_header/compo
 import DefinitionCardHeaderClose from "@/components/definition-card/_header/components/close";
 import DefinitionCardHeaderExpand from "@/components/definition-card/_header/components/expand";
 import DefinitionCardHeaderWordStatus from "@/components/definition-card/_header/components/word-status";
-import { RubyText } from "@/components/ruby-text";
+import Ruby from "@/components/ruby";
 import { CardHeader, CardTitle } from "@/components/ui/card";
 import { parseRuby } from "@/lib/utils/subtitle";
 import { JMdictWord } from "@/types/jmdict";
@@ -22,12 +22,12 @@ export default function DefinitionCardHeader({ token, entries }: DefinitionCardH
     <CardHeader className="flex flex-row justify-between items-center p-0">
       <CardTitle>
         {pairs.map((pair, pairIdx) => {
-          const { baseText, rubyText } = pair
+          const { furigana, kanji } = pair
           return (
-            <RubyText
+            <Ruby
               key={pairIdx}
-              baseText={baseText}
-              rubyText={rubyText}
+              kanji={kanji}
+              furigana={furigana}
             />
           )
         })}

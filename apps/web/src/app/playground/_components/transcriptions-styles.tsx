@@ -8,9 +8,9 @@ import { useSubtitleTranscriptions } from "@/lib/hooks/use-subtitle-transcriptio
 import { useInitializeTokenizer } from "@/lib/hooks/use-initialize-tokenizer";
 import { hasChanged } from "@/lib/utils/utils";
 import { useSubtitleStyles } from "@/lib/hooks/use-subtitle-styles";
-import { usePitchAccentChunks } from "@/lib/hooks/use-pitch-accent-chunks";
 import { useTranscriptionStore } from "@/lib/stores/transcription-store";
 import { Button } from "@/components/ui/button";
+import SettingsDialog from "@/app/watch/[id]/[ep]/components/settings/settings-dialog";
 
 export default function TranscriptionsStylesPlayground() {
   const setActiveSubtitleFile = useSubtitleStore((state) => state.setActiveSubtitleFile);
@@ -37,30 +37,27 @@ export default function TranscriptionsStylesPlayground() {
     animeId: 9253,
     episodeNumber: 2
   })
-  const { styles, refetch: refetchStyles } = useSubtitleStyles() 
+  const { rawStyles, computedStyles, refetch: refetchStyles } = useSubtitleStyles() 
 
-  const setTranscriptionsStyles = useTranscriptionStore((state) => state.setTranscriptionsStyles)
   const setTranscriptions = useTranscriptionStore((state) => state.setTranscriptions)
   const store = useTranscriptionStore.getState(); // use this to read current store values (won't trigger re-renders)
 
-  useEffect(() => {
-    if (styles && hasChanged(styles, store.transcriptionsStyles)) {
-      setTranscriptionsStyles(styles);
-    }
-  }, [styles]);
   useEffect(() => {
     if (transcriptions && hasChanged(transcriptions, store.transcriptions)) {
       setTranscriptions(transcriptions);
     }
   }, [transcriptions]);
-  
+
   return (
     <div className="flex flex-row gap-10">
-      <Button
-        onClick={() => refetchStyles()}
-      >
-        Refetch Styles
-      </Button>
+      <div className="flex flex-row gap-5">
+        <Button
+          onClick={() => refetchStyles()}
+        >
+          Refetch Styles
+        </Button>
+        <SettingsDialog />
+      </div>
       <SubtitleTranscriptions />
     </div>
   );

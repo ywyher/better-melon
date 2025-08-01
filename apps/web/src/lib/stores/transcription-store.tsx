@@ -14,9 +14,6 @@ export type TranscriptionStore = {
   activeTranscriptions: SubtitleTranscription[];
   setActiveTranscriptions: (transcriptions: SubtitleTranscription[]) => void;
 
-  transcriptionsStyles: TranscriptionStyles;
-  setTranscriptionsStyles: (styles: TranscriptionStore['transcriptionsStyles']) => void;
-
   batchUpdate: (updates: Partial<Omit<TranscriptionStore, 'setTranscriptions' | 'setTranscriptionsLookup' | 'setTranscriptionsStyles' | 'reset' | 'batchUpdate'>>) => void;
   reset: () => void;
 };
@@ -31,44 +28,10 @@ export const useTranscriptionStore = create<TranscriptionStore>()((set) => ({
   activeTranscriptions: ['japanese'],
   setActiveTranscriptions: (activeTranscriptions) => set({ activeTranscriptions }),
   
-  transcriptionsStyles: {
-    all: {
-      tokenStyles: getTokenStyles({
-        shouldScaleFontDown: false,
-        styles: {
-          active: defaultSubtitleStyles['all'].active,
-          default: defaultSubtitleStyles['all'].default
-        },
-        transcription: 'all'
-      }),
-      containerStyle: getContainerStyles({
-        active: defaultSubtitleStyles['all'].active,
-        default: defaultSubtitleStyles['all'].default
-      })
-    }
-  },
-  setTranscriptionsStyles: (transcriptionsStyles) => set({ transcriptionsStyles }),
-
   batchUpdate: (updates) => set((state) => ({ ...state, ...updates })),
   reset: () => set({
     transcriptions: null,
     transcriptionsLookup: new Map(),
     activeTranscriptions: ['japanese'],
-    transcriptionsStyles: {
-      all: {
-        tokenStyles: getTokenStyles({
-          shouldScaleFontDown: false,
-          styles: {
-            active: defaultSubtitleStyles['all'].active,
-            default: defaultSubtitleStyles['all'].default
-          },
-          transcription: 'all'
-        }),
-        containerStyle: getContainerStyles({
-          active: defaultSubtitleStyles['all'].active,
-          default: defaultSubtitleStyles['all'].default
-        })
-      }
-    }
   }),
 }));

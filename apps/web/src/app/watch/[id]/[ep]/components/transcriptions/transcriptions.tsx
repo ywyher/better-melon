@@ -1,5 +1,6 @@
 'use client'
 
+import useAutoPause from "@/lib/hooks/use-auto-pause";
 import { TranscriptionItem } from "@/app/watch/[id]/[ep]/components/transcriptions/transcription-item";
 import { usePlayerStore } from "@/lib/stores/player-store";
 import { closestCenter, DndContext, KeyboardSensor, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
@@ -8,14 +9,12 @@ import { memo, useCallback, useMemo } from "react";
 import { useActiveSubtitles } from "@/lib/hooks/use-active-subtitles";
 import { useMediaState } from "@vidstack/react";
 import { useTranscriptionOrder } from "@/lib/hooks/use-transcriptions-order";
-import useAutoPause from "@/lib/hooks/use-auto-pause";
 import { useTranscriptionStore } from "@/lib/stores/transcription-store";
 import { useSettingsStore } from "@/lib/stores/settings-store";
 
 const SubtitleTranscriptions = memo(function SubtitleTranscriptions() {
   const player = usePlayerStore((state) => state.player);
 
-  const transcriptionsStyles = useTranscriptionStore((state) => state.transcriptionsStyles)
   const transcriptions = useTranscriptionStore((state) => state.transcriptions)
 
   const subtitleSettings = useSettingsStore((settings) => settings.subtitle)

@@ -1,83 +1,72 @@
 import React, { memo, useMemo } from 'react';
-import { Ruby, SubtitleToken } from '@/types/subtitle';
-import { RubyText } from '@/components/ruby-text';
+import { Ruby as TRuby, SubtitleToken } from '@/types/subtitle';
+import Ruby from '@/components/ruby';
 import { parseRuby } from '@/lib/utils/subtitle';
 import { useSettingsStore } from '@/lib/stores/settings-store';
-import { useTokenStyles } from '@/lib/hooks/use-token-styles';
+import { TokenStyles } from '@/lib/hooks/use-token-styles';
 
 interface JapaneseTokenProps {
   token: SubtitleToken;
-  isActive: boolean;
-  accent: any;
+  styles: TokenStyles;
   onTokenClick: () => void;
   onTokenMouseEnter: () => void;
   onTokenMouseLeave: () => void;
 }
 
-const rubyPairsCache = new Map();
+const rubyPairsCache = new Map<string, TRuby[]>();
 
-const getCachedRubyPairs = (surfaceForm: string): Ruby[] => {
+const getCachedRubyPairs = (surfaceForm: string): TRuby[] => {
   if (!rubyPairsCache.has(surfaceForm)) {
     rubyPairsCache.set(surfaceForm, parseRuby(surfaceForm, true));
   }
-  return rubyPairsCache.get(surfaceForm);
+  return rubyPairsCache.get(surfaceForm)!;
 };
 
 export const JapaneseToken = memo<JapaneseTokenProps>(({
   token,
-  isActive,
-  accent,
+  styles,
   onTokenClick,
   onTokenMouseEnter,
   onTokenMouseLeave,
 }) => {
   const showFurigana = useSettingsStore((settings) => settings.subtitle.showFurigana);
-  const { getTokenStyles, getContainerStyles, getLearningStatusStyles } = useTokenStyles();
-  
   const rubyPairs = useMemo(() => getCachedRubyPairs(token.surface_form), [token.surface_form]);
-  
-  const tokenStyle = useMemo(() => {
-    return getTokenStyles({ isActive, accent, transcription: 'japanese' })
-  },[getTokenStyles, isActive, accent]);
-
-  const containerStyle = useMemo(() => {
-    return getContainerStyles({ isActive, transcription: 'japanese' })
-  }, [getContainerStyles, isActive]);
-
-  const learningStatusStyle = useMemo(() => {
-    return getLearningStatusStyles(token)
-  }, [getLearningStatusStyles, token]);
-  
-  const baseBackgroundStyle = useMemo(() => 
-    isActive ? containerStyle : { display: 'flex' }, 
-    [isActive, containerStyle]
-  );
-
-  const rubyTextStyle = useMemo(() => getTokenStyles({
-    isActive,
-    accent,
-    transcription: 'furigana'
-  }), [getTokenStyles, isActive, accent])
 
   return (
     <div
       className='mr-2 cursor-pointer'
-      style={learningStatusStyle}
       onClick={onTokenClick}
       onMouseEnter={onTokenMouseEnter}
       onMouseLeave={onTokenMouseLeave}
     >
       {rubyPairs.map((pair, pairIdx) => {
-        const { baseText, rubyText } = pair;
+        const { kanji, furigana } = pair;
         return (
-          <RubyText
+          <Ruby
             key={`${token.id}-${pairIdx}`}
-            baseText={baseText}
-            rubyText={rubyText || ""}
+
+            kanji={kanji}
+            furigana={furigana || ""}
+            
             showFurigana={showFurigana}
-            baseTextStyle={tokenStyle}
-            rubyTextStyle={rubyTextStyle}
-            baseBackgroundStyle={baseBackgroundStyle}
+            
+            kanjiStyles={{
+              text: {
+                ...styles.token,
+                ...styles.learningStatus
+              },
+              container: styles.container
+            }}
+            furiganaStyles={{
+              text: {
+                ...styles.furigana?.token
+              },
+              container: {
+                ...styles.furigana?.container
+              },
+            }}
+
+            // wrapperStyles={styles.container}
           />
         );
       })}

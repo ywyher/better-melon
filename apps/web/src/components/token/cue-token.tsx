@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { SubtitleToken } from '@/types/subtitle';
 import { cn } from '@/lib/utils/utils';
 import { parseRuby } from '@/lib/utils/subtitle';
-import { RubyText } from '@/components/ruby-text';
+import Ruby from '@/components/ruby';
 import { useTokenStyles } from '@/lib/hooks/use-token-styles';
 import { PitchAccents } from '@/types/pitch';
 
@@ -49,15 +49,28 @@ export const CueToken = React.memo<SubtitleCueTokenProps>(({
     return (
       <div onClick={onTokenClick}>
         {rubyPairs.map((pair, pairIdx) => (
-          <RubyText
+          <Ruby
             key={pairIdx}
-            baseText={pair.baseText}
-            rubyText={pair.rubyText || ""}
+            kanji={pair.kanji}
+            furigana={pair.furigana || ""}
             showFurigana={showFurigana}
-            style={{
+
+            kanjiStyles={{
+              text: {
+                fontSize: 19
+              }
+            }}
+            furiganaStyles={{
+              text: {
+                fontSize: 17,
+                marginBottom: 15
+              }
+            }}
+            styles={{
               ...styles.pitch,
               ...styles.learning
             }}
+
             className={className}
           />
         ))}

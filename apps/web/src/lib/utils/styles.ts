@@ -61,6 +61,7 @@ export const getTokenStyles = ({ shouldScaleFontDown, styles, transcription }: {
       ? '-1px -1px 0px rgba(255, 255, 255, 0.5), 1px 1px 1px rgba(0, 0, 0, 0.8)'
       : 'none',
       
+    transition: 'all'
     // WebkitTextStroke: styles.active.textShadow === 'outline'
     //   ? (shouldScaleFontDown ? '.5px black' : '.3px black') 
     //   : 'none',
@@ -85,15 +86,14 @@ export const getContainerStyles = (styles: {
     borderRadius: styles.default.backgroundRadius 
       ? `${styles.default.backgroundRadius}px` 
       : '8px',
-    padding: '.5rem 1rem',
-    marginBottom: ".5rem",
+    padding: '1rem 1rem 0.5rem 1rem',
+    marginBottom: "1rem",
     flexWrap: 'wrap',
     justifyContent: 'center',
-    textAlign: 'center',
+    gap: 2
   }
 
   const activeStyles: CSSProperties = {
-    display: "flex",
     backgroundColor: `color-mix(in oklab, ${styles.active.backgroundColor} ${(((styles.active.backgroundOpacity || 0) * 100))}%, transparent)`,
     backdropFilter: styles.active.backgroundBlur 
       ? `blur(${styles.active.backgroundBlur * 4}px)` 
@@ -101,10 +101,9 @@ export const getContainerStyles = (styles: {
     borderRadius: styles.active.backgroundRadius 
       ? `${styles.active.backgroundRadius}px` 
       : '8px',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
     textAlign: 'center',
-    width: 'fit-content'
+    width: 'fit-content',
+    height: 'fit-content'
   }
 
   return {

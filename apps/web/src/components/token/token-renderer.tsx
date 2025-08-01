@@ -1,9 +1,11 @@
-import React, { memo, useCallback, useMemo } from 'react';
+import React, { memo, useCallback, useEffect, useMemo } from 'react';
 import { SubtitleToken, SubtitleCue, SubtitleTranscription } from '@/types/subtitle';
-import { TranscriptionStyleSet } from '@/app/watch/[id]/[ep]/types';
 import { JapaneseToken } from '@/components/token/japanese-token';
 import { RegularToken } from '@/components/token/regular-token';
 import { PitchAccents } from '@/types/pitch';
+import { useTokenStyles } from '@/lib/hooks/use-token-styles';
+import { useSubtitleStylesStore } from '@/lib/stores/subtitle-styles-store';
+import { computed } from 'better-auth/react';
 
 interface TokenRendererProps {
   cue: SubtitleCue;
@@ -28,10 +30,15 @@ const TokenRenderer = memo<TokenRendererProps>(({
   getTokenAccent,
   japaneseToken
 }) => {
-  const isActive = useMemo(() => {
-    return isTokenActive(cue.id, token.id);
-  }, [isTokenActive, cue.id, token.id]);
+  const { getStyles } = useTokenStyles();
+  
+  const isActive = useMemo(() => isTokenActive(cue.id, token.id), [isTokenActive, cue.id, token.id]);
   const accent = useMemo(() => getTokenAccent(token), [getTokenAccent, token]);
+
+  const styles = useMemo(() => 
+    getStyles({ token, isActive, accent, transcription }), 
+    [getStyles, token, isActive, accent, transcription]
+  );
 
   const handleClick = useCallback(() => {
     onTokenClick(cue.id, japaneseToken || token)
@@ -45,8 +52,7 @@ const TokenRenderer = memo<TokenRendererProps>(({
     return (
       <JapaneseToken
         token={token}
-        isActive={isActive}
-        accent={accent}
+        styles={styles}
         onTokenClick={handleClick}
         onTokenMouseEnter={handleMouseEnter}
         onTokenMouseLeave={onTokenMouseLeave}
@@ -57,8 +63,7 @@ const TokenRenderer = memo<TokenRendererProps>(({
   return (
     <RegularToken
       token={token}
-      isActive={isActive}
-      accent={accent}
+      styles={styles}
       transcription={transcription}
       onTokenClick={handleClick}
       onTokenMouseEnter={handleMouseEnter}
