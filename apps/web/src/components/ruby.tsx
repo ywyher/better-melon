@@ -1,4 +1,5 @@
 import { defaultSubtitleStyles } from '@/components/subtitle/styles/constants';
+import { usePlayerStore } from '@/lib/stores/player-store';
 import { cn } from '@/lib/utils/utils';
 import { useMediaState } from '@vidstack/react';
 import React, { memo, useEffect, useMemo } from 'react';
@@ -38,7 +39,7 @@ const DEFAULT_STYLES = {
   } as const,
   furigana: { 
     text: {
-      margin: `0 0 ${defaultSubtitleStyles.furigana.default.margin}px 0`,
+      margin: defaultSubtitleStyles.furigana.default.margin,
       fontSize: defaultSubtitleStyles.furigana.default.fontSize, 
     }, 
     container: {
@@ -113,16 +114,24 @@ const Ruby = memo<RubyProps>(({
       ...styles,
     };
     
+    let dynamicMargin = computedFuriganaStyle.text.margin;
     if(autoMargin) {
-      const dynamicMarginEm = Math.max(
-        (isFullScreen ? 2 : 1),
+      dynamicMargin = Math.max(
+        (isFullScreen ? 28 : 20),
         Number(computedFuriganaStyle.text.margin) / Number(computedFuriganaStyle.text.fontSize));
-      computedFuriganaStyle.text.margin = `0 0 ${dynamicMarginEm}rem 0`;
+        console.log(`dynamicMargin`, dynamicMargin)
+      computedFuriganaStyle.text.margin = dynamicMargin;
     }
 
     return {
       kanji: computedKanjiStyles,
-      furigana: computedFuriganaStyle,
+      furigana: {
+        ...computedFuriganaStyle,
+        text: {
+          ...computedFuriganaStyle.text,
+          margin: `0 0 ${dynamicMargin}px 0`
+        }
+      },
       wrapper: computedWrapperStyles,
       isMinimal: false
     };
@@ -137,7 +146,6 @@ const Ruby = memo<RubyProps>(({
       )}
       style={{
         ...computedStyles.wrapper,
-        lineHeight: 'calc(1 + var(10) / 1em)',
       }}
       onClick={onClick}
       onMouseEnter={onMouseEnter}

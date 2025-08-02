@@ -65,6 +65,7 @@ export const JapaneseToken = memo<JapaneseTokenProps>(({
                 ...styles.furigana?.container
               },
             }}
+            autoMargin={true}
 
             // wrapperStyles={styles.container}
           />

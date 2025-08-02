@@ -23,8 +23,8 @@ export const getTokenStyles = ({ shouldScaleFontDown, styles, transcription }: {
     fontWeight: styles.default.fontWeight ||  defaultSubtitleStyles[transcription].default.fontWeight,
     transition: 'all 0.15s ease',
     margin: transcription != 'furigana' 
-    ? `0 ${styles.default.margin || defaultSubtitleStyles[transcription].default.margin}px` 
-    : `0 0 ${styles.default.margin || defaultSubtitleStyles[transcription].default.margin}px 0`,
+    ? styles.default.margin || defaultSubtitleStyles[transcription].default.margin
+    : styles.default.margin || defaultSubtitleStyles[transcription].default.margin,
     cursor: 'pointer',
     textShadow: styles.default.textShadow === 'drop-shadow' 
       ? '1px 1px 2px rgba(0, 0, 0, 0.8)'
@@ -50,8 +50,8 @@ export const getTokenStyles = ({ shouldScaleFontDown, styles, transcription }: {
     opacity: styles.active.textOpacity || defaultSubtitleStyles[transcription].active.textOpacity,
     fontWeight: styles.active.fontWeight || defaultSubtitleStyles[transcription].active.fontWeight,
     margin: transcription != 'furigana' 
-    ? `0 ${styles.default.margin || defaultSubtitleStyles[transcription].default.margin}px` 
-    : `0 0 ${styles.default.margin || defaultSubtitleStyles[transcription].default.margin}px 0`,
+    ? styles.default.margin || defaultSubtitleStyles[transcription].default.margin
+    : styles.default.margin || defaultSubtitleStyles[transcription].default.margin,
     cursor: 'pointer',
     textShadow: styles.active.textShadow === 'drop-shadow' 
       ? '1px 1px 2px rgba(0, 0, 0, 0.8)'

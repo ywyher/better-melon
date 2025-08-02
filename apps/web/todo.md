@@ -1,4 +1,4 @@
-fix useAutoPause since it causes maxiumum depth
+add pitch coloring and learning status as playback toggles
 
 add more options for the delay like custom inputs
 
