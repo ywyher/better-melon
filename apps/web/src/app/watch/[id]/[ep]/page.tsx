@@ -7,9 +7,9 @@ import PanelSection from '@/app/watch/[id]/[ep]/components/sections/panel-sectio
 import { useParams } from 'next/navigation';
 import { Indicator } from '@/components/indicator';
 import { usePlayerStore } from '@/lib/stores/player-store';
-import { useIsMedium } from '@/lib/hooks/use-media-query';
+import { useIsXLarge } from '@/lib/hooks/use-media-query';
 import { usePrefetchEpisode } from '@/lib/hooks/use-prefetch-episode';
-import { useLayoutEffect, useMemo } from 'react';
+import { useEffect, useLayoutEffect, useMemo } from 'react';
 import { useDefinitionStore } from '@/lib/stores/definition-store';
 import { SubtitlesNotAvailableError } from '@/lib/errors/player';
 import { useSubtitleStore } from '@/lib/stores/subtitle-store';
@@ -21,7 +21,7 @@ export default function WatchPage() {
   const params = useParams();
   const animeId = Number(params.id);
   const episodeNumber = Number(params.ep as string);
-  const isMedium = useIsMedium();
+  const isXLarge = useIsXLarge();
 
   const setIsVideoReady = usePlayerStore((state) => state.setIsVideoReady);
   const panelState = useUIStateStore((state) => state.panelState);
@@ -64,12 +64,12 @@ export default function WatchPage() {
   });
   
   const shouldShowPanel = useMemo(() => {
-    return (!isMedium && 
+    return (isXLarge && 
       panelState === 'visible' && 
       episode?.data?.metadata && 
       transcriptions && 
       transcriptions?.data?.find(t => t.transcription === 'japanese')) ? true : false
-  }, [isMedium, panelState, episode?.data?.metadata, transcriptions]);
+  }, [isXLarge, panelState, episode?.data?.metadata, transcriptions]);
 
   if (errors.length > 0) {
     const subtitlesError = errors.find(error => error instanceof SubtitlesNotAvailableError);
@@ -95,10 +95,10 @@ export default function WatchPage() {
   }
 
   return (
-    <div className="flex flex-col md:flex-row w-full md:gap-10">
+    <div className="flex flex-col xl:flex-row w-full md:gap-10">
       <div className="flex flex-col gap-3 w-full">
         {/* Top controls and player area */}
-        <PlayerSection isMedium={isMedium} />
+        <PlayerSection />
         {/* Settings below player */}
         <ControlsSection />
       </div>

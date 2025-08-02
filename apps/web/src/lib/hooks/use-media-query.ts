@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 export const breakpoints = {
   small: "(max-width: 772px)",     // Mobile
   medium: "(max-width: 1024px)",   // Tablets
-  large: "(min-width: 1025px)"     // Laptops/PCs
+  large: "(max-width: 1279px)",     // Laptops/PCs
+  xLarge: "(min-width: 1280px)"     // Laptops/PCs
 };
 
 const useMediaQuery = (query: string) => {
@@ -40,5 +41,6 @@ const useMediaQuery = (query: string) => {
 export const useIsSmall = () => useMediaQuery(breakpoints.small);
 export const useIsMedium = () => useMediaQuery(breakpoints.medium);
 export const useIsLarge = () => useMediaQuery(breakpoints.large);
+export const useIsXLarge = () => useMediaQuery(breakpoints.xLarge);
 
 export default useMediaQuery;

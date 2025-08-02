@@ -30,7 +30,7 @@ type DialogWrapperProps = {
   setOpen?: Dispatch<SetStateAction<boolean>>;
   trigger?: React.ReactNode;
   defaultOpen?: boolean;
-  breakpoint?: 'small' | 'medium'
+  breakpoint?: 'small' | 'medium' | 'large' | 'xLarge'
 }
 
 export default function DialogWrapper({ 
@@ -45,7 +45,7 @@ export default function DialogWrapper({
   defaultOpen = false,
   breakpoint = 'small'
 }: DialogWrapperProps) {
-  const isSmall = useMediaQuery(breakpoint == 'small' ? breakpoints.small : breakpoints.medium);
+  const isBreakpoint = useMediaQuery(breakpoints[breakpoint]);
   
   // Internal state for uncontrolled mode
   const [internalOpen, setInternalOpen] = useState(defaultOpen);
@@ -57,7 +57,7 @@ export default function DialogWrapper({
     ? setOpen 
     : setInternalOpen;
 
-  if (isSmall) {
+  if (isBreakpoint) {
     return (
       <Drawer open={isOpen} onOpenChange={onOpenChange}>
         {trigger && <DrawerTrigger asChild>{trigger}</DrawerTrigger>}

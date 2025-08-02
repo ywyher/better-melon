@@ -11,7 +11,7 @@ export default function PanelSection() {
   const transcriptionsLookup = useTranscriptionStore((state) => state.transcriptionsLookup)
 
   return (
-    <div className="flex flex-col gap-5 w-full md:w-auto">
+    <div className="flex flex-col gap-5 w-full xl:w-auto">
       {isLoading ? (
         <PanelSkeleton />
       ) : (

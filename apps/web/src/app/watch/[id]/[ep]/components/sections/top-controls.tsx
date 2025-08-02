@@ -2,17 +2,14 @@ import SubtitlePanel from "@/app/watch/[id]/[ep]/components/panel/panel";
 import SettingsDialog from "@/app/watch/[id]/[ep]/components/settings/settings-dialog";
 import DialogWrapper from "@/components/dialog-wrapper";
 import { Button } from "@/components/ui/button";
+import { useIsXLarge } from "@/lib/hooks/use-media-query";
 import { useUIStateStore } from "@/lib/stores/ui-state-store";
 import { useWatchStore } from "@/lib/stores/watch-store";
 import { Captions, Loader2, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 
-type TopControlsProps = {
-  isMedium: boolean;
-}
+export function TopControls() {
+  const isXLarge = useIsXLarge()
 
-export function TopControls({ 
-  isMedium,
-}: TopControlsProps) {
   const isLoading = useWatchStore((state) => state.isLoading)
   const loadingDuration = useWatchStore((state) => state.loadingDuration)
 
@@ -31,11 +28,12 @@ export function TopControls({
           <Button variant='outline'>
             <Loader2 className='animate-spin' />
           </Button>
-          {isMedium && (
-            <Button variant='outline'>
-              <Loader2 className='animate-spin' />
-            </Button>
-          )}
+          <Button 
+            className="block xl:hidden"
+            variant='outline'
+          >
+            <Loader2 className='animate-spin' />
+          </Button>
           {panelState == 'visible' && (
             <Button variant='outline'>
               <Loader2 className='animate-spin' />
@@ -45,15 +43,15 @@ export function TopControls({
       ) : (
         <div className='flex flex-row gap-2'>
           <SettingsDialog  />
-          {isMedium ? (
+          {!isXLarge ? (
             <DialogWrapper
               trigger={<Button variant='outline'>
                 <Captions />
               </Button>}
               className="overflow-y-auto w-full flex flex-col"
-              breakpoint='medium'
+              breakpoint='large'
             >
-              <SubtitlePanel />
+              <SubtitlePanel className="flex-1" />
             </DialogWrapper>
           ) : (
             <Button 

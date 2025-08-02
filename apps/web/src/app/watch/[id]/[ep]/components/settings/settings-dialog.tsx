@@ -7,13 +7,13 @@ import { useState } from "react"
 import SubtitleStyles from "@/components/subtitle/styles/subtitle-styles"
 import DelayController from "@/app/watch/[id]/[ep]/components/settings/delay-controller"
 import { Separator } from "@/components/ui/separator"
-import { useIsLarge } from "@/lib/hooks/use-media-query"
+import { useIsXLarge } from "@/lib/hooks/use-media-query"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useSettingsStore } from "@/lib/stores/settings-store"
   
 export default function SettingsDialog() {
     const [open, setOpen] = useState<boolean>(false)
-    const isLarge = useIsLarge()
+    const isXLarge = useIsXLarge()
 
     const generalSettings = useSettingsStore((settings) => settings.general)
 
@@ -23,7 +23,7 @@ export default function SettingsDialog() {
         setOpen={setOpen}
         className="
           flex flex-col justify-start
-          min-h-[85vh] max-h-[85vh] lg:min-w-[75%] lg:max-w-[90%]
+          min-h-[85vh] max-h-[85vh] xl:min-w-[75%] xl:max-w-[90%]
           p-0 overflow-hidden gap-0 m-0 space-y-0
         "
         trigger={
@@ -31,11 +31,11 @@ export default function SettingsDialog() {
             <Settings className="w-4 h-4" />
           </Button>
         }
-        breakpoint="medium"
+        breakpoint="large"
         title="Settings"
         description="Configure your preferences and subtitle styles"
       >
-        {isLarge ? (
+        {isXLarge ? (
           <Tabs 
             defaultValue="styles"
             className="
