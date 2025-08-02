@@ -165,3 +165,11 @@ export type AnimeListQueryVariables = Partial<{
   withPopularity: boolean;
   withEpisodes: boolean;
 }>
+
+export type AnimeInHistory = { episode: number } & Pick<Anime,
+  | "id"
+  | "title"
+  | "coverImage"
+>
+
+export type AnimeCardType = 'regular' | 'history'

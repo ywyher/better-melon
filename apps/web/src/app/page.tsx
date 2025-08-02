@@ -6,6 +6,8 @@ import AnimeList from "@/components/home/anime-list/anime-list";
 import { Award, Clock, Heart, LucideIcon, TrendingUp } from "lucide-react";
 import { AnimeListQueryVariableKeys, AnimeListQueryVariables } from "@/types/anime";
 import { queryVariables } from "@/lib/constants/anime";
+import AnimeHistoryCard from "@/components/anime/card/history/card";
+import ContinueWatching from "@/components/home/continue-watching/continue-watching";
 
 const animeLists: {
   title: string;
@@ -53,6 +55,7 @@ export default function Home() {
         flex flex-col gap-20
       ">
         <TopTrending />
+        <ContinueWatching />
         {animeLists.map((list) => (
           <AnimeList
             key={list.name}

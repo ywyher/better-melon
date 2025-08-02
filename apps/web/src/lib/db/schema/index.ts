@@ -1,5 +1,6 @@
 import { AnkiFieldKey } from "@/types/anki";
 import { SubtitleTranscription } from "@/types/subtitle";
+import { AnilistCoverImage, AnilistTitle } from "@better-melon/shared/types";
 import { InferSelectModel, relations } from "drizzle-orm";
 import { pgTable, text, timestamp, boolean, jsonb, pgEnum, real } from "drizzle-orm/pg-core";
 			
@@ -259,6 +260,30 @@ export const wordRelations = relations(word, ({ one }) => ({
   })
 }))
 
+export const history = pgTable("history", {
+  id: text("id").primaryKey(),
+
+  duration: real("duration").notNull().default(0),
+  progress: real("progress").notNull().default(0),
+
+  // Store these as JSON
+  mediaTitle: jsonb("media_title").$type<AnilistTitle>().notNull(),
+  mediaCoverImage: jsonb("media_cover_image").$type<AnilistCoverImage>().notNull(),
+  mediaId: text("media_id").notNull(),
+  mediaEpisode: real("media_episode").notNull().default(1),
+  
+  userId: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at").notNull(),
+  updatedAt: timestamp("updated_at").notNull()
+});
+
+export const historyRelations = relations(history, ({ one }) => ({
+  user: one(user, {
+    fields: [history.userId],
+    references: [user.id]
+  })
+}))
+
 export const session = pgTable("session", {
   id: text("id").primaryKey(),
   expiresAt: timestamp('expires_at').notNull(),
@@ -307,3 +332,4 @@ export type SubtitleSettings = InferSelectModel<typeof subtitleSettings> & {
 }
 export type PlayerSettings = InferSelectModel<typeof playerSettings>
 export type GeneralSettings = InferSelectModel<typeof generalSettings>
+export type History = InferSelectModel<typeof history>

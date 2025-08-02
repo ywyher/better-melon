@@ -112,6 +112,7 @@ export default function Player() {
     }, [metadata, sources, player.current?.duration, episodeNumber]);
 
     const handleCanPlay = useCallback(() => {
+        console.log('can play from player')
         setIsVideoReady(true);
         setLoadingDuration(prev => ({
           ...prev,

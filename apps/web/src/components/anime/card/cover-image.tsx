@@ -2,18 +2,17 @@ import { ImageSkeleton } from "@/components/image-skeleton";
 import { Anime } from "@/types/anime";
 import { AnilistCoverImage } from "@better-melon/shared/types";
 import Image from "next/image";
+import { useState } from "react";
 
 export default function AnimeCardCoverImage({ 
   coverImage, 
   id, 
-  imageLoading, 
-  setImageLoading 
 }: {
   coverImage: AnilistCoverImage;
   id: Anime['id'];
-  imageLoading: boolean;
-  setImageLoading: (loading: boolean) => void;
 }) {
+  const [imageLoading, setImageLoading] = useState<boolean>(true);
+
   return (
     <>
       {imageLoading && <ImageSkeleton />}

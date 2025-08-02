@@ -1,4 +1,4 @@
-import AnimeCard from "@/components/anime/anime-card/anime-card"
+import AnimeCard from "@/components/anime/card/default/card"
 import { AnimeDetails } from "@/types/anime"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { excludeRelations } from "@/lib/constants/anime"

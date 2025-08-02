@@ -13,6 +13,8 @@ test("hianime anime episode sources", async () => {
     fallback: true
   })
 
+  console.log(sources)
+
   expect(servers).not.toBeEmpty()
   expect(sources).not.toBeEmpty()
 });

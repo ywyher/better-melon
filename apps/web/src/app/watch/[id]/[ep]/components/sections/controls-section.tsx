@@ -1,7 +1,6 @@
 import CueNavigations from "@/app/watch/[id]/[ep]/components/settings/cue-navigations";
 import EpisodeNavigations from "@/app/watch/[id]/[ep]/components/settings/episode-navigations";
 import SettingsToggles from "@/app/watch/[id]/[ep]/components/settings/settings-toggles";
-import PlayerSettings from "@/app/watch/[id]/[ep]/components/settings/player-settings";
 import Screenshot from "@/app/watch/[id]/[ep]/components/settings/screenshot";
 import EnabledTranscriptions from "@/components/enabled-transcriptions";
 import { Separator } from "@/components/ui/separator";

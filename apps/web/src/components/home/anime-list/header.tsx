@@ -16,7 +16,7 @@ export default function AnimeListHeader({
         <Icon color="#6366F1" size={30} />
         <span className="text-2xl font-bold">{title}</span>
       </div>
-      <Button 
+      <Button
         variant="outline"
         className="flex flex-row gap-3"
         onClick={onViewAllClick}

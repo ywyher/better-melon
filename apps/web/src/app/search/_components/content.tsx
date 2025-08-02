@@ -1,5 +1,5 @@
-import AnimeCard from "@/components/anime/anime-card/anime-card";
-import AnimeCardSkeleton from "@/components/anime/anime-card/skeleton";
+import AnimeCard from "@/components/anime/card/default/card";
+import AnimeCardSkeleton from "@/components/anime/card/default/skeleton";
 import { Anime } from "@/types/anime";
 
 type SearchContentProps = {

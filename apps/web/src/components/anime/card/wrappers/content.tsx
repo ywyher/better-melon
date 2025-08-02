@@ -1,24 +1,23 @@
-import AnimeCardCoverImage from "@/components/anime/anime-card/cover-image";
-import AnimeCardOverlay from "@/components/anime/anime-card/overlay";
-import AnimeCardTitle from "@/components/anime/anime-card/title";
+import AnimeCardCoverImage from "@/components/anime/card/cover-image";
+import AnimeCardOverlay from "@/components/anime/card/overlay";
+import AnimeCardTitle from "@/components/anime/card/title";
 import { CardContent } from "@/components/ui/card";
 import { Anime } from "@/types/anime";
 import { AnilistCoverImage, AnilistStatus, AnilistTitle } from "@better-melon/shared/types";
+import { ReactNode } from "react";
 
-export default function AnimeCardContent({ 
+export default function AnimeCardContentWrapper({ 
   coverImage, 
-  id, 
-  imageLoading, 
-  setImageLoading, 
+  id,
+  title,
   status, 
-  title 
+  children
 }: {
   id: Anime['id'];
   coverImage: AnilistCoverImage;
-  imageLoading: boolean;
-  setImageLoading: (loading: boolean) => void;
-  status: AnilistStatus;
   title: AnilistTitle;
+  status?: AnilistStatus,
+  children: ReactNode
 }) {
   return (
     <CardContent className="p-0 flex flex-col gap-3">
@@ -31,9 +30,8 @@ export default function AnimeCardContent({
         <AnimeCardCoverImage 
           id={id}
           coverImage={coverImage}
-          imageLoading={imageLoading}
-          setImageLoading={setImageLoading}
         />
+        {children}
         <AnimeCardOverlay />
       </div>
       <AnimeCardTitle status={status} title={title} />

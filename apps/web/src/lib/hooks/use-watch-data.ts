@@ -18,6 +18,7 @@ import { useEpisodeStore } from "@/lib/stores/episode-store";
 import { useSettingsStore } from "@/lib/stores/settings-store";
 import { useTranscriptionStore } from "@/lib/stores/transcription-store";
 import { useLearningStore } from "@/lib/stores/learning-store";
+import { useMediaHistory } from "@/lib/hooks/use-media-history";
 
 export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
   const loadStartTimeRef = useRef<number>(performance.now());
@@ -104,6 +105,16 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
     loadingDuration: wordsLoadingDuration
   } = useWords({
     shouldFetch: settings?.wordSettings.learningStatus || false
+  });
+
+  const { 
+    mediaHistory,
+    isLoading: isMediaHistoryLoading,
+    error: isMediaHistoryError,
+    loadingDuration: mediaHistoryLoadingDuration
+  } = useMediaHistory({
+    mediaEpisode: episodeNumber,
+    mediaId: animeId
   });
 
   const {
@@ -219,6 +230,7 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
       isEpisodeDataLoading ||
       isSettingsLoading ||
       isWordsLoading ||
+      isMediaHistoryLoading ||
       (isTranscriptionsLoading && !hasInitialized) ||
       (isStylesLoading && !hasInitialized)
     );
@@ -227,6 +239,7 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
     isSettingsLoading,
     isWordsLoading,
     isPitchAccentLoading,
+    isMediaHistoryLoading,
     isTranscriptionsLoading,
     isStylesLoading,
     hasInitialized
@@ -249,6 +262,7 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
         transcriptionsLoadingDuration >= 0 &&
         settingsLoadingDuration >= 0 &&
         stylesLoadingDuration >= 0 && 
+        mediaHistoryLoadingDuration >= 0 && 
         wordsLoadingDuration >= 0 &&
         pitchAccentLoadingDuration >= 0 
     ) {
@@ -266,6 +280,7 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
     transcriptionsLoadingDuration,
     settingsLoadingDuration,
     stylesLoadingDuration,
+    mediaHistoryLoadingDuration,
     wordsLoadingDuration,
     pitchAccentLoadingDuration,
   ]);
@@ -277,6 +292,7 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
       settingsError,
       stylesError,
       subtitlesError,
+      isMediaHistoryError,
       wordsError,
       pitchAccentError
     ].filter(Boolean);
@@ -286,6 +302,7 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
     settingsError,
     stylesError,
     subtitlesError,
+    isMediaHistoryError,
     wordsError,
     pitchAccentError
   ]);

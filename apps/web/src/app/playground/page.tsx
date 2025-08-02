@@ -16,11 +16,13 @@ import TranscriptionsHookPlayground from "@/app/playground/_components/transcrip
 import WatchDataPlayground from "@/app/playground/_components/watch-data";
 import { defaultPlayerSettings } from "@/app/settings/player/constants";
 import EnabledTranscriptions from "@/components/enabled-transcriptions";
+import HistoryPlayground from "@/app/playground/_components/history";
 
 export default function Playground() {
   return (
     <>
-      <TranscriptionsStylesPlayground />
+      <HistoryPlayground />
+      {/* <TranscriptionsStylesPlayground /> */}
       {/* <StylesPlayground /> */}
       {/* <ProxyPlayground /> */}
       {/* <AnimeListPlayground /> */}

@@ -12,7 +12,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 type PrefetchEpisodeProps = {
   animeId: Anime['id'],
   episodeNumber: number,
-  episodeData: EpisodeData | undefined,
+  episodeData: EpisodeData | null,
   episodesLength: number,
   preferredFormat: SubtitleSettings["preferredFormat"],
 }
@@ -103,7 +103,6 @@ export function usePrefetchEpisode({
     animeId,
     episodeData,
     japaneseCues: subtitleQueries?.find(q => q.data?.transcription == 'japanese')?.data?.cues,
-    episodeNumber,
     isLastEpisode,
     isReady,
     networkCondition,

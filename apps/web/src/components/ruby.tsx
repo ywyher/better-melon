@@ -68,7 +68,8 @@ const Ruby = memo<RubyProps>(({
   className,
   styles,
 }) => {
-  const isFullScreen = useMediaState('fullscreen')
+  const player = usePlayerStore((state) => state.player);
+  const isFullScreen = useMediaState('fullscreen', player)
 
   const computedStyles = useMemo(() => {
     const hasKanjiStyles = Object.entries(kanjiStyles).length > 0;

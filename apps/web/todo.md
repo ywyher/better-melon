@@ -1,3 +1,5 @@
+check whereever you use currentTime and see if it causes any performance issues
+
 add more options for the delay like custom inputs
 
 check if search functioanlity works for romanjin and native

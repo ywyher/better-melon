@@ -16,6 +16,7 @@ import { useSubtitleStore } from '@/lib/stores/subtitle-store';
 import { useUIStateStore } from '@/lib/stores/ui-state-store';
 import { useWatchData } from '@/lib/hooks/use-watch-data';
 import { defaultSubtitleSettings } from '@/app/settings/subtitle/_subtitle-settings/constants';
+import { useSaveProgress } from '@/lib/hooks/use-save-progress';
 
 export default function WatchPage() {
   const params = useParams();
@@ -58,10 +59,17 @@ export default function WatchPage() {
   usePrefetchEpisode({
     animeId,
     episodeNumber: episodeNumber + 1,
-    episodeData: episode.data,
+    episodeData: episode.data || null,
     episodesLength: episode.episodesLength,
     preferredFormat: settings?.data?.subtitleSettings.preferredFormat || defaultSubtitleSettings.preferredFormat
   });
+  
+  useSaveProgress({
+    animeId,
+    episodeNumber,
+    animeCoverImage: episode.data?.details.coverImage,
+    animeTitle: episode.data?.details.title,
+  })
   
   const shouldShowPanel = useMemo(() => {
     return (isXLarge && 

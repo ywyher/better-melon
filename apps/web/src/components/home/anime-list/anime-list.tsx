@@ -3,8 +3,9 @@ import { LucideIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { AnimeListSkeleton } from "@/components/home/anime-list/skeleton";
 import AnimeListHeader from "@/components/home/anime-list/header";
-import AnimeListScrollArea from "@/components/home/anime-list/scroll-area";
 import { useAnimeList } from "@/lib/hooks/use-anime-list";
+import ListScrollAreaWrapper from "@/components/home/wrappers/scroll-area";
+import AnimeCard from "@/components/anime/card/default/card";
 
 type AnimeListProps = {
   title: string;
@@ -38,10 +39,22 @@ export default function AnimeList({
         onViewAllClick={handleMoreClick}
       />
       {data?.Page.media && (
-        <AnimeListScrollArea
-          animeList={data.Page.media}
+        <ListScrollAreaWrapper
           onMoreClick={handleMoreClick}
-        />
+        >
+          {data.Page.media.map((anime) => (
+            <AnimeCard
+              key={anime.id}
+              id={anime.id}
+              title={anime.title}
+              format={anime.format}
+              coverImage={anime.coverImage}
+              averageScore={anime.averageScore!}
+              seasonYear={anime.seasonYear!}
+              status={anime.status!}
+            />
+          ))}
+        </ListScrollAreaWrapper>
       )}
     </div>
   );

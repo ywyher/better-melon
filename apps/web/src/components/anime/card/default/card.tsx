@@ -1,12 +1,11 @@
-import { Card } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import AnimeCardFooter from "@/components/anime/anime-card/footer";
-import AnimeCardContent from "@/components/anime/anime-card/content";
-import { cn } from "@/lib/utils/utils";
+import AnimeCardFooter from "@/components/anime/card/default/footer";
+import AnimeCardContent from "@/components/anime/card/default/content";
 import { AnilistCoverImage, AnilistFormat, AnilistStatus, AnilistTitle } from "@better-melon/shared/types";
 import { Anime } from "@/types/anime";
 import { AnilistRelationType } from "@/types/anilist";
+import AnimeCardWrapper from "@/components/anime/card/wrappers/card";
 
 type AnimeCardProps = {
   id: Anime['id'];
@@ -40,20 +39,13 @@ export default function AnimeCard({
   };
   
   return (
-    <Card 
-      className={cn(
-        "aspect-[3/4] relative p-0 max-h-100 w-full bg-transparent",
-        "border-0 outline-0 shadow-none",
-        "flex flex-col gap-2",
-        className
-      )}
-      onClick={handleClick}
+    <AnimeCardWrapper
+      handleClick={handleClick}
+      className={className}
     >
       <AnimeCardContent
         id={id}
         coverImage={coverImage}
-        imageLoading={imageLoading}
-        setImageLoading={setImageLoading}
         status={status}
         title={title}
       />
@@ -64,6 +56,6 @@ export default function AnimeCard({
         relationType={relationType}
         averageScore={averageScore}
       />
-    </Card>
+    </AnimeCardWrapper>
   );
 }

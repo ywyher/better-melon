@@ -6,7 +6,7 @@ export default function AnimeCardTitle({
   status, 
   title 
 }: {
-  status: AnilistStatus;
+  status?: AnilistStatus;
   title: AnilistTitle;
 }) {
   // const [isHovered, setIsHovered] = useState(false);
@@ -21,7 +21,7 @@ export default function AnimeCardTitle({
       // onMouseEnter={() => setIsHovered(true)}
       // onMouseLeave={() => setIsHovered(false)}
     >
-      <AnimeStatusIndicator animate={false} status={status} />
+      {status && <AnimeStatusIndicator animate={false} status={status} />}
       <div 
         className="font-bold text-sm transition-all"
         title={title.english}

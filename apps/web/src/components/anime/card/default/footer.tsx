@@ -1,4 +1,4 @@
-import AnimeCardInfoBadge from "@/components/anime/anime-card/info-badge";
+import AnimeCardInfoBadge from "@/components/anime/card/info-badge";
 import { CardFooter } from "@/components/ui/card";
 import { AnilistRelationType } from "@/types/anilist";
 import { AnilistFormat } from "@better-melon/shared/types";

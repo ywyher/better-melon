@@ -1,4 +1,4 @@
-import AnimeCardSkeleton from "@/components/anime/anime-card/skeleton";
+import AnimeCardSkeleton from "@/components/anime/card/default/skeleton";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 

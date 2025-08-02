@@ -4,10 +4,11 @@ import { getCache } from "@/lib/db/queries";
 import { env } from "@/lib/env/client";
 import { GET_ANIME, GET_ANIME_LIST } from "@/lib/graphql/queries";
 import { sortObject } from "@/lib/utils/utils";
-import { Anime, AnimeListQueryVariableKeys, AnimeQueryVariableKeys, AnimeQueryVariables, AnimeListQueryVariables } from "@/types/anime";
+import { Anime, AnimeListQueryVariableKeys, AnimeQueryVariableKeys, AnimeQueryVariables, AnimeListQueryVariables, AnimeInHistory } from "@/types/anime";
 import { createQueryKeys } from "@lukemorales/query-key-factory";
 import { AnilistResponse, KitsuEpisodesReponse } from "@better-melon/shared/types";
 import { ApiResponse } from "@/types/api";
+import { getHistory, getHistoryByMedia } from "@/lib/actions/history";
 
 export const animeQueries = createQueryKeys('anime', {
   data: ({ animeId, name, variables }: { animeId: Anime['id'], name: AnimeQueryVariableKeys, variables: AnimeQueryVariables }) => ({
@@ -87,6 +88,35 @@ export const animeQueries = createQueryKeys('anime', {
           };
         }
       },
+  }),
+  history: ({ limit }: { limit: number }) => ({
+      queryKey: ['history'],
+      queryFn: async () => {
+        try {
+          const { error, history } = await getHistory({ limit }) 
+
+          if(error) throw new Error(error)
+
+          return history;
+        } catch (error) {
+          const msg = error instanceof Error ? error.message : "Failed to fetch anime data"
+          return []
+        }
+      },
+  }),
+  historyByMedia: ({ mediaId, mediaEpisode }: { mediaId: string; mediaEpisode: number }) => ({
+    queryKey: ['history', 'media', mediaId, mediaEpisode],
+    queryFn: async () => {
+      try {
+        const { error, history } = await getHistoryByMedia({ mediaId, mediaEpisode })
+        if(error) throw new Error(error)
+
+        return history ?? null;
+      } catch (error) {
+        const msg = error instanceof Error ? error.message : "Failed to fetch history data"
+        return null;
+      }
+    },
   }),
   episodesMetadata: ({ animeId, limit, offset }: {
     animeId: Anime['id'];

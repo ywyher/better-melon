@@ -219,3 +219,7 @@ export function sortObject({
   }
   return Object.fromEntries(sortedEntries);
 }
+
+export function getPercentage({ duration, progress }:{ progress: number; duration: number }) {
+  return Number(((progress / duration) * 100).toFixed(1))
+}

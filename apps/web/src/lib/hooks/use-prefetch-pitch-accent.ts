@@ -12,8 +12,7 @@ import { EpisodeData } from '@/types/episode';
 
 type PrefetchPitchAccentProps = {
   animeId: Anime['id'],
-  episodeNumber: number,
-  episodeData: EpisodeData | undefined,
+  episodeData: EpisodeData | null,
   japaneseCues: SubtitleCue[] | undefined,
   preferredFormat: SubtitleSettings["preferredFormat"],
   networkCondition: NetworkCondition,
@@ -23,7 +22,6 @@ type PrefetchPitchAccentProps = {
 
 export function usePrefetchPitchAccent({
   animeId,
-  episodeNumber,
   episodeData,
   japaneseCues,
   preferredFormat,
