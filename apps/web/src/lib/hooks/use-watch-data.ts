@@ -81,7 +81,6 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
   });
 
   const { 
-    styles, 
     isLoading: isStylesLoading, 
     error: stylesError,
     loadingDuration: stylesLoadingDuration 
@@ -186,16 +185,12 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
       updates.transcriptionsLookup = transcriptionsLookup;
     }
     
-    if (hasChanged(styles, currentTranscriptionState.transcriptionsStyles)) {
-      updates.transcriptionsStyles = styles;
-    }
-
     // Only update if there are actual changes
     if (Object.keys(updates).length > 0) {
       console.log('Batch updating transcription store with:', Object.keys(updates));
       transcriptionStore.batchUpdate(updates);
     }
-  }, [transcriptions, transcriptionsLookup, styles]);
+  }, [transcriptions, transcriptionsLookup]);
 
   // Update learning store
   useEffect(() => {
@@ -318,7 +313,6 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
       lookup: transcriptionsLookup
     },
     styles: {
-      data: styles,
       isLoading: isStylesLoading,
       error: stylesError,
       loadingDuration: stylesLoadingDuration

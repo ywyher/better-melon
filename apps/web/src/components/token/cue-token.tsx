@@ -5,6 +5,7 @@ import { parseRuby } from '@/lib/utils/subtitle';
 import Ruby from '@/components/ruby';
 import { useTokenStyles } from '@/lib/hooks/use-token-styles';
 import { PitchAccents } from '@/types/pitch';
+import { useSettingsStore } from '@/lib/stores/settings-store';
 
 interface SubtitleCueTokenProps {
   token: SubtitleToken;
@@ -23,6 +24,7 @@ export const CueToken = React.memo<SubtitleCueTokenProps>(({
   accent,
   onTokenClick,
 }) => {
+  const wordsSettings = useSettingsStore((settings) => settings.word);
   const {
     getPitchStyles,
     getLearningStatusStyles
@@ -30,7 +32,7 @@ export const CueToken = React.memo<SubtitleCueTokenProps>(({
 
   const styles = useMemo(() => ({
     pitch: getPitchStyles(isActive, accent),
-    learning: getLearningStatusStyles(token)
+    learning: wordsSettings.learningStatus ? getLearningStatusStyles(token) : undefined
   }), [getPitchStyles, isActive, accent, getLearningStatusStyles, token]);
 
   const rubyPairs = useMemo(() => {

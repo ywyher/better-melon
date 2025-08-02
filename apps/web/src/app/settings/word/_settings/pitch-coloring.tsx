@@ -17,7 +17,7 @@ export default function PitchColoring({ value }: {
             <div className="col-span-1 space-y-1">
                 <h3 className="font-medium">Pitch Coloring</h3>
                 <p className="text-sm text-muted-foreground">
-                    Color words depending on its learning status
+                    Color words based on its pitch accent
                 </p>
             </div>
             <div className="col-span-1 flex justify-end">

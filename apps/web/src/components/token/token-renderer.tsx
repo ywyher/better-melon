@@ -4,8 +4,7 @@ import { JapaneseToken } from '@/components/token/japanese-token';
 import { RegularToken } from '@/components/token/regular-token';
 import { PitchAccents } from '@/types/pitch';
 import { useTokenStyles } from '@/lib/hooks/use-token-styles';
-import { useSubtitleStylesStore } from '@/lib/stores/subtitle-styles-store';
-import { computed } from 'better-auth/react';
+import { useSettingsStore } from '@/lib/stores/settings-store';
 
 interface TokenRendererProps {
   cue: SubtitleCue;
@@ -31,7 +30,7 @@ const TokenRenderer = memo<TokenRendererProps>(({
   japaneseToken
 }) => {
   const { getStyles } = useTokenStyles();
-  
+
   const isActive = useMemo(() => isTokenActive(cue.id, token.id), [isTokenActive, cue.id, token.id]);
   const accent = useMemo(() => getTokenAccent(token), [getTokenAccent, token]);
 

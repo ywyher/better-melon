@@ -2,6 +2,7 @@ import { useEffect, useState, useRef, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { settingsQueries } from '@/lib/queries/settings';
 import { Word } from '@/lib/db/schema';
+import { WordsLookup } from '@/app/watch/[id]/[ep]/types';
 
 type UseWordsProps = {
   status?: Word['status']
@@ -37,8 +38,8 @@ export function useWords({
 
 
   const wordsLookup = useMemo(() => {
-    if (!words) return new Map<string, { word: Word['word'], status: Word['status'] }>();
-    const lookup = new Map<string, { word: Word['word'], status: Word['status'] }>();
+    if (!words) return new Map() as WordsLookup;
+    const lookup = new Map() as WordsLookup;
     words.forEach((wordsData) => lookup.set(wordsData.word, {
       word: wordsData.word,
       status: wordsData.status

@@ -7,6 +7,7 @@ import { handlePlayerSettings } from "@/app/settings/player/actions";
 import { useSettingsStore } from "@/lib/stores/settings-store";
 import { useSyncSettings } from "@/lib/hooks/use-sync-settings";
 import { handleSubtitleSettings } from "@/app/settings/subtitle/_subtitle-settings/actions";
+import { handleWordSettings } from "@/app/settings/word/_settings/actions";
 
 type PlaybackSetting = "autoPlay" | "autoNext" | "autoSkip" | "pauseOnCue";
 type SubtitleSetting = "showFurigana";
@@ -24,7 +25,15 @@ export default function SettingsToggles() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const store = useSettingsStore();
-  const { player, subtitle, general: { syncSettings }, updatePlayer, updateSubtitle } = store
+  const {
+    player,
+    subtitle,
+    general: { syncSettings },
+    word,
+    updatePlayer,
+    updateSubtitle,
+    updateWord
+   } = store
 
   const { handleSync } = useSyncSettings({
     syncSettings: syncSettings,
@@ -88,6 +97,22 @@ export default function SettingsToggles() {
       updateLocal: (_, value) => updateSubtitle({ showFurigana: value }),
       updateServer: (value) => handleSubtitleSettings({ showFurigana: value }),
       tooltip: "Display furigana (reading aids) above kanji characters",
+    },
+    {
+      key: "pitchColoring",
+      name: "Pitch Coloring",
+      getValue: () => word.pitchColoring,
+      updateLocal: (_, value) => updateWord({ pitchColoring: value }),
+      updateServer: (value) => handleWordSettings({ pitchColoring: value }),
+      tooltip: "Color words based on its pitch accent",
+    },
+    {
+      key: "learningStatus",
+      name: "Learning Status",
+      getValue: () => word.learningStatus,
+      updateLocal: (_, value) => updateWord({ learningStatus: value }),
+      updateServer: (value) => handleWordSettings({ learningStatus: value }),
+      tooltip: "Show a special mark under words depending on its learning status",
     },
   ];
 

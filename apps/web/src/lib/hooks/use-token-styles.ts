@@ -1,8 +1,8 @@
 // useTokenStyles.ts - Individual functions + combined function
-import { CSSProperties, useCallback, useEffect } from 'react';
+import { CSSProperties, useCallback } from 'react';
 import { excludedPos, learningStatusesStyles } from '@/lib/constants/subtitle';
 import { SubtitleToken } from '@/types/subtitle';
-import { StyleSet, StyleTranscription } from '@/app/watch/[id]/[ep]/types';
+import { StyleTranscription } from '@/app/watch/[id]/[ep]/types';
 import { pitchAccentsStyles } from '@/lib/constants/pitch';
 import { PitchAccents } from '@/types/pitch';
 import { useSettingsStore } from '@/lib/stores/settings-store';
@@ -20,7 +20,7 @@ interface TokenStylesParams {
 export interface TokenStyles {
   token: CSSProperties;
   container: CSSProperties;
-  learningStatus: CSSProperties;
+  learningStatus?: CSSProperties;
   furigana?: {
     token: CSSProperties;
     container: CSSProperties
@@ -28,7 +28,7 @@ export interface TokenStyles {
 }
 
 export const useTokenStyles = () => {
-  const wordsSettings = useSettingsStore((settings) => settings.word);
+  const wordSettings = useSettingsStore((settings) => settings.word);
   const wordsLookup = useLearningStore((state) => state.wordsLookup);
   const computedStyles = useSubtitleStylesStore((state) => state.computedStyles);
 
@@ -64,14 +64,14 @@ export const useTokenStyles = () => {
       ? styles.token.active 
       : styles.token.default;
 
-    const pitchStyle = wordsSettings.pitchColoring 
+    const pitchStyle = wordSettings.pitchColoring 
       && !isActive 
       && accent 
         ? pitchAccentsStyles[accent] 
         : undefined;
     
     return pitchStyle ? { ...baseStyle, ...pitchStyle } : baseStyle;
-  }, [computedStyles, wordsSettings]);
+  }, [computedStyles, wordSettings]);
 
   const getContainerStyles = useCallback((
     { isActive, transcription }: 
@@ -95,7 +95,7 @@ export const useTokenStyles = () => {
     const status = word?.status;
     const isExcludedPos = excludedPos.some(p => p === token.pos);
     
-    if (wordsSettings.learningStatus && !isExcludedPos && status) {
+    if (wordSettings.learningStatus && !isExcludedPos && status) {
       return learningStatusesStyles[status];
     }
     
@@ -104,7 +104,7 @@ export const useTokenStyles = () => {
     }
     
     return {};
-  }, [wordsSettings, wordsLookup]);
+  }, [wordSettings, wordsLookup]);
 
   const getPitchStyles = useCallback((
     isActive: boolean, 
@@ -119,7 +119,11 @@ export const useTokenStyles = () => {
     
     const tokenStyle = getTokenStyles({ isActive, accent, transcription });
     const containerStyle = getContainerStyles({ isActive, transcription });
-    const learningStatusStyle = getLearningStatusStyles(token);
+
+    let learningStatusStyle = undefined;
+    if(wordSettings.learningStatus) {
+      learningStatusStyle = getLearningStatusStyles(token);
+    }
     
     // Ruby text styles (for Japanese tokens)
     const furiganaStyle = transcription === 'japanese' 
@@ -135,7 +139,7 @@ export const useTokenStyles = () => {
       learningStatus: learningStatusStyle,
       furigana: furiganaStyle,
     };
-  }, [getTokenStyles, getContainerStyles, getLearningStatusStyles]);
+  }, [getTokenStyles, getContainerStyles, getLearningStatusStyles, wordSettings]);
 
   return {
     getTokenStyles,

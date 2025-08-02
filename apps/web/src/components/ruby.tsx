@@ -123,12 +123,7 @@ const Ruby = memo<RubyProps>(({
     };
   }, [kanjiStyles, furiganaStyles, wrapperStyles, styles, isFullScreen]);
 
-  useEffect(() =>{ 
-    console.log(`computedStyles`, computedStyles.furigana.text)
-  }, [computedStyles])
-
   if (!kanji) return null;
-
 
   return (
     <ruby
