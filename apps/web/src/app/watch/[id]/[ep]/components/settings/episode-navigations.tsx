@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { SkipBack, SkipForward } from "lucide-react"
 import { useEpisodeStore } from "@/lib/stores/episode-store"
+import { useEffect, useMemo } from "react"
 
 type EpisodeNavigationsProps = { 
     direction: 'next' | 'previous',
@@ -30,12 +31,20 @@ export default function EpisodeNavigations({
         router.push(`/watch/${animeId}/${newEp}`);
     };
 
-    const isDisabled 
-        =  (!isNext && Number(episodeNumber) == 1)
-        || (
-            (isNext && Number(episodeNumber) == episodesLength)
-            || (isNext && Number(episodeNumber) + 1 >= Number(nextAiringEpisode))
-        );
+    const isDisabled = useMemo(() => {
+        const episodeNum = Number(episodeNumber);
+        const nextAiringNum = Number(nextAiringEpisode);
+
+        if (!isNext && episodeNum === 1) return true;
+
+        if (isNext) {
+            if(episodeNum === episodesLength) return true;
+            if(nextAiringNum && episodeNum + 1 >= nextAiringNum) return true
+        }
+
+        return false;
+    }, [isNext, episodeNumber, episodesLength, nextAiringEpisode]);
+
 
     return (
         <Button 
