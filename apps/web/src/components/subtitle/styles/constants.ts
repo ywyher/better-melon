@@ -18,7 +18,7 @@ const DEFAULT_SETTINGS: {
         backgroundRadius: 6,
         transcription: "all" as SubtitleStyles['transcription'],
         fontWeight: 'bold',
-        margin: 3,
+        gap: 0,
         userId: '',
         state: 'default',
         createdAt: null,
@@ -37,7 +37,7 @@ const DEFAULT_SETTINGS: {
         backgroundRadius: 6,
         transcription: "all" as SubtitleStyles['transcription'],
         fontWeight: 'bold',
-        margin: 3,
+        gap: 0,
         userId: '',
         state: 'active',
         createdAt: null,
@@ -77,12 +77,10 @@ export const defaultSubtitleStyles: Record<StyleTranscription, {
         default: {
             ...DEFAULT_SETTINGS.default,
             fontSize: 25,
-            margin: 15
         },
         active: {
             ...DEFAULT_SETTINGS.active,
             fontSize: 25,
-            margin: 15
         },
     }
 };

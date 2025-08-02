@@ -1,5 +1,5 @@
 // useTokenStyles.ts - Individual functions + combined function
-import { CSSProperties, useCallback } from 'react';
+import { CSSProperties, useCallback, useEffect } from 'react';
 import { excludedPos, learningStatusesStyles } from '@/lib/constants/subtitle';
 import { SubtitleToken } from '@/types/subtitle';
 import { StyleSet, StyleTranscription } from '@/app/watch/[id]/[ep]/types';
@@ -8,6 +8,7 @@ import { PitchAccents } from '@/types/pitch';
 import { useSettingsStore } from '@/lib/stores/settings-store';
 import { useLearningStore } from '@/lib/stores/learning-store';
 import { useSubtitleStylesStore } from '@/lib/stores/subtitle-styles-store';
+import { defaultSubtitleStyles } from '@/components/subtitle/styles/constants';
 
 interface TokenStylesParams {
   token: SubtitleToken;
@@ -38,9 +39,26 @@ export const useTokenStyles = () => {
       accent: PitchAccents | null,
       transcription: StyleTranscription 
     }): CSSProperties => {
-    const styles = computedStyles?.[transcription] || computedStyles?.['all'];
+    let styles;
+    if(transcription != 'furigana') {
+      styles = computedStyles?.[transcription] || computedStyles?.['all'];
+    } else {
+      styles = computedStyles?.[transcription] || {
+          ...computedStyles?.['all'],
+          token: {
+            active: {
+              ...computedStyles?.['all']?.token.active,
+              fontSize: defaultSubtitleStyles.furigana.active.fontSize
+            },
+            default: {
+              ...computedStyles?.['all']?.token.default,
+              fontSize: defaultSubtitleStyles.furigana.default.fontSize
+            }
+          }
+        }
+      }
 
-    if (!styles) return {};
+    if (!styles?.token) return {};
       
     const baseStyle = isActive 
       ? styles.token.active 

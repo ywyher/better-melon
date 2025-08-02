@@ -19,6 +19,7 @@ export const RegularToken = memo<RegularTokenProps>(({
   onTokenMouseEnter,
   onTokenMouseLeave,
 }) => {
+
   return (
     <div style={{
       ...styles.container,
@@ -26,7 +27,9 @@ export const RegularToken = memo<RegularTokenProps>(({
       <span
         style={{
           ...styles.token,
-          ...(transcription != 'english' ? styles.learningStatus : undefined)
+          ...(transcription != 'english' 
+            ? styles.learningStatus 
+            : undefined),
         }}
         onClick={onTokenClick}
         onMouseEnter={onTokenMouseEnter}

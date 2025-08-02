@@ -31,7 +31,8 @@ export const useSubtitleCue = () => {
   const setIsAddToAnki = useDefinitionStore((state) => state.setIsAddToAnki);
   
   const handleSeek = useCallback((from: TSubtitleCue['from']) => {
-    player.current?.remoteControl.seek(from + delay.japanese);
+    // 0.1 to avoid seeking to the previous cue
+    player.current?.remoteControl.seek(from + delay.japanese + 0.1);
   }, [player, activeSubtitleFile, delay.japanese]);
 
   const handleTokenClick = useCallback((token: SubtitleToken, from: number, to: number) => {

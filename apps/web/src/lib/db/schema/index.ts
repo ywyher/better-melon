@@ -166,7 +166,7 @@ export const subtitleStyles = pgTable("subtitle_styles", {
   backgroundBlur: real("background_blur").notNull().default(0),
   backgroundRadius: real("background_radius").notNull().default(6),
 
-  margin: real('margin').notNull().default(1),
+  gap: real('gap').notNull().default(10),
   
   state: subtitleStateEnum('state').notNull().default('default'),
   userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }),

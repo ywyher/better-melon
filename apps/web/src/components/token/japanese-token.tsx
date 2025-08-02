@@ -34,7 +34,7 @@ export const JapaneseToken = memo<JapaneseTokenProps>(({
 
   return (
     <div
-      className='mr-2 cursor-pointer'
+      className='flex flex-row gap-0 items-end cursor-pointer'
       onClick={onTokenClick}
       onMouseEnter={onTokenMouseEnter}
       onMouseLeave={onTokenMouseLeave}
@@ -51,11 +51,11 @@ export const JapaneseToken = memo<JapaneseTokenProps>(({
             showFurigana={showFurigana}
             
             kanjiStyles={{
-              text: {
-                ...styles.token,
+              text: styles.token,
+              container: {
+                ...styles.container,
                 ...styles.learningStatus
-              },
-              container: styles.container
+              }
             }}
             furiganaStyles={{
               text: {
@@ -65,9 +65,6 @@ export const JapaneseToken = memo<JapaneseTokenProps>(({
                 ...styles.furigana?.container
               },
             }}
-            autoMargin={true}
-
-            // wrapperStyles={styles.container}
           />
         );
       })}

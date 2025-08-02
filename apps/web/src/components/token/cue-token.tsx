@@ -41,13 +41,16 @@ export const CueToken = React.memo<SubtitleCueTokenProps>(({
   }, [token.surface_form, transcription]);
 
   const className = useMemo(() => cn(
-    "cursor-pointer mr-1 pb-2 transition-colors hover:bg-primary/10",
+    "cursor-pointer transition-colors hover:bg-primary/10",
     isActive && "bg-primary/20"
   ), [isActive]);
 
   if (transcription === 'japanese' && rubyPairs) {
     return (
-      <div onClick={onTokenClick}>
+      <div 
+        onClick={onTokenClick}
+        className='flex flex-row items-end cursor-pointer'
+      >
         {rubyPairs.map((pair, pairIdx) => (
           <Ruby
             key={pairIdx}
@@ -58,19 +61,19 @@ export const CueToken = React.memo<SubtitleCueTokenProps>(({
             kanjiStyles={{
               text: {
                 fontSize: 19
+              },
+              container: {
+                ...styles.learning
               }
             }}
             furiganaStyles={{
               text: {
                 fontSize: 17,
-                marginBottom: 15
               }
             }}
             styles={{
               ...styles.pitch,
-              ...styles.learning
             }}
-
             className={className}
           />
         ))}

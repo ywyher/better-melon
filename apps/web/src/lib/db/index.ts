@@ -5,7 +5,6 @@ import { drizzle, NodePgQueryResultHKT } from 'drizzle-orm/node-postgres';
 import { PgTransaction } from 'drizzle-orm/pg-core';
 import * as schema from "./schema"; // getting the schema
 
-
 const db = drizzle(env.DATABASE_URL!, {
   schema,
   logger: true

@@ -117,7 +117,16 @@ export const TranscriptionItem = React.memo<TranscriptionItemProps>(function Tra
         <GripVertical className={GRIP_CLASSES} />
       </div>
       {memoizedTokens.map(({ cue, tokens }) => (
-        <Fragment key={`${transcription}-${cue.id}`}>
+        <div 
+          key={`${transcription}-${cue.id}`}
+          className={cn(
+            "flex flex-row",
+            transcription == 'english' && "gap-2"
+          )}
+          style={{
+            gap: containerStyles.gap
+          }}
+        >
           {tokens.map((token) => (
             <TokenRenderer
               key={token.key}
@@ -132,7 +141,7 @@ export const TranscriptionItem = React.memo<TranscriptionItemProps>(function Tra
               japaneseToken={token.japaneseToken}
             />
           ))}
-        </Fragment>
+        </div>
       ))}
     </div>
   );

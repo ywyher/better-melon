@@ -24,22 +24,31 @@ export function useSubtitleCuesList({ cues, selectedTranscription }: UseSubtitle
   const player = usePlayerStore((state) => state.player);
   const delay = useDelayStore((state) => state.delay);
 
-  // Dynamic size estimation based on transcription type
+  // More sophisticated dynamic size estimation
   const estimateSize = useMemo(() => {
     return (index: number) => {
       const cue = cues?.[index];
-      if (!cue) return 80;
+      if (!cue || !cue.content) return 60; // Base minimum height
       
-      if (selectedTranscription === 'japanese') {
-        return 110;
-      }
+      const content = cue.content.trim();
+      const contentLength = content.length;
       
-      const contentLength = cue.content?.length || 0;
-      if (contentLength > 50) {
-        return 80;
-      }
+      // Base height for padding, margins, etc.
+      let baseHeight = 45;
       
-      return 80;
+      // Estimate based on character count and line breaks
+      const estimatedLines = Math.max(1, Math.ceil(contentLength / 50)); // ~50 chars per line
+      const actualLineBreaks = (content.match(/\n/g) || []).length;
+      const totalLines = Math.max(estimatedLines, actualLineBreaks + 1);
+      
+      // Line height varies by transcription type
+      const lineHeight = selectedTranscription === 'japanese' ? 28 : 24;
+      
+      // Calculate total height
+      const estimatedHeight = baseHeight + (totalLines * lineHeight);
+      
+      // Set reasonable bounds
+      return Math.max(60, Math.min(estimatedHeight, 300));
     };
   }, [cues, selectedTranscription]);
 
@@ -47,9 +56,10 @@ export function useSubtitleCuesList({ cues, selectedTranscription }: UseSubtitle
       count: cues?.length || 0,
       getScrollElement: () => scrollAreaRef.current,
       estimateSize: estimateSize,
-      overscan: 0,
+      overscan: 3,
       measureElement: (element: Element) => {
-        return element.getBoundingClientRect().height || 60;
+        const height = element.getBoundingClientRect().height;
+        return height > 0 ? height : 60;
       },
   });
 
@@ -115,7 +125,9 @@ export function useSubtitleCuesList({ cues, selectedTranscription }: UseSubtitle
   
   useEffect(() => {
     if (!player.current || !cues?.length) return;
-    rowVirtualizer.measure()
+    
+    // Force remeasure all items when transcription changes
+    rowVirtualizer.measure();
     
     const timeoutId = setTimeout(() => {
       const currentTime = player.current?.currentTime || 0;
@@ -136,6 +148,13 @@ export function useSubtitleCuesList({ cues, selectedTranscription }: UseSubtitle
     
     return () => clearTimeout(timeoutId);
   }, [selectedTranscription, findActiveCue, rowVirtualizer]);
+
+  // Force remeasure when cues change (content might have changed)
+  useEffect(() => {
+    if (cues?.length) {
+      rowVirtualizer.measure();
+    }
+  }, [cues, rowVirtualizer]);
 
   const handleManualScroll = useCallback(() => {
     if (!playerSettings.autoScrollToCue) return

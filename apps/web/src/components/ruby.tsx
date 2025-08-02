@@ -25,27 +25,25 @@ interface RubyProps {
   
   className?: string;
   styles?: React.CSSProperties;
-  autoMargin?: boolean
 }
 
 const DEFAULT_STYLES = {
   kanji: { 
     text: {
       fontSize: defaultSubtitleStyles.all.default.fontSize
-    },
+    } as React.CSSProperties,
     container: {
-      textAlign: 'center' as const
-    }
-  } as const,
+      textAlign: 'center'
+    } as React.CSSProperties
+  },
   furigana: { 
     text: {
-      margin: defaultSubtitleStyles.furigana.default.margin,
       fontSize: defaultSubtitleStyles.furigana.default.fontSize, 
-    }, 
+    } as React.CSSProperties, 
     container: {
-      textAlign: 'center' as const
-    }
-  } as const,
+      textAlign: 'center'
+    } as React.CSSProperties
+  },
   wrapper: { lineHeight: '1.5' } as const
 } as const;
 
@@ -69,8 +67,6 @@ const Ruby = memo<RubyProps>(({
   onMouseLeave,
   className,
   styles,
-
-  autoMargin = true,
 }) => {
   const isFullScreen = useMediaState('fullscreen')
 
@@ -113,15 +109,6 @@ const Ruby = memo<RubyProps>(({
       ...wrapperStyles,
       ...styles,
     };
-    
-    let dynamicMargin = computedFuriganaStyle.text.margin;
-    if(autoMargin) {
-      dynamicMargin = Math.max(
-        (isFullScreen ? 28 : 20),
-        Number(computedFuriganaStyle.text.margin) / Number(computedFuriganaStyle.text.fontSize));
-        console.log(`dynamicMargin`, dynamicMargin)
-      computedFuriganaStyle.text.margin = dynamicMargin;
-    }
 
     return {
       kanji: computedKanjiStyles,
@@ -129,23 +116,29 @@ const Ruby = memo<RubyProps>(({
         ...computedFuriganaStyle,
         text: {
           ...computedFuriganaStyle.text,
-          margin: `0 0 ${dynamicMargin}px 0`
         }
       },
       wrapper: computedWrapperStyles,
       isMinimal: false
     };
-  }, [kanjiStyles, furiganaStyles, wrapperStyles, styles]);
+  }, [kanjiStyles, furiganaStyles, wrapperStyles, styles, isFullScreen]);
+
+  useEffect(() =>{ 
+    console.log(`computedStyles`, computedStyles.furigana.text)
+  }, [computedStyles])
 
   if (!kanji) return null;
+
 
   return (
     <ruby
       className={cn(
         className,
+        "flex flex-col-reverse justify-center items-center",
       )}
       style={{
         ...computedStyles.wrapper,
+        rowGap: Number(computedStyles.furigana.text?.gap || 0),
       }}
       onClick={onClick}
       onMouseEnter={onMouseEnter}

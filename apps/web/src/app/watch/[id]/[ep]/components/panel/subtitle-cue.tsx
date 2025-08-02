@@ -61,25 +61,23 @@ const SubtitleCue = React.memo(({
           <Clipboard className="h-3 w-3" />
         </Button>
       </div>
-      <div className="flex flex-col gap-0">
-        <div className="flex flex-wrap gap-1 items-end">
-          {cue.tokens?.length ? cue.tokens.map((token, idx) => {
-            const accent = getTokenAccent(token) 
-            const japaneseToken = japaneseCue?.tokens?.find((t) => t.id == token.id)
+      <div className="flex flex-wrap gap-y-3 gap-1 flex-row items-end">
+        {cue.tokens?.length ? cue.tokens.map((token, idx) => {
+          const accent = getTokenAccent(token) 
+          const japaneseToken = japaneseCue?.tokens?.find((t) => t.id == token.id)
 
-            return (
-                <CueToken
-                  key={idx}
-                  showFurigana={showFurigana}
-                  accent={accent}
-                  token={token}
-                  transcription={cue.transcription}
-                  isActive={activeToken?.id === token.id}
-                  onTokenClick={() => handleTokenClick(japaneseToken || token, cue.from, cue.to)}
-                />
-            )
-          }) : null}
-        </div>
+          return (
+            <CueToken
+              key={idx}
+              showFurigana={showFurigana}
+              accent={accent}
+              token={token}
+              transcription={cue.transcription}
+              isActive={activeToken?.id === token.id}
+              onTokenClick={() => handleTokenClick(japaneseToken || token, cue.from, cue.to)}
+            />
+          )
+        }) : null}
       </div>
     </div>
   );

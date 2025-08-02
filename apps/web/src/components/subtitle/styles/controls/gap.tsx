@@ -5,7 +5,7 @@ import TooltipWrapper from "@/components/tooltip-wrapper";
 import { useStyleFieldController } from "@/lib/hooks/use-style-field-controller";
 import { SubtitleStylesControllerProps } from "@/types/subtitle";
 
-export default function MarginController({
+export default function GapController({
   transcription,
   value,
   source,
@@ -16,17 +16,17 @@ export default function MarginController({
     transcription,
     initialValue: value,
     source,
-    field: 'margin',
+    field: 'gap',
     syncSettings,
     state,
-    successMessage: 'Margin updated successfully',
-    errorMessage: 'Failed to update margin'
+    successMessage: 'Gap updated successfully',
+    errorMessage: 'Failed to update gap'
   });
 
   return (
     <div className="flex flex-col gap-1">
       <div className="flex flex-row gap-2 items-center">
-        <p>Margin</p>
+        <p>Gap</p>
         <TooltipWrapper>
           {transcription == 'furigana' ? (
             <>Vertical space between the furigana and the japanese text</>
@@ -37,8 +37,8 @@ export default function MarginController({
       </div>
       <SliderInput
         min={0}
-        max={15}
-        step={0.1}
+        max={30}
+        step={0.5}
         showValue={true}
         unit='px'
         className="w-full"

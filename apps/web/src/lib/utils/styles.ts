@@ -22,9 +22,6 @@ export const getTokenStyles = ({ shouldScaleFontDown, styles, transcription }: {
     opacity: styles.default.textOpacity ||  defaultSubtitleStyles[transcription].default.textOpacity,
     fontWeight: styles.default.fontWeight ||  defaultSubtitleStyles[transcription].default.fontWeight,
     transition: 'all 0.15s ease',
-    margin: transcription != 'furigana' 
-    ? styles.default.margin || defaultSubtitleStyles[transcription].default.margin
-    : styles.default.margin || defaultSubtitleStyles[transcription].default.margin,
     cursor: 'pointer',
     textShadow: styles.default.textShadow === 'drop-shadow' 
       ? '1px 1px 2px rgba(0, 0, 0, 0.8)'
@@ -49,9 +46,6 @@ export const getTokenStyles = ({ shouldScaleFontDown, styles, transcription }: {
     color: styles.active.textColor || defaultSubtitleStyles[transcription].active.textColor,
     opacity: styles.active.textOpacity || defaultSubtitleStyles[transcription].active.textOpacity,
     fontWeight: styles.active.fontWeight || defaultSubtitleStyles[transcription].active.fontWeight,
-    margin: transcription != 'furigana' 
-    ? styles.default.margin || defaultSubtitleStyles[transcription].default.margin
-    : styles.default.margin || defaultSubtitleStyles[transcription].default.margin,
     cursor: 'pointer',
     textShadow: styles.active.textShadow === 'drop-shadow' 
       ? '1px 1px 2px rgba(0, 0, 0, 0.8)'
@@ -90,7 +84,7 @@ export const getContainerStyles = (styles: {
     marginBottom: "1rem",
     flexWrap: 'wrap',
     justifyContent: 'center',
-    gap: 2
+    gap: styles.default.gap
   }
 
   const activeStyles: CSSProperties = {
@@ -103,7 +97,8 @@ export const getContainerStyles = (styles: {
       : '8px',
     textAlign: 'center',
     width: 'fit-content',
-    height: 'fit-content'
+    height: 'fit-content',
+    gap: styles.active.gap
   }
 
   return {

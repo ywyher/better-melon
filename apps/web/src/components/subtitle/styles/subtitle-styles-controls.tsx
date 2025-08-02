@@ -10,8 +10,8 @@ import BackgroundColorController from "@/components/subtitle/styles/controls/bac
 import BackgroundBlurController from "@/components/subtitle/styles/controls/background-blur";
 import BackgroundRadiusController from "@/components/subtitle/styles/controls/background-radius";
 import BackgroundOpacityController from "@/components/subtitle/styles/controls/background-opacity";
-import MarginController from "@/components/subtitle/styles/controls/margin";
 import FontWeightController from "@/components/subtitle/styles/controls/font-weight";
+import GapController from "@/components/subtitle/styles/controls/gap";
 
 type SubtitleStylesControlsProps = { 
   transcription: SubtitleStyles['transcription']
@@ -156,8 +156,8 @@ export default function SubtitleStylesControls({
                   </div>
                   <div className="pl-3 pr-1 space-y-6">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                          <MarginController 
-                              value={styles.margin}
+                          <GapController 
+                              value={styles.gap}
                               transcription={transcription}
                               source={source}
                               syncSettings={syncSettings}

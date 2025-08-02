@@ -6,9 +6,12 @@ import DefinitionCardHeaderExpand from "@/components/definition-card/_header/com
 import DefinitionCardHeaderWordStatus from "@/components/definition-card/_header/components/word-status";
 import Ruby from "@/components/ruby";
 import { CardHeader, CardTitle } from "@/components/ui/card";
+import { pitchAccentsStyles } from "@/lib/constants/pitch";
+import { useTranscriptionItem } from "@/lib/hooks/use-transcription-item";
 import { parseRuby } from "@/lib/utils/subtitle";
 import { JMdictWord } from "@/types/jmdict";
 import { SubtitleToken } from "@/types/subtitle";
+import { useMemo } from "react";
 
 type DefinitionCardHeaderProps = {
   token: SubtitleToken
@@ -16,11 +19,16 @@ type DefinitionCardHeaderProps = {
 }
 
 export default function DefinitionCardHeader({ token, entries }: DefinitionCardHeaderProps) {
+  const { getTokenAccent } = useTranscriptionItem('japanese')
+
   const pairs = parseRuby(token.surface_form, true)
+  const accent = useMemo(() => getTokenAccent(token), [token]);
 
   return (
     <CardHeader className="flex flex-row justify-between items-center p-0">
-      <CardTitle>
+      <CardTitle
+        className='flex flex-row items-end'
+      >
         {pairs.map((pair, pairIdx) => {
           const { furigana, kanji } = pair
           return (
@@ -37,10 +45,12 @@ export default function DefinitionCardHeader({ token, entries }: DefinitionCardH
               furiganaStyles={{
                 text: {
                   fontSize: 15,
-                  margin: "0 0 10px 0"
                 }
               }}
-              autoMargin={false}
+
+              styles={{
+                ...(accent && pitchAccentsStyles[accent])
+              }}
             />
           )
         })}
