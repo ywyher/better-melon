@@ -1,5 +1,3 @@
-add pitch coloring and learning status as playback toggles
-
 add more options for the delay like custom inputs
 
 check if search functioanlity works for romanjin and native

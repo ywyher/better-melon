@@ -21,9 +21,12 @@ export const RegularToken = memo<RegularTokenProps>(({
 }) => {
 
   return (
-    <div style={{
-      ...styles.container,
-    }}>
+    <div 
+      style={{
+        ...styles.container,
+      }}
+      className='flex flex-row gap-0 items-end'
+    >
       <span
         style={{
           ...styles.token,

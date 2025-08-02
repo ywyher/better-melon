@@ -120,7 +120,7 @@ export const TranscriptionItem = React.memo<TranscriptionItemProps>(function Tra
         <div 
           key={`${transcription}-${cue.id}`}
           className={cn(
-            "flex flex-row",
+            "flex flex-row flex-wrap",
             transcription == 'english' && "gap-2"
           )}
           style={{
