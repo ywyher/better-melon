@@ -1,13 +1,13 @@
 import { t } from "elysia";
 import { datePattern } from ".";
-import { kitsuTitles } from "@better-melon/shared/types"
+import { kitsuEpisode, kitsuTitles } from "@better-melon/shared/types"
 
-export const kitsuAnimeDimensions = t.Object({
+export const kitsuDimensions = t.Object({
   width: t.Number(),
   height: t.Number()
 })
 
-export const kitsuAnimeStatus = t.UnionEnum([
+export const kitsuStatus = t.UnionEnum([
   "current",
   "finished",
   "tba",
@@ -18,12 +18,12 @@ export const kitsuAnimeStatus = t.UnionEnum([
 export const anilistToKitsu = t.Object({
   q: t.String(),
   success: t.Boolean(),
-  status: kitsuAnimeStatus,
+  status: kitsuStatus,
   startDate: t.String({ pattern: datePattern }),
   endDate: t.Nullable(t.String({ pattern: datePattern })),
 })
 
-export const kitsuAnimePoster = t.Object({
+export const kitsuPoster = t.Object({
   tiny: t.String({
     format: 'uri'
   }),
@@ -40,15 +40,15 @@ export const kitsuAnimePoster = t.Object({
     format: 'uri'
   }),
   meta: t.Object({
-    tiny: kitsuAnimeDimensions,
-    small: kitsuAnimeDimensions,
-    medium: kitsuAnimeDimensions,
-    large: kitsuAnimeDimensions,
-    original: kitsuAnimeDimensions,
+    tiny: kitsuDimensions,
+    small: kitsuDimensions,
+    medium: kitsuDimensions,
+    large: kitsuDimensions,
+    original: kitsuDimensions,
   })
 })
 
-export const kitsuAnimeCover = t.Object({
+export const kitsuCover = t.Object({
   tiny: t.String({
     format: 'uri'
   }),
@@ -62,14 +62,14 @@ export const kitsuAnimeCover = t.Object({
     format: 'uri'
   }),
   meta: t.Object({
-    tiny: kitsuAnimeDimensions,
-    medium: kitsuAnimeDimensions,
-    large: kitsuAnimeDimensions,
-    original: kitsuAnimeDimensions,
+    tiny: kitsuDimensions,
+    medium: kitsuDimensions,
+    large: kitsuDimensions,
+    original: kitsuDimensions,
   })
 })
 
-export const kitsuAnimeAttributes = t.Object({
+export const kitsuAttributes = t.Object({
   slug: t.String(),
   synopsis: t.Nullable(t.String()),
   description: t.Nullable(t.String()),
@@ -88,9 +88,9 @@ export const kitsuAnimeAttributes = t.Object({
   ageRating: t.String(),
   ageRatingGuide: t.String(),
   subtype: t.String(),
-  status: kitsuAnimeStatus,
-  posterImage: kitsuAnimePoster,
-  coverImage: kitsuAnimeCover,
+  status: kitsuStatus,
+  posterImage: kitsuPoster,
+  coverImage: kitsuCover,
   episodeCount: t.Number(),
   episodeLength: t.Number(),
   youtubeVideoId: t.String(),
@@ -100,22 +100,28 @@ export const kitsuAnimeAttributes = t.Object({
   updatedAt: t.String(),
 })
 
-export const kitsuAnimeInfo = t.Object({
+export const kitsuAnime = t.Object({
   id: t.String(),
   type: t.Literal("anime"),
   links: t.Object({
     self: t.String()
   }),
-  attributes: kitsuAnimeAttributes,
+  attributes: kitsuAttributes,
   relationships: t.Any()
 })
 
-export type KitsuAnimeAttributes = typeof kitsuAnimeAttributes.static
-export type KitsuAnimeInfo = typeof kitsuAnimeInfo.static
-export type KitsuAnimeStatus = typeof kitsuAnimeStatus.static
-export type KitsuAnimeDimensions = typeof kitsuAnimeDimensions.static
-export type KitsuAnimePoster = typeof kitsuAnimePoster.static
-export type KitsuAnimeCover = typeof kitsuAnimeCover.static
+export const kitsuResponse = t.Object({
+  anime: kitsuAnime,
+  episode: kitsuEpisode
+})
+
+export type KitsuResponse = typeof kitsuResponse.static
+export type KitsuAttributes = typeof kitsuAttributes.static
+export type KitsuAnime = typeof kitsuAnime.static
+export type KitsuStatus = typeof kitsuStatus.static
+export type KitsuDimensions = typeof kitsuDimensions.static
+export type KitsuPoster = typeof kitsuPoster.static
+export type KitsuCover = typeof kitsuCover.static
 export type AnilistToKitsu = typeof anilistToKitsu.static
 
 export type KitsuApiResponse<T> = {

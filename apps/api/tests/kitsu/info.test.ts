@@ -1,10 +1,10 @@
 import { expect, test } from "bun:test";
-import { getKitsuAnimeInfo } from "../../src/services/kitsu";
 import { getAnilistAnime } from "../../src/services/anilist";
+import { getKitsuInfo } from "../../src/services/kitsu";
 
 test("returns anime info from kitsu", async () => {
-    const anilistData = await getAnilistAnime(9253)
-    const data = await getKitsuAnimeInfo(anilistData)
+    const anilistData = await getAnilistAnime({ anilistId: 20661 })
+    const data = await getKitsuInfo({ anilistData })
 
     expect(anilistData).not.toBeEmpty()
     expect(data).not.toBeEmpty()

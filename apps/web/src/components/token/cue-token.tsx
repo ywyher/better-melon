@@ -24,16 +24,16 @@ export const CueToken = React.memo<SubtitleCueTokenProps>(({
   accent,
   onTokenClick,
 }) => {
-  const wordsSettings = useSettingsStore((settings) => settings.word);
+  const wordSettings = useSettingsStore((settings) => settings.word);
   const {
     getPitchStyles,
     getLearningStatusStyles
   } = useTokenStyles();
 
   const styles = useMemo(() => ({
-    pitch: getPitchStyles(isActive, accent),
-    learning: wordsSettings.learningStatus ? getLearningStatusStyles(token) : undefined
-  }), [getPitchStyles, isActive, accent, getLearningStatusStyles, token]);
+    pitch: wordSettings.pitchColoring ? getPitchStyles(isActive, accent) : undefined,
+    learning: wordSettings.learningStatus ? getLearningStatusStyles(token) : undefined
+  }), [getPitchStyles, getLearningStatusStyles, isActive, accent, token, wordSettings]);
 
   const rubyPairs = useMemo(() => {
     if (transcription === 'japanese') {

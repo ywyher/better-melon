@@ -1,31 +1,9 @@
 import { GeneralSettings, SubtitleStyles } from "@/lib/db/schema";
+import { SubtitleFile } from "@better-melon/shared/types";
 
 export type Ruby = {
   kanji: string;
   furigana: string;
-}
-
-export type SubtitleEntry = {
-  id: number;
-  name: string;
-  flags: {
-    anime: boolean;
-    unverified: boolean;
-    external: boolean;
-    movie: boolean;
-    adult: boolean;
-  };
-  last_modified: string | Date;
-  anilist_id: number;
-  english_name: string;
-  japanese_name: string;
-}
-
-export type SubtitleFile = {
-  url: string;
-  name: string;
-  size: number;
-  last_modified: Date | string;
 }
 
 export type ActiveSubtitleFile = 

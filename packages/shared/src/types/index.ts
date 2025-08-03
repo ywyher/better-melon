@@ -19,3 +19,9 @@ export * from './kitsu/anime/schema'
 export * from './kitsu/anime/type'
 export * from './kitsu/episode/schema'
 export * from './kitsu/episode/type'
+
+export * from './subtitle/schema'
+export * from './subtitle/type'
+
+export * from './streaming/schema'
+export * from './streaming/type'

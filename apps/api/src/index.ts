@@ -1,8 +1,9 @@
 import Elysia from "elysia";
 import { cors } from '@elysiajs/cors';
 import { env } from "./lib/env";
-import { animeProviders, indexes } from "./lib/constants/constants";
+import { indexes } from "./lib/constants/constants";
 import { api } from "./routes/api";
+import { animeProvider } from "@better-melon/shared/types";
 
 export const server = new Elysia({ serve: { idleTimeout: 255 } })
   .use(cors())
@@ -11,7 +12,7 @@ export const server = new Elysia({ serve: { idleTimeout: 255 } })
     return {
       about: "This API provide the needed data like M3U8 links, japanese subtitle files and dictionary data for better-melon",
       status: '200',
-      providers: animeProviders[0],
+      providers: animeProvider,
       indexes: indexes[0],
       routes: [
         '/api/anime/:anilistId/:episodeNumber/:provider',

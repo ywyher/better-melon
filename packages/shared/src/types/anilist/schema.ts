@@ -1,4 +1,5 @@
 import { Type as t } from "@sinclair/typebox";
+import { animeDate } from "../anime/schema";
 
 export const anilistGenre = t.Union([
   t.Literal("Action"),
@@ -471,3 +472,22 @@ export const anilistTag = t.Union([
   t.Literal('Yuri'),
   t.Literal('Zombie')
 ])
+
+export const anilistAnime = t.Object({
+  id: t.Number(),
+  title: anilistTitle,
+  format: anilistFormat,
+  status: anilistStatus,
+  bannerImage: t.Union([
+    t.String(),
+    t.Null()
+  ]),
+  coverImage: anilistCoverImage,
+  episodes: t.Number(),
+  nextAiringEpisode: t.Union([
+    anilistNextAiringEpisode,
+    t.Null()
+  ]),
+  startDate: animeDate,
+  endDate: animeDate,
+})

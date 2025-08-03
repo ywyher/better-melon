@@ -1,10 +1,9 @@
 import Hianime from '@repo/scraper';
 import { redis } from "bun";
-import { AnilistAnime } from "../types/anilist";
 import { AnilistToHiAnime, HianimeResponse } from "../types/hianime";
-import { getAnilistAnime } from "./anilist";
 import { cacheKeys } from "../lib/constants/cache";
-import { AnilistFormat, AnilistStatus, HianimeAnime, HianimeEpisode, HianimeEpisodeServers, HianimeEpisodeSources, hianimeFormat, HianimeFormat, hianimeStatus, HianimeStatus } from '@better-melon/shared/types';
+import { AnilistAnime, AnilistFormat, AnilistStatus, HianimeAnime, HianimeEpisode, HianimeEpisodeServers, HianimeEpisodeSources, hianimeFormat, HianimeFormat, hianimeStatus, HianimeStatus } from '@better-melon/shared/types';
+import { setCache } from '../utils/utils';
 
 const hianime = new Hianime()
 
@@ -67,7 +66,7 @@ async function mapAnilistToHianime({ anilistData }: { anilistData: AnilistAnime 
   }
 }
 
-export async function getHianimeAnimeInfo({ anilistData }: { anilistData: AnilistAnime }): Promise<HianimeAnime> {
+export async function getHianimeInfo({ anilistData }: { anilistData: AnilistAnime }): Promise<HianimeAnime> {
   try {
     const cacheKey = `${cacheKeys.hianime.info(anilistData.id)}`;
     const cachedData = await redis.get(cacheKey);
@@ -98,7 +97,7 @@ export async function getHianimeAnimeInfo({ anilistData }: { anilistData: Anilis
 
     const anime = animes[0] as HianimeAnime
 
-    await redis.set(cacheKey, JSON.stringify(anime), "EX", 3600);
+    setCache({ data: anime, key: cacheKey, ttl: 3600, background: true })
     console.log(`Cached hianime data for ID: ${anilistData.id}`);
     return anime;
   } catch (error) {
@@ -107,7 +106,7 @@ export async function getHianimeAnimeInfo({ anilistData }: { anilistData: Anilis
   }
 }
 
-export async function getHianimeAnimeEpisodes({ animeId }: { animeId: HianimeAnime['id'] }): Promise<HianimeEpisode[]> {
+export async function getHianimeEpisodes({ animeId }: { animeId: HianimeAnime['id'] }): Promise<HianimeEpisode[]> {
   try {
     const cacheKey = `${cacheKeys.hianime.episodes(animeId)}`;
     const cachedData = await redis.get(cacheKey);
@@ -120,14 +119,15 @@ export async function getHianimeAnimeEpisodes({ animeId }: { animeId: HianimeAni
     if (!episodes.length) {
       throw new Error(`No episodes found on HiAnime for: ${animeId}`);
     }
-    await redis.set(cacheKey, JSON.stringify(episodes), "EX", 3600);
+
+    setCache({ data: episodes, key: cacheKey, ttl: 3600, background: true })
     return episodes;
   } catch (error) {
     throw new Error(`${error instanceof Error ? error.message : 'Failed to fetch hianime anime episode streaming links: Unknown error'}`);
   }
 }
 
-export async function getHianimeAnimeEpisodeServers({ episodeId }: { episodeId: HianimeEpisode['id'] }): Promise<HianimeEpisodeServers> {
+export async function getHianimeEpisodeServers({ episodeId }: { episodeId: HianimeEpisode['id'] }): Promise<HianimeEpisodeServers> {
   try {
     const cacheKey = `${cacheKeys.hianime.servers(episodeId)}`;
     const cachedData = await redis.get(cacheKey);
@@ -142,14 +142,14 @@ export async function getHianimeAnimeEpisodeServers({ episodeId }: { episodeId: 
       throw new Error(`No episode servers found on Hianime for: ${episodeId}`);
     }
 
-    await redis.set(cacheKey, JSON.stringify(servers), "EX", 300);
+    setCache({ data: servers, key: cacheKey, ttl: 300, background: true })
     return servers;
   } catch (error) {
     throw new Error(`${error instanceof Error ? error.message : 'Failed to fetch hianime anime episode servers: Unknown error'}`);
   }
 }
 
-export async function getHianimeAnimeEpisodeSources({
+export async function getHianimeEpisodeSources({
   episodeId,
   servers
 }: {
@@ -157,72 +157,73 @@ export async function getHianimeAnimeEpisodeSources({
   servers: HianimeEpisodeServers
 }): Promise<HianimeEpisodeSources> {
   try {
-    const cacheKey = `${cacheKeys.hianime.sources(String(episodeId))}`;
+    const cacheKey = `${cacheKeys.hianime.sources(episodeId)}`;
     const cachedData = await redis.get(cacheKey);
     if (cachedData) {
       console.log(`Cache hit for hianime anime episode sources episodeID: ${episodeId}`);
       return JSON.parse(cachedData as string) as HianimeEpisodeSources;
     }
     
-    console.log(servers)
-    
     const sources = await hianime.getEpisodeSources({
       episodeId: episodeId,
       server: servers.sub[0] || servers.sub[1],
       fallback: true
     })
-    console.log(sources)
 
     if (!sources) {
       throw new Error(`No episodes sources found on HiAnime for: ${episodeId}`);
     }
 
-    await redis.set(cacheKey, JSON.stringify(sources), "EX", 300);
+    setCache({ data: sources, key: cacheKey, ttl: 300, background: true })
     return sources;
   } catch (error) {
     throw new Error(`${error instanceof Error ? error.message : 'Failed to fetch hianime anime episode sources: Unknown error'}`);
   }
 }
 
-export async function getHianimeAnime(anilistId: AnilistAnime['id'], episodeNumber: string): Promise<HianimeResponse> {
-  console.log(`Starting getHianimeAnime for anilistId: ${anilistId}, episodeNumber: ${episodeNumber}`);
+export async function getHianimeAnime({
+  anilistData,
+  episodeNumber
+}: {
+  anilistData: AnilistAnime,
+  episodeNumber: number
+}): Promise<HianimeResponse> {
+  console.log(`Starting getHianimeAnime for anilistId: ${anilistData.id}, episodeNumber: ${episodeNumber}`);
   
   try {
-    console.log('Fetching anilist anime data...');
-    const anilistAnimeData = await getAnilistAnime({ anilistId });
-    console.log('Successfully fetched anilist anime data');
-    
     console.log('Fetching hianime anime info...');
-    const animeData = await getHianimeAnimeInfo({ anilistData: anilistAnimeData });
-    if(!animeData) {
+    const info = await getHianimeInfo({ anilistData });
+    if(!info) {
       console.error('No anime data found from HiAnime');
       throw new Error("Couldn't find anime data from HiAnime");
     }
-    console.log(`Successfully fetched hianime info for ID: ${animeData.id}`);
+    console.log(`Successfully fetched hianime info for ID: ${info.id}`);
     
     console.log('Fetching episodes data...');
-    const episodes = await getHianimeAnimeEpisodes({ animeId: animeData.id });
+    const episodes = await getHianimeEpisodes({ animeId: info.id });
     console.log('Successfully fetched episodes data');
 
-    const episode = episodes.find(e => e.number === Number(episodeNumber));
+    const episode = episodes.find(e => e.number === episodeNumber);
     const episodeId = episode?.id
     if(!episode || !episodeId) throw new Error(`Couldn't find hianime anime episode`)
 
     console.log('Fetching episode servers...');
-    const servers = await getHianimeAnimeEpisodeServers({
+    const servers = await getHianimeEpisodeServers({
       episodeId
     });
     console.log('Successfully fetched episode servers');
 
     console.log('Fetching sources...');
-    const sources = await getHianimeAnimeEpisodeSources({
-      episodeId, 
+    const sources = await getHianimeEpisodeSources({
+      episodeId,
       servers
     });
     console.log('Successfully fetched sources');
 
     return {
-      details: anilistAnimeData,
+      anime: info,
+      episodes,
+      servers,
       sources: sources
     };
   } catch (error) {

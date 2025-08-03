@@ -1,10 +1,10 @@
 import { expect, test } from "bun:test";
-import { getHianimeAnimeInfo } from "../../src/services/hianime";
 import { getAnilistAnime } from "../../src/services/anilist";
+import { getHianimeInfo } from "../../src/services/hianime";
 
 test("returns anime info", async () => {
-    const anilistData = await getAnilistAnime(9253)
-    const info = await getHianimeAnimeInfo(anilistData)
+    const anilistData = await getAnilistAnime({ anilistId: 9253 })
+    const info = await getHianimeInfo({ anilistData })
 
     // console.log(info)
 

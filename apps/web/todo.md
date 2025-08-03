@@ -1,4 +1,10 @@
-check whereever you use currentTime and see if it causes any performance issues
+toggling learning status return to default file
+
+filter ja-en files
+
+check out memory mapping instead of json for parsing files idk how it works yet but it seems promising (prob not hehe)
+
+check where ever you use currentTime and see if it causes any performance issues
 
 add more options for the delay like custom inputs
 

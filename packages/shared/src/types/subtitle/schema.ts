@@ -1,4 +1,4 @@
-import { t } from "elysia";
+import { Type as t } from '@sinclair/typebox'
 
 export const subtitleEntry = t.Object({
   id: t.Number(),
@@ -22,7 +22,3 @@ export const subtitleFile = t.Object({
   size: t.Number(),
   last_modified: t.String()
 })
-
-
-export type SubtitleFile = typeof subtitleFile.static
-export type SubtitleEntry = typeof subtitleEntry.static

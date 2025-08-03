@@ -1,14 +1,14 @@
+import { SubtitleSettings } from "@/lib/db/schema";
 import { SubtitlesNotAvailableError } from "@/lib/errors/player";
 import { useSubtitleStore } from "@/lib/stores/subtitle-store";
 import { getActiveSubtitleFile, getEnglishSubtitleUrl } from "@/lib/utils/subtitle";
 import { EpisodeData } from "@/types/episode";
-import { SettingsForEpisode } from "@/types/settings";
 import { CachedFiles } from "@/types/subtitle";
 import { useEffect, useState } from "react";
 
 type UseSetSubtitlesProps = {
   episodeData: EpisodeData | null | undefined, 
-  settings: SettingsForEpisode | null | undefined, 
+  preferredFormat: SubtitleSettings['preferredFormat'] | null, 
   episodeNumber: number
   cachedFiles: CachedFiles
 }
@@ -16,7 +16,7 @@ type UseSetSubtitlesProps = {
 export const useSetSubtitles = ({
   episodeData,
   episodeNumber,
-  settings,
+  preferredFormat,
   cachedFiles
 }: UseSetSubtitlesProps) => {
   const activeSubtitleFile = useSubtitleStore((state) => state.activeSubtitleFile);
@@ -36,8 +36,7 @@ export const useSetSubtitles = ({
     if (
       !episodeData ||
       !episodeData?.sources ||
-      !settings ||
-      !settings?.subtitleSettings
+      !preferredFormat
     ) return;
 
     setSubtitlesErrorDialog(false);
@@ -54,7 +53,7 @@ export const useSetSubtitles = ({
 
     if (episodeData.subtitles?.length > 0) {
       const file = getActiveSubtitleFile({
-        preferredFormat: settings.subtitleSettings.preferredFormat,
+        preferredFormat,
         files: episodeData.subtitles,
         // name
         matchPattern: cachedFiles.japanese
@@ -74,7 +73,7 @@ export const useSetSubtitles = ({
     }
   }, [
     episodeData, 
-    settings, 
+    preferredFormat, 
     episodeNumber, 
     englishSubtitleUrl
   ]);

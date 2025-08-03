@@ -20,12 +20,12 @@ export default function ControlsSection() {
   return (
       <div className="flex flex-col gap-10">
           <div className="flex flex-col gap-5">
-              <div className="flex flex-col-reverse gap-2">
-                <EnabledTranscriptions />
-                <div className="flex flex-row gap-1">
-                    <SettingsToggles  />
-                    <Screenshot />
+              <div className="flex flex-col-reverse gap-3">
+                <div className="flex flex-row gap-2">
+                  <EnabledTranscriptions />
+                  <Screenshot />
                 </div>
+                <SettingsToggles  />
             </div>
               <Separator />
               <div className="flex flex-row gap-2 w-full justify-between items-center">
@@ -35,12 +35,8 @@ export default function ControlsSection() {
                   </div>
                   <Separator orientation="vertical" />
                   <div className="flex flex-col gap-2 w-full flex-1">
-                      <EpisodeNavigations
-                        direction="previous" 
-                      />
-                      <EpisodeNavigations 
-                        direction="next" 
-                      />
+                      <EpisodeNavigations direction="previous" />
+                      <EpisodeNavigations direction="next" />
                   </div>
               </div>
           </div>

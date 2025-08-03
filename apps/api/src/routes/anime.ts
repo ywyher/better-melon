@@ -2,12 +2,9 @@ import Elysia, { t } from "elysia";
 import { getHianimeAnime } from "../services/hianime";
 import { getSubtitleFiles } from "../services/subtitle";
 import { createError } from "../utils/utils";
-import { animeProvider } from "../types";
-import { subtitleFile } from "../types/jiamku";
-import { getKitsuAnimeEpisodes, getKitsuAnimeInfo } from "../services/kitsu";
 import { getAnilistAnime } from "../services/anilist";
-import { anilistAnime } from "../types/anilist";
-import { hianimeEpisodeSources, kitsuEpisodesReponse } from "@better-melon/shared/types";
+import { animeProvider, kitsuEpisodesReponse, streamingData } from "@better-melon/shared/types";
+import { getKitsuAnime, getKitsuEpisodes, getKitsuInfo } from "../services/kitsu";
 
 export const anime = new Elysia({ prefix: 'anime' })
   .get('/:anilistId/:episodeNumber/:provider',
@@ -16,9 +13,13 @@ export const anime = new Elysia({ prefix: 'anime' })
       console.clear()
       console.log('*-----------------------------------------------------------------------------------*')
       try {
-        const anime = await getHianimeAnime(anilistId, episodeNumber);
-        const SubtitleFiles = await getSubtitleFiles({ anilistData: anime.details, episodeNumber });
-
+        const anilistData = await getAnilistAnime({ anilistId })
+        
+        const [{ sources }, { episode }, subtitles] = await Promise.all([
+          getHianimeAnime({ anilistData, episodeNumber }),
+          getKitsuAnime({ anilistData, episodeNumber }),
+          getSubtitleFiles({  anilistData, episodeNumber })
+        ])
         const fetchEnd = performance.now()
         console.log(`Fetched data in ${(fetchEnd - fetchStart).toFixed(2)}ms`);
   
@@ -26,9 +27,12 @@ export const anime = new Elysia({ prefix: 'anime' })
           success: true,
           data: {
             provider,
-            details: anime.details,
-            sources: anime.sources,
-            subtitles: SubtitleFiles,
+            anime: anilistData,
+            episode: {
+              details: episode,
+              sources,
+              subtitles,
+            }
           }
         };
       } catch (error) {
@@ -38,17 +42,12 @@ export const anime = new Elysia({ prefix: 'anime' })
     {
       params: t.Object({
         anilistId: t.Number(),
-        episodeNumber: t.String(),
+        episodeNumber: t.Number(),
         provider: animeProvider,
       }),
       response: t.Object({
         success: t.Boolean(),
-        data: t.Optional(t.Object({
-          provider: animeProvider,
-          details: anilistAnime,
-          sources: hianimeEpisodeSources,
-          subtitles: t.Array(subtitleFile)
-        })),
+        data: t.Optional(streamingData),
         message: t.Optional(t.String())
       })
   })
@@ -58,8 +57,8 @@ export const anime = new Elysia({ prefix: 'anime' })
 
       try {
         const anilistData = await getAnilistAnime({ anilistId })
-        const anime = await getKitsuAnimeInfo({ anilistData });
-        const { count, episodes } = await getKitsuAnimeEpisodes({
+        const anime = await getKitsuInfo({ anilistData });
+        const { count, episodes } = await getKitsuEpisodes({
           kitsuAnimeId: anime.id,
           anilistData,
           limit,

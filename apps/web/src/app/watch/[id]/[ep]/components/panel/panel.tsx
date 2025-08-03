@@ -67,7 +67,7 @@ export default function SubtitlePanel({ className = "" }: { className?: string }
         <Card 
           className={cn(
             "flex flex-col flex-1 gap-3",
-            "w-full lg:min-h-[80vh] h-fit",
+            "w-full min-h-[80vh] h-fit",
             "border-0 xl:border-1 p-0 m-0 xl:py-5",
             className
           )}

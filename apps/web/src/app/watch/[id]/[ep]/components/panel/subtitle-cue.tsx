@@ -40,7 +40,8 @@ const SubtitleCue = React.memo(({
     <div 
       style={containerStyle}
       className={cn(
-        "group flex cursor-pointer items-center border-l-2 border-b-2 border-b-primary border-l-transparent transition-all hover:bg-muted/50",
+        "flex flex-row gap-2 pr-2",
+        "group cursor-pointer items-center border-l-2 border-b-2 border-b-primary border-l-transparent transition-all hover:bg-muted/50",
         isActive && "border-l-primary bg-muted",
         className
       )}

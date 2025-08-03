@@ -1,10 +1,11 @@
 import { AxiosRequestConfig, AxiosResponse } from "axios";
-import { AnimeProvider, ErrorResponse } from "../types";
+import { ErrorResponse } from "../types";
 import client from "../lib/client";
-import { animeProviders } from "../lib/constants/constants";
+import { redis } from "bun";
+import { AnimeProvider, animeProvider } from "@better-melon/shared/types";
 
 export const isValidProvider = (provider: string): provider is AnimeProvider => {
-  return animeProviders.includes(provider as AnimeProvider);
+  return animeProvider.enum.includes(provider as AnimeProvider);
 };
 
 export function isErrorResponse(obj: unknown): obj is ErrorResponse {
@@ -69,5 +70,45 @@ export async function makeRequest<T>(
   } catch (error) {
     const errorMessage = `(${name}) Failed to fetch data: ${error instanceof Error ? error.message : 'Unknown error'}`;
     throw new Error(errorMessage);
+  }
+}
+
+// DONT ASYNC THIS
+export function setCache<T>({
+  data,
+  key,
+  ttl = 3600,
+  background = false
+}: {
+  key: string,
+  data: T,
+  ttl?: number,
+  background?: boolean
+}): Promise<void> | void {
+  const startTime = performance.now();
+  const cacheOperation = redis.set(key, JSON.stringify(data), 'EX', ttl);
+  
+  if (background) {
+    cacheOperation
+      .then(() => {
+        const duration = (performance.now() - startTime).toFixed(2);
+        console.log(`Background cache write successful for key: ${key} (${duration}ms)`);
+      })
+      .catch(error => {
+        const duration = (performance.now() - startTime).toFixed(2);
+        console.error(`Background cache write failed for key ${key} after ${duration}ms:`, error);
+      });
+    return;
+  } else {
+    return cacheOperation
+      .then(() => {
+        const duration = (performance.now() - startTime).toFixed(2);
+        console.log(`Sync cache write successful for key: ${key} (${duration}ms)`);
+      })
+      .catch(error => {
+        const duration = (performance.now() - startTime).toFixed(2);
+        console.error(`Sync cache write failed for key ${key} after ${duration}ms:`, error);
+        throw error;
+      });
   }
 }

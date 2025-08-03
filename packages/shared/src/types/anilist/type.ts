@@ -1,5 +1,5 @@
 import type { Static } from "@sinclair/typebox";
-import type { anilistCoverImage, anilistFormat, anilistGenre, anilistSeason, anilistSort, anilistSource, anilistStatus, anilistTitle, anilistNextAiringEpisode, anilistTag } from "./schema"
+import type { anilistCoverImage, anilistFormat, anilistGenre, anilistSeason, anilistSort, anilistSource, anilistStatus, anilistTitle, anilistNextAiringEpisode, anilistTag, anilistAnime } from "./schema"
 
 export type AnilistStatus = Static<typeof anilistStatus>
 export type AnilistTag = Static<typeof anilistTag>
@@ -11,6 +11,7 @@ export type AnilistSort = Static<typeof anilistSort>
 export type AnilistTitle = Static<typeof anilistTitle>
 export type AnilistNextAiringEpisode = Static<typeof anilistNextAiringEpisode>
 export type AnilistCoverImage = Static<typeof anilistCoverImage>
+export type AnilistAnime = Static<typeof anilistAnime>
 
 // AnilistResponse<'Page', { media: [] }>
 export type AnilistResponse<Key extends string, T> = {

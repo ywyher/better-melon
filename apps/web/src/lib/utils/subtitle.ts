@@ -1,5 +1,5 @@
 import { TranscriptionsLookup } from "@/app/watch/[id]/[ep]/types";
-import { excludedPos, subtitleFormats } from "@/lib/constants/subtitle";
+import { excludedPos, excludeWordsInFileName, subtitleFormats } from "@/lib/constants/subtitle";
 import { SubtitleSettings } from "@/lib/db/schema";
 import { FileSelectionError } from "@/lib/errors/player";
 import { DelayStore } from "@/lib/stores/delay-store";
@@ -161,8 +161,6 @@ export const selectSubtitleFile = ({ files, preferredFormat, matchPattern }: {
     return null;
   }
   
-  console.log(`matchPattern`, matchPattern)
-  
   // Helper function to check if file matches pattern
   const matchesPattern = (file: SubtitleFile): boolean => {
     if (!matchPattern) return false;
@@ -231,7 +229,16 @@ export const selectSubtitleFile = ({ files, preferredFormat, matchPattern }: {
     return supportedFile;
   }
   
-  // Last resort: Return first file (regardless of extension)
+  const unwantedWords = ['ja-en'];
+
+  // Last resort: Return first file (regardless of extension), preferring non-ja-en
+  const cleanFiles = files.filter(file => excludeWordsInFileName.some(word => file.name.toLowerCase().includes(word.toLocaleLowerCase())));
+  
+  if (cleanFiles.length > 0) {
+    return cleanFiles[0];
+  }
+  
+  // Absolute last resort: Return first file even if it contains unwanted words
   return files[0];
 };
 

@@ -1,6 +1,5 @@
-import { HianimeAnime } from "@better-melon/shared/types";
-import { AnilistAnime } from "../../types/anilist";
-import { KitsuAnimeInfo } from "../../types/kitsu";
+import { AnilistAnime, HianimeAnime, HianimeEpisode } from "@better-melon/shared/types";
+import { KitsuAnime } from "../../types/kitsu";
 
 export const cacheKeys = {
   anilist: {
@@ -10,19 +9,25 @@ export const cacheKeys = {
   hianime: {
     info: (animeId: AnilistAnime['id']) => `hianime:info:${animeId}`,
     episodes: (animeId: HianimeAnime['id']) => `hianime:episodes:${animeId}`,
-    servers: (episodeId: HianimeAnime['id']) => `hianime:servers:${episodeId}`,
-    sources: (episodeId: HianimeAnime['id']) => `hianime:sources:${episodeId}`
+    servers: (episodeId: HianimeEpisode['id']) => `hianime:servers:${episodeId}`,
+    sources: (episodeId: HianimeEpisode['id']) => `hianime:sources:${episodeId}`
   },
   subtitle: {
     entries: (animeId: AnilistAnime['id']) => `subtitle:entries:${animeId}`,
-    files: (entryId: number, episodeNumber: string) => `subtitle:files:${entryId}:${episodeNumber}`
+    files: (entryId: number, episodeNumber: number) => `subtitle:files:${entryId}:${episodeNumber}`
   },
   kitsu: {
-    info: (animeId: KitsuAnimeInfo['id']) => `kitsu:info:${animeId}`,
+    info: (animeId: KitsuAnime['id']) => `kitsu:info:${animeId}`,
+    episode: ({
+      animeId, episodeNumber
+    }: {
+      animeId: KitsuAnime['id'], 
+      episodeNumber: number
+    }) => `kitsu:episode:${animeId}:${episodeNumber}`,
     episodes: ({
       animeId, offset, limit
     }: {
-      animeId: KitsuAnimeInfo['id'], limit: number | string, offset: number
+      animeId: KitsuAnime['id'], limit: number | string, offset: number
     }) => `kitsu:episodes:${animeId}:${limit}:${offset}`
   }
 }

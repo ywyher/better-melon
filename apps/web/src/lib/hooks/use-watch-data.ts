@@ -124,7 +124,7 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
     resetSubtitlesErrors
   } = useSetSubtitles({
     episodeData,
-    settings,
+    preferredFormat: settings.subtitleSettings.preferredFormat,
     episodeNumber,
     cachedFiles
   });

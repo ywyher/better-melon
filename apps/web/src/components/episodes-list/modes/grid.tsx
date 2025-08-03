@@ -1,14 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils/utils";
 import { Anime } from "@/types/anime";
-import { KitsuAnimeEpisode } from "@better-melon/shared/types";
+import { KitsuEpisode } from "@better-melon/shared/types";
 import { Play } from "lucide-react";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 interface GridViewProps {
   animeId: Anime['id'];
   router: AppRouterInstance;
-  episodes: KitsuAnimeEpisode[];
+  episodes: KitsuEpisode[];
   currentEpisode: number;
 }
 

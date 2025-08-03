@@ -1,12 +1,21 @@
 import { expect, test } from "bun:test";
-import { getHianimeAnimeEpisodes, getHianimeAnimeEpisodeSources, getHianimeAnimeInfo } from "../../src/services/hianime";
 import { getAnilistAnime } from "../../src/services/anilist";
+import { getHianimeEpisodes, getHianimeEpisodeServers, getHianimeEpisodeSources, getHianimeInfo } from "../../src/services/hianime";
 
 test("returns episodes data", async () => {
-    const anilistData = await getAnilistAnime(9253)
-    const info = await getHianimeAnimeInfo(anilistData)
-    const episodes = await getHianimeAnimeEpisodes(info.id)
-    const sources = await getHianimeAnimeEpisodeSources(episodes, '1')
+    const episodeNumber = 1;
+    const anilistData = await getAnilistAnime({ anilistId: 9253 })
+    const info = await getHianimeInfo({ anilistData })
+    const episodes = await getHianimeEpisodes({ animeId: info.id })
+    const episode = episodes.find(e => e.number == episodeNumber)
+    if(!episode) throw new Error("Episode not found")
+    const servers = await getHianimeEpisodeServers({
+      episodeId: episode?.id
+    });
+    const sources = await getHianimeEpisodeSources({
+        episodeId: episode.id,
+        servers: servers
+    })
 
     expect(anilistData).not.toBeEmpty()
     expect(info.id).not.toBeEmpty()

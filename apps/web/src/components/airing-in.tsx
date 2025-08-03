@@ -38,7 +38,7 @@ export default function AiringIn({ nextAiringEpisode }: AiringInProps) {
   };
 
   return (
-    <Card className="w-full py-3 border border-dashed border-amber-500 rounded-md bg-amber-50 dark:bg-amber-950/20">
+    <Card className="w-full border border-dashed border-amber-500 rounded-md bg-amber-50 dark:bg-amber-950/20">
       <CardContent className='flex flex-col gap-2'>
         <div className='flex flex-row gap-1 items-center text-amber-700 dark:text-amber-400'>
           <h3 className="text-xl font-bold">

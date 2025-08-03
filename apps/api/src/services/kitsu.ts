@@ -1,10 +1,9 @@
 import { redis } from "bun";
-import { KitsuApiResponse, KitsuAnimeInfo, KitsuAnimeStatus, AnilistToKitsu, kitsuAnimeStatus } from "../types/kitsu";
+import { KitsuApiResponse, AnilistToKitsu, KitsuStatus, KitsuAnime, kitsuStatus, KitsuResponse } from "../types/kitsu";
 import { env } from "../lib/env";
-import { makeRequest } from "../utils/utils";
+import { makeRequest, setCache } from "../utils/utils";
 import { cacheKeys } from "../lib/constants/cache";
-import { AnilistAnime } from "../types/anilist";
-import { AnilistStatus, KitsuEpisode, KitsuEpisodesReponse } from "@better-melon/shared/types";
+import { AnilistAnime, AnilistStatus, KitsuEpisode, KitsuEpisodesReponse } from "@better-melon/shared/types";
 import { getNextAiringEpisodeTTL } from "@better-melon/shared/utils";
 
 async function mapAnilistToKitsu({ anilistData }: { anilistData: AnilistAnime }): Promise<AnilistToKitsu> {
@@ -16,16 +15,16 @@ async function mapAnilistToKitsu({ anilistData }: { anilistData: AnilistAnime })
     const endDate = anilistData.endDate;
     const title = anilistData.title.english.toLowerCase().replace(/\s+/g, '+');
     
-    const statusMapping: Record<AnilistStatus, KitsuAnimeStatus | null> = {
+    const statusMapping: Record<AnilistStatus, KitsuStatus | null> = {
       'FINISHED': 'finished',
       "RELEASING": 'current',
       'NOT_YET_RELEASED': 'unreleased',
       'CANCELLED': null,
       "HIATUS": null
     }
-    const mappedStatus = statusMapping[status] as KitsuAnimeStatus;
+    const mappedStatus = statusMapping[status] as KitsuStatus;
     if (!mappedStatus) {
-      throw new Error(`Invalid status: ${status}. Valid Kitsu statuss are: ${Object.keys(kitsuAnimeStatus.enum).join(', ')}`)
+      throw new Error(`Invalid status: ${status}. Valid Kitsu statuss are: ${Object.keys(kitsuStatus.enum).join(', ')}`)
     }
 
     const pad = (n: number) => n ? String(n).padStart(2, '0') : undefined;
@@ -49,19 +48,19 @@ async function mapAnilistToKitsu({ anilistData }: { anilistData: AnilistAnime })
   }
 }
 
-export async function getKitsuAnimeInfo({ anilistData }: { anilistData: AnilistAnime }): Promise<KitsuAnimeInfo> {
+export async function getKitsuInfo({ anilistData }: { anilistData: AnilistAnime }): Promise<KitsuAnime> {
   try {
     const cacheKey = cacheKeys.kitsu.info(String(anilistData.id));
     const cachedData = await redis.get(cacheKey);
     if (cachedData) {
       console.log(`Cache hit for kitsu anime ID: ${anilistData.id}`);
-      return JSON.parse(cachedData as string) as KitsuAnimeInfo;
+      return JSON.parse(cachedData as string) as KitsuAnime;
     }
 
     const mapped = await mapAnilistToKitsu({ anilistData });
     const { endDate, q, startDate, status } = mapped;
 
-    const { data: { data } } = await makeRequest<KitsuApiResponse<KitsuAnimeInfo[]>>(`
+    const { data: { data } } = await makeRequest<KitsuApiResponse<KitsuAnime[]>>(`
       ${env.KITSU_API_URL}/anime?filter[text]=${q}&filter[status]=${status}
     `, {
       name: 'kitsu-anime-info',
@@ -85,23 +84,92 @@ export async function getKitsuAnimeInfo({ anilistData }: { anilistData: AnilistA
       }
     })
 
-    await redis.set(cacheKey, JSON.stringify(anime || data[0]), "EX", 3600);
+    setCache({ data: anime || data[0], key: cacheKey, ttl: 3600, background: true })
     console.log(`Cached kitsu anime info for ID: ${anilistData.id}`);
     return anime || data[0]
   } catch (error) {
     console.error(`Error fetching kitsu data for ${anilistData.id}:`, error);
-    throw new Error(`${error instanceof Error ? error.message : 'Failed to fetch kitsu anime data: Unknown error'}`);
+    throw new Error(`${error instanceof Error ? error.message : 'Failed to fetch kitsu anime info: Unknown error'}`);
   }
 }
 
+export async function getKitsuEpisode({
+  kitsuAnimeId,
+  episodeNumber
+}: {
+  kitsuAnimeId: KitsuAnime['id']
+  episodeNumber: number
+}): Promise<KitsuEpisode> {
+    const cacheKey = `${cacheKeys.kitsu.episode({
+      animeId: kitsuAnimeId,
+      episodeNumber
+    })}`;
+    const cachedData = await redis.get(cacheKey);
+    
+    if (cachedData) {
+      console.log(`Cache hit for kitsu episodes, anime ID: ${kitsuAnimeId}, episodeNumber: ${episodeNumber}`);
+      return JSON.parse(cachedData as string) as KitsuEpisode;
+    }
 
-export async function getKitsuAnimeEpisodes({
+    const { data: { data } } = await makeRequest<KitsuApiResponse<KitsuEpisode[]>>(`
+      ${env.KITSU_API_URL}/anime/${kitsuAnimeId}/episodes?filter[number]=${episodeNumber}
+    `, {
+      name: 'kitsu-anime-episodes',
+      benchmark: true,
+      headers: {
+        'Accept': 'application/vnd.api+json',
+        'Content-Type': 'application/vnd.api+json'
+      }
+    });
+
+    const episode = data[0]
+    
+    setCache({ data: episode, key: cacheKey, ttl: 3600, background: true })
+    return episode;
+}
+
+export async function getKitsuAnime({
+  anilistData,
+  episodeNumber
+}: {
+  anilistData: AnilistAnime,
+  episodeNumber: number
+}): Promise<KitsuResponse> {
+  console.log(`Starting getKitsu for anilistId: ${anilistData.id}, episodeNumber: ${episodeNumber}`);
+  
+  try {
+    console.log('Fetching kitsu anime info...');
+    const info = await getKitsuInfo({ anilistData });
+    if(!info) {
+      console.error('No anime info found from Kitsu');
+      throw new Error("Couldn't find anime info from Kitsu");
+    }
+    console.log(`Successfully fetched kitsu info for ID: ${info.id}`);
+    
+    console.log('Fetching episode data...');
+    const episode = await getKitsuEpisode({ 
+      episodeNumber,
+      kitsuAnimeId: info.id
+    });
+    console.log('Successfully fetched episode data');
+
+    return {
+      anime: info,
+      episode
+    };
+  } catch (error) {
+    console.error('Error in getKitsu:', error);
+    throw new Error(`${error instanceof Error ? error.message : 'Failed to fetch kitsu data: Unknown error'}`);
+  }
+}
+
+export async function getKitsuEpisodes({
   kitsuAnimeId,
   anilistData,
   limit,
   offset
 }: {
-  kitsuAnimeId: KitsuAnimeInfo['id']
+  kitsuAnimeId: KitsuAnime['id']
   anilistData: AnilistAnime
   limit?: number
   offset?: number
@@ -245,8 +313,7 @@ export async function getKitsuAnimeEpisodes({
     // Set cache TTL based on nextAiringEpisode
     const cacheTtl = getNextAiringEpisodeTTL(anilistData.nextAiringEpisode || undefined)
 
-    await redis.set(cacheKey, JSON.stringify(result), "EX", cacheTtl);
-    console.log(`Cached kitsu episodes for anime ID: ${kitsuAnimeId} with TTL: ${cacheTtl}s (limit: ${limit || 'all'}, offset: ${startOffset})`);
+    setCache({ data: result, key: cacheKey, ttl: cacheTtl, background: true })
     console.log(`Current aired episodes: ${currentAiredCount}, Total planned episodes: ${totalKitsuCount || 'unknown'}`);
 
     return result;

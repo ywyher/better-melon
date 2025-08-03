@@ -17,6 +17,10 @@ import { useUIStateStore } from '@/lib/stores/ui-state-store';
 import { useWatchData } from '@/lib/hooks/use-watch-data';
 import { defaultSubtitleSettings } from '@/app/settings/subtitle/_subtitle-settings/constants';
 import { useSaveProgress } from '@/lib/hooks/use-save-progress';
+import EpisodesList from '@/components/episodes-list/episodes-list';
+import PanelSkeleton from '@/app/watch/[id]/[ep]/components/panel/panel-skeleton';
+import SubtitlePanel from '@/app/watch/[id]/[ep]/components/panel/panel';
+import { cn } from '@/lib/utils/utils';
 
 export default function WatchPage() {
   const params = useParams();
@@ -39,7 +43,8 @@ export default function WatchPage() {
     duration,
     transcriptions,
     subtitles,
-    loadStartTimeRef
+    loadStartTimeRef,
+    isLoading
   } = useWatchData(animeId, episodeNumber)
 
   useLayoutEffect(() => {
@@ -103,17 +108,48 @@ export default function WatchPage() {
   }
 
   return (
-    <div className="flex flex-col xl:flex-row w-full md:gap-10">
-      <div className="flex flex-col gap-3 w-full">
+    <div className="grid grid-cols-14 gap-8 pb-20">
+      <div className={cn(
+        "flex flex-col gap-3 w-full",
+        (isLoading || shouldShowPanel) && 'col-span-9',
+        (!shouldShowPanel) && 'col-span-14',
+      )}>
         {/* Top controls and player area */}
         <PlayerSection />
         {/* Settings below player */}
         <ControlsSection />
       </div>
       {/* Side panel (visible based on state) */}
-      {shouldShowPanel && (
-        <PanelSection />
-      )}
+      <div className={cn(
+        "flex flex-col gap-5",
+        (isLoading || shouldShowPanel) && 'col-span-5'
+      )}>
+        {isLoading ? (
+          <PanelSkeleton />
+        ) : (
+          <>
+            {shouldShowPanel && <SubtitlePanel />}
+          </>
+        )}
+        {isLoading ? (
+          <EpisodesList 
+            nextAiringEpisode={episode.data?.details.nextAiringEpisode}
+            animeTitle={episode.data?.details.title}
+            animeBanner={episode.data?.details.bannerImage}
+            isLoading={isLoading}
+          />
+        ): (
+          <>
+            {shouldShowPanel && (
+              <EpisodesList 
+                nextAiringEpisode={episode.data?.details.nextAiringEpisode}
+                animeTitle={episode.data?.details.title}
+                animeBanner={episode.data?.details.bannerImage}
+              />
+            )}
+          </>
+        )}
+      </div>
     </div>
   );
 }

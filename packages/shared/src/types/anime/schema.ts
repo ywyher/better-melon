@@ -5,3 +5,12 @@ export const animeDate = t.Object({
   month: t.Number(),
   year: t.Number(),
 })
+
+export const animeProvider = t.Union([
+  t.Literal('hianime')
+],{
+  error: {
+    success: false,
+    message: `Invalid provider. Supported providers: hianime`
+  }
+})

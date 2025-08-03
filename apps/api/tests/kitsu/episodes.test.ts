@@ -1,11 +1,11 @@
 import { expect, test } from "bun:test";
-import { getKitsuAnimeEpisodes, getKitsuAnimeInfo } from "../../src/services/kitsu";
 import { getAnilistAnime } from "../../src/services/anilist";
+import { getKitsuEpisodes, getKitsuInfo } from "../../src/services/kitsu";
 
 test("returns anime episodes data from kitsu", async () => {
-    const anilistData = await getAnilistAnime(21)
-    const info = await getKitsuAnimeInfo(anilistData)
-    const { episodes } = await getKitsuAnimeEpisodes({
+    const anilistData = await getAnilistAnime({ anilistId: 21 })
+    const info = await getKitsuInfo({ anilistData })
+    const { episodes } = await getKitsuEpisodes({
         kitsuAnimeId: info.id,
         anilistData,
         offset: 0,

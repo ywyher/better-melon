@@ -47,6 +47,7 @@ export default function SubtitleFileSelector() {
                 setOpen={setOpen}
                 title="Select a subtitle"
                 trigger={trigger}
+                className="min-w-fit"
             >
                 <LocalFileSelector />
                 <ScrollArea className="max-h-72 pr-1">

@@ -20,13 +20,20 @@ import AiringIn from "@/components/airing-in";
 import { AnilistNextAiringEpisode, AnilistTitle } from "@better-melon/shared/types";
 
 type EpisodesListProps = {
-  nextAiringEpisode: AnilistNextAiringEpisode | null
-  animeTitle: AnilistTitle
-  animeBanner: Anime['bannerImage']
+  nextAiringEpisode?: AnilistNextAiringEpisode | null
+  animeTitle?: AnilistTitle
+  animeBanner?: Anime['bannerImage']
+  isLoading?: boolean
   className?: string
 }
 
-export default function EpisodesList({ nextAiringEpisode, animeTitle, animeBanner, className = "" }: EpisodesListProps) {
+export default function EpisodesList({ 
+  nextAiringEpisode,
+  animeTitle,
+  animeBanner,
+  isLoading = false,
+  className = "" 
+}: EpisodesListProps) {
   const params = useParams<{ id: string, ep: string }>();
   const router = useRouter();
   const animeId = Number(params.id)
@@ -34,7 +41,7 @@ export default function EpisodesList({ nextAiringEpisode, animeTitle, animeBanne
   
   const {
     episodes,
-    isLoading,
+    isLoading: isEpisodesLoading,
     
     chunks,
     
@@ -63,16 +70,19 @@ export default function EpisodesList({ nextAiringEpisode, animeTitle, animeBanne
     }, [episodes])
   });
 
-  useEffect(() => {
-    console.log(`episodes`, episodes)
-  }, [episodes])
-
-  if(isLoading || !episodes) return <EpisodesListSkeleton viewMode={episodesListViewMode} />
+  if(
+    isLoading 
+    || isEpisodesLoading 
+    || !episodes
+    || !animeTitle
+    || !animeBanner
+  ) return <EpisodesListSkeleton viewMode={episodesListViewMode} />
 
   return (
     <Card 
       className={cn(
-        "max-h-[100vh] bg-secondary",
+        "max-h-[100vh] h-fit bg-secondary",
+        "flex flex-col justify-between",
         className
       )}
     >
@@ -135,7 +145,7 @@ export default function EpisodesList({ nextAiringEpisode, animeTitle, animeBanne
       </CardHeader>
       <CardContent
         ref={scrollAreaRef}
-        className="relative h-full min-h-[10vh] w-full overflow-y-auto"
+        className="relative h-fit min-h-[50vh] w-full overflow-y-auto"
       >
         <div
           style={{
@@ -177,12 +187,10 @@ export default function EpisodesList({ nextAiringEpisode, animeTitle, animeBanne
         </div>
       </CardContent>
       {nextAiringEpisode && (
-        <div>
+        <CardFooter className="flex flex-col gap-5 items-end">
           <Separator />
-          <div className="px-4 pt-5">
-            <AiringIn nextAiringEpisode={nextAiringEpisode} />
-          </div>
-        </div>
+          <AiringIn nextAiringEpisode={nextAiringEpisode} />
+        </CardFooter>
       )}
     </Card>
   );

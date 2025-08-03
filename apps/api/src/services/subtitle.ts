@@ -1,9 +1,8 @@
 import { redis } from "bun";
 import { env } from "../lib/env";
-import { makeRequest } from "../utils/utils";
+import { makeRequest, setCache } from "../utils/utils";
 import { cacheKeys } from "../lib/constants/cache";
-import { SubtitleEntry, SubtitleFile } from "../types/jiamku";
-import { AnilistAnime } from "../types/anilist";
+import { AnilistAnime, SubtitleEntry, SubtitleFile } from "@better-melon/shared/types";
 
 export async function getSubtitleEntries({ anilistId, shouldCache = true }: { anilistId: AnilistAnime['id'], shouldCache: boolean }): Promise<SubtitleEntry[]> {
   try {
@@ -29,7 +28,8 @@ export async function getSubtitleEntries({ anilistId, shouldCache = true }: { an
     });
 
     if (shouldCache && entries?.length) {
-      await redis.set(cacheKey, JSON.stringify(entries), "EX", 21600); // 6 hours
+    
+      setCache({ data: entries, key: cacheKey, ttl: 21600, background: true })
       console.log(`Cached subtitle entries for: ${anilistId}`);
     }
 
@@ -39,7 +39,7 @@ export async function getSubtitleEntries({ anilistId, shouldCache = true }: { an
   }
 }
 
-export async function getSubtitleFiles({ anilistData, episodeNumber }: { anilistData: AnilistAnime, episodeNumber: string }): Promise<SubtitleFile[]> {
+export async function getSubtitleFiles({ anilistData, episodeNumber }: { anilistData: AnilistAnime, episodeNumber: number }): Promise<SubtitleFile[]> {
   try {
     const shouldCache = anilistData.status !== "RELEASING";
     
@@ -73,8 +73,7 @@ export async function getSubtitleFiles({ anilistData, episodeNumber }: { anilist
     });
 
     if (shouldCache && files?.length) {
-      await redis.set(cacheKey, JSON.stringify(files), "EX", 43200); // 12 hours
-      console.log(`Cached subtitle files for: ${entries[0].id} episode ${episodeNumber}`);
+      setCache({ data: files, key: cacheKey, ttl: 43200, background: true })
     }
 
     return files;

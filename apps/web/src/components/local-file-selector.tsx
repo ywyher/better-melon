@@ -85,7 +85,7 @@ export default function LocalFileSelector({ onSelect }: LocalFileSelectorProps) 
   const { loading, fileName, error } = fileState;
 
   return (
-    <div className="w-full max-w-lg">
+    <div className="w-full w-full">
       {/* Hidden file input */}
       <input
         ref={fileInputRef}

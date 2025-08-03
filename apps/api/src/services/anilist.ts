@@ -1,9 +1,8 @@
-import { makeRequest } from "../utils/utils";
+import { makeRequest, setCache } from "../utils/utils";
 import { env } from "../lib/env";
 import { redis } from "bun";
 import { cacheKeys } from "../lib/constants/cache";
-import { AnilistDyanmicData, AnilistStaticData, AnilistResponse } from "@better-melon/shared/types";
-import { AnilistAnime } from "../types/anilist";
+import { AnilistDyanmicData, AnilistStaticData, AnilistResponse, AnilistAnime } from "@better-melon/shared/types";
 
 async function getAnilistStaticData({ anilistId }: { anilistId: AnilistAnime['id'] }): Promise<AnilistStaticData<AnilistAnime>> {
   try {
@@ -58,11 +57,11 @@ async function getAnilistStaticData({ anilistId }: { anilistId: AnilistAnime['id
     );
 
     const anime = anilistAnime.Media;
-    await redis.set(cacheKey, JSON.stringify(anime), 'EX', 3600);
+    setCache({ data: anime, key: cacheKey, ttl: 3600, background: true })
     
     return anime;
   } catch (error) {
-    throw new Error(`${error instanceof Error ? error.message : 'Failed to fetch anilist data: Unknown error'}`)
+    throw new Error(`${error instanceof Error ? error.message : 'Failed to fetch anilist static data: Unknown error'}`)
   }
 }
 
@@ -108,13 +107,15 @@ async function getAnilistDynamicData({ anilistId }: { anilistId: AnilistAnime['i
 
     return anime;
   } catch (error) {
-    throw new Error(`${error instanceof Error ? error.message : 'Failed to fetch anilist data: Unknown error'}`)
+    throw new Error(`${error instanceof Error ? error.message : 'Failed to fetch anilist dynamic data: Unknown error'}`)
   }
 }
 
 export async function getAnilistAnime({ anilistId }: { anilistId: AnilistAnime['id'] }): Promise<AnilistAnime> {
-  const staticData = await getAnilistStaticData({ anilistId })
-  const dynamicData = await getAnilistDynamicData({ anilistId })
+  const [staticData, dynamicData] = await Promise.all([
+    getAnilistStaticData({ anilistId }),
+    getAnilistDynamicData({ anilistId })
+  ])
 
   return {
     ...staticData,

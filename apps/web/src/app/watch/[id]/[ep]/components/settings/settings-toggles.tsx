@@ -1,4 +1,5 @@
 "use client";
+
 import ToggleButton from "@/components/toggle-button";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -8,9 +9,6 @@ import { useSettingsStore } from "@/lib/stores/settings-store";
 import { useSyncSettings } from "@/lib/hooks/use-sync-settings";
 import { handleSubtitleSettings } from "@/app/settings/subtitle/_subtitle-settings/actions";
 import { handleWordSettings } from "@/app/settings/word/_settings/actions";
-
-type PlaybackSetting = "autoPlay" | "autoNext" | "autoSkip" | "pauseOnCue";
-type SubtitleSetting = "showFurigana";
 
 interface ToggleConfig {
   key: string;
@@ -133,7 +131,7 @@ export default function SettingsToggles() {
   };
 
   return (
-    <div className="flex flex-row gap-2 flex-wrap">
+    <div className="flex gap-1 flex-wrap justify-between">
       {TOGGLE_CONFIGS.map((config) => {
         const currentValue = config.getValue(store);
         return (
