@@ -67,12 +67,13 @@ export default function WatchPage() {
     preferredFormat: settings?.data?.subtitleSettings.preferredFormat || defaultSubtitleSettings.preferredFormat
   });
   
-  useSaveProgress({
-    animeId,
-    episodeNumber,
-    animeCoverImage: streaming.data?.anime.coverImage,
-    animeTitle: streaming.data?.anime.title,
-  })
+  // CAUSES LAGGGGG FUCKK
+  // useSaveProgress({
+  //   animeId,
+  //   episodeNumber,
+  //   animeCoverImage: streaming.data?.anime.coverImage,
+  //   animeTitle: streaming.data?.anime.title,
+  // })
   
   const shouldShowPanel = useMemo(() => {
     return (isXLarge && 
@@ -128,7 +129,7 @@ export default function WatchPage() {
            <SubtitlePanel />
           </>
         )}
-        {isLoading ? (
+        {/* {isLoading ? (
           <EpisodesList 
             nextAiringEpisode={streaming.data?.anime.nextAiringEpisode}
             animeTitle={streaming.data?.anime.title}
@@ -145,7 +146,7 @@ export default function WatchPage() {
               />
             )}
           </>
-        )}
+        )} */}
       </div>
     </div>
   );

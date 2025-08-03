@@ -1,4 +1,4 @@
-toggling learning status return to default file
+use-save-progress causes lag, disable rn
 
 filter ja-en files
 

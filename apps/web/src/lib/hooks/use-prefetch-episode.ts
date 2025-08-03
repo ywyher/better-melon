@@ -7,6 +7,7 @@ import { usePrefetchSubtitleTranscriptions } from "@/lib/hooks/use-prefetch-subt
 import { usePlayerStore } from "@/lib/stores/player-store";
 import { Anime } from "@/types/anime";
 import { StreamingData } from "@better-melon/shared/types";
+import { useMediaState } from "@vidstack/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 type PrefetchEpisodeProps = {
@@ -25,6 +26,7 @@ export function usePrefetchEpisode({
   const isVideoReady = usePlayerStore((state) => state.isVideoReady);
   const isLastEpisode = (streamingData?.anime.episodes || 0) > 0 && episodeNumber >= (streamingData?.anime.episodes || 0);
   const player = usePlayerStore((state) => state.player)
+  const isPaused = useMediaState('paused')
   const [passedHalfDuration, setPassedHalfDuration] = useState<boolean>(false)
   const lastUpdateTimeRef = useRef<number>(0);
   
@@ -44,7 +46,7 @@ export function usePrefetchEpisode({
   }, [player])
 
   const isReady = useMemo(() => {
-    if(!streamingData || !preferredFormat || !passedHalfDuration) return false;
+    if(!streamingData || !preferredFormat || !passedHalfDuration || isPaused) return false;
     const shared = isVideoReady &&
         preferredFormat &&
         passedHalfDuration;

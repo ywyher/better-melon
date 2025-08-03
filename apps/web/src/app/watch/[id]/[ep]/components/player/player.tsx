@@ -211,9 +211,9 @@ export default function Player() {
                 >
                     <MediaProvider>
                         <Poster
-                            className="vds-poster"
+                            className="vds-poster object-cover"
                             src={
-                                streamingData?.episode.details.attributes.thumbnail?.original
+                                `${env.NEXT_PUBLIC_PROXY_URL}?url=${streamingData?.episode.details.attributes.thumbnail?.original}`
                                 || streamingData?.anime.bannerImage
                             }
                             alt={streamingData?.episode.details.attributes.canonicalTitle}
