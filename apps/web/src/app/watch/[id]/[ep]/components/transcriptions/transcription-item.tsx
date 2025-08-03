@@ -120,11 +120,13 @@ export const TranscriptionItem = React.memo<TranscriptionItemProps>(function Tra
         <div 
           key={`${transcription}-${cue.id}`}
           className={cn(
-            "flex flex-row flex-wrap",
-            transcription == 'english' && "gap-2"
+            "flex flex-row flex-wrap"
           )}
           style={{
-            gap: containerStyles.gap
+            gap: containerStyles.gap,
+            ...(transcription == 'english' && {
+              gap: '0.5rem'
+            })
           }}
         >
           {tokens.map((token) => (
