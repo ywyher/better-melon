@@ -8,11 +8,11 @@ import { pitchQueries } from '@/lib/queries/pitch';
 import { Anime } from '@/types/anime';
 import { pitchAccentConfig } from '@/lib/hooks/use-pitch-accent-chunks';
 import { NetworkCondition } from '@/types';
-import { EpisodeData } from '@/types/episode';
+import { StreamingData } from '@better-melon/shared/types';
 
 type PrefetchPitchAccentProps = {
   animeId: Anime['id'],
-  episodeData: EpisodeData | null,
+  streamingData: StreamingData | null,
   japaneseCues: SubtitleCue[] | undefined,
   preferredFormat: SubtitleSettings["preferredFormat"],
   networkCondition: NetworkCondition,
@@ -22,7 +22,7 @@ type PrefetchPitchAccentProps = {
 
 export function usePrefetchPitchAccent({
   animeId,
-  episodeData,
+  streamingData,
   japaneseCues,
   preferredFormat,
   networkCondition,
@@ -41,25 +41,25 @@ export function usePrefetchPitchAccent({
   }, [japaneseCues]);
   
   const subtitleFileName = useMemo(() => {
-    if (!episodeData) return '';
+    if (!streamingData) return '';
     
     try {
       const activeSubtitleFile = getActiveSubtitleFile({
-        files: episodeData.subtitles ?? [], 
+        files: streamingData.episode.subtitles ?? [], 
         preferredFormat
       });
       return activeSubtitleFile?.file.name || '';
     } catch {
       return '';
     }
-  }, [episodeData, preferredFormat]);
+  }, [streamingData, preferredFormat]);
   
     const shouldFetchPitchAccentChunks = useMemo(() => {
       return isReady &&
              !isLastEpisode && 
              networkCondition !== 'poor' &&
              chunks.length > 0 &&
-             episodeData != null &&
+             streamingData != null &&
              japaneseCues?.length &&
              subtitleFileName != null;
     }, [isReady, isLastEpisode, networkCondition, chunks.length]);

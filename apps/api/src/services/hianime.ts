@@ -82,7 +82,6 @@ export async function getHianimeInfo({ anilistData }: { anilistData: AnilistAnim
       q,
       page: 1,
       filters: {
-        // other filters may change between hinaime and anilist so we dont use them
         format,
         startDate,
         endDate: endDate ?? undefined,

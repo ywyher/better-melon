@@ -19,19 +19,20 @@ import { defaultGeneralSettings, screenshotFormats } from "@/lib/constants/setti
 import { SelectInput } from "@/components/form/select-input";
 import TooltipWrapper from "@/components/tooltip-wrapper";
 import { useSettingsStore } from "@/lib/stores/settings-store";
-import { useEpisodeStore } from "@/lib/stores/episode-store";
+import { useStreamingStore } from "@/lib/stores/streaming-store";
 
 export default function Screenshot() {
   const player = usePlayerStore((state) => state.player);
   const generalSettings = useSettingsStore((settings) => settings.general)
-  const animeMetadata = useEpisodeStore((state) => state.episodeData?.metadata)
+  const episodeNumber = useStreamingStore((state) => state.episodeNumber)
+  const streamingData = useStreamingStore((state) => state.streamingData)
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [customName, setCustomName] = useState("");
   const [selectedFormat, setSelectedFormat] = useState(generalSettings.screenshotFormat);
 
   const handleScreenShot = (customFileName?: string, outputFormat = generalSettings.screenshotFormat) => {
-    if (!player.current || !animeMetadata) return;
+    if (!player.current || !streamingData) return;
 
     let name;
     if (customFileName) {
@@ -39,7 +40,10 @@ export default function Screenshot() {
     } else {
       name = mapScreenshotNamingPatternValues({
         pattern: generalSettings.screenshotNamingPattern, 
-        animeMetadata
+        episodeNumber,
+        episodeTitle: 
+          streamingData.episode.details.attributes.canonicalTitle
+          || streamingData.anime.title.english
       });
     }
 
@@ -49,10 +53,13 @@ export default function Screenshot() {
   };
 
   const openScreenshotDialog = () => {
-    if(!animeMetadata) return
+    if(!streamingData) return
     setCustomName(mapScreenshotNamingPatternValues({
       pattern: generalSettings.screenshotNamingPattern || defaultGeneralSettings.screenshotNamingPattern,
-      animeMetadata
+        episodeNumber,
+        episodeTitle: 
+          streamingData.episode.details.attributes.canonicalTitle
+          || streamingData.anime.title.english
     }));
     setSelectedFormat(generalSettings.screenshotFormat);
     setIsDialogOpen(true);

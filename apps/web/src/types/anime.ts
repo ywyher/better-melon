@@ -10,8 +10,6 @@ export type AnimeSkipTime = {
   skipType: "OP" | "OT";
 };
 
-export type AnimeProvider = 'hianime' 
-
 export type Anime = {
   id: number;
   title: AnilistTitle;

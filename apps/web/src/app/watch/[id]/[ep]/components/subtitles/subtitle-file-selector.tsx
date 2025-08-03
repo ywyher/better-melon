@@ -8,18 +8,18 @@ import { cn } from "@/lib/utils/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { toast } from "sonner";
 import DialogWrapper from "@/components/dialog-wrapper";
-import { SubtitleFile } from "@/types/subtitle";
 import { subtitleFormats } from "@/lib/constants/subtitle";
 import LocalFileSelector from "@/components/local-file-selector";
 import { useSubtitleStore } from "@/lib/stores/subtitle-store";
-import { useEpisodeStore } from "@/lib/stores/episode-store";
+import { useStreamingStore } from "@/lib/stores/streaming-store";
+import { SubtitleFile } from "@better-melon/shared/types";
 
 export default function SubtitleFileSelector() {
     const [loading, setLoading] = useState<string | null>(null);
     const [open, setOpen] = useState(false);
     const activeSubtitleFile = useSubtitleStore((state) => state.activeSubtitleFile)
     const setActiveSubtitleFile = useSubtitleStore((state) => state.setActiveSubtitleFile)
-    const subtitleFiles = useEpisodeStore((state) => state.episodeData?.subtitles)
+    const subtitleFiles = useStreamingStore((state) => state.streamingData?.episode.subtitles)
 
     const handleSelectFile = async (file: SubtitleFile) => {
         if (file.name === activeSubtitleFile?.file.name) return;

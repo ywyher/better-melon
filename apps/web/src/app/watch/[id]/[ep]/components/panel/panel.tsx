@@ -13,8 +13,8 @@ import PanelSkeleton from "@/app/watch/[id]/[ep]/components/panel/panel-skeleton
 import { subtitleQueries } from "@/lib/queries/subtitle";
 import { useSubtitleStore } from "@/lib/stores/subtitle-store";
 import { useTranscriptionStore } from "@/lib/stores/transcription-store";
-import { useEpisodeStore } from "@/lib/stores/episode-store";
 import { cn } from "@/lib/utils/utils";
+import { useStreamingStore } from "@/lib/stores/streaming-store";
 
 export default function SubtitlePanel({ className = "" }: { className?: string }) { 
     const [selectedTranscription, setSelectedTranscription] = useState<SubtitleTranscription>('japanese')
@@ -25,8 +25,8 @@ export default function SubtitlePanel({ className = "" }: { className?: string }
 
     const transcriptions = useTranscriptionStore((state) => state.transcriptions)
 
-    const animeId = useEpisodeStore((state) => state.animeId)
-    const episodeNumber = useEpisodeStore((state) => state.episodeNumber)
+    const animeId = useStreamingStore((state) => state.animeId)
+    const episodeNumber = useStreamingStore((state) => state.episodeNumber)
     
     const { data: subtitleCues, isLoading: isCuesLoading, error: cuesError } = useQuery({
       ...subtitleQueries.cues({

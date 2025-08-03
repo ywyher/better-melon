@@ -1,17 +1,16 @@
 import { SubtitleSettings } from "@/lib/db/schema";
 import { subtitleQueries } from "@/lib/queries/subtitle";
-import { useSubtitleStore } from "@/lib/stores/subtitle-store";
 import { useTranscriptionStore } from "@/lib/stores/transcription-store";
 import { getActiveSubtitleFile, getEnglishSubtitleUrl } from "@/lib/utils/subtitle";
 import { NetworkCondition } from "@/types";
 import { Anime } from "@/types/anime";
-import { EpisodeData } from "@/types/episode";
 import { ActiveSubtitleFile, SubtitleTranscription } from "@/types/subtitle";
+import { StreamingData } from "@better-melon/shared/types";
 import { useQueries } from "@tanstack/react-query";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 
 type PrefetchSubtitleTranscriptionsProps = {
-  episodeData: EpisodeData | undefined,
+  streamingData: StreamingData | undefined,
   preferredFormat: SubtitleSettings["preferredFormat"],
   isReady: boolean,
   isLastEpisode: boolean,
@@ -21,7 +20,7 @@ type PrefetchSubtitleTranscriptionsProps = {
 }
 
 export function usePrefetchSubtitleTranscriptions({
-  episodeData,
+  streamingData,
   preferredFormat,
   isReady,
   isLastEpisode,
@@ -52,9 +51,9 @@ export function usePrefetchSubtitleTranscriptions({
       let englishSubtitleUrl = '';
       
       try {
-        activeSubtitleFile = episodeData ? 
+        activeSubtitleFile = streamingData ? 
           getActiveSubtitleFile({
-            files: episodeData.subtitles ?? [],
+            files: streamingData.episode.subtitles ?? [],
             preferredFormat,
           }) : 
           undefined;
@@ -63,9 +62,9 @@ export function usePrefetchSubtitleTranscriptions({
       }
       
       try {
-        englishSubtitleUrl = episodeData ? 
+        englishSubtitleUrl = streamingData ? 
           getEnglishSubtitleUrl({
-            files: episodeData.sources?.tracks ?? [],
+            files: streamingData.episode.sources?.tracks ?? [],
           }) : 
           '';
       } catch (error) {
@@ -84,7 +83,7 @@ export function usePrefetchSubtitleTranscriptions({
         }),
         staleTime: 1000 * 60 * 60,
         enabled: !!shouldFetchSubtitles && 
-                !!episodeData != null && 
+                !!streamingData != null && 
                 (
                   (isEnglish && !!englishSubtitleUrl) || 
                   (!isEnglish && !!activeSubtitleFile)

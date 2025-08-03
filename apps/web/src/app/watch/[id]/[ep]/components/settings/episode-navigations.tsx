@@ -3,8 +3,8 @@
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { SkipBack, SkipForward } from "lucide-react"
-import { useEpisodeStore } from "@/lib/stores/episode-store"
-import { useEffect, useMemo } from "react"
+import { useMemo } from "react"
+import { useStreamingStore } from "@/lib/stores/streaming-store"
 
 type EpisodeNavigationsProps = { 
     direction: 'next' | 'previous',
@@ -16,10 +16,9 @@ export default function EpisodeNavigations({
     const router = useRouter();
     const isNext = direction === 'next';
 
-    const animeId = useEpisodeStore((state) => state.animeId)
-    const episodesLength = useEpisodeStore((state) => state.episodesLength)
-    const episodeNumber = useEpisodeStore((state) => state.episodeNumber)
-    const nextAiringEpisode = useEpisodeStore((state) => state.episodeData?.details.nextAiringEpisode)
+    const animeId = useStreamingStore((state) => state.animeId)
+    const episodeNumber = useStreamingStore((state) => state.episodeNumber)
+    const streamingData = useStreamingStore((state) => state.streamingData)
 
     const handleClick = () => {
         const currentEp = Number(episodeNumber);
@@ -32,6 +31,8 @@ export default function EpisodeNavigations({
     };
 
     const isDisabled = useMemo(() => {
+        const nextAiringEpisode = streamingData?.anime.nextAiringEpisode
+        const episodesLength = streamingData?.anime.episodes
         const episodeNum = Number(episodeNumber);
         const nextAiringNum = Number(nextAiringEpisode);
 
@@ -43,7 +44,7 @@ export default function EpisodeNavigations({
         }
 
         return false;
-    }, [isNext, episodeNumber, episodesLength, nextAiringEpisode]);
+    }, [isNext, episodeNumber, streamingData?.anime]);
 
 
     return (

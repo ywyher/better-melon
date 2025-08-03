@@ -1,5 +1,5 @@
 import { ankiQueries } from "@/lib/queries/anki";
-import { episodeQueries } from "@/lib/queries/episode";
+import { episodeQueries } from "@/lib/queries/streaming";
 import { settingsQueries } from "@/lib/queries/settings";
 import { subtitleQueries } from "@/lib/queries/subtitle";
 import { userQueries } from "@/lib/queries/user";

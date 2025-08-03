@@ -2,19 +2,19 @@ import { SubtitleSettings } from "@/lib/db/schema";
 import { SubtitlesNotAvailableError } from "@/lib/errors/player";
 import { useSubtitleStore } from "@/lib/stores/subtitle-store";
 import { getActiveSubtitleFile, getEnglishSubtitleUrl } from "@/lib/utils/subtitle";
-import { EpisodeData } from "@/types/episode";
 import { CachedFiles } from "@/types/subtitle";
+import { StreamingData } from "@better-melon/shared/types";
 import { useEffect, useState } from "react";
 
 type UseSetSubtitlesProps = {
-  episodeData: EpisodeData | null | undefined, 
+  streamingData: StreamingData | null | undefined, 
   preferredFormat: SubtitleSettings['preferredFormat'] | null, 
   episodeNumber: number
   cachedFiles: CachedFiles
 }
 
 export const useSetSubtitles = ({
-  episodeData,
+  streamingData,
   episodeNumber,
   preferredFormat,
   cachedFiles
@@ -34,27 +34,25 @@ export const useSetSubtitles = ({
 
   useEffect(() => {
     if (
-      !episodeData ||
-      !episodeData?.sources ||
-      !preferredFormat
+      !streamingData
     ) return;
 
     setSubtitlesErrorDialog(false);
     setSubtitlesError(null);
 
-    if (episodeData.sources.tracks && !englishSubtitleUrl) {
+    if (streamingData.episode.sources.tracks && !englishSubtitleUrl) {
       const englishSub = getEnglishSubtitleUrl({
-        files: episodeData.sources.tracks,
+        files: streamingData.episode.sources.tracks,
         // url
         match: cachedFiles.english
       })
       setEnglishSubtitleUrl(englishSub);
     }
 
-    if (episodeData.subtitles?.length > 0) {
+    if (streamingData.episode.subtitles.length > 0) {
       const file = getActiveSubtitleFile({
         preferredFormat,
-        files: episodeData.subtitles,
+        files: streamingData.episode.subtitles,
         // name
         matchPattern: cachedFiles.japanese
       });
@@ -72,11 +70,18 @@ export const useSetSubtitles = ({
       }
     }
   }, [
-    episodeData, 
+    streamingData, 
     preferredFormat, 
     episodeNumber, 
     englishSubtitleUrl
   ]);
+
+  useEffect(() => {
+    console.log(`test`, {
+      streamingData,
+      activeSubtitleFile
+    })
+  }, [streamingData, activeSubtitleFile])
 
   return {
     subtitlesError,

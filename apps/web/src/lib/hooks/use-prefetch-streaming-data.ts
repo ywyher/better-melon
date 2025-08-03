@@ -1,50 +1,53 @@
-import { episodeQueries } from "@/lib/queries/episode";
+import { streamingQueries } from "@/lib/queries/streaming";
 import { NetworkCondition } from "@/types";
 import { Anime } from "@/types/anime";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 
-type PrefetchEpisodeDataProps = {
+type PrefetchStreamingDataProps = {
   animeId: Anime['id'],
   episodeNumber: number,
   isReady: boolean,
   isLastEpisode: boolean,
   networkCondition: NetworkCondition
 }
-export function usePrefetchEpisodeData({
+export function usePrefetchStreamingData({
   animeId,
   episodeNumber,
   isReady,
   isLastEpisode,
   networkCondition
-}: PrefetchEpisodeDataProps) {
-  const shouldFetchEpisodeData = useMemo(() => {
+}: PrefetchStreamingDataProps) {
+  const shouldFetchStreamingData = useMemo(() => {
     return isReady &&
            !isLastEpisode && 
            networkCondition !== 'poor';
   }, [isReady, isLastEpisode, networkCondition]);
   
   const { 
-    data: episodeData,
-    isSuccess: episodeDataFetched,
-    isFetching: isEpisodeDataFetching
+    data: streamingData,
+    isSuccess: streamingDataFetched,
+    isFetching: isStreamingDataFetching
   } = useQuery({
-    ...episodeQueries.data(animeId, episodeNumber),
+    ...streamingQueries.data({
+      animeId, 
+      episodeNumber
+    }),
     staleTime: 1000 * 60 * 45,
-    enabled: !!shouldFetchEpisodeData
+    enabled: !!shouldFetchStreamingData
   });
 
   // useEffect(() => {
-  //   if (isEpisodeDataFetching) {
+  //   if (isStreamingDataFetching) {
   //     console.info(`debug Started prefetching episode ${episodeNumber} data`);
-  //   } else if (episodeDataFetched) {
+  //   } else if (streamingDataFetched) {
   //     console.info(`debug Successfully prefetched episode ${episodeNumber} data`);
   //   }
-  // }, [isEpisodeDataFetching, episodeDataFetched, episodeNumber]);
+  // }, [isStreamingDataFetching, streamingDataFetched, episodeNumber]);
 
   return {
-    episodeData,
-    episodeDataPrefetched: episodeDataFetched,
-    isEpisodeDataFetching
+    streamingData,
+    streamingDataPrefetched: streamingDataFetched,
+    isStreamingDataFetching
   };
 }

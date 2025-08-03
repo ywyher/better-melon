@@ -3,15 +3,15 @@ import SettingsDialog from "@/app/watch/[id]/[ep]/components/settings/settings-d
 import DialogWrapper from "@/components/dialog-wrapper";
 import { Button } from "@/components/ui/button";
 import { useIsXLarge } from "@/lib/hooks/use-media-query";
+import { useStreamingStore } from "@/lib/stores/streaming-store";
 import { useUIStateStore } from "@/lib/stores/ui-state-store";
-import { useWatchStore } from "@/lib/stores/watch-store";
 import { Captions, Loader2, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 
 export function TopControls() {
   const isXLarge = useIsXLarge()
 
-  const isLoading = useWatchStore((state) => state.isLoading)
-  const loadingDuration = useWatchStore((state) => state.loadingDuration)
+  const isLoading = useStreamingStore((state) => state.isLoading)
+  const loadingDuration = useStreamingStore((state) => state.loadingDuration)
 
   const panelState = useUIStateStore((state) => state.panelState)
   const setPanelState = useUIStateStore((state) => state.setPanelState)

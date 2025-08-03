@@ -22,7 +22,7 @@ import { AnilistNextAiringEpisode, AnilistTitle } from "@better-melon/shared/typ
 type EpisodesListProps = {
   nextAiringEpisode?: AnilistNextAiringEpisode | null
   animeTitle?: AnilistTitle
-  animeBanner?: Anime['bannerImage']
+  animeBanner?: Anime['bannerImage'] | null
   isLoading?: boolean
   className?: string
 }

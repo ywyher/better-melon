@@ -6,6 +6,7 @@ import { MediaPlayerInstance } from "@vidstack/react";
 import { defaultGeneralSettings } from "@/lib/constants/settings";
 import _ from 'lodash';
 import { EpisodeMetadata } from "@/types/episode";
+import { StreamingData } from "@better-melon/shared/types";
 
 export const s3 = new S3Client({
   region: "auto",
@@ -144,10 +145,13 @@ export const downloadBase64Image = (base64Data: string, fileName: string, fileTy
  * @returns The pattern with placeholders replaced by actual values
  */
 export const mapScreenshotNamingPatternValues = ({
-  animeMetadata,
-  pattern
+  pattern,
+  episodeNumber,
+  episodeTitle
 }: {
-  pattern: string, animeMetadata: EpisodeMetadata
+  pattern: string, 
+  episodeNumber: number;
+  episodeTitle: string
 }): string => {
   const randomString = Math.random().toString(36).substring(2, 6);
   const timestamp = Date.now();
@@ -156,12 +160,12 @@ export const mapScreenshotNamingPatternValues = ({
   
   // Replace {title} placeholder
   if (result.includes('{title}')) {
-    result = result.replace(/{title}/g, animeMetadata.title.toLowerCase().replace(' ', '_') || '');
+    result = result.replace(/{title}/g, episodeTitle.toLowerCase().replace(' ', '_') || '');
   }
   
   // Replace {counter} placeholder
   if (result.includes('{counter}')) {
-    result = result.replace(/{counter}/g, animeMetadata.number?.toString() || '');
+    result = result.replace(/{counter}/g, episodeNumber?.toString() || '');
   }
   
   // Replace {random} placeholder

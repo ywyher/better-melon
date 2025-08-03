@@ -2,12 +2,10 @@ import GoBack from '@/components/goback';
 import Player from "../player/player";
 import PlayerSkeleton from "../player/player-skeleton";
 import { TopControls } from '@/app/watch/[id]/[ep]/components/sections/top-controls';
-import { useWatchStore } from '@/lib/stores/watch-store';
-import { useEpisodeStore } from '@/lib/stores/episode-store';
+import { useStreamingStore } from '@/lib/stores/streaming-store';
 
 export default function PlayerSection() {
-  const isLoading = useWatchStore((state) => state.isLoading)
-  const episodeData = useEpisodeStore((state) => state.episodeData)
+  const isLoading = useStreamingStore((state) => state.isLoading)
 
   return (
     <>
@@ -19,15 +17,7 @@ export default function PlayerSection() {
       <div className="relative w-full lg:aspect-video">
         {isLoading ? (
           <PlayerSkeleton isLoading={isLoading} />
-        ) : (
-          <>
-            {episodeData && (
-              <>
-                <Player />
-              </>
-            )}
-          </>
-        )}
+        ) : ( <Player /> )}
       </div>
     </>
   );

@@ -1,31 +1,29 @@
 import { SubtitleSettings } from "@/lib/db/schema";
 import { useNetworkCondition } from "@/lib/hooks/use-network-condition";
-import { usePrefetchEpisodeData } from "@/lib/hooks/use-prefetch-episode-data";
 import { usePrefetchPitchAccent } from "@/lib/hooks/use-prefetch-pitch-accent";
+import { usePrefetchStreamingData } from "@/lib/hooks/use-prefetch-streaming-data";
 import { usePrefetchSubtitleStyles } from "@/lib/hooks/use-prefetch-subtitle-styles";
 import { usePrefetchSubtitleTranscriptions } from "@/lib/hooks/use-prefetch-subtitle-transcriptions";
 import { usePlayerStore } from "@/lib/stores/player-store";
 import { Anime } from "@/types/anime";
-import { EpisodeData } from "@/types/episode";
+import { StreamingData } from "@better-melon/shared/types";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 type PrefetchEpisodeProps = {
   animeId: Anime['id'],
   episodeNumber: number,
-  episodeData: EpisodeData | null,
-  episodesLength: number,
+  streamingData: StreamingData | null,
   preferredFormat: SubtitleSettings["preferredFormat"],
 }
 
 export function usePrefetchEpisode({
   animeId,
   episodeNumber,
-  episodeData,
-  episodesLength,
+  streamingData,
   preferredFormat,
 }: PrefetchEpisodeProps) {
   const isVideoReady = usePlayerStore((state) => state.isVideoReady);
-  const isLastEpisode = episodesLength > 0 && episodeNumber >= episodesLength;
+  const isLastEpisode = (streamingData?.anime.episodes || 0) > 0 && episodeNumber >= (streamingData?.anime.episodes || 0);
   const player = usePlayerStore((state) => state.player)
   const [passedHalfDuration, setPassedHalfDuration] = useState<boolean>(false)
   const lastUpdateTimeRef = useRef<number>(0);
@@ -46,26 +44,26 @@ export function usePrefetchEpisode({
   }, [player])
 
   const isReady = useMemo(() => {
-    if(!episodeData || !preferredFormat || !passedHalfDuration) return false;
+    if(!streamingData || !preferredFormat || !passedHalfDuration) return false;
     const shared = isVideoReady &&
         preferredFormat &&
         passedHalfDuration;
 
-    if(episodeData.details.nextAiringEpisode) {
+    if(streamingData.anime.nextAiringEpisode) {
       return shared &&
-        episodeData.details.nextAiringEpisode?.episode != episodeNumber + 1
+        streamingData.anime.nextAiringEpisode?.episode != episodeNumber + 1
     }else {
       return shared &&
-        episodeData.details.episodes != episodeNumber
+        streamingData.anime.episodes != episodeNumber
     };
-  }, [isVideoReady, episodeData, preferredFormat, passedHalfDuration])
+  }, [isVideoReady, streamingData, preferredFormat, passedHalfDuration])
 
   const networkCondition = useNetworkCondition();
   
   const { 
-    episodeData: prefetchedEpisodeData, 
-    episodeDataPrefetched, 
-  } = usePrefetchEpisodeData({
+    streamingData: prefetchedStreamingData, 
+    streamingDataPrefetched 
+  } = usePrefetchStreamingData({
     animeId, 
     episodeNumber, 
     isReady, 
@@ -78,7 +76,7 @@ export function usePrefetchEpisode({
     activeTranscriptions,
     subtitleQueries
   } = usePrefetchSubtitleTranscriptions({
-    episodeData: prefetchedEpisodeData,
+    streamingData: prefetchedStreamingData,
     preferredFormat,
     isReady,
     isLastEpisode,
@@ -101,7 +99,7 @@ export function usePrefetchEpisode({
     pitchAccentPrefetched
   } = usePrefetchPitchAccent({
     animeId,
-    episodeData,
+    streamingData,
     japaneseCues: subtitleQueries?.find(q => q.data?.transcription == 'japanese')?.data?.cues,
     isLastEpisode,
     isReady,
@@ -111,7 +109,6 @@ export function usePrefetchEpisode({
 
   return {
     isLastEpisode,
-    episodeDataPrefetched,
     subtitlesPrefetched,
     stylesPrefetched,
     pitchAccentPrefetched,

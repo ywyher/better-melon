@@ -3,24 +3,23 @@
 import PlayerSection from '@/app/watch/[id]/[ep]/components/sections/player-section';
 import MissingSubtitlesDialog from '@/app/watch/[id]/[ep]/components/subtitles/missing-subtitles-dialog';
 import ControlsSection from '@/app/watch/[id]/[ep]/components/sections/controls-section';
-import PanelSection from '@/app/watch/[id]/[ep]/components/sections/panel-section';
+import EpisodesList from '@/components/episodes-list/episodes-list';
+import PanelSkeleton from '@/app/watch/[id]/[ep]/components/panel/panel-skeleton';
+import SubtitlePanel from '@/app/watch/[id]/[ep]/components/panel/panel';
 import { useParams } from 'next/navigation';
 import { Indicator } from '@/components/indicator';
 import { usePlayerStore } from '@/lib/stores/player-store';
 import { useIsXLarge } from '@/lib/hooks/use-media-query';
 import { usePrefetchEpisode } from '@/lib/hooks/use-prefetch-episode';
-import { useEffect, useLayoutEffect, useMemo } from 'react';
+import { useLayoutEffect, useMemo } from 'react';
 import { useDefinitionStore } from '@/lib/stores/definition-store';
 import { SubtitlesNotAvailableError } from '@/lib/errors/player';
 import { useSubtitleStore } from '@/lib/stores/subtitle-store';
 import { useUIStateStore } from '@/lib/stores/ui-state-store';
-import { useWatchData } from '@/lib/hooks/use-watch-data';
 import { defaultSubtitleSettings } from '@/app/settings/subtitle/_subtitle-settings/constants';
 import { useSaveProgress } from '@/lib/hooks/use-save-progress';
-import EpisodesList from '@/components/episodes-list/episodes-list';
-import PanelSkeleton from '@/app/watch/[id]/[ep]/components/panel/panel-skeleton';
-import SubtitlePanel from '@/app/watch/[id]/[ep]/components/panel/panel';
 import { cn } from '@/lib/utils/utils';
+import { useWatchData } from '@/lib/hooks/use-watch-data';
 
 export default function WatchPage() {
   const params = useParams();
@@ -37,7 +36,7 @@ export default function WatchPage() {
   const setEnglishSubtitleUrl = useSubtitleStore((state) => state.setEnglishSubtitleUrl);
 
   const {
-    episode,
+    streaming,
     errors,
     settings,
     duration,
@@ -64,37 +63,35 @@ export default function WatchPage() {
   usePrefetchEpisode({
     animeId,
     episodeNumber: episodeNumber + 1,
-    episodeData: episode.data || null,
-    episodesLength: episode.episodesLength,
+    streamingData: streaming.data || null,
     preferredFormat: settings?.data?.subtitleSettings.preferredFormat || defaultSubtitleSettings.preferredFormat
   });
   
   useSaveProgress({
     animeId,
     episodeNumber,
-    animeCoverImage: episode.data?.details.coverImage,
-    animeTitle: episode.data?.details.title,
+    animeCoverImage: streaming.data?.anime.coverImage,
+    animeTitle: streaming.data?.anime.title,
   })
   
   const shouldShowPanel = useMemo(() => {
     return (isXLarge && 
       panelState === 'visible' && 
-      episode?.data?.metadata && 
       transcriptions && 
       transcriptions?.data?.find(t => t.transcription === 'japanese')) ? true : false
-  }, [isXLarge, panelState, episode?.data?.metadata, transcriptions]);
+  }, [isXLarge, panelState, transcriptions]);
 
-  if (errors.length > 0) {
+  if (errors.length > 0 && streaming.data) {
     const subtitlesError = errors.find(error => error instanceof SubtitlesNotAvailableError);
     const error = subtitlesError || errors[0];
 
     if (error instanceof SubtitlesNotAvailableError) {
       return <MissingSubtitlesDialog
-        animeTitle={episode?.data?.metadata.title || ""}
-        episodeNumber={episode?.data?.metadata.number || 0}
+        animeTitle={streaming.data.anime.title}
+        episodeNumber={episodeNumber}
         open={subtitles.errorDialog}
         onSelect={() => {
-          episode.refetch();
+          streaming.refetch();
           subtitles.reset();
         }}
         setOpen={subtitles.setErrorDialog}
@@ -128,23 +125,23 @@ export default function WatchPage() {
           <PanelSkeleton />
         ) : (
           <>
-            {shouldShowPanel && <SubtitlePanel />}
+           <SubtitlePanel />
           </>
         )}
         {isLoading ? (
           <EpisodesList 
-            nextAiringEpisode={episode.data?.details.nextAiringEpisode}
-            animeTitle={episode.data?.details.title}
-            animeBanner={episode.data?.details.bannerImage}
+            nextAiringEpisode={streaming.data?.anime.nextAiringEpisode}
+            animeTitle={streaming.data?.anime.title}
+            animeBanner={streaming.data?.anime.bannerImage}
             isLoading={isLoading}
           />
         ): (
           <>
             {shouldShowPanel && (
               <EpisodesList 
-                nextAiringEpisode={episode.data?.details.nextAiringEpisode}
-                animeTitle={episode.data?.details.title}
-                animeBanner={episode.data?.details.bannerImage}
+                nextAiringEpisode={streaming.data?.anime.nextAiringEpisode}
+                animeTitle={streaming.data?.anime.title}
+                animeBanner={streaming.data?.anime.bannerImage}
               />
             )}
           </>

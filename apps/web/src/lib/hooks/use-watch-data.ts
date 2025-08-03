@@ -1,7 +1,6 @@
 'use client'
 
 import useIsTranscriptionsCached from "@/lib/hooks/use-is-transcriptions-cached";
-import { useEpisodeData } from "@/lib/hooks/use-episode-data";
 import { useInitializeTokenizer } from "@/lib/hooks/use-initialize-tokenizer";
 import { usePitchAccentChunks } from "@/lib/hooks/use-pitch-accent-chunks";
 import { useSetSubtitles } from "@/lib/hooks/use-set-subtitles";
@@ -13,12 +12,13 @@ import { hasChanged } from "@/lib/utils/utils";
 import { Anime } from "@/types/anime";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useDelayStore } from "@/lib/stores/delay-store";
-import { useWatchStore } from "@/lib/stores/watch-store";
-import { useEpisodeStore } from "@/lib/stores/episode-store";
 import { useSettingsStore } from "@/lib/stores/settings-store";
 import { useTranscriptionStore } from "@/lib/stores/transcription-store";
 import { useLearningStore } from "@/lib/stores/learning-store";
 import { useMediaHistory } from "@/lib/hooks/use-media-history";
+import { useStreamingStore } from "@/lib/stores/streaming-store";
+import { useStreamingData } from "@/lib/hooks/use-streaming-data";
+import { StreamingData } from "@better-melon/shared/types";
 
 export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
   const loadStartTimeRef = useRef<number>(performance.now());
@@ -26,14 +26,12 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
   const [totalDuration, setTotalDuration] = useState<number>(0);
   const setDelay = useDelayStore((state) => state.setDelay)
 
-  const watchStore = useWatchStore();
-  const episodeStore = useEpisodeStore();
+  const streamingStore = useStreamingStore();
   const settingsStore = useSettingsStore();
   const transcriptionStore = useTranscriptionStore();
   const learningStore = useLearningStore();
 
-  const currentWatchState = useWatchStore.getState();
-  const currentEpisodeState = useEpisodeStore.getState();
+  const currentStreamingState = useStreamingStore.getState();
   const currentSettingsState = useSettingsStore.getState();
   const currentTranscriptionState = useTranscriptionStore.getState();
   const currentLearningState = useLearningStore.getState();
@@ -54,13 +52,12 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
   const { isInitialized: isTokenizerInitialized } = useInitializeTokenizer({ shouldInitialize: shouldInitializeTokenizer });
 
   const {
-    episodeData,
-    isLoading: isEpisodeDataLoading,
-    error: episodeDataError,
-    loadingDuration: episodeDataLoadingDuration,
-    episodesLength,
-    refetch: refetchEpisodeData
-  } = useEpisodeData(animeId, episodeNumber);
+    streamingData,
+    isLoading: isStreamingDataLoading,
+    error: streamingDataError,
+    loadingDuration: streamingDataLoadingDuration,
+    refetch: refetchStreamingData
+  } = useStreamingData(animeId, episodeNumber);
 
   const {
     settings,
@@ -108,7 +105,6 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
   });
 
   const { 
-    mediaHistory,
     isLoading: isMediaHistoryLoading,
     error: isMediaHistoryError,
     loadingDuration: mediaHistoryLoadingDuration
@@ -123,8 +119,8 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
     setSubtitlesErrorDialog,
     resetSubtitlesErrors
   } = useSetSubtitles({
-    episodeData,
-    preferredFormat: settings.subtitleSettings.preferredFormat,
+    streamingData,
+    preferredFormat: settings.subtitleSettings.preferredFormat || "srt",
     episodeNumber,
     cachedFiles
   });
@@ -134,11 +130,11 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
     const updates: Partial<{
       animeId: number;
       episodeNumber: number;
-      episodeData: any;
+      streamingData: StreamingData;
       episodesLength: number;
     }> = {};
     
-    if (hasChanged(animeId, currentEpisodeState.animeId)) {
+    if (hasChanged(animeId, currentStreamingState.animeId)) {
       updates.animeId = animeId;
       setDelay({
         english: 0,
@@ -146,24 +142,20 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
       });
     }
     
-    if (hasChanged(episodeNumber, currentEpisodeState.episodeNumber)) {
+    if (hasChanged(episodeNumber, currentStreamingState.episodeNumber)) {
       updates.episodeNumber = episodeNumber;
     }
     
-    if (hasChanged(episodeData, currentEpisodeState.episodeData)) {
-      updates.episodeData = episodeData;
+    if (hasChanged(streamingData, currentStreamingState.streamingData)) {
+      updates.streamingData = streamingData;
     }
     
-    if (hasChanged(episodesLength, currentEpisodeState.episodesLength)) {
-      updates.episodesLength = episodesLength;
-    }
-
     // Only update if there are actual changes
     if (Object.keys(updates).length > 0) {
       console.log('Batch updating episode store with:', Object.keys(updates));
-      episodeStore.batchUpdate(updates);
+      streamingStore.batchUpdate(updates);
     }
-  }, [animeId, episodeNumber, episodeData, episodesLength]);
+  }, [animeId, episodeNumber, streamingData]);
 
   // Update settings store
   useEffect(() => {
@@ -227,7 +219,7 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
 
   const isLoading = useMemo(() => {
     return (
-      isEpisodeDataLoading ||
+      isStreamingDataLoading ||
       isSettingsLoading ||
       isWordsLoading ||
       isMediaHistoryLoading ||
@@ -235,7 +227,7 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
       (isStylesLoading && !hasInitialized)
     );
   }, [
-    isEpisodeDataLoading,
+    isStreamingDataLoading,
     isSettingsLoading,
     isWordsLoading,
     isPitchAccentLoading,
@@ -247,8 +239,8 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
 
   // Update watch store
   useEffect(() => {
-    if (hasChanged(isLoading, currentWatchState.isLoading)) {
-      watchStore.setIsLoading(isLoading);
+    if (hasChanged(isLoading, currentStreamingState.isLoading)) {
+      streamingStore.setIsLoading(isLoading);
     }
     
     if (!isLoading && !hasInitialized) {
@@ -258,7 +250,7 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
 
   useEffect(() => {
     if (!isLoading &&
-        episodeDataLoadingDuration >= 0 &&
+        streamingDataLoadingDuration >= 0 &&
         transcriptionsLoadingDuration >= 0 &&
         settingsLoadingDuration >= 0 &&
         stylesLoadingDuration >= 0 && 
@@ -269,14 +261,14 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
       const loadEndTime = performance.now();
       const elapsed = loadEndTime - loadStartTimeRef.current;
       
-      if (hasChanged(elapsed, currentWatchState.loadingDuration)) {
+      if (hasChanged(elapsed, currentStreamingState.loadingDuration)) {
         setTotalDuration(elapsed);
-        watchStore.setLoadingDuration(elapsed);
+        streamingStore.setLoadingDuration(elapsed);
       }
     }
   }, [
     isLoading,
-    episodeDataLoadingDuration,
+    streamingDataLoadingDuration,
     transcriptionsLoadingDuration,
     settingsLoadingDuration,
     stylesLoadingDuration,
@@ -287,7 +279,7 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
 
   const errors = useMemo(() => {
     return [
-      episodeDataError,
+      streamingDataError,
       transcriptionsError,
       settingsError,
       stylesError,
@@ -297,7 +289,7 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
       pitchAccentError
     ].filter(Boolean);
   }, [
-    episodeDataError,
+    streamingDataError,
     transcriptionsError,
     settingsError,
     stylesError,
@@ -308,13 +300,12 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
   ]);
 
   return {
-    episode: {
-      data: episodeData,
-      isLoading: isEpisodeDataLoading,
-      error: episodeDataError,
-      loadingDuration: episodeDataLoadingDuration,
-      episodesLength,
-      refetch: refetchEpisodeData
+    streaming: {
+      data: streamingData,
+      isLoading: isStreamingDataLoading,
+      error: streamingDataError,
+      loadingDuration: streamingDataLoadingDuration,
+      refetch: refetchStreamingData
     },
     settings: {
       data: settings,

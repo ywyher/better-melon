@@ -18,8 +18,8 @@ import SubtitleTranscriptions from '@/app/watch/[id]/[ep]/components/transcripti
 import { env } from '@/lib/env/client';
 import DefinitionCard from '@/components/definition-card/definition-card';
 import { AnimeSkipTime } from '@/types/anime';
-import { useEpisodeStore } from '@/lib/stores/episode-store';
 import { useSettingsStore } from '@/lib/stores/settings-store';
+import { useStreamingStore } from '@/lib/stores/streaming-store';
 
 const MemoizedPlayerSkeleton = memo(PlayerSkeleton);
 const MemoizedSkipButton = memo(SkipButton);
@@ -43,11 +43,9 @@ export default function Player() {
     const autoNext = useSettingsStore((settings) => settings.player.autoNext);
     const autoPlay = useSettingsStore((settings) => settings.player.autoPlay);
 
-    const sources = useEpisodeStore((state) => state.episodeData?.sources)
-    const metadata = useEpisodeStore((state) => state.episodeData?.metadata)
-    const episodeNumber = useEpisodeStore((state) => state.episodeNumber)
-    const episodesLength = useEpisodeStore((state) => state.episodesLength)
-    const animeId = useEpisodeStore((state) => state.animeId)
+    const episodeNumber = useStreamingStore((state) => state.episodeNumber)
+    const animeId = useStreamingStore((state) => state.animeId)
+    const streamingData = useStreamingStore((state) => state.streamingData)
 
     const [loadingDuration, setLoadingDuration] = useState<{
       start: Date | undefined,
@@ -62,29 +60,29 @@ export default function Player() {
     }, [setPlayer]);
 
     useEffect(() => {
-      if(!sources || !sources.sources.file) return;
+      if(!streamingData?.episode.sources) return;
 
-      const url = `${env.NEXT_PUBLIC_PROXY_URL}?url=${sources.sources.file}`
+      const url = `${env.NEXT_PUBLIC_PROXY_URL}?url=${streamingData.episode.sources.sources.file}`
       setVideoSrc(url)
       setIsInitialized(true);
       setLoadingDuration({ start: new Date(), end: undefined })
-    }, [sources]);
+    }, [streamingData?.episode.sources]);
 
     useEffect(() => {
-        if (!sources || !player.current) return;
+        if (!streamingData?.episode.sources || !player.current) return;
 
         const skipTimesData = [
             {
                 interval: {
-                    startTime: sources.intro.start,
-                    endTime: sources.intro.end,
+                    startTime: streamingData.episode.sources.intro.start,
+                    endTime: streamingData.episode.sources.intro.end,
                 },
                 skipType: 'OP' as AnimeSkipTime['skipType']
             },
             {
                 interval: {
-                    startTime: sources.outro.start,
-                    endTime: sources.outro.end,
+                    startTime: streamingData.episode.sources.outro.start,
+                    endTime: streamingData.episode.sources.outro.end,
                 },
                 skipType: 'OT' as AnimeSkipTime['skipType']
             }
@@ -96,8 +94,8 @@ export default function Player() {
             skipTimes: skipTimesData,
             totalDuration: player.current?.duration || 0,
             episode: {
-                title: metadata?.title || "",
-                number: metadata?.number || episodeNumber
+                title: streamingData.anime?.title.english,
+                number: episodeNumber
             }
         });
         
@@ -109,7 +107,7 @@ export default function Player() {
         return () => {
             if (blobUrl) URL.revokeObjectURL(blobUrl);
         };
-    }, [metadata, sources, player.current?.duration, episodeNumber]);
+    }, [streamingData, player.current?.duration, episodeNumber]);
 
     const handleCanPlay = useCallback(() => {
         console.log('can play from player')
@@ -121,6 +119,8 @@ export default function Player() {
     }, [setIsVideoReady, setLoadingDuration]);
 
     const handlePlaybackEnded = useCallback(() => {
+        if(!streamingData?.anime) return
+
         if (!autoNext) {
             isTransitioning.current = false;
             return;
@@ -129,7 +129,7 @@ export default function Player() {
         try {
             player.current?.pause();
             
-            if (episodeNumber < episodesLength) {
+            if (episodeNumber < streamingData.anime.episodes) {
                 router.push(`/watch/${animeId}/${episodeNumber + 1}`);
             } else {
                 toast.message("No more episodes to watch :(");
@@ -139,7 +139,7 @@ export default function Player() {
             console.error('Error moving to the next episode:', error);
             isTransitioning.current = false;
         }
-    }, [autoNext, episodeNumber, episodesLength, animeId, router]);
+    }, [autoNext, episodeNumber, streamingData?.anime.episodes, animeId, router]);
 
     const onTimeUpdate = useThrottledCallback(() => {
         if (!player.current) return;
@@ -192,7 +192,11 @@ export default function Player() {
                   }s</p>
                 )}
                 <MediaPlayer
-                    title={metadata?.title || ""}
+                    title={
+                        streamingData?.episode.details.attributes.canonicalTitle 
+                        || streamingData?.anime.title.english
+                        || ""
+                    }
                     src={videoSrc}
                     ref={player}
                     onCanPlay={handleCanPlay}
@@ -208,8 +212,11 @@ export default function Player() {
                     <MediaProvider>
                         <Poster
                             className="vds-poster"
-                            src={metadata?.image}
-                            alt={metadata?.title}
+                            src={
+                                streamingData?.episode.details.attributes.thumbnail?.original
+                                || streamingData?.anime.bannerImage
+                            }
+                            alt={streamingData?.episode.details.attributes.canonicalTitle}
                         />
                         {vttUrl && (
                             <Track kind='chapters' src={vttUrl} default label='Skip Times' />
@@ -217,7 +224,7 @@ export default function Player() {
                     </MediaProvider>
                     <DefaultAudioLayout icons={defaultLayoutIcons} />
                     <DefaultVideoLayout
-                        thumbnails={`${env.NEXT_PUBLIC_PROXY_URL}?url=${metadata?.thumbnails?.file}`}
+                        thumbnails={`${env.NEXT_PUBLIC_PROXY_URL}?url=${streamingData?.episode.sources.tracks.find(t => t.label == 'thumbnails')}`}
                         icons={defaultLayoutIcons} 
                     />
                     <MemoizedSkipButton

@@ -4,10 +4,10 @@ import SettingsToggles from "@/app/watch/[id]/[ep]/components/settings/settings-
 import Screenshot from "@/app/watch/[id]/[ep]/components/settings/screenshot";
 import EnabledTranscriptions from "@/components/enabled-transcriptions";
 import { Separator } from "@/components/ui/separator";
-import { useWatchStore } from "@/lib/stores/watch-store";
+import { useStreamingStore } from "@/lib/stores/streaming-store";
 
 export default function ControlsSection() {
-  const isLoading = useWatchStore((state) => state.isLoading)
+  const isLoading = useStreamingStore((state) => state.isLoading)
 
   if (isLoading) {
     return (

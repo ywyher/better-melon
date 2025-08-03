@@ -14,7 +14,7 @@ import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction } from "react";
 
 type MissingSubtitlesDialogPorps = {
-  animeTitle: Anime['title']['english']
+  animeTitle: Anime['title']
   episodeNumber: number
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
@@ -36,7 +36,7 @@ export default function MissingSubtitlesDialog({
    <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Subtitles doesn't exist yet for {animeTitle} episode {episodeNumber}</DialogTitle>
+          <DialogTitle>Subtitles doesn't exist yet for {animeTitle.english} episode {episodeNumber}</DialogTitle>
           <DialogDescription>{errorMessage}</DialogDescription>
         </DialogHeader>
           <div className="flex flex-col gap-5">
