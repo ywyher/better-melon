@@ -38,7 +38,6 @@ export default function AnimeListProviderCard({
   const [isUnlinking, setIsUnlinking] = useState<boolean>(false);
   const [isAlertOpen, setIsAlertOpen] = useState<boolean>(false);
   const queryClient = useQueryClient();
-  const router = useRouter()
   
   const onLink = async () => {
     if (!isAuthenticated) {

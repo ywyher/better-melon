@@ -17,11 +17,15 @@ import WatchDataPlayground from "@/app/playground/_components/watch-data";
 import { defaultPlayerSettings } from "@/app/settings/player/constants";
 import EnabledTranscriptions from "@/components/enabled-transcriptions";
 import HistoryPlayground from "@/app/playground/_components/history";
+import EpisodeDetailsPlayground from "@/app/playground/_components/streaming-details";
+import AddToListPlayground from "@/app/playground/_components/add-to-list";
 
 export default function Playground() {
   return (
     <>
-      <HistoryPlayground />
+      <AddToListPlayground />
+      {/* <EpisodeDetailsPlayground /> */}
+      {/* <HistoryPlayground /> */}
       {/* <TranscriptionsStylesPlayground /> */}
       {/* <StylesPlayground /> */}
       {/* <ProxyPlayground /> */}

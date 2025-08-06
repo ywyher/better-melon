@@ -22,6 +22,7 @@ export async function ensureAuthenticated() {
                 return {
                     userId: null,
                     message: null,
+                    isAnon: true,
                     error: "Not authenticated nor were we able to authenticate you as an anonymous user. Please register."
                 };
             }
@@ -35,12 +36,14 @@ export async function ensureAuthenticated() {
             userId: userId,
             error: null,
             message: null,
+            isAnon: false
         }
     } catch(error) {
         return {
             userId: null,
             error: error instanceof Error ? error.message : 'Failed to ensure user authentication',
             message: null,
+            isAnon: false
         }
     }
 }

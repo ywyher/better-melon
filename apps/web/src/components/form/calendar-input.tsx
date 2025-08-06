@@ -1,6 +1,6 @@
 "use client";
 
-import { Calendar } from "@/components/calendar";
+import { Calendar } from "@/components/ui/calendar";
 import React, { forwardRef, useState } from "react";
 import {
   Popover,
@@ -49,6 +49,7 @@ export const CalendarInput = forwardRef<
             onSelect={handleSelect}
             disabled={disabled}
             required={required}
+            captionLayout="dropdown"
             {...props}
           />
         </PopoverContent>

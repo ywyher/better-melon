@@ -4,7 +4,7 @@ import AnimeCardFooter from "@/components/anime/card/default/footer";
 import AnimeCardContent from "@/components/anime/card/default/content";
 import { AnilistCoverImage, AnilistFormat, AnilistStatus, AnilistTitle } from "@better-melon/shared/types";
 import { Anime } from "@/types/anime";
-import { AnilistRelationType } from "@/types/anilist";
+import { AnilistRelationType } from "@/types/anilist/anime";
 import AnimeCardWrapper from "@/components/anime/card/wrappers/card";
 
 type AnimeCardProps = {

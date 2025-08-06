@@ -9,26 +9,40 @@ import { account, generalSettings, playerSettings, subtitleSettings, User, wordS
 import { env } from "@/lib/env/client"
 import { redis } from "@/lib/redis"
 import { NHKEntry } from "@/types/nhk"
-import { eq } from "drizzle-orm"
+import { and, eq } from "drizzle-orm"
 import { headers } from "next/headers"
 import db from "@/lib/db"
+import { AuthProvider } from "@/types"
+import { ensureAuthenticated } from "@/lib/db/mutations"
 
-export async function getAccessToken({ accountId }: {accountId: string}) {
-  const [accountData] = await db.select().from(account)
-    .where(eq(account.accountId, accountId)) 
 
-  return accountData.accessToken
-}
+export async function getAccountInfo({ provider }: { provider: AuthProvider }) {
+  const { userId, isAnon, error } = await ensureAuthenticated()
 
-export async function getSession() {
-  const session = await auth.api.getSession({ headers: await headers() });
-      
-  return session
-}
+  if(error || !userId) return {
+    userId: null,
+    info: null,
+    error
+  }
 
-export async function listAccoutns({ userId }: { userId: User['id'] }) {
-  const data = await db.select().from(account).where(eq(account.userId, userId))
-  return data
+  if (isAnon) return {
+    userId,
+    info: null,
+    error: `${provider} is not connected to user`
+  }
+
+  const [info] = await db.select().from(account)
+    .where(and(
+      eq(account.providerId, provider),
+      eq(account.userId, userId)
+    ))
+
+
+  return {
+    userId,
+    info,
+    error: null
+  }
 }
 
 export async function getSettingsForEpisode() {

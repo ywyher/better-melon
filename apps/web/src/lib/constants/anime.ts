@@ -1,4 +1,4 @@
-import { AnilistCountry, AnilistRelationType } from "@/types/anilist"
+import { AnilistCountry, AnilistRelationType } from "@/types/anilist/anime"
 import { Anime, AnimeQueryVariables, AnimeListQueryVariables } from "@/types/anime";
 import { SearchFilters } from "@/types/search";
 import { AnilistFormat, AnilistGenre, AnilistSeason, AnilistSort, AnilistSource, AnilistStatus, AnilistTag } from "@better-melon/shared/types"

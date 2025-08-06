@@ -5,7 +5,7 @@ import { useCallback, useEffect, useRef } from "react";
 import { AnilistPageInfo } from "@/types/anilist";
 import { AnilistResponse, AnilistSort, AnilistGenre, AnilistTag, AnilistStatus, AnilistFormat, AnilistSeason, AnilistSource } from "@better-melon/shared/types";
 import { GET_ANIME_LIST } from "@/lib/graphql/queries";
-import { AnilistCountry } from "@/types/anilist";
+import { AnilistCountry } from "@/types/anilist/anime";
 import { SearchFilters } from "@/types/search";
 import { queryVariables } from "@/lib/constants/anime";
 

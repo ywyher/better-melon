@@ -1,6 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils/utils";
-import { AnilistChracter } from "@/types/anilist";
+import { AnilistChracter } from "@/types/anilist/anime";
 import Image from "next/image";
 
 type CharacterProps = { character: AnilistChracter, className?: string }

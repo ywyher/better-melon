@@ -3,6 +3,8 @@ export type Option = {
     label: string;
 };
 
+export type AuthProvider = 'anilist'
+
 export type SyncStrategy = 'always' | 'ask' | 'never' | 'once'
 
 export type NetworkCondition = 'good'|'poor'|'n'

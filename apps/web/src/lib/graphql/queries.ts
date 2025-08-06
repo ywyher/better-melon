@@ -154,45 +154,6 @@ export const GET_ANIME = gql`
   }
 `;
 
-export const GET_ANIME_IN_LIST = gql`
-  query GetAnimeList (
-    $mediaId: Int!,
-    $userId: Int!,
-    $type: MediaType
-  ){
-    MediaList(
-      mediaId: $mediaId,
-      userId: $userId,
-      type: $type
-    ) {
-      media {
-        mediaListEntry {
-          id
-        }
-        episodes
-      }
-      status
-      progress
-      startedAt {
-        year
-        month
-        day
-      }
-      completedAt {
-        year
-        month
-        day
-      }
-      score
-      repeat
-      notes
-      user {
-        id
-      }
-    }
-  }
-`;
-
 export const GET_ANIME_LIST = gql`
   query GetAnimeList(
     # Pagination
@@ -279,6 +240,45 @@ export const GET_ANIME_LIST = gql`
         }
         popularity @include(if: $withPopularity)
         episodes @include(if: $withEpisodes)
+      }
+    }
+  }
+`;
+
+export const GET_ANIME_IN_LIST = gql`
+  query GetAnimeList (
+    $mediaId: Int!,
+    $userId: Int!,
+    $type: MediaType
+  ){
+    MediaList(
+      mediaId: $mediaId,
+      userId: $userId,
+      type: $type
+    ) {
+      media {
+        mediaListEntry {
+          id
+        }
+        episodes
+      }
+      status
+      progress
+      startedAt {
+        year
+        month
+        day
+      }
+      completedAt {
+        year
+        month
+        day
+      }
+      score
+      repeat
+      notes
+      user {
+        id
       }
     }
   }

@@ -1,8 +1,8 @@
 "use client"
 
-import AnilistListOptions from "@/components/add-to-list/lists/anilist/add-to-anilist";
+import AddToAnilist from "@/components/add-to-list/lists/anilist/add-to-anilist";
 import { AddToAnilistSkeleton } from "@/components/add-to-list/lists/anilist/add-to-anilist-skeleton";
-import SelectConnectionProvider from "@/components/add-to-list/select-connection-provider";
+import SelectListProvider from "@/components/add-to-list/select-list-provider";
 import DialogWrapper from "@/components/dialog-wrapper";
 import { Button } from "@/components/ui/button";
 import { animeListProviders } from "@/lib/constants/anime-list";
@@ -16,57 +16,58 @@ import { useEffect, useState } from "react";
 
 type AddToListProps = { 
   animeId: Anime['id']
-  isAddToList: boolean
+  isAddToList?: boolean
 }
 
 export default function AddToList({ 
   animeId,
-  isAddToList
+  isAddToList = false
 }: AddToListProps ) {
   const [open, setOpen] = useState<boolean>(isAddToList || false)
   const [selectedProvider, setSelectedProvider] = useState<AnimeListProivder>(animeListProviders[0])
   const setIsAuthDialogOpen = useAuthStore((state) => state.setIsAuthDialogOpen)
 
-  const { data: user, isLoading: isUserLoading } = useSession()
-  const { data: accounts, isLoading: isAccountsLoading } = useQuery({ 
-    ...userQueries.listAccountsFullData({ userId: user?.id || "" }),
-    enabled: !!user && user.id != null
-  })
+  const { 
+    data: { userId, info } = { userId: null, info: null },
+    isLoading
+  } = useQuery({
+    ...userQueries.accountInfo({ provider: 'anilist' })
+  });
 
   return (
     <DialogWrapper
       open={open}
       setOpen={setOpen}
       trigger={<Button variant='outline' className="w-fit"><FilePenLine /> Add to list</Button>}
-      title={<SelectConnectionProvider selectedProvider={selectedProvider} setSelectedProvider={setSelectedProvider} />}
+      title={<SelectListProvider selectedProvider={selectedProvider} setSelectedProvider={setSelectedProvider} />}
       className="min-w-[50%]"
       breakpoint="medium"
+      headerClassName="p-0"
     >
-      {isUserLoading || isAccountsLoading ? (
-         <AddToAnilistSkeleton />
+      {isLoading ? (
+        <AddToAnilistSkeleton />
       ): (
         <>
-          {!user ? (
-            <div className="flex justify-center items-center">
-              <Button 
-                variant='outline'
-                onClick={() => {
-                  setIsAuthDialogOpen(true)
-                  setOpen(false)
-                }}
-              >
-                Authenticate
-              </Button>
-            </div>
+          {!userId || !info || !info.accessToken || !info.accountId ? (
+            <Button 
+              className="w-full"
+              variant='outline'
+              onClick={() => {
+                setIsAuthDialogOpen(true)
+                setOpen(false)
+              }}
+            >
+              Authenticate
+            </Button>
           ): (
             <>
               {selectedProvider.name == 'anilist' && (
-                <AnilistListOptions 
+                <AddToAnilist 
                   animeId={animeId}
                   provider={selectedProvider}
-                  accountId={accounts?.find(a => a.providerId == selectedProvider.name)?.accountId}
-                  accessToken={accounts?.find(a => a.providerId == selectedProvider.name)?.accessToken || undefined}
                   setOpen={setOpen}
+                  accessToken={info.accessToken}
+                  accountId={info.accountId}
                 />
               )}
             </>

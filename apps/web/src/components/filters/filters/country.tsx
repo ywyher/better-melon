@@ -2,7 +2,7 @@ import { Combobox } from "@/components/ui/combobox";
 import { animeCountries } from "@/lib/constants/anime";
 import { parseAsStringEnum, useQueryState } from "nuqs";
 import FilterField from "@/components/filters/filed";
-import { AnilistCountry } from "@/types/anilist";
+import { AnilistCountry } from "@/types/anilist/anime";
 
 export default function CountryFilter() {
     const [country, setCountry] = useQueryState<AnilistCountry>('country',

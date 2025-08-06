@@ -1,6 +1,6 @@
 import AnimeCardInfoBadge from "@/components/anime/card/info-badge";
 import { CardFooter } from "@/components/ui/card";
-import { AnilistRelationType } from "@/types/anilist";
+import { AnilistRelationType } from "@/types/anilist/anime";
 import { AnilistFormat } from "@better-melon/shared/types";
 import { Star } from "lucide-react";
 

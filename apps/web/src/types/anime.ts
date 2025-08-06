@@ -1,5 +1,6 @@
 import { queryVariables } from "@/lib/constants/anime";
-import { AnilistChracter, AnilistCountry, AnilistEdges, AnilistRecommendation, AnilistRleation, AnilistStudio, AnilistTrailer } from "@/types/anilist";
+import { AnilistEdges } from "@/types/anilist";
+import { AnilistChracter, AnilistCountry, AnilistRecommendation, AnilistRleation, AnilistStudio, AnilistTrailer } from "@/types/anilist/anime";
 import { AnilistCoverImage, AnilistFormat, AnilistGenre, AnilistNextAiringEpisode, AnilistSeason, AnilistSort, AnilistSource, AnilistStatus, AnilistTag, AnilistTitle, AnimeDate } from "@better-melon/shared/types";
 
 export type AnimeSkipTime = {

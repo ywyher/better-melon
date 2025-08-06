@@ -7,3 +7,12 @@ export const animeListProviders: AnimeListProivder[] = [
     icon: Anilist,
   }
 ]
+
+export const anilistListStatusEnum = [
+  'CURRENT',
+  'PLANNING',
+  'COMPLETED',
+  'REPEATING',
+  'PAUSED',
+  'DROPPED'
+] as const

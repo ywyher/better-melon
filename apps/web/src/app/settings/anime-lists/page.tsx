@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -24,9 +24,9 @@ export default function AnimeLists() {
       }
     }, [user])
 
-    const isConnected = (provider: AnimeListProivders) => {
+    const isConnected = useCallback((provider: AnimeListProivders) => {
         return connectedProviders?.find(d => d.provider === provider) ? true : false
-    }
+    }, [connectedProviders])
 
     return (
         <div className="flex flex-col gap-6">
