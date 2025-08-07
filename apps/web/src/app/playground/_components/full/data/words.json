@@ -1,0 +1,34 @@
+[
+  {
+    "id": "QS2jYTMNEWZnR83d1JJbcPZD7gnHfhVO",
+    "word": "さ",
+    "status": "known",
+    "userId": "eLThMoM7UARk8W8iRkwuINquVvMWdQU5",
+    "createdAt": "2025-08-02T20:29:44.454Z",
+    "updatedAt": "2025-08-02T20:30:28.668Z"
+  },
+  {
+    "id": "lzX4nOoxLvVXNTGsjAdPQx5M4L8NWMRl",
+    "word": "写真",
+    "status": "known",
+    "userId": "eLThMoM7UARk8W8iRkwuINquVvMWdQU5",
+    "createdAt": "2025-08-02T20:30:11.706Z",
+    "updatedAt": "2025-08-02T20:30:28.668Z"
+  },
+  {
+    "id": "8Yp0M5kc6nHEzn8sfmErDgdZsGYlqhmi",
+    "word": "を",
+    "status": "known",
+    "userId": "eLThMoM7UARk8W8iRkwuINquVvMWdQU5",
+    "createdAt": "2025-08-02T20:30:26.840Z",
+    "updatedAt": "2025-08-02T20:30:28.668Z"
+  },
+  {
+    "id": "iz5sZnaoSDjote5Es616wqT9seWnGS9N",
+    "word": "これ",
+    "status": "ignore",
+    "userId": "eLThMoM7UARk8W8iRkwuINquVvMWdQU5",
+    "createdAt": "2025-08-02T20:30:38.434Z",
+    "updatedAt": "2025-08-02T20:30:38.434Z"
+  }
+]

@@ -5,7 +5,6 @@ import { defaultGeneralSettings } from "@/lib/constants/settings";
 import { GeneralSettings, PlayerSettings, SubtitleSettings, WordSettings } from "@/lib/db/schema";
 import { SettingsForEpisode } from "@/types/settings";
 import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
 
 export type SettingsStore = {
   general: GeneralSettings;

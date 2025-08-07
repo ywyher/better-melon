@@ -77,6 +77,7 @@ export function usePitchAccentChunks({
 
   const pitchLookup = useMemo(() => {
     if(queries.some(q => q.isLoading)) return new Map()
+    console.log(`queries`, queries)
     const newLookup = new Map<string, NHKEntry>();
     
     queries.forEach(query => {

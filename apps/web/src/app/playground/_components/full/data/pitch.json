@@ -1,0 +1,6854 @@
+[
+  {
+    "status": "success",
+    "fetchStatus": "idle",
+    "isPending": false,
+    "isSuccess": true,
+    "isError": false,
+    "isInitialLoading": false,
+    "isLoading": false,
+    "data": [
+      {
+        "id": 35591,
+        "word": "せっかく",
+        "type": "pitch",
+        "reading": "せっかく",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 0,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 34699,
+        "word": "正解",
+        "type": "pitch",
+        "reading": "せいかい",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 23518,
+        "word": "この",
+        "type": "pitch",
+        "reading": "この",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 50098,
+        "word": "人",
+        "type": "pitch",
+        "reading": "にん",
+        "pitches": [
+          {
+            "position": 1,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 39571,
+        "word": "たち",
+        "type": "pitch",
+        "reading": "たち",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 1,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 9596,
+        "word": "が",
+        "type": "pitch",
+        "reading": "が",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 1,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 34537,
+        "word": "ずる",
+        "type": "pitch",
+        "reading": "ずる",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 1,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 63849,
+        "word": "見え",
+        "type": "pitch",
+        "reading": "みえ",
+        "pitches": [
+          {
+            "position": 2,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 52370,
+        "word": "爆弾",
+        "type": "pitch",
+        "reading": "ばくだん",
+        "pitches": [
+          {
+            "position": 0,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 47247,
+        "word": "止め",
+        "type": "pitch",
+        "reading": "とめ",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 0,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 35351,
+        "word": "世界",
+        "type": "pitch",
+        "reading": "せかい",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 64944,
+        "word": "みんな",
+        "type": "pitch",
+        "reading": "みんな",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 3,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 48079,
+        "word": "ナイン",
+        "type": "pitch",
+        "reading": "ナイン",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 1488,
+        "word": "あの",
+        "type": "pitch",
+        "reading": "あの",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 0,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 9516,
+        "word": "女",
+        "type": "pitch",
+        "reading": "おんな",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 3
+          }
+        ]
+      },
+      {
+        "id": 45120,
+        "word": "どう",
+        "type": "pitch",
+        "reading": "どう",
+        "pitches": [
+          {
+            "position": 1,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 34534,
+        "word": "する",
+        "type": "pitch",
+        "reading": "する",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 43250,
+        "word": "つもり",
+        "type": "pitch",
+        "reading": "つもり",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 2601,
+        "word": "家出",
+        "type": "pitch",
+        "reading": "いえで",
+        "pitches": [
+          {
+            "position": 0,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 58982,
+        "word": "ふらふら",
+        "type": "pitch",
+        "reading": "ふらふら",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 19438,
+        "word": "警察",
+        "type": "pitch",
+        "reading": "けいさつ",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 0,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 49226,
+        "word": "に",
+        "type": "pitch",
+        "reading": "に",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 40281,
+        "word": "たら",
+        "type": "pitch",
+        "reading": "たら",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 1,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 13898,
+        "word": "監視",
+        "type": "pitch",
+        "reading": "かんし",
+        "pitches": [
+          {
+            "position": 0,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 4201,
+        "word": "意味",
+        "type": "pitch",
+        "reading": "いみ",
+        "pitches": [
+          {
+            "position": 1,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 43426,
+        "word": "で",
+        "type": "pitch",
+        "reading": "で",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 66253,
+        "word": "も",
+        "type": "pitch",
+        "reading": "も",
+        "pitches": [
+          {
+            "position": 0,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 40887,
+        "word": "近く",
+        "type": "pitch",
+        "reading": "ちかく",
+        "pitches": [
+          {
+            "position": 1,
+            "devoice": [
+              1
+            ],
+            "nasal": []
+          },
+          {
+            "position": 2,
+            "nasal": [],
+            "devoice": [
+              1
+            ]
+          }
+        ]
+      },
+      {
+        "id": 46256,
+        "word": "とく",
+        "type": "pitch",
+        "reading": "とく",
+        "pitches": [
+          {
+            "position": 1,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 11842,
+        "word": "方",
+        "type": "pitch",
+        "reading": "かた",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 2
+          }
+        ]
+      },
+      {
+        "id": 2450,
+        "word": "いい",
+        "type": "pitch",
+        "reading": "いい",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 45065,
+        "word": "と",
+        "type": "pitch",
+        "reading": "と",
+        "pitches": [
+          {
+            "position": 1,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 9072,
+        "word": "思う",
+        "type": "pitch",
+        "reading": "おもう",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 2,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 145,
+        "word": "あいつ",
+        "type": "pitch",
+        "reading": "あいつ",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 0,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 48256,
+        "word": "仲間",
+        "type": "pitch",
+        "reading": "なかま",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 3
+          }
+        ]
+      },
+      {
+        "id": 22750,
+        "word": "ここ",
+        "type": "pitch",
+        "reading": "ここ",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 3126,
+        "word": "いずれ",
+        "type": "pitch",
+        "reading": "いずれ",
+        "pitches": [
+          {
+            "position": 0,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 9341,
+        "word": "俺",
+        "type": "pitch",
+        "reading": "おれ",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 29179,
+        "word": "邪魔",
+        "type": "pitch",
+        "reading": "じゃま",
+        "pitches": [
+          {
+            "position": 0,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 48964,
+        "word": "なる",
+        "type": "pitch",
+        "reading": "なる",
+        "pitches": [
+          {
+            "position": 1,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 12571,
+        "word": "可能",
+        "type": "pitch",
+        "reading": "かのう",
+        "pitches": [
+          {
+            "position": 0,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 30489,
+        "word": "性",
+        "type": "pitch",
+        "reading": "しょう",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 39759,
+        "word": "だって",
+        "type": "pitch",
+        "reading": "だって",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 2068,
+        "word": "ある",
+        "type": "pitch",
+        "reading": "ある",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 47943,
+        "word": "な",
+        "type": "pitch",
+        "reading": "な",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 13044,
+        "word": "から",
+        "type": "pitch",
+        "reading": "から",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 38117,
+        "word": "たい",
+        "type": "pitch",
+        "reading": "たい",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 50413,
+        "word": "ね",
+        "type": "pitch",
+        "reading": "ね",
+        "pitches": [
+          {
+            "position": 0,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 46560,
+        "word": "どこ",
+        "type": "pitch",
+        "reading": "どこ",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 4081,
+        "word": "居場所",
+        "type": "pitch",
+        "reading": "いばしょ",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 52717,
+        "word": "はず",
+        "type": "pitch",
+        "reading": "はず",
+        "pitches": [
+          {
+            "position": 0,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 57478,
+        "word": "深入り",
+        "type": "pitch",
+        "reading": "ふかいり",
+        "pitches": [
+          {
+            "devoice": [
+              1
+            ],
+            "position": 0,
+            "nasal": []
+          },
+          {
+            "position": 4,
+            "devoice": [
+              1
+            ],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 10633,
+        "word": "関わり",
+        "type": "pitch",
+        "reading": "かかわり",
+        "pitches": [
+          {
+            "position": 0,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 57905,
+        "word": "不幸",
+        "type": "pitch",
+        "reading": "ふこう",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 2,
+            "devoice": [
+              1
+            ]
+          },
+          {
+            "devoice": [
+              1
+            ],
+            "position": 1,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 20110,
+        "word": "結末",
+        "type": "pitch",
+        "reading": "けつまつ",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 4256,
+        "word": "いや",
+        "type": "pitch",
+        "reading": "いや",
+        "pitches": [
+          {
+            "position": 0,
+            "nasal": [],
+            "devoice": []
+          },
+          {
+            "position": 1,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 6049,
+        "word": "運",
+        "type": "pitch",
+        "reading": "うん",
+        "pitches": [
+          {
+            "position": 1,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 20982,
+        "word": "こいつ",
+        "type": "pitch",
+        "reading": "こいつ",
+        "pitches": [
+          {
+            "position": 0,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 39485,
+        "word": "ただ",
+        "type": "pitch",
+        "reading": "ただ",
+        "pitches": [
+          {
+            "position": 1,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 45052,
+        "word": "電話",
+        "type": "pitch",
+        "reading": "でんわ",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 30561,
+        "word": "消火",
+        "type": "pitch",
+        "reading": "しょうか",
+        "pitches": [
+          {
+            "position": 0,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 5536,
+        "word": "器",
+        "type": "pitch",
+        "reading": "うつわ",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 0,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 41443,
+        "word": "中",
+        "type": "pitch",
+        "reading": "ちゅう",
+        "pitches": [
+          {
+            "position": 1,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 58946,
+        "word": "プラスチック",
+        "type": "pitch",
+        "reading": "プラスチック",
+        "pitches": [
+          {
+            "devoice": [
+              3
+            ],
+            "nasal": [],
+            "position": 4
+          }
+        ]
+      },
+      {
+        "id": 37580,
+        "word": "そして",
+        "type": "pitch",
+        "reading": "そして",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 0,
+            "devoice": [
+              2
+            ]
+          }
+        ]
+      },
+      {
+        "id": 37765,
+        "word": "その",
+        "type": "pitch",
+        "reading": "その",
+        "pitches": [
+          {
+            "position": 0,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 15639,
+        "word": "起爆",
+        "type": "pitch",
+        "reading": "きばく",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 37135,
+        "word": "装置",
+        "type": "pitch",
+        "reading": "そうち",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 1,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 66525,
+        "word": "もし",
+        "type": "pitch",
+        "reading": "もし",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 1,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 32355,
+        "word": "信管",
+        "type": "pitch",
+        "reading": "しんかん",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 0,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 4153,
+        "word": "今",
+        "type": "pitch",
+        "reading": "いま",
+        "pitches": [
+          {
+            "position": 1,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 1870,
+        "word": "あら",
+        "type": "pitch",
+        "reading": "あら",
+        "pitches": [
+          {
+            "position": 2,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 56702,
+        "word": "病人",
+        "type": "pitch",
+        "reading": "びょうにん",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 0,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 8552,
+        "word": "脅かし",
+        "type": "pitch",
+        "reading": "おどかし",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 0,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 33614,
+        "word": "過ぎ",
+        "type": "pitch",
+        "reading": "すぎ",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [
+              2
+            ],
+            "position": 2
+          }
+        ]
+      },
+      {
+        "id": 26951,
+        "word": "じき",
+        "type": "pitch",
+        "reading": "じき",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 0,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 1788,
+        "word": "雨",
+        "type": "pitch",
+        "reading": "あめ",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 19986,
+        "word": "結構",
+        "type": "pitch",
+        "reading": "けっこう",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 1,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 62507,
+        "word": "まあ",
+        "type": "pitch",
+        "reading": "まあ",
+        "pitches": [
+          {
+            "position": 1,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 34031,
+        "word": "ずっと",
+        "type": "pitch",
+        "reading": "ずっと",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 0,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 59380,
+        "word": "風呂",
+        "type": "pitch",
+        "reading": "ふろ",
+        "pitches": [
+          {
+            "position": 2,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 48455,
+        "word": "なし崩し",
+        "type": "pitch",
+        "reading": "なしくずし",
+        "pitches": [
+          {
+            "devoice": [
+              2
+            ],
+            "position": 0,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 3160,
+        "word": "居候",
+        "type": "pitch",
+        "reading": "いそうろう",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 0,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 4813,
+        "word": "う",
+        "type": "pitch",
+        "reading": "う",
+        "pitches": [
+          {
+            "position": 0,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 47022,
+        "word": "とにかく",
+        "type": "pitch",
+        "reading": "とにかく",
+        "pitches": [
+          {
+            "position": 1,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 50607,
+        "word": "熱",
+        "type": "pitch",
+        "reading": "ねつ",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 2,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 43427,
+        "word": "出",
+        "type": "pitch",
+        "reading": "で",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 0,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 66964,
+        "word": "もらう",
+        "type": "pitch",
+        "reading": "もらう",
+        "pitches": [
+          {
+            "position": 0,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 44454,
+        "word": "でも",
+        "type": "pitch",
+        "reading": "でも",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 1,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 48638,
+        "word": "何",
+        "type": "pitch",
+        "reading": "なに",
+        "pitches": [
+          {
+            "position": 1,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 6317,
+        "word": "役",
+        "type": "pitch",
+        "reading": "えき",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 36228,
+        "word": "先日",
+        "type": "pitch",
+        "reading": "せんじつ",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 0,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 53087,
+        "word": "ハッキング",
+        "type": "pitch",
+        "reading": "ハッキング",
+        "pitches": [
+          {
+            "position": 0,
+            "nasal": [
+              5
+            ],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 27178,
+        "word": "事件",
+        "type": "pitch",
+        "reading": "じけん",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 43786,
+        "word": "データ",
+        "type": "pitch",
+        "reading": "データ",
+        "pitches": [
+          {
+            "position": 1,
+            "devoice": [],
+            "nasal": []
+          },
+          {
+            "devoice": [],
+            "position": 0,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 72000,
+        "word": "漏えい",
+        "type": "pitch",
+        "reading": "ろうえい",
+        "pitches": [
+          {
+            "position": 0,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 24143,
+        "word": "今回",
+        "type": "pitch",
+        "reading": "こんかい",
+        "pitches": [
+          {
+            "position": 1,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 36935,
+        "word": "捜査",
+        "type": "pitch",
+        "reading": "そうさ",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 30690,
+        "word": "状況",
+        "type": "pitch",
+        "reading": "じょうきょう",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 0,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 52319,
+        "word": "白日",
+        "type": "pitch",
+        "reading": "はくじつ",
+        "pitches": [
+          {
+            "position": 0,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 19296,
+        "word": "下",
+        "type": "pitch",
+        "reading": "げ",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 1
+          },
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 25889,
+        "word": "さらさ",
+        "type": "pitch",
+        "reading": "サラサ",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 1,
+            "nasal": []
+          },
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 23383,
+        "word": "こと",
+        "type": "pitch",
+        "reading": "こと",
+        "pitches": [
+          {
+            "position": 1,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 73058,
+        "word": "われわれ",
+        "type": "pitch",
+        "reading": "われわれ",
+        "pitches": [
+          {
+            "position": 0,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 24023,
+        "word": "これ",
+        "type": "pitch",
+        "reading": "これ",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 0,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 3061,
+        "word": "以上",
+        "type": "pitch",
+        "reading": "いじょう",
+        "pitches": [
+          {
+            "position": 1,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 28098,
+        "word": "失敗",
+        "type": "pitch",
+        "reading": "しっぱい",
+        "pitches": [
+          {
+            "devoice": [
+              1
+            ],
+            "nasal": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 25914,
+        "word": "さらなる",
+        "type": "pitch",
+        "reading": "さらなる",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 32292,
+        "word": "人員",
+        "type": "pitch",
+        "reading": "じんいん",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 36797,
+        "word": "増加",
+        "type": "pitch",
+        "reading": "ぞうか",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 46440,
+        "word": "特に",
+        "type": "pitch",
+        "reading": "とくに",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 1,
+            "nasal": []
+          }
+        ]
+      }
+    ],
+    "dataUpdatedAt": 1754583897770,
+    "error": null,
+    "errorUpdatedAt": 0,
+    "failureCount": 0,
+    "failureReason": null,
+    "errorUpdateCount": 0,
+    "isFetched": true,
+    "isFetchedAfterMount": true,
+    "isFetching": false,
+    "isRefetching": false,
+    "isLoadingError": false,
+    "isPaused": false,
+    "isPlaceholderData": false,
+    "isRefetchError": false,
+    "isStale": false,
+    "promise": {
+      "status": "rejected",
+      "reason": {}
+    },
+    "isEnabled": true
+  },
+  {
+    "status": "success",
+    "fetchStatus": "idle",
+    "isPending": false,
+    "isSuccess": true,
+    "isError": false,
+    "isInitialLoading": false,
+    "isLoading": false,
+    "data": [
+      {
+        "id": 54450,
+        "word": "犯罪",
+        "type": "pitch",
+        "reading": "はんざい",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 58832,
+        "word": "部門",
+        "type": "pitch",
+        "reading": "ぶもん",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 1,
+            "nasal": []
+          },
+          {
+            "position": 0,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 40670,
+        "word": "担当",
+        "type": "pitch",
+        "reading": "たんとう",
+        "pitches": [
+          {
+            "position": 0,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 51889,
+        "word": "倍増",
+        "type": "pitch",
+        "reading": "ばいぞう",
+        "pitches": [
+          {
+            "position": 0,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 34637,
+        "word": "せ",
+        "type": "pitch",
+        "reading": "せ",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 37310,
+        "word": "総力",
+        "type": "pitch",
+        "reading": "そうりょく",
+        "pitches": [
+          {
+            "position": 1,
+            "devoice": [],
+            "nasal": []
+          },
+          {
+            "position": 0,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 54708,
+        "word": "犯人",
+        "type": "pitch",
+        "reading": "はんにん",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 38818,
+        "word": "逮捕",
+        "type": "pitch",
+        "reading": "たいほ",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 37952,
+        "word": "それ",
+        "type": "pitch",
+        "reading": "それ",
+        "pitches": [
+          {
+            "position": 0,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 2637,
+        "word": "以外",
+        "type": "pitch",
+        "reading": "いがい",
+        "pitches": [
+          {
+            "nasal": [
+              2
+            ],
+            "position": 1,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 45118,
+        "word": "道",
+        "type": "pitch",
+        "reading": "どう",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 45070,
+        "word": "ドア",
+        "type": "pitch",
+        "reading": "ドア",
+        "pitches": [
+          {
+            "position": 1,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 592,
+        "word": "開く",
+        "type": "pitch",
+        "reading": "あく",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 8538,
+        "word": "音",
+        "type": "pitch",
+        "reading": "おと",
+        "pitches": [
+          {
+            "position": 2,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 9764,
+        "word": "会議",
+        "type": "pitch",
+        "reading": "かいぎ",
+        "pitches": [
+          {
+            "position": 1,
+            "devoice": [],
+            "nasal": [
+              3
+            ]
+          },
+          {
+            "devoice": [],
+            "position": 3,
+            "nasal": [
+              3
+            ]
+          }
+        ]
+      },
+      {
+        "id": 69904,
+        "word": "よろしく",
+        "type": "pitch",
+        "reading": "よろしく",
+        "pitches": [
+          {
+            "devoice": [
+              3
+            ],
+            "nasal": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 39989,
+        "word": "頼む",
+        "type": "pitch",
+        "reading": "たのむ",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [],
+            "position": 2
+          }
+        ]
+      },
+      {
+        "id": 25992,
+        "word": "ざわめき",
+        "type": "pitch",
+        "reading": "ざわめき",
+        "pitches": [
+          {
+            "position": 0,
+            "devoice": [],
+            "nasal": []
+          },
+          {
+            "position": 4,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 35983,
+        "word": "前",
+        "type": "pitch",
+        "reading": "ぜん",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 1,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 28149,
+        "word": "失礼",
+        "type": "pitch",
+        "reading": "しつれい",
+        "pitches": [
+          {
+            "position": 2,
+            "devoice": [
+              1
+            ],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 28635,
+        "word": "しま",
+        "type": "pitch",
+        "reading": "しま",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 2
+          }
+        ]
+      },
+      {
+        "id": 33134,
+        "word": "す",
+        "type": "pitch",
+        "reading": "す",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [],
+            "position": 0
+          },
+          {
+            "nasal": [],
+            "position": 1,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 21186,
+        "word": "交換",
+        "type": "pitch",
+        "reading": "こうかん",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 62981,
+        "word": "ます",
+        "type": "pitch",
+        "reading": "ます",
+        "pitches": [
+          {
+            "position": 2,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 6189,
+        "word": "英語",
+        "type": "pitch",
+        "reading": "えいご",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 0,
+            "nasal": [
+              3
+            ]
+          }
+        ]
+      },
+      {
+        "id": 2138,
+        "word": "あれ",
+        "type": "pitch",
+        "reading": "あれ",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 0,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 10835,
+        "word": "嗅ぐ",
+        "type": "pitch",
+        "reading": "かぐ",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 0,
+            "nasal": [
+              2
+            ]
+          }
+        ]
+      },
+      {
+        "id": 2581,
+        "word": "言う",
+        "type": "pitch",
+        "reading": "いう",
+        "pitches": [
+          {
+            "position": 0,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 11464,
+        "word": "火事",
+        "type": "pitch",
+        "reading": "かじ",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 35380,
+        "word": "せき",
+        "type": "pitch",
+        "reading": "せき",
+        "pitches": [
+          {
+            "position": 2,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 42173,
+        "word": "ちょっと",
+        "type": "pitch",
+        "reading": "ちょっと",
+        "pitches": [
+          {
+            "position": 3,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 62987,
+        "word": "まずい",
+        "type": "pitch",
+        "reading": "まずい",
+        "pitches": [
+          {
+            "position": 2,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 34135,
+        "word": "ストレート",
+        "type": "pitch",
+        "reading": "ストレート",
+        "pitches": [
+          {
+            "devoice": [
+              1
+            ],
+            "position": 3,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 2493,
+        "word": "言い過ぎ",
+        "type": "pitch",
+        "reading": "いいすぎ",
+        "pitches": [
+          {
+            "nasal": [
+              4
+            ],
+            "position": 0,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 63811,
+        "word": "み",
+        "type": "pitch",
+        "reading": "み",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 62097,
+        "word": "ほら",
+        "type": "pitch",
+        "reading": "ほら",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 1,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 38619,
+        "word": "大体",
+        "type": "pitch",
+        "reading": "だいたい",
+        "pitches": [
+          {
+            "position": 3,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 40346,
+        "word": "誰",
+        "type": "pitch",
+        "reading": "だれ",
+        "pitches": [
+          {
+            "position": 1,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 24300,
+        "word": "こんな",
+        "type": "pitch",
+        "reading": "こんな",
+        "pitches": [
+          {
+            "position": 0,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 1530,
+        "word": "アピール",
+        "type": "pitch",
+        "reading": "アピール",
+        "pitches": [
+          {
+            "position": 2,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 15838,
+        "word": "逆",
+        "type": "pitch",
+        "reading": "ぎゃく",
+        "pitches": [
+          {
+            "position": 0,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 21111,
+        "word": "効果",
+        "type": "pitch",
+        "reading": "こうか",
+        "pitches": [
+          {
+            "position": 1,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 10494,
+        "word": "顔",
+        "type": "pitch",
+        "reading": "かお",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 0,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 353,
+        "word": "赤い",
+        "type": "pitch",
+        "reading": "あかい",
+        "pitches": [
+          {
+            "position": 0,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 63049,
+        "word": "まだ",
+        "type": "pitch",
+        "reading": "まだ",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 32267,
+        "word": "寝",
+        "type": "pitch",
+        "reading": "しん",
+        "pitches": [
+          {
+            "position": 1,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 31529,
+        "word": "食事",
+        "type": "pitch",
+        "reading": "しょくじ",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 15396,
+        "word": "貴重",
+        "type": "pitch",
+        "reading": "きちょう",
+        "pitches": [
+          {
+            "position": 0,
+            "devoice": [
+              1
+            ],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 12977,
+        "word": "かも",
+        "type": "pitch",
+        "reading": "かも",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 1,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 1104,
+        "word": "あそこ",
+        "type": "pitch",
+        "reading": "あそこ",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 915,
+        "word": "味",
+        "type": "pitch",
+        "reading": "あじ",
+        "pitches": [
+          {
+            "position": 0,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 8912,
+        "word": "覚え",
+        "type": "pitch",
+        "reading": "おぼえ",
+        "pitches": [
+          {
+            "position": 3,
+            "devoice": [],
+            "nasal": []
+          },
+          {
+            "position": 2,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 36363,
+        "word": "全然",
+        "type": "pitch",
+        "reading": "ぜんぜん",
+        "pitches": [
+          {
+            "position": 0,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 25132,
+        "word": "作業",
+        "type": "pitch",
+        "reading": "さぎょう",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [
+              2
+            ],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 37997,
+        "word": "そろそろ",
+        "type": "pitch",
+        "reading": "そろそろ",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 26920,
+        "word": "時間",
+        "type": "pitch",
+        "reading": "じかん",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 0,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 19456,
+        "word": "刑事",
+        "type": "pitch",
+        "reading": "けいじ",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 7017,
+        "word": "おい",
+        "type": "pitch",
+        "reading": "おい",
+        "pitches": [
+          {
+            "position": 1,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 34253,
+        "word": "スピン",
+        "type": "pitch",
+        "reading": "スピン",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 2,
+            "devoice": [
+              1
+            ]
+          }
+        ]
+      },
+      {
+        "id": 3553,
+        "word": "一",
+        "type": "pitch",
+        "reading": "いつ",
+        "pitches": [
+          {
+            "position": 1,
+            "nasal": [],
+            "devoice": []
+          },
+          {
+            "position": 2,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 21024,
+        "word": "号",
+        "type": "pitch",
+        "reading": "ごう",
+        "pitches": [
+          {
+            "position": 1,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 71135,
+        "word": "料理",
+        "type": "pitch",
+        "reading": "りょうり",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 18993,
+        "word": "くれる",
+        "type": "pitch",
+        "reading": "くれる",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 0,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 12581,
+        "word": "彼女",
+        "type": "pitch",
+        "reading": "かのじょ",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 1,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 61676,
+        "word": "募集",
+        "type": "pitch",
+        "reading": "ぼしゅう",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 0,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 64507,
+        "word": "皆さん",
+        "type": "pitch",
+        "reading": "みなさん",
+        "pitches": [
+          {
+            "position": 2,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 61462,
+        "word": "僕",
+        "type": "pitch",
+        "reading": "ぼく",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 1
+          },
+          {
+            "devoice": [],
+            "position": 0,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 66257,
+        "word": "もう",
+        "type": "pitch",
+        "reading": "もう",
+        "pitches": [
+          {
+            "position": 1,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 48488,
+        "word": "なぞなぞ",
+        "type": "pitch",
+        "reading": "なぞなぞ",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 24302,
+        "word": "今日",
+        "type": "pitch",
+        "reading": "こんにち",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 1,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 67096,
+        "word": "問題",
+        "type": "pitch",
+        "reading": "もんだい",
+        "pitches": [
+          {
+            "position": 0,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 14518,
+        "word": "木",
+        "type": "pitch",
+        "reading": "き",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 1,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 44715,
+        "word": "天使",
+        "type": "pitch",
+        "reading": "てんし",
+        "pitches": [
+          {
+            "position": 1,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 25783,
+        "word": "さま",
+        "type": "pitch",
+        "reading": "さま",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 2
+          }
+        ]
+      },
+      {
+        "id": 20938,
+        "word": "５",
+        "type": "pitch",
+        "reading": "ご",
+        "pitches": [
+          {
+            "position": 1,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 52945,
+        "word": "８",
+        "type": "pitch",
+        "reading": "はち",
+        "pitches": [
+          {
+            "position": 2,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 16013,
+        "word": "９",
+        "type": "pitch",
+        "reading": "きゅう",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 1,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 52948,
+        "word": "罰",
+        "type": "pitch",
+        "reading": "ばち",
+        "pitches": [
+          {
+            "position": 2,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 27984,
+        "word": "執行",
+        "type": "pitch",
+        "reading": "しっこう",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 0,
+            "devoice": [
+              1
+            ]
+          }
+        ]
+      },
+      {
+        "id": 52673,
+        "word": "場所",
+        "type": "pitch",
+        "reading": "ばしょ",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 38862,
+        "word": "タイムリミット",
+        "type": "pitch",
+        "reading": "タイムリミット",
+        "pitches": [
+          {
+            "position": 4,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 49223,
+        "word": "２",
+        "type": "pitch",
+        "reading": "に",
+        "pitches": [
+          {
+            "position": 1,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 46168,
+        "word": "時",
+        "type": "pitch",
+        "reading": "とき",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 2,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 20346,
+        "word": "元気",
+        "type": "pitch",
+        "reading": "げんき",
+        "pitches": [
+          {
+            "position": 1,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 35006,
+        "word": "せいぜい",
+        "type": "pitch",
+        "reading": "せいぜい",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 51524,
+        "word": "羽",
+        "type": "pitch",
+        "reading": "は",
+        "pitches": [
+          {
+            "position": 0,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 38013,
+        "word": "村",
+        "type": "pitch",
+        "reading": "そん",
+        "pitches": [
+          {
+            "position": 1,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 18228,
+        "word": "くそ",
+        "type": "pitch",
+        "reading": "くそ",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [
+              1
+            ],
+            "position": 2
+          }
+        ]
+      },
+      {
+        "id": 10039,
+        "word": "解析",
+        "type": "pitch",
+        "reading": "かいせき",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 54299,
+        "word": "班",
+        "type": "pitch",
+        "reading": "はん",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 69698,
+        "word": "呼び出し",
+        "type": "pitch",
+        "reading": "よびだし",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 33708,
+        "word": "すぐ",
+        "type": "pitch",
+        "reading": "すぐ",
+        "pitches": [
+          {
+            "position": 1,
+            "devoice": [],
+            "nasal": [
+              2
+            ]
+          }
+        ]
+      },
+      {
+        "id": 51640,
+        "word": "はい",
+        "type": "pitch",
+        "reading": "はい",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 1,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 26013,
+        "word": "さん",
+        "type": "pitch",
+        "reading": "さん",
+        "pitches": [
+          {
+            "position": 1,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 49167,
+        "word": "ナンバー",
+        "type": "pitch",
+        "reading": "ナンバー",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 22799,
+        "word": "心当たり",
+        "type": "pitch",
+        "reading": "こころあたり",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [],
+            "position": 4
+          }
+        ]
+      },
+      {
+        "id": 8942,
+        "word": "お前",
+        "type": "pitch",
+        "reading": "おまえ",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 46645,
+        "word": "年",
+        "type": "pitch",
+        "reading": "とし",
+        "pitches": [
+          {
+            "position": 2,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 4383,
+        "word": "いる",
+        "type": "pitch",
+        "reading": "いる",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 0,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 39207,
+        "word": "たく",
+        "type": "pitch",
+        "reading": "たく",
+        "pitches": [
+          {
+            "position": 1,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 59620,
+        "word": "文書",
+        "type": "pitch",
+        "reading": "ぶんしょ",
+        "pitches": [
+          {
+            "position": 1,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 9593,
+        "word": "課",
+        "type": "pitch",
+        "reading": "か",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 48485,
+        "word": "謎",
+        "type": "pitch",
+        "reading": "なぞ",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 0,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 13769,
+        "word": "関係",
+        "type": "pitch",
+        "reading": "かんけい",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 32087,
+        "word": "資料",
+        "type": "pitch",
+        "reading": "しりょう",
+        "pitches": [
+          {
+            "position": 1,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 67605,
+        "word": "やつ",
+        "type": "pitch",
+        "reading": "やつ",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 1,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 69949,
+        "word": "ら",
+        "type": "pitch",
+        "reading": "ら",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 23519,
+        "word": "この間",
+        "type": "pitch",
+        "reading": "このあいだ",
+        "pitches": [
+          {
+            "position": 0,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 3809,
+        "word": "一般",
+        "type": "pitch",
+        "reading": "いっぱん",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 0,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 70867,
+        "word": "流出",
+        "type": "pitch",
+        "reading": "りゅうしゅつ",
+        "pitches": [
+          {
+            "position": 0,
+            "devoice": [
+              3
+            ],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 20417,
+        "word": "現行",
+        "type": "pitch",
+        "reading": "げんこう",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 0,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 11293,
+        "word": "過去",
+        "type": "pitch",
+        "reading": "かこ",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 1,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 49933,
+        "word": "入手",
+        "type": "pitch",
+        "reading": "にゅうしゅ",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 0,
+            "nasal": []
+          },
+          {
+            "devoice": [],
+            "position": 1,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 13675,
+        "word": "考える",
+        "type": "pitch",
+        "reading": "かんがえる",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [
+              3
+            ],
+            "position": 3
+          },
+          {
+            "position": 4,
+            "nasal": [
+              3
+            ],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 39883,
+        "word": "妥当",
+        "type": "pitch",
+        "reading": "だとう",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 0,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 72629,
+        "word": "分かる",
+        "type": "pitch",
+        "reading": "わかる",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 2
+          }
+        ]
+      },
+      {
+        "id": 68938,
+        "word": "よう",
+        "type": "pitch",
+        "reading": "よう",
+        "pitches": [
+          {
+            "position": 1,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 72750,
+        "word": "わざわざ",
+        "type": "pitch",
+        "reading": "わざわざ",
+        "pitches": [
+          {
+            "position": 1,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 26840,
+        "word": "仕掛け",
+        "type": "pitch",
+        "reading": "しかけ",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 0,
+            "devoice": [
+              1
+            ]
+          }
+        ]
+      },
+      {
+        "id": 33388,
+        "word": "ずいぶん",
+        "type": "pitch",
+        "reading": "ずいぶん",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 46805,
+        "word": "栃木",
+        "type": "pitch",
+        "reading": "とちぎ",
+        "pitches": [
+          {
+            "nasal": [
+              3
+            ],
+            "devoice": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 22174,
+        "word": "公立",
+        "type": "pitch",
+        "reading": "こうりつ",
+        "pitches": [
+          {
+            "position": 0,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 21368,
+        "word": "高校",
+        "type": "pitch",
+        "reading": "こうこう",
+        "pitches": [
+          {
+            "position": 0,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 38757,
+        "word": "体罰",
+        "type": "pitch",
+        "reading": "たいばつ",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 1,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 910,
+        "word": "朝練",
+        "type": "pitch",
+        "reading": "あされん",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 41030,
+        "word": "遅刻",
+        "type": "pitch",
+        "reading": "ちこく",
+        "pitches": [
+          {
+            "devoice": [
+              1
+            ],
+            "nasal": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 35104,
+        "word": "生徒",
+        "type": "pitch",
+        "reading": "せいと",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 47941,
+        "word": "名",
+        "type": "pitch",
+        "reading": "な",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 0,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 14626,
+        "word": "気温",
+        "type": "pitch",
+        "reading": "きおん",
+        "pitches": [
+          {
+            "position": 0,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 45069,
+        "word": "度",
+        "type": "pitch",
+        "reading": "ど",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 0,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 22260,
+        "word": "超える",
+        "type": "pitch",
+        "reading": "こえる",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 0,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 21832,
+        "word": "校庭",
+        "type": "pitch",
+        "reading": "こうてい",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 49667,
+        "word": "日射病",
+        "type": "pitch",
+        "reading": "にっしゃびょう",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 0,
+            "devoice": []
+          }
+        ]
+      }
+    ],
+    "dataUpdatedAt": 1754583898004,
+    "error": null,
+    "errorUpdatedAt": 0,
+    "failureCount": 0,
+    "failureReason": null,
+    "errorUpdateCount": 0,
+    "isFetched": true,
+    "isFetchedAfterMount": true,
+    "isFetching": false,
+    "isRefetching": false,
+    "isLoadingError": false,
+    "isPaused": false,
+    "isPlaceholderData": false,
+    "isRefetchError": false,
+    "isStale": false,
+    "promise": {
+      "status": "rejected",
+      "reason": {}
+    },
+    "isEnabled": true
+  },
+  {
+    "status": "success",
+    "fetchStatus": "idle",
+    "isPending": false,
+    "isSuccess": true,
+    "isError": false,
+    "isInitialLoading": false,
+    "isLoading": false,
+    "data": [
+      {
+        "id": 15264,
+        "word": "起訴",
+        "type": "pitch",
+        "reading": "きそ",
+        "pitches": [
+          {
+            "devoice": [
+              1
+            ],
+            "nasal": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 66450,
+        "word": "黙示録",
+        "type": "pitch",
+        "reading": "もくしろく",
+        "pitches": [
+          {
+            "position": 3,
+            "devoice": [
+              2
+            ],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 3469,
+        "word": "一文",
+        "type": "pitch",
+        "reading": "いちぶん",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 21003,
+        "word": "こう",
+        "type": "pitch",
+        "reading": "こう",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 6518,
+        "word": "エデン",
+        "type": "pitch",
+        "reading": "エデン",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 37764,
+        "word": "園",
+        "type": "pitch",
+        "reading": "その",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 12809,
+        "word": "神",
+        "type": "pitch",
+        "reading": "かみ",
+        "pitches": [
+          {
+            "position": 1,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 2697,
+        "word": "怒り",
+        "type": "pitch",
+        "reading": "いかり",
+        "pitches": [
+          {
+            "position": 3,
+            "devoice": [],
+            "nasal": []
+          },
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 28864,
+        "word": "蛇",
+        "type": "pitch",
+        "reading": "じゃ",
+        "pitches": [
+          {
+            "position": 1,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 66656,
+        "word": "持つ",
+        "type": "pitch",
+        "reading": "もつ",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 57144,
+        "word": "ファイル",
+        "type": "pitch",
+        "reading": "ファイル",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 1,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 38169,
+        "word": "対応",
+        "type": "pitch",
+        "reading": "たいおう",
+        "pitches": [
+          {
+            "position": 0,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 28771,
+        "word": "示し",
+        "type": "pitch",
+        "reading": "しめし",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 3,
+            "devoice": []
+          },
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 12350,
+        "word": "仮定",
+        "type": "pitch",
+        "reading": "かてい",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 0,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 37516,
+        "word": "そこ",
+        "type": "pitch",
+        "reading": "そこ",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 71906,
+        "word": "連想",
+        "type": "pitch",
+        "reading": "れんそう",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 0,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 52710,
+        "word": "走る",
+        "type": "pitch",
+        "reading": "はしる",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 2,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 64292,
+        "word": "見た目",
+        "type": "pitch",
+        "reading": "みため",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 0,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 44758,
+        "word": "電車",
+        "type": "pitch",
+        "reading": "でんしゃ",
+        "pitches": [
+          {
+            "position": 0,
+            "nasal": [],
+            "devoice": []
+          },
+          {
+            "position": 1,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 36747,
+        "word": "そう",
+        "type": "pitch",
+        "reading": "そう",
+        "pitches": [
+          {
+            "position": 1,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 46745,
+        "word": "都心",
+        "type": "pitch",
+        "reading": "としん",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 0,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 30174,
+        "word": "首都",
+        "type": "pitch",
+        "reading": "しゅと",
+        "pitches": [
+          {
+            "position": 1,
+            "devoice": [
+              1
+            ],
+            "nasal": []
+          },
+          {
+            "nasal": [],
+            "position": 2,
+            "devoice": [
+              1
+            ]
+          }
+        ]
+      },
+      {
+        "id": 32618,
+        "word": "新宿",
+        "type": "pitch",
+        "reading": "しんじゅく",
+        "pitches": [
+          {
+            "position": 0,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 35980,
+        "word": "線",
+        "type": "pitch",
+        "reading": "せん",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 1,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 38813,
+        "word": "大変",
+        "type": "pitch",
+        "reading": "たいへん",
+        "pitches": [
+          {
+            "position": 0,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 60875,
+        "word": "報告",
+        "type": "pitch",
+        "reading": "ほうこく",
+        "pitches": [
+          {
+            "position": 0,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 29218,
+        "word": "車両",
+        "type": "pitch",
+        "reading": "しゃりょう",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 0,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 35982,
+        "word": "全",
+        "type": "pitch",
+        "reading": "ぜん",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 1,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 32013,
+        "word": "調べ",
+        "type": "pitch",
+        "reading": "しらべ",
+        "pitches": [
+          {
+            "position": 3,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 40907,
+        "word": "地下鉄",
+        "type": "pitch",
+        "reading": "ちかてつ",
+        "pitches": [
+          {
+            "position": 0,
+            "devoice": [
+              1
+            ],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 45938,
+        "word": "どうやら",
+        "type": "pitch",
+        "reading": "どうやら",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 1,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 18889,
+        "word": "くる",
+        "type": "pitch",
+        "reading": "くる",
+        "pitches": [
+          {
+            "position": 1,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 17903,
+        "word": "偶然",
+        "type": "pitch",
+        "reading": "ぐうぜん",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 0,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 64959,
+        "word": "無",
+        "type": "pitch",
+        "reading": "む",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 1
+          },
+          {
+            "nasal": [],
+            "devoice": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 25766,
+        "word": "差別",
+        "type": "pitch",
+        "reading": "さべつ",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 1,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 44547,
+        "word": "テロ",
+        "type": "pitch",
+        "reading": "テロ",
+        "pitches": [
+          {
+            "position": 1,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 14164,
+        "word": "簡単",
+        "type": "pitch",
+        "reading": "かんたん",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 23780,
+        "word": "困る",
+        "type": "pitch",
+        "reading": "こまる",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 2,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 72740,
+        "word": "わざと",
+        "type": "pitch",
+        "reading": "わざと",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 1,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 1,
+        "word": "ああ",
+        "type": "pitch",
+        "reading": "ああ",
+        "pitches": [
+          {
+            "position": 0,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 48897,
+        "word": "なら",
+        "type": "pitch",
+        "reading": "なら",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 1,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 20237,
+        "word": "件",
+        "type": "pitch",
+        "reading": "けん",
+        "pitches": [
+          {
+            "position": 1,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 52407,
+        "word": "爆破",
+        "type": "pitch",
+        "reading": "ばくは",
+        "pitches": [
+          {
+            "position": 0,
+            "nasal": [],
+            "devoice": [
+              2
+            ]
+          },
+          {
+            "position": 1,
+            "nasal": [],
+            "devoice": [
+              2
+            ]
+          }
+        ]
+      },
+      {
+        "id": 14504,
+        "word": "関連",
+        "type": "pitch",
+        "reading": "かんれん",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 0,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 15426,
+        "word": "気付く",
+        "type": "pitch",
+        "reading": "きづく",
+        "pitches": [
+          {
+            "position": 2,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 24055,
+        "word": "ころ",
+        "type": "pitch",
+        "reading": "ころ",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 1,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 68996,
+        "word": "要求",
+        "type": "pitch",
+        "reading": "ようきゅう",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 0,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 66470,
+        "word": "目的",
+        "type": "pitch",
+        "reading": "もくてき",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [
+              2
+            ],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 32100,
+        "word": "知る",
+        "type": "pitch",
+        "reading": "しる",
+        "pitches": [
+          {
+            "position": 0,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 40223,
+        "word": "ため",
+        "type": "pitch",
+        "reading": "ため",
+        "pitches": [
+          {
+            "position": 2,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 33066,
+        "word": "信頼",
+        "type": "pitch",
+        "reading": "しんらい",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 0,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 1205,
+        "word": "厚い",
+        "type": "pitch",
+        "reading": "あつい",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 31027,
+        "word": "冗談",
+        "type": "pitch",
+        "reading": "じょうだん",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 3,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 38129,
+        "word": "第",
+        "type": "pitch",
+        "reading": "だい",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 45270,
+        "word": "東京",
+        "type": "pitch",
+        "reading": "とうきょう",
+        "pitches": [
+          {
+            "position": 0,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 46815,
+        "word": "都庁",
+        "type": "pitch",
+        "reading": "とちょう",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 1,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 46929,
+        "word": "トップ",
+        "type": "pitch",
+        "reading": "トップ",
+        "pitches": [
+          {
+            "position": 1,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 46806,
+        "word": "都知事",
+        "type": "pitch",
+        "reading": "とちじ",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 2,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 72374,
+        "word": "六本木",
+        "type": "pitch",
+        "reading": "ろっぽんぎ",
+        "pitches": [
+          {
+            "nasal": [
+              5
+            ],
+            "devoice": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 30471,
+        "word": "署",
+        "type": "pitch",
+        "reading": "しょ",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 1,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 31800,
+        "word": "署長",
+        "type": "pitch",
+        "reading": "しょちょう",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 64068,
+        "word": "未遂",
+        "type": "pitch",
+        "reading": "みすい",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 0,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 32601,
+        "word": "神社",
+        "type": "pitch",
+        "reading": "じんじゃ",
+        "pitches": [
+          {
+            "position": 1,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 47010,
+        "word": "隣",
+        "type": "pitch",
+        "reading": "となり",
+        "pitches": [
+          {
+            "position": 0,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 56873,
+        "word": "ビル",
+        "type": "pitch",
+        "reading": "ビル",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 7523,
+        "word": "オーナー",
+        "type": "pitch",
+        "reading": "オーナー",
+        "pitches": [
+          {
+            "position": 1,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 20247,
+        "word": "元",
+        "type": "pitch",
+        "reading": "げん",
+        "pitches": [
+          {
+            "position": 1,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 47966,
+        "word": "内閣",
+        "type": "pitch",
+        "reading": "ないかく",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 1,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 14387,
+        "word": "官房",
+        "type": "pitch",
+        "reading": "かんぼう",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 0,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 41771,
+        "word": "長官",
+        "type": "pitch",
+        "reading": "ちょうかん",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 19322,
+        "word": "経営",
+        "type": "pitch",
+        "reading": "けいえい",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 0,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 26644,
+        "word": "市営",
+        "type": "pitch",
+        "reading": "しえい",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 0,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 40627,
+        "word": "団体",
+        "type": "pitch",
+        "reading": "だんたい",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 13425,
+        "word": "彼ら",
+        "type": "pitch",
+        "reading": "かれら",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 1,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 35999,
+        "word": "全員",
+        "type": "pitch",
+        "reading": "ぜんいん",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 0,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 64494,
+        "word": "皆",
+        "type": "pitch",
+        "reading": "みな",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [],
+            "position": 2
+          }
+        ]
+      },
+      {
+        "id": 32657,
+        "word": "新進",
+        "type": "pitch",
+        "reading": "しんしん",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 59987,
+        "word": "平和",
+        "type": "pitch",
+        "reading": "へいわ",
+        "pitches": [
+          {
+            "position": 0,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 29841,
+        "word": "塾",
+        "type": "pitch",
+        "reading": "じゅく",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 35880,
+        "word": "セミナー",
+        "type": "pitch",
+        "reading": "セミナー",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 1,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 26026,
+        "word": "参加",
+        "type": "pitch",
+        "reading": "さんか",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 0,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 14418,
+        "word": "官民",
+        "type": "pitch",
+        "reading": "かんみん",
+        "pitches": [
+          {
+            "position": 0,
+            "devoice": [],
+            "nasal": []
+          },
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 22187,
+        "word": "交流",
+        "type": "pitch",
+        "reading": "こうりゅう",
+        "pitches": [
+          {
+            "position": 0,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 30515,
+        "word": "場",
+        "type": "pitch",
+        "reading": "じょう",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 35803,
+        "word": "設立",
+        "type": "pitch",
+        "reading": "せつりつ",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 24735,
+        "word": "財団",
+        "type": "pitch",
+        "reading": "ざいだん",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 61001,
+        "word": "法人",
+        "type": "pitch",
+        "reading": "ほうじん",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 16014,
+        "word": "旧",
+        "type": "pitch",
+        "reading": "きゅう",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 1,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 24809,
+        "word": "財閥",
+        "type": "pitch",
+        "reading": "ざいばつ",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 38125,
+        "word": "大",
+        "type": "pitch",
+        "reading": "だい",
+        "pitches": [
+          {
+            "position": 1,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 14831,
+        "word": "企業",
+        "type": "pitch",
+        "reading": "きぎょう",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 1,
+            "nasal": [
+              2
+            ]
+          }
+        ]
+      },
+      {
+        "id": 14347,
+        "word": "幹部",
+        "type": "pitch",
+        "reading": "かんぶ",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 68462,
+        "word": "有力",
+        "type": "pitch",
+        "reading": "ゆうりょく",
+        "pitches": [
+          {
+            "position": 0,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 34911,
+        "word": "政治",
+        "type": "pitch",
+        "reading": "せいじ",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 2583,
+        "word": "家",
+        "type": "pitch",
+        "reading": "いえ",
+        "pitches": [
+          {
+            "position": 2,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 7627,
+        "word": "大物",
+        "type": "pitch",
+        "reading": "おおもの",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 0,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 34463,
+        "word": "ずらりと",
+        "type": "pitch",
+        "reading": "ずらりと",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 2,
+            "devoice": []
+          },
+          {
+            "nasal": [],
+            "devoice": [],
+            "position": 3
+          }
+        ]
+      },
+      {
+        "id": 62905,
+        "word": "まさか",
+        "type": "pitch",
+        "reading": "まさか",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 56688,
+        "word": "標的",
+        "type": "pitch",
+        "reading": "ひょうてき",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 0,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 13664,
+        "word": "考え",
+        "type": "pitch",
+        "reading": "かんがえ",
+        "pitches": [
+          {
+            "nasal": [
+              3
+            ],
+            "position": 3,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 68482,
+        "word": "愉快",
+        "type": "pitch",
+        "reading": "ゆかい",
+        "pitches": [
+          {
+            "position": 1,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 38058,
+        "word": "そんな",
+        "type": "pitch",
+        "reading": "そんな",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 44549,
+        "word": "テロリスト",
+        "type": "pitch",
+        "reading": "テロリスト",
+        "pitches": [
+          {
+            "devoice": [
+              4
+            ],
+            "position": 3,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 15823,
+        "word": "気持ち",
+        "type": "pitch",
+        "reading": "きもち",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 0,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 44157,
+        "word": "撤去",
+        "type": "pitch",
+        "reading": "てっきょ",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 34369,
+        "word": "済み",
+        "type": "pitch",
+        "reading": "すみ",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 2
+          }
+        ]
+      },
+      {
+        "id": 62929,
+        "word": "まし",
+        "type": "pitch",
+        "reading": "まし",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 37681,
+        "word": "そっち",
+        "type": "pitch",
+        "reading": "そっち",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 3
+          }
+        ]
+      },
+      {
+        "id": 64800,
+        "word": "妙",
+        "type": "pitch",
+        "reading": "みょう",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 1,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 61134,
+        "word": "報道",
+        "type": "pitch",
+        "reading": "ほうどう",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 2239,
+        "word": "案外",
+        "type": "pitch",
+        "reading": "あんがい",
+        "pitches": [
+          {
+            "position": 1,
+            "devoice": [],
+            "nasal": [
+              3
+            ]
+          },
+          {
+            "position": 0,
+            "nasal": [
+              3
+            ],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 46857,
+        "word": "とっくに",
+        "type": "pitch",
+        "reading": "とっくに",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [],
+            "position": 0
+          },
+          {
+            "position": 3,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 3283,
+        "word": "１",
+        "type": "pitch",
+        "reading": "いち",
+        "pitches": [
+          {
+            "position": 2,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 38950,
+        "word": "大量",
+        "type": "pitch",
+        "reading": "たいりょう",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 25596,
+        "word": "殺人",
+        "type": "pitch",
+        "reading": "さつじん",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 2911,
+        "word": "いざ",
+        "type": "pitch",
+        "reading": "いざ",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 1,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 9971,
+        "word": "解除",
+        "type": "pitch",
+        "reading": "かいじょ",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 1,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 44945,
+        "word": "電波",
+        "type": "pitch",
+        "reading": "でんぱ",
+        "pitches": [
+          {
+            "position": 1,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 7692,
+        "word": "おかしい",
+        "type": "pitch",
+        "reading": "おかしい",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 3
+          }
+        ]
+      },
+      {
+        "id": 16015,
+        "word": "急",
+        "type": "pitch",
+        "reading": "きゅう",
+        "pitches": [
+          {
+            "position": 0,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 31744,
+        "word": "女性",
+        "type": "pitch",
+        "reading": "じょせい",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 0,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 40591,
+        "word": "男性",
+        "type": "pitch",
+        "reading": "だんせい",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 0,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 66538,
+        "word": "もしもし",
+        "type": "pitch",
+        "reading": "もしもし",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 1,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 23305,
+        "word": "こっち",
+        "type": "pitch",
+        "reading": "こっち",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 3,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 36582,
+        "word": "全部",
+        "type": "pitch",
+        "reading": "ぜんぶ",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 1,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 15988,
+        "word": "キャリア",
+        "type": "pitch",
+        "reading": "キャリア",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 1,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 45476,
+        "word": "同時に",
+        "type": "pitch",
+        "reading": "どうじに",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 0,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 30578,
+        "word": "障害",
+        "type": "pitch",
+        "reading": "しょうがい",
+        "pitches": [
+          {
+            "position": 0,
+            "nasal": [
+              3
+            ],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 20958,
+        "word": "故意",
+        "type": "pitch",
+        "reading": "こい",
+        "pitches": [
+          {
+            "position": 1,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 42783,
+        "word": "机",
+        "type": "pitch",
+        "reading": "つくえ",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [
+              1
+            ],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 39521,
+        "word": "たたく",
+        "type": "pitch",
+        "reading": "たたく",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 2
+          }
+        ]
+      },
+      {
+        "id": 45135,
+        "word": "どういう",
+        "type": "pitch",
+        "reading": "どういう",
+        "pitches": [
+          {
+            "position": 1,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 48484,
+        "word": "なぜ",
+        "type": "pitch",
+        "reading": "なぜ",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 1,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 30987,
+        "word": "上層",
+        "type": "pitch",
+        "reading": "じょうそう",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 57114,
+        "word": "部",
+        "type": "pitch",
+        "reading": "ぶ",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 1,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 27342,
+        "word": "指示",
+        "type": "pitch",
+        "reading": "しじ",
+        "pitches": [
+          {
+            "position": 1,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 31919,
+        "word": "処理",
+        "type": "pitch",
+        "reading": "しょり",
+        "pitches": [
+          {
+            "position": 1,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 23226,
+        "word": "こちら",
+        "type": "pitch",
+        "reading": "こちら",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 38248,
+        "word": "待機",
+        "type": "pitch",
+        "reading": "たいき",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 36736,
+        "word": "そ",
+        "type": "pitch",
+        "reading": "そ",
+        "pitches": [
+          {
+            "position": 1,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 28660,
+        "word": "島田",
+        "type": "pitch",
+        "reading": "しまだ",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 3
+          }
+        ]
+      },
+      {
+        "id": 5073,
+        "word": "動く",
+        "type": "pitch",
+        "reading": "うごく",
+        "pitches": [
+          {
+            "position": 2,
+            "nasal": [
+              2
+            ],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 46102,
+        "word": "とおり",
+        "type": "pitch",
+        "reading": "とおり",
+        "pitches": [
+          {
+            "position": 1,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 12258,
+        "word": "勝手",
+        "type": "pitch",
+        "reading": "かって",
+        "pitches": [
+          {
+            "position": 0,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 21883,
+        "word": "行動",
+        "type": "pitch",
+        "reading": "こうどう",
+        "pitches": [
+          {
+            "position": 0,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 47695,
+        "word": "取る",
+        "type": "pitch",
+        "reading": "とる",
+        "pitches": [
+          {
+            "position": 1,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 65014,
+        "word": "昔",
+        "type": "pitch",
+        "reading": "むかし",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 0,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 8692,
+        "word": "同じ",
+        "type": "pitch",
+        "reading": "おなじ",
+        "pitches": [
+          {
+            "position": 0,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 10303,
+        "word": "開閉",
+        "type": "pitch",
+        "reading": "かいへい",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 0,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 14966,
+        "word": "聞こえる",
+        "type": "pitch",
+        "reading": "きこえる",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [
+              1
+            ],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 65351,
+        "word": "無線",
+        "type": "pitch",
+        "reading": "むせん",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 14227,
+        "word": "感度",
+        "type": "pitch",
+        "reading": "かんど",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 70999,
+        "word": "良好",
+        "type": "pitch",
+        "reading": "りょうこう",
+        "pitches": [
+          {
+            "position": 0,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 27243,
+        "word": "時刻",
+        "type": "pitch",
+        "reading": "じこく",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 1,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 9102,
+        "word": "表",
+        "type": "pitch",
+        "reading": "おもて",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 3,
+            "nasal": []
+          }
+        ]
+      }
+    ],
+    "dataUpdatedAt": 1754583898284,
+    "error": null,
+    "errorUpdatedAt": 0,
+    "failureCount": 0,
+    "failureReason": null,
+    "errorUpdateCount": 0,
+    "isFetched": true,
+    "isFetchedAfterMount": true,
+    "isFetching": false,
+    "isRefetching": false,
+    "isLoadingError": false,
+    "isPaused": false,
+    "isPlaceholderData": false,
+    "isRefetchError": false,
+    "isStale": false,
+    "promise": {
+      "status": "rejected",
+      "reason": {}
+    },
+    "isEnabled": true
+  },
+  {
+    "status": "success",
+    "fetchStatus": "idle",
+    "isPending": false,
+    "isSuccess": true,
+    "isError": false,
+    "isInitialLoading": false,
+    "isLoading": false,
+    "data": [
+      {
+        "id": 34706,
+        "word": "正確",
+        "type": "pitch",
+        "reading": "せいかく",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 3285,
+        "word": "位置",
+        "type": "pitch",
+        "reading": "いち",
+        "pitches": [
+          {
+            "position": 1,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 44220,
+        "word": "鉄道",
+        "type": "pitch",
+        "reading": "てつどう",
+        "pitches": [
+          {
+            "position": 0,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 9944,
+        "word": "会社",
+        "type": "pitch",
+        "reading": "かいしゃ",
+        "pitches": [
+          {
+            "position": 0,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 6059,
+        "word": "運行",
+        "type": "pitch",
+        "reading": "うんこう",
+        "pitches": [
+          {
+            "position": 0,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 27526,
+        "word": "システム",
+        "type": "pitch",
+        "reading": "システム",
+        "pitches": [
+          {
+            "position": 1,
+            "nasal": [],
+            "devoice": [
+              2
+            ]
+          }
+        ]
+      },
+      {
+        "id": 5753,
+        "word": "裏",
+        "type": "pitch",
+        "reading": "うら",
+        "pitches": [
+          {
+            "position": 2,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 4340,
+        "word": "入り込む",
+        "type": "pitch",
+        "reading": "いりこむ",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 3,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 8476,
+        "word": "追って",
+        "type": "pitch",
+        "reading": "おって",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 71969,
+        "word": "連絡",
+        "type": "pitch",
+        "reading": "れんらく",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 52415,
+        "word": "爆発",
+        "type": "pitch",
+        "reading": "ばくはつ",
+        "pitches": [
+          {
+            "position": 0,
+            "devoice": [
+              2
+            ],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 41970,
+        "word": "ちょうど",
+        "type": "pitch",
+        "reading": "ちょうど",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 42090,
+        "word": "直接",
+        "type": "pitch",
+        "reading": "ちょくせつ",
+        "pitches": [
+          {
+            "position": 0,
+            "nasal": [],
+            "devoice": [
+              2
+            ]
+          }
+        ]
+      },
+      {
+        "id": 9956,
+        "word": "回収",
+        "type": "pitch",
+        "reading": "かいしゅう",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 0,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 57111,
+        "word": "分",
+        "type": "pitch",
+        "reading": "ぶ",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 64396,
+        "word": "ミッション",
+        "type": "pitch",
+        "reading": "ミッション",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 1,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 38091,
+        "word": "他",
+        "type": "pitch",
+        "reading": "た",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 1,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 61201,
+        "word": "方法",
+        "type": "pitch",
+        "reading": "ほうほう",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 0,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 30504,
+        "word": "使用",
+        "type": "pitch",
+        "reading": "しよう",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 13005,
+        "word": "火薬",
+        "type": "pitch",
+        "reading": "かやく",
+        "pitches": [
+          {
+            "position": 0,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 57594,
+        "word": "吹き飛ばす",
+        "type": "pitch",
+        "reading": "ふきとばす",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 4,
+            "devoice": [
+              1
+            ]
+          }
+        ]
+      },
+      {
+        "id": 33695,
+        "word": "過ぎる",
+        "type": "pitch",
+        "reading": "すぎる",
+        "pitches": [
+          {
+            "position": 2,
+            "devoice": [],
+            "nasal": [
+              2
+            ]
+          }
+        ]
+      },
+      {
+        "id": 4380,
+        "word": "威力",
+        "type": "pitch",
+        "reading": "いりょく",
+        "pitches": [
+          {
+            "position": 1,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 45920,
+        "word": "どうも",
+        "type": "pitch",
+        "reading": "どうも",
+        "pitches": [
+          {
+            "position": 1,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 19557,
+        "word": "携帯",
+        "type": "pitch",
+        "reading": "けいたい",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 36741,
+        "word": "そいつ",
+        "type": "pitch",
+        "reading": "そいつ",
+        "pitches": [
+          {
+            "position": 0,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 47268,
+        "word": "止める",
+        "type": "pitch",
+        "reading": "とめる",
+        "pitches": [
+          {
+            "position": 0,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 639,
+        "word": "アクセス",
+        "type": "pitch",
+        "reading": "アクセス",
+        "pitches": [
+          {
+            "devoice": [
+              2
+            ],
+            "nasal": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 14488,
+        "word": "完了",
+        "type": "pitch",
+        "reading": "かんりょう",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 54716,
+        "word": "反応",
+        "type": "pitch",
+        "reading": "はんのう",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 28776,
+        "word": "示す",
+        "type": "pitch",
+        "reading": "しめす",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [],
+            "position": 2
+          },
+          {
+            "position": 0,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 57741,
+        "word": "複数",
+        "type": "pitch",
+        "reading": "ふくすう",
+        "pitches": [
+          {
+            "devoice": [
+              1
+            ],
+            "nasal": [],
+            "position": 3
+          }
+        ]
+      },
+      {
+        "id": 38031,
+        "word": "存在",
+        "type": "pitch",
+        "reading": "そんざい",
+        "pitches": [
+          {
+            "position": 0,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 2015,
+        "word": "あり",
+        "type": "pitch",
+        "reading": "あり",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 46252,
+        "word": "得",
+        "type": "pitch",
+        "reading": "とく",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 0,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 49115,
+        "word": "何で",
+        "type": "pitch",
+        "reading": "なんで",
+        "pitches": [
+          {
+            "position": 1,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 40210,
+        "word": "ダミー",
+        "type": "pitch",
+        "reading": "ダミー",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 1,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 43425,
+        "word": "手",
+        "type": "pitch",
+        "reading": "て",
+        "pitches": [
+          {
+            "position": 1,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 32885,
+        "word": "侵入",
+        "type": "pitch",
+        "reading": "しんにゅう",
+        "pitches": [
+          {
+            "position": 0,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 46169,
+        "word": "とき",
+        "type": "pitch",
+        "reading": "とき",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 2
+          }
+        ]
+      },
+      {
+        "id": 53089,
+        "word": "バック",
+        "type": "pitch",
+        "reading": "バック",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 1,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 47404,
+        "word": "トラップ",
+        "type": "pitch",
+        "reading": "トラップ",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 2,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 2430,
+        "word": "い",
+        "type": "pitch",
+        "reading": "い",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 0
+          },
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 63984,
+        "word": "見越し",
+        "type": "pitch",
+        "reading": "みこし",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 49569,
+        "word": "偽",
+        "type": "pitch",
+        "reading": "にせ",
+        "pitches": [
+          {
+            "position": 0,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 39758,
+        "word": "たって",
+        "type": "pitch",
+        "reading": "たって",
+        "pitches": [
+          {
+            "position": 1,
+            "nasal": [],
+            "devoice": []
+          },
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 40089,
+        "word": "たぶん",
+        "type": "pitch",
+        "reading": "たぶん",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 34752,
+        "word": "正規",
+        "type": "pitch",
+        "reading": "せいき",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 1,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 46419,
+        "word": "特定",
+        "type": "pitch",
+        "reading": "とくてい",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [
+              2
+            ],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 37771,
+        "word": "その間",
+        "type": "pitch",
+        "reading": "そのかん",
+        "pitches": [
+          {
+            "position": 3,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 40872,
+        "word": "近い",
+        "type": "pitch",
+        "reading": "ちかい",
+        "pitches": [
+          {
+            "position": 2,
+            "devoice": [
+              1
+            ],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 26006,
+        "word": "３",
+        "type": "pitch",
+        "reading": "さん",
+        "pitches": [
+          {
+            "position": 0,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 68021,
+        "word": "やる",
+        "type": "pitch",
+        "reading": "やる",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 0,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 70954,
+        "word": "了解",
+        "type": "pitch",
+        "reading": "りょうかい",
+        "pitches": [
+          {
+            "position": 0,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 27263,
+        "word": "仕事",
+        "type": "pitch",
+        "reading": "しごと",
+        "pitches": [
+          {
+            "position": 0,
+            "nasal": [
+              2
+            ],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 50434,
+        "word": "ねえ",
+        "type": "pitch",
+        "reading": "ねえ",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 1,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 37711,
+        "word": "外",
+        "type": "pitch",
+        "reading": "そと",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 1,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 34077,
+        "word": "すでに",
+        "type": "pitch",
+        "reading": "すでに",
+        "pitches": [
+          {
+            "devoice": [],
+            "position": 1,
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 32645,
+        "word": "侵食",
+        "type": "pitch",
+        "reading": "しんしょく",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 64708,
+        "word": "耳鳴り",
+        "type": "pitch",
+        "reading": "みみなり",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 0,
+            "devoice": []
+          },
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 4
+          },
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 3
+          }
+        ]
+      },
+      {
+        "id": 9655,
+        "word": "かい",
+        "type": "pitch",
+        "reading": "かい",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 53825,
+        "word": "羽村",
+        "type": "pitch",
+        "reading": "はむら",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [],
+            "position": 1
+          },
+          {
+            "nasal": [],
+            "devoice": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 19614,
+        "word": "警備",
+        "type": "pitch",
+        "reading": "けいび",
+        "pitches": [
+          {
+            "position": 1,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 34919,
+        "word": "正式",
+        "type": "pitch",
+        "reading": "せいしき",
+        "pitches": [
+          {
+            "devoice": [
+              3
+            ],
+            "nasal": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 45049,
+        "word": "伝令",
+        "type": "pitch",
+        "reading": "でんれい",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 0,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 30150,
+        "word": "出動",
+        "type": "pitch",
+        "reading": "しゅつどう",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [
+              1
+            ],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 8944,
+        "word": "おまけ",
+        "type": "pitch",
+        "reading": "おまけ",
+        "pitches": [
+          {
+            "position": 0,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 32124,
+        "word": "指令",
+        "type": "pitch",
+        "reading": "しれい",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 63047,
+        "word": "また",
+        "type": "pitch",
+        "reading": "また",
+        "pitches": [
+          {
+            "position": 0,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 63844,
+        "word": "身内",
+        "type": "pitch",
+        "reading": "みうち",
+        "pitches": [
+          {
+            "position": 0,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 151,
+        "word": "相手",
+        "type": "pitch",
+        "reading": "あいて",
+        "pitches": [
+          {
+            "position": 3,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 72810,
+        "word": "私",
+        "type": "pitch",
+        "reading": "わたくし",
+        "pitches": [
+          {
+            "position": 0,
+            "devoice": [
+              3
+            ],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 17187,
+        "word": "ぎりぎり",
+        "type": "pitch",
+        "reading": "ぎりぎり",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 63374,
+        "word": "間に合う",
+        "type": "pitch",
+        "reading": "まにあう",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 3
+          }
+        ]
+      },
+      {
+        "id": 6321,
+        "word": "駅",
+        "type": "pitch",
+        "reading": "えき",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 12967,
+        "word": "カメラ",
+        "type": "pitch",
+        "reading": "カメラ",
+        "pitches": [
+          {
+            "position": 1,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 56393,
+        "word": "悲鳴",
+        "type": "pitch",
+        "reading": "ひめい",
+        "pitches": [
+          {
+            "position": 0,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 55504,
+        "word": "非常",
+        "type": "pitch",
+        "reading": "ひじょう",
+        "pitches": [
+          {
+            "position": 0,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 60346,
+        "word": "ベル",
+        "type": "pitch",
+        "reading": "ベル",
+        "pitches": [
+          {
+            "position": 1,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 24936,
+        "word": "さえ",
+        "type": "pitch",
+        "reading": "さえ",
+        "pitches": [
+          {
+            "position": 2,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 45474,
+        "word": "どうして",
+        "type": "pitch",
+        "reading": "どうして",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [
+              3
+            ],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 10615,
+        "word": "係員",
+        "type": "pitch",
+        "reading": "かかりいん",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 3,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 59774,
+        "word": "へ",
+        "type": "pitch",
+        "reading": "へ",
+        "pitches": [
+          {
+            "position": 1,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 48333,
+        "word": "泣き声",
+        "type": "pitch",
+        "reading": "なきごえ",
+        "pitches": [
+          {
+            "nasal": [
+              3
+            ],
+            "position": 3,
+            "devoice": []
+          },
+          {
+            "position": 0,
+            "devoice": [],
+            "nasal": [
+              3
+            ]
+          }
+        ]
+      },
+      {
+        "id": 47007,
+        "word": "どなた",
+        "type": "pitch",
+        "reading": "どなた",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 1,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 14521,
+        "word": "き",
+        "type": "pitch",
+        "reading": "き",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 1
+          }
+        ]
+      },
+      {
+        "id": 57959,
+        "word": "無事",
+        "type": "pitch",
+        "reading": "ぶじ",
+        "pitches": [
+          {
+            "devoice": [],
+            "nasal": [],
+            "position": 0
+          }
+        ]
+      },
+      {
+        "id": 38511,
+        "word": "大丈夫",
+        "type": "pitch",
+        "reading": "だいじょうふ",
+        "pitches": [
+          {
+            "nasal": [],
+            "devoice": [],
+            "position": 3
+          }
+        ]
+      },
+      {
+        "id": 2715,
+        "word": "生き",
+        "type": "pitch",
+        "reading": "いき",
+        "pitches": [
+          {
+            "position": 0,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 1186,
+        "word": "当たり前",
+        "type": "pitch",
+        "reading": "あたりまえ",
+        "pitches": [
+          {
+            "position": 0,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 52007,
+        "word": "バイブレーター",
+        "type": "pitch",
+        "reading": "バイブレーター",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 4,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 63120,
+        "word": "間違い",
+        "type": "pitch",
+        "reading": "まちがい",
+        "pitches": [
+          {
+            "position": 3,
+            "devoice": [],
+            "nasal": [
+              3
+            ]
+          }
+        ]
+      },
+      {
+        "id": 24454,
+        "word": "再会",
+        "type": "pitch",
+        "reading": "さいかい",
+        "pitches": [
+          {
+            "nasal": [],
+            "position": 0,
+            "devoice": []
+          }
+        ]
+      },
+      {
+        "id": 4469,
+        "word": "彩る",
+        "type": "pitch",
+        "reading": "いろどる",
+        "pitches": [
+          {
+            "position": 3,
+            "devoice": [],
+            "nasal": []
+          }
+        ]
+      },
+      {
+        "id": 53549,
+        "word": "花火",
+        "type": "pitch",
+        "reading": "はなび",
+        "pitches": [
+          {
+            "position": 1,
+            "nasal": [],
+            "devoice": []
+          }
+        ]
+      }
+    ],
+    "dataUpdatedAt": 1754583898512,
+    "error": null,
+    "errorUpdatedAt": 0,
+    "failureCount": 0,
+    "failureReason": null,
+    "errorUpdateCount": 0,
+    "isFetched": true,
+    "isFetchedAfterMount": true,
+    "isFetching": false,
+    "isRefetching": false,
+    "isLoadingError": false,
+    "isPaused": false,
+    "isPlaceholderData": false,
+    "isRefetchError": false,
+    "isStale": false,
+    "promise": {
+      "status": "rejected",
+      "reason": {}
+    },
+    "isEnabled": true
+  }
+]

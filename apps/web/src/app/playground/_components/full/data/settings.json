@@ -1,0 +1,56 @@
+{
+  "general": {
+    "id": "lktq0xBVndS4Xnty5wn0ytTtsvVXEHOg",
+    "hideSpoilers": false,
+    "syncSettings": "always",
+    "screenshotNamingDialog": true,
+    "screenshotNamingPattern": "better_melon_{title}_{counter}_{random}",
+    "screenshotFormat": "png",
+    "userId": "eLThMoM7UARk8W8iRkwuINquVvMWdQU5",
+    "createdAt": "2025-07-31T07:09:29.440Z",
+    "updatedAt": "2025-08-01T09:40:59.547Z"
+  },
+  "player": {
+    "id": "rNdBqdkgV77jA8tfgqtZjTuW5ya3MWtL",
+    "autoPlay": false,
+    "autoNext": false,
+    "autoSkip": false,
+    "autoScrollToCue": true,
+    "autoScrollResumeDelay": 3,
+    "pauseOnCue": false,
+    "cuePauseDuration": null,
+    "enabledTranscriptions": [
+      "japanese",
+      "english",
+      "hiragana"
+    ],
+    "userId": "eLThMoM7UARk8W8iRkwuINquVvMWdQU5",
+    "createdAt": "2025-07-31T07:09:29.450Z",
+    "updatedAt": "2025-07-31T07:09:29.450Z"
+  },
+  "subtitle": {
+    "id": "4QXiajBtAvbT9QGBsiDp6vvb5X41yWvp",
+    "preferredFormat": null,
+    "matchPattern": null,
+    "transcriptionOrder": [
+      "hiragana",
+      "katakana",
+      "romaji",
+      "japanese",
+      "english"
+    ],
+    "definitionTrigger": "click",
+    "showFurigana": true,
+    "userId": "eLThMoM7UARk8W8iRkwuINquVvMWdQU5",
+    "createdAt": "2025-08-02T03:25:29.104Z",
+    "updatedAt": "2025-08-03T01:44:42.827Z"
+  },
+  "word": {
+    "id": "A2BTR9Fk17jV4wyIJulvCpjBzCF7op3U",
+    "learningStatus": true,
+    "pitchColoring": true,
+    "userId": "eLThMoM7UARk8W8iRkwuINquVvMWdQU5",
+    "createdAt": "2025-08-02T03:24:57.214Z",
+    "updatedAt": "2025-08-03T01:44:45.614Z"
+  }
+}
