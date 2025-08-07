@@ -5,7 +5,7 @@ import TooltipWrapper from "@/components/tooltip-wrapper"
 import { toast } from "sonner"
 import { useMutation } from "@tanstack/react-query"
 import { useDebounce } from "use-debounce"
-import { arraysEqual } from "@/lib/utils/utils";
+import { arraysEqual, cn } from "@/lib/utils/utils";
 import { useSyncSettings } from "@/lib/hooks/use-sync-settings";
 import { settingsQueries } from "@/lib/queries/settings"
 import { useSettingsStore } from "@/lib/stores/settings-store";
@@ -15,7 +15,11 @@ import { subtitleTranscriptions } from "@/lib/constants/subtitle";
 import { useEffect, useState, useRef } from "react"
 import { handleEnabledTranscriptions } from "@/app/settings/player/actions"
 
-export default function EnabledTranscriptions() {
+export default function EnabledTranscriptions({
+  className = ""
+}: {
+  className?: string
+}) {
   const activeTranscriptions = useTranscriptionStore((state) => state.activeTranscriptions)
   const setActiveTranscriptions = useTranscriptionStore((state) => state.setActiveTranscriptions)
   const [selectedTranscriptions, setSelectedTranscriptions] = useState<SubtitleTranscription[]>([])
@@ -68,7 +72,9 @@ export default function EnabledTranscriptions() {
   return (
     <TooltipWrapper
       trigger={
-        <div className="w-full flex-1">
+        <div className={cn(
+          "w-full flex-1",
+        )}>
           <MultipleSelector
             placeholder="Select transcription to display"
             disabled={isPending}
@@ -84,7 +90,10 @@ export default function EnabledTranscriptions() {
               hasUserChangedRef.current = true;
               setSelectedTranscriptions(transcriptions.map((transcription) => transcription.value) as SubtitleTranscription[]);
             }}
-            className="w-full"
+            className={cn(
+              "w-full",
+              className
+            )}
           />
         </div>
       }

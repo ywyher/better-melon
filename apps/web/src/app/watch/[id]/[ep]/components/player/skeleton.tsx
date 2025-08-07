@@ -2,12 +2,12 @@
 
 import { useState, useEffect } from "react"
 import { Skeleton } from "@/components/ui/skeleton"
+import { Progress } from "@/components/ui/progress";
 
-export default function PlayerSkeleton({ isLoading }: { isLoading: boolean }) {
+export default function PlayerSkeleton() {
     const [progress, setProgress] = useState(0);
     
     useEffect(() => {
-        if (!isLoading) return;
         
         setProgress(0);
         
@@ -22,9 +22,7 @@ export default function PlayerSkeleton({ isLoading }: { isLoading: boolean }) {
         }, 200);
         
         return () => clearInterval(interval);
-    }, [isLoading]);
-
-    if (!isLoading) return null;
+    }, []);
 
     return (
         <div className="absolute inset-0 z-10 w-full aspect-video bg-black bg-opacity-80 flex flex-col items-center justify-center">
@@ -36,9 +34,8 @@ export default function PlayerSkeleton({ isLoading }: { isLoading: boolean }) {
             
             {/* Linear loading indicator with real progress */}
             <div className="w-64 h-1.5 bg-gray-700 rounded overflow-hidden z-20">
-                <div 
-                    className="h-full bg-blue-500 transition-all duration-200 ease-out"
-                    style={{ width: `${progress}%` }}
+                <Progress
+                    value={progress}
                 />
             </div>
         </div>

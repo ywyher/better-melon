@@ -81,7 +81,7 @@ export default function Screenshot() {
   return (
     <div>
       <Button
-        variant='secondary'
+        variant='outline'
         onClick={handleClick}
       >
         <Camera />

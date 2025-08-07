@@ -131,7 +131,7 @@ export function useSubtitleCuesList({ cues, selectedTranscription }: UseSubtitle
     
     const timeoutId = setTimeout(() => {
       if(!player.current) return;
-      const currentTime = player.current?.currentTime || 0;
+      const currentTime = player?.current?.currentTime || 0;
       const activeCueData = findActiveCue(currentTime);
       
       if (activeCueData) {

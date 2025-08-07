@@ -64,7 +64,9 @@ export default function DialogWrapper({
         <DrawerContent className="min-h-[85vh] max-h-[85vh]">
           <div className={cn("pb-3 px-3", className)}>
             <DrawerHeader className={cn(
-              (title || description) && "px-6 py-4 border-b bg-background/95 backdrop-blur h-fit"
+              (title || description) 
+              ? "px-6 py-4 border-b bg-background/95 backdrop-blur h-fit"
+              : "p-0"
             )}>
               <DrawerTitle className="text-xl font-semibold">{title}</DrawerTitle>
               <DrawerDescription className="text-sm text-muted-foreground mt-1">

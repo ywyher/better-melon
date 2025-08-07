@@ -9,7 +9,7 @@ import '@vidstack/react/player/styles/default/layouts/video.css';
 import { useCallback, useEffect, useRef, useState, useMemo, memo } from "react";
 import { usePlayerStore } from "@/lib/stores/player-store";
 import SkipButton from '@/app/watch/[id]/[ep]/components/player/skip-button';
-import PlayerSkeleton from '@/app/watch/[id]/[ep]/components/player/player-skeleton';
+import PlayerSkeleton from '@/app/watch/[id]/[ep]/components/player/skeleton';
 import { useThrottledCallback } from 'use-debounce';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
@@ -21,7 +21,6 @@ import { AnimeSkipTime } from '@/types/anime';
 import { useSettingsStore } from '@/lib/stores/settings-store';
 import { useStreamingStore } from '@/lib/stores/streaming-store';
 
-const MemoizedPlayerSkeleton = memo(PlayerSkeleton);
 const MemoizedSkipButton = memo(SkipButton);
 const MemoizedDefinitionCard = memo(DefinitionCard);
 
@@ -46,6 +45,7 @@ export default function Player() {
     const episodeNumber = useStreamingStore((state) => state.episodeNumber)
     const animeId = useStreamingStore((state) => state.animeId)
     const streamingData = useStreamingStore((state) => state.streamingData)
+    const isLoading = useStreamingStore((state) => state.isLoading)
 
     const [loadingDuration, setLoadingDuration] = useState<{
       start: Date | undefined,
@@ -178,19 +178,16 @@ export default function Player() {
         };
     }, [vttUrl]);
 
+    if(isLoading || !isInitialized) return <PlayerSkeleton />
+
     return (
         <div className="relative w-full aspect-video">
-            {(!isInitialized) && (
-              <>
-                <MemoizedPlayerSkeleton isLoading={!isInitialized} />
-              </>
-            )}
             <div className={containerClassName}>
-                {loadingDuration.start && loadingDuration.end && (
+                {/* {loadingDuration.start && loadingDuration.end && (
                   <p>Loaded in: {
                     ((loadingDuration.end.getTime() - loadingDuration.start.getTime()) / 1000).toFixed(2)
                   }s</p>
-                )}
+                )} */}
                 <MediaPlayer
                     title={
                         streamingData?.episode.details.attributes.canonicalTitle 

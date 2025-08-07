@@ -8,7 +8,7 @@ export default function PanelSkeleton() {
   const id = useId();
   
   return (
-    <Card className="flex flex-col gap-3 w-full max-w-[500px]">
+    <Card className="flex flex-col gap-3 w-full bg-secondary">
       <CardHeader className="flex flex-col gap-3">
         <div className="flex flex-row justify-between items-center w-full">
           <CardTitle className="text-xl">Transcriptions</CardTitle>

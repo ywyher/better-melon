@@ -3,9 +3,9 @@
 import PlayerSection from '@/app/watch/[id]/[ep]/components/sections/player-section';
 import MissingSubtitlesDialog from '@/app/watch/[id]/[ep]/components/subtitles/missing-subtitles-dialog';
 import ControlsSection from '@/app/watch/[id]/[ep]/components/sections/controls-section';
-import EpisodesList from '@/components/episodes-list/episodes-list';
-import PanelSkeleton from '@/app/watch/[id]/[ep]/components/panel/panel-skeleton';
-import SubtitlePanel from '@/app/watch/[id]/[ep]/components/panel/panel';
+import EpisodeDetails from '@/app/watch/[id]/[ep]/components/episode/details/details';
+import Panel from '@/app/watch/[id]/[ep]/components/panel/panel';
+import { cn } from '@/lib/utils/utils';
 import { useParams } from 'next/navigation';
 import { Indicator } from '@/components/indicator';
 import { usePlayerStore } from '@/lib/stores/player-store';
@@ -17,10 +17,7 @@ import { SubtitlesNotAvailableError } from '@/lib/errors/player';
 import { useSubtitleStore } from '@/lib/stores/subtitle-store';
 import { useUIStateStore } from '@/lib/stores/ui-state-store';
 import { defaultSubtitleSettings } from '@/app/settings/subtitle/_subtitle-settings/constants';
-import { useSaveProgress } from '@/lib/hooks/use-save-progress';
-import { cn } from '@/lib/utils/utils';
 import { useWatchData } from '@/lib/hooks/use-watch-data';
-import EpisodeDetails from '@/app/watch/[id]/[ep]/components/episode/details/details';
 
 export default function WatchPage() {
   const params = useParams();
@@ -44,7 +41,6 @@ export default function WatchPage() {
     transcriptions,
     subtitles,
     loadStartTimeRef,
-    isLoading
   } = useWatchData(animeId, episodeNumber)
 
   useLayoutEffect(() => {
@@ -109,29 +105,19 @@ export default function WatchPage() {
   return (
     <div className="grid grid-cols-14 gap-8 pb-20">
       <div className={cn(
-        "flex flex-col gap-3 w-full",
-        (isLoading || shouldShowPanel) && 'col-span-9',
-        (!shouldShowPanel) && 'col-span-14',
+        "flex flex-col gap-3 w-full col-span-14 xl:col-span-9",
+        !shouldShowPanel && "xl:col-span-14"
       )}>
         {/* Top controls and player area */}
         <PlayerSection />
-        {/* Settings below player */}
-        <ControlsSection />
         {/* Episode Data Section */}
         <EpisodeDetails />
+        {/* Settings below player */}
+        <ControlsSection />
       </div>
       {/* Side panel (visible based on state) */}
-      <div className={cn(
-        "flex flex-col gap-5",
-        (isLoading || shouldShowPanel) && 'col-span-5'
-      )}>
-        {isLoading ? (
-          <PanelSkeleton />
-        ) : (
-          <>
-           <SubtitlePanel />
-          </>
-        )}
+      <div className="hidden xl:flex flex-col gap-5 col-span-5">
+        {shouldShowPanel && <Panel />}
         {/* {isLoading ? (
           <EpisodesList 
             nextAiringEpisode={streaming.data?.anime.nextAiringEpisode}

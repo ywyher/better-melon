@@ -1,6 +1,6 @@
 import useFullPlayground from "@/app/playground/_components/full/use-full-playground"
 import EpisodeDetails from "@/app/watch/[id]/[ep]/components/episode/details/details";
-import SubtitlePanel from "@/app/watch/[id]/[ep]/components/panel/panel";
+import Panel from "@/app/watch/[id]/[ep]/components/panel/panel";
 import ControlsSection from "@/app/watch/[id]/[ep]/components/sections/controls-section";
 import PlayerSection from "@/app/watch/[id]/[ep]/components/sections/player-section";
 import { cn } from "@/lib/utils/utils";
@@ -11,21 +11,18 @@ export default function FullPlayground() {
   return (
     <div className="grid grid-cols-14 gap-8 pb-20">
       <div className={cn(
-        "flex flex-col gap-3 w-full",
-        'col-span-9',
+        "flex flex-col gap-3 w-full xl:col-span-9 col-span-14",
       )}>
         {/* Top controls and player area */}
         <PlayerSection />
-        {/* Settings below player */}
-        <ControlsSection />
         {/* Episode Data Section */}
         <EpisodeDetails />
+        {/* Settings below player */}
+        <ControlsSection />
       </div>
       {/* Side panel (visible based on state) */}
-      <div className={cn(
-        "flex flex-col gap-5 col-span-5",
-      )}>
-        <SubtitlePanel />
+      <div className="hidden xl:flex flex-col gap-5 col-span-5">
+        <Panel />
         {/* {isLoading ? (
           <EpisodesList 
             nextAiringEpisode={streaming.data?.anime.nextAiringEpisode}

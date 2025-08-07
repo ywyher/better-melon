@@ -21,7 +21,7 @@ export default function ToggleButton({
 }) {
     const button = (
         <Button 
-            variant="ghost"
+            variant="outline"
             onClick={onClick}
             disabled={disabled}
             className={cn(className, "flex items-center gap-2")}

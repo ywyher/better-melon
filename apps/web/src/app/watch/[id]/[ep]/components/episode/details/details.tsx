@@ -5,11 +5,12 @@ import { useStreamingStore } from "@/lib/stores/streaming-store"
    
 export default function EpisodeDetails() {
   const episode = useStreamingStore((state) => state.streamingData?.episode)
+  const isLoading = useStreamingStore((state) => state.isLoading)
    
-  if(!episode) return <StreamingDetailsSkeleton />;
+  if(!episode || isLoading) return <StreamingDetailsSkeleton />;
 
   return (
-    <Card className="flex flex-col gap-3 bg-secondary py-3">
+    <Card className="flex flex-col gap-3 bg-secondary py-4">
       <EpisodeDetailsHeader />
       <CardContent>
         <CardDescription

@@ -7,16 +7,16 @@ import { Indicator } from "@/components/indicator";
 import { Tabs } from "@/components/ui/tabs";
 import type { SubtitleCue as TSubtitleCue, SubtitleTranscription } from "@/types/subtitle";
 import { subtitleTranscriptions } from "@/lib/constants/subtitle";
-import PanelHeader from "@/app/watch/[id]/[ep]/components/panel/panel-header";
+import PanelHeader from "@/app/watch/[id]/[ep]/components/panel/header";
 import SubtitleCuesList from "@/app/watch/[id]/[ep]/components/panel/subtitle-cues-list";
-import PanelSkeleton from "@/app/watch/[id]/[ep]/components/panel/panel-skeleton";
+import PanelSkeleton from "@/app/watch/[id]/[ep]/components/panel/skeleton";
 import { subtitleQueries } from "@/lib/queries/subtitle";
 import { useSubtitleStore } from "@/lib/stores/subtitle-store";
 import { useTranscriptionStore } from "@/lib/stores/transcription-store";
 import { cn } from "@/lib/utils/utils";
 import { useStreamingStore } from "@/lib/stores/streaming-store";
 
-export default function SubtitlePanel({ className = "" }: { className?: string }) { 
+export default function Panel({ className = "" }: { className?: string }) { 
     const [selectedTranscription, setSelectedTranscription] = useState<SubtitleTranscription>('japanese')
     const [previousCues, setPreviousCues] = useState<TSubtitleCue[] | undefined>();
 
@@ -27,6 +27,8 @@ export default function SubtitlePanel({ className = "" }: { className?: string }
 
     const animeId = useStreamingStore((state) => state.animeId)
     const episodeNumber = useStreamingStore((state) => state.episodeNumber)
+
+    const isLoading = useStreamingStore((state) => state.isLoading)
     
     const { data: subtitleCues, isLoading: isCuesLoading, error: cuesError } = useQuery({
       ...subtitleQueries.cues({
@@ -61,7 +63,7 @@ export default function SubtitlePanel({ className = "" }: { className?: string }
       );
     }
 
-    if(isCuesLoading) return <PanelSkeleton />
+    if(isLoading || isCuesLoading) return <PanelSkeleton />
 
     return (
         <Card 
@@ -69,6 +71,7 @@ export default function SubtitlePanel({ className = "" }: { className?: string }
             "flex flex-col flex-1 gap-3",
             "w-full min-h-[80vh] h-fit",
             "border-0 xl:border-1 p-0 m-0 xl:py-5",
+            "xl:bg-secondary",
             className
           )}
         >
@@ -78,7 +81,7 @@ export default function SubtitlePanel({ className = "" }: { className?: string }
                   activeSubtitleFile={activeSubtitleFile}
                   setSelectedTranscription={setSelectedTranscription}
                 />
-                <CardContent className="h-full flex justify-center items-center w-full">
+                <CardContent className="flex justify-center items-center w-full">
                   {activeSubtitleFile && cues ? (
                       <SubtitleCuesList
                         isLoading={isCuesLoading}
