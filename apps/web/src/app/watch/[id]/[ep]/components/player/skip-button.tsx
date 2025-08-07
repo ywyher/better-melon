@@ -2,79 +2,68 @@
 
 import { Button } from "@/components/ui/button";
 import { usePlayerStore } from "@/lib/stores/player-store";
-import { Dispatch, SetStateAction, useMemo } from "react";
+import { Dispatch, SetStateAction, useMemo, useCallback } from "react";
 import { useMediaState } from "@vidstack/react";
 import { cn } from "@/lib/utils/utils";
 import { AnimeSkipTime } from "@/types/anime";
+
+interface SkipButtonProps {
+    canSkip: boolean;
+    setCanSkip: Dispatch<SetStateAction<boolean>>;
+    skipTimes: AnimeSkipTime[];
+}
 
 export default function SkipButton({ 
     canSkip,
     setCanSkip,
     skipTimes,
-    currentTime
-}: { 
-    canSkip: boolean;
-    setCanSkip: Dispatch<SetStateAction<boolean>>
-    skipTimes: AnimeSkipTime[];
-    currentTime: number
-}) {
+}: SkipButtonProps) {
     const player = usePlayerStore((state) => state.player);
     const isFullscreen = useMediaState('fullscreen', player);
     const controlsVisible = useMediaState('controlsVisible', player);
+    const currentTime = useMediaState('currentTime', player)
 
-    const buttonPositioning = useMemo(() => {
-        if (isFullscreen) {
-            return controlsVisible 
-                ? { bottom: '7rem', right: '1rem' } 
-                : { bottom: '3rem', right: '1rem' };
-        }
-        return controlsVisible 
-            ? { bottom: '6rem', right: '1rem' } 
-            : { bottom: '2rem', right: '1rem' };
-    }, [isFullscreen, controlsVisible]);
+    const buttonStyle = useMemo(() => ({
+        position: 'absolute' as const,
+        bottom: isFullscreen 
+            ? (controlsVisible ? '7rem' : '3rem')
+            : (controlsVisible ? '6rem' : '2rem'),
+        right: '1rem',
+        zIndex: 10
+    }), [isFullscreen, controlsVisible]);
 
-    const getSkipType = () => {
-        if(!currentTime || !skipTimes.length) return "";
+    const currentSkipInterval = useMemo(() => {
+        if (!currentTime || !skipTimes.length) return null;
         
-        const matchedInterval = skipTimes.find(({ interval }) => 
-            currentTime >= interval.startTime &&
-            currentTime < interval.endTime
-        );
+        return skipTimes.find(({ interval }) => 
+            currentTime >= interval.startTime && currentTime < interval.endTime
+        ) || null;
+    }, [currentTime, skipTimes]);
+
+    const skipTypeText = useMemo(() => {
+        if (!currentSkipInterval) return "";
+        return currentSkipInterval.skipType === 'OP' ? " Opening" : " Outro";
+    }, [currentSkipInterval]);
+
+    const handleSkip = useCallback(() => {
+        if (!currentSkipInterval || !player.current) return;
         
-        return matchedInterval?.skipType === 'OP' ? " Opening" : " Outro";
-    };
+        player.current.remoteControl.seek(currentSkipInterval.interval.endTime);
+        setCanSkip(false);
+    }, [currentSkipInterval, player, setCanSkip]);
+
+    if (!canSkip) return null;
 
     return (
-        <>
-            {canSkip && (
-                <div 
-                    style={{ position: 'absolute', ...buttonPositioning, zIndex: 10 }}
-                >
-                    <Button
-                        className={cn(
-                            "relative overflow-hidden",
-                        )}
-                        onClick={(() => {
-                            if(!currentTime) return;
-                            const skipInterval = skipTimes.find(
-                                ({ interval }) =>
-                                currentTime >= interval.startTime && currentTime < interval.endTime,
-                            );
-                            if (skipInterval) {
-                                player.current?.remoteControl.seek(skipInterval.interval.endTime);
-                                setCanSkip(false);
-                            }
-                        })}
-                    >
-                        <div>
-                            <span className="font-medium">Skip</span>
-                            {skipTimes.length > 0 && (
-                                <span className="font-medium">{getSkipType()}</span>
-                            )}
-                        </div>
-                    </Button>
-                </div>
-            )}
-        </>
+        <div style={buttonStyle}>
+            <Button
+                className={cn("relative overflow-hidden")}
+                onClick={handleSkip}
+            >
+                <span className="font-medium">
+                    Skip{skipTypeText}
+                </span>
+            </Button>
+        </div>
     );
 }

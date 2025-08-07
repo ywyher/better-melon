@@ -4,7 +4,7 @@ import { SubtitleSettings } from "@/lib/db/schema";
 import { FileSelectionError } from "@/lib/errors/player";
 import { DelayStore } from "@/lib/stores/delay-store";
 import { getExtension } from "@/lib/utils/utils";
-import { ActiveSubtitleFile, Ruby, SubtitleFile, SubtitleFormat, SubtitleToken } from "@/types/subtitle";
+import { ActiveSubtitleFile, Ruby, SubtitleFormat, SubtitleToken } from "@/types/subtitle";
 import Kuroshiro from "@sglkc/kuroshiro";
 import CustomKuromojiAnalyzer from "@/lib/subtitle/custom-kuromoji-analyzer";
 import { getTokenizer } from "kuromojin";
@@ -15,7 +15,7 @@ import { parseVtt } from "@/lib/subtitle/parsers/vtt";
 import { parseAss } from "@/lib/subtitle/parsers/ass";
 import { franc } from 'franc-min'
 import { Anime, AnimeSkipTime } from "@/types/anime";
-import { HianimeEpisodeSourcesTrack } from "@better-melon/shared/types";
+import { HianimeEpisodeSourcesTrack, SubtitleFile } from "@better-melon/shared/types";
 
 export function getSubtitleCacheKey({
   source,
