@@ -20,6 +20,7 @@ import { defaultSubtitleSettings } from '@/app/settings/subtitle/_subtitle-setti
 import { useSaveProgress } from '@/lib/hooks/use-save-progress';
 import { cn } from '@/lib/utils/utils';
 import { useWatchData } from '@/lib/hooks/use-watch-data';
+import EpisodeDetails from '@/app/watch/[id]/[ep]/components/episode/details/details';
 
 export default function WatchPage() {
   const params = useParams();
@@ -116,6 +117,8 @@ export default function WatchPage() {
         <PlayerSection />
         {/* Settings below player */}
         <ControlsSection />
+        {/* Episode Data Section */}
+        <EpisodeDetails />
       </div>
       {/* Side panel (visible based on state) */}
       <div className={cn(

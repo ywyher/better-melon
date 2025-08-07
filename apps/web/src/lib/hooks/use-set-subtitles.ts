@@ -76,13 +76,6 @@ export const useSetSubtitles = ({
     englishSubtitleUrl
   ]);
 
-  useEffect(() => {
-    console.log(`test`, {
-      streamingData,
-      activeSubtitleFile
-    })
-  }, [streamingData, activeSubtitleFile])
-
   return {
     subtitlesError,
     subtitlesErrorDialog,

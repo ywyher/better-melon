@@ -1,11 +1,13 @@
-import StreamingDetails from "@/app/watch/[id]/[ep]/components/details/details";
+import StreamingDetails from "@/app/watch/[id]/[ep]/components/episode/details/details";
 import { useStreamingStore } from "@/lib/stores/streaming-store";
 import { useEffect } from "react";
 
 export default function StreamingDetailsPlayground() {
+  const setEpisodeNumber = useStreamingStore((state) => state.setEpisodeNumber)
   const setStreamingData = useStreamingStore((state) => state.setStreamingData)
 
   useEffect(() => {
+    setEpisodeNumber(5)
     setStreamingData(  {
     "provider": "hianime",
       "anime": {

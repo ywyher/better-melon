@@ -12,7 +12,7 @@ import { Anime } from "@/types/anime";
 import { AnimeListProivder } from "@/types/anime-list";
 import { useQuery } from "@tanstack/react-query";
 import { FilePenLine } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 type AddToListProps = { 
   animeId: Anime['id']

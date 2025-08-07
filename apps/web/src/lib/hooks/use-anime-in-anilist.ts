@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { anilistOptionsSchema } from "@/components/add-to-list/types";
 
-type UseAnimeInListParams = {
+type UseAnimeInAnilistParams = {
   animeId: Anime['id'];
   accessToken?: string | null;
   accountId?: string;
@@ -18,14 +18,14 @@ type UseAnimeInListParams = {
   onError?: (error: string) => void;
 }
 
-export default function useAnimeInList({
+export default function useAnimeInAnilist({
   animeId,
   accessToken,
   accountId,
   runOnMount = false,
   onSuccess,
   onError
-}: UseAnimeInListParams) {
+}: UseAnimeInAnilistParams) {
   const [isLoading, setIsLoading] = useState(false);
 
   const [getAnimeInList, {

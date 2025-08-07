@@ -24,7 +24,7 @@ export default function LoadingButton({
   return (
     <Button
       type={type}
-      className={`w-full ${className}`}
+      className={`w-fit ${className}`}
       disabled={disabled || isLoading}
       size={size}
       variant={variant}

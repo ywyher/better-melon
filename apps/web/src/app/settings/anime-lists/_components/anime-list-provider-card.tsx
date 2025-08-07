@@ -19,7 +19,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import { userQueries } from "@/lib/queries/user";
 import { AnimeListProivder } from "@/types/anime-list";
-import { useRouter } from "next/navigation";
 
 type AnimeListProviderCardProps = {
   provider: AnimeListProivder;

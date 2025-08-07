@@ -74,51 +74,89 @@ export async function ensureHistoryExists({
     }
 }
 
-type HandleHistoryProps = {
+type SaveInHistoryProps = {
   data: Pick<History, 'mediaCoverImage' | 'mediaId' | 'mediaTitle' | 'mediaEpisode'> & Partial<Omit<History, 'id' | 'userId' | 'createdAt' | 'updatedAt'>>
-} 
+}
 
-export async function handleHistory({ data }: HandleHistoryProps) {
-    const { mediaCoverImage, mediaId, mediaTitle, mediaEpisode } = data
+type DeleteFromHistoryProps = {
+  mediaId: History['mediaId']
+  mediaEpisode: History['mediaEpisode']
+}
 
-    try {
-        const {error, historyId, userId } = await ensureHistoryExists({ 
-            mediaCoverImage,
-            mediaId,
-            mediaTitle,
-            mediaEpisode
-        })
-    
-        if(!historyId || error || !userId) return {
-            message: null,
-            error: error,
-        }
-        
-        const result = await db.update(history)
-        .set({
-            ...data,
-            updatedAt: new Date()
-        })
-        .where(and(
-            eq(history.id, historyId),
-            eq(history.userId, userId)
-        )) 
-    
-        if(!result) return {
-            message: null,
-            error: 'Failed to save media in history, try again later...',
-        }
-    
-        return {
-            message: "Media saved in history..",
-            error: null
-        }
-    } catch (error: unknown) {
-        return {
-            message: null,
-            error: error instanceof Error ? error.message : "Failed to save media in history",
-        }
+export async function saveInHistory({ data }: SaveInHistoryProps) {
+  const { mediaCoverImage, mediaId, mediaTitle, mediaEpisode } = data
+
+  try {
+      const {error, historyId, userId } = await ensureHistoryExists({ 
+          mediaCoverImage,
+          mediaId,
+          mediaTitle,
+          mediaEpisode
+      })
+  
+      if(!historyId || error || !userId) return {
+          message: null,
+          error: error,
+      }
+      
+      const result = await db.update(history)
+      .set({
+          ...data,
+          updatedAt: new Date()
+      })
+      .where(and(
+          eq(history.id, historyId),
+          eq(history.userId, userId)
+      )) 
+  
+      if(!result) return {
+        message: null,
+        error: 'Failed to save media in history, try again later...',
+      }
+  
+      return {
+        message: "Media saved in history..",
+        error: null
+      }
+  } catch (error: unknown) {
+      return {
+        message: null,
+        error: error instanceof Error ? error.message : "Failed to save media in history",
+      }
+  }
+}
+
+export async function deleteFromHistory({ mediaId, mediaEpisode }: DeleteFromHistoryProps) {
+  try {
+    const { userId, error } = await ensureAuthenticated()
+
+    if(!userId || error) return {
+      message: null,
+      error: error,
     }
+
+    const result = await db.delete(history)
+      .where(and(
+        eq(history.mediaId, mediaId),
+        eq(history.mediaEpisode, mediaEpisode),
+        eq(history.userId, userId)
+      )) 
+
+    if(!result) return {
+      message: null,
+      error: 'Failed to save media in history, try again later...',
+    }
+
+    return {
+      message: "Media saved in history..",
+      error: null
+    }
+  } catch (error: unknown) {
+    return {
+      message: null,
+      error: error instanceof Error ? error.message : "Failed to save media in history",
+    }
+  }
 }
 
 export async function getHistory({ limit }: { limit?: number }) {

@@ -1,21 +1,19 @@
 "use client"
 
-import { handleEnabledTranscriptions } from "@/app/settings/player/actions"
 import MultipleSelector from "@/components/multiple-selector"
 import TooltipWrapper from "@/components/tooltip-wrapper"
-import { subtitleTranscriptions } from "@/lib/constants/subtitle";
-import { GeneralSettings, PlayerSettings } from "@/lib/db/schema"
-import { settingsQueries } from "@/lib/queries/settings"
-import { useSubtitleStore } from "@/lib/stores/subtitle-store"
-import { SubtitleTranscription } from "@/types/subtitle"
-import { useMutation } from "@tanstack/react-query"
-import { useEffect, useState, useRef } from "react"
 import { toast } from "sonner"
+import { useMutation } from "@tanstack/react-query"
 import { useDebounce } from "use-debounce"
 import { arraysEqual } from "@/lib/utils/utils";
 import { useSyncSettings } from "@/lib/hooks/use-sync-settings";
+import { settingsQueries } from "@/lib/queries/settings"
 import { useSettingsStore } from "@/lib/stores/settings-store";
+import { SubtitleTranscription } from "@/types/subtitle"
 import { useTranscriptionStore } from "@/lib/stores/transcription-store";
+import { subtitleTranscriptions } from "@/lib/constants/subtitle";
+import { useEffect, useState, useRef } from "react"
+import { handleEnabledTranscriptions } from "@/app/settings/player/actions"
 
 export default function EnabledTranscriptions() {
   const activeTranscriptions = useTranscriptionStore((state) => state.activeTranscriptions)

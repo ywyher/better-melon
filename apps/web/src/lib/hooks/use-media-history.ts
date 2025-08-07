@@ -18,6 +18,7 @@ export function useMediaHistory({ mediaId, mediaEpisode }: UseHistoryMediaProps)
     data: mediaHistory,
     isLoading,
     error,
+    refetch
   } = useQuery({
     ...animeQueries.historyByMedia({ mediaId: String(mediaId), mediaEpisode }),
     staleTime: 1000 * 60 * 5,
@@ -44,5 +45,6 @@ export function useMediaHistory({ mediaId, mediaEpisode }: UseHistoryMediaProps)
     isLoading,
     error,
     loadingDuration,
+    refetch
   };
 }

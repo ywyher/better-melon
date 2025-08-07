@@ -1,5 +1,5 @@
 import LoadingButton from "@/components/loading-button";
-import useAnimeInList from "@/lib/hooks/use-anime-in-list";
+import useAnimeInAnilist from "@/lib/hooks/use-anime-in-anilist";
 import AnimeListProviderCard from "@/app/settings/anime-lists/_components/anime-list-provider-card";
 import { z } from "zod";
 import { Form } from "@/components/ui/form";
@@ -44,7 +44,7 @@ export default function AddToAnilist({
     isQueryLoading,
     addAnimeToList,
     deleteAnimeFromList,
-  } = useAnimeInList({
+  } = useAnimeInAnilist({
     animeId,
     accessToken: accessToken,
     accountId: accountId,
