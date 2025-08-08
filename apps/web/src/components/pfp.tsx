@@ -15,7 +15,7 @@ export default function Pfp({
       className={cn(
         "cursor-pointer border-none",
         "w-12 h-12",
-        "object",
+        "object-cover",
         className,
       )}
       onClick={onClick}

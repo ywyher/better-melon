@@ -47,13 +47,20 @@ export const auth = betterAuth({
       }
     },
   },
+  user: {
+    additionalFields: {
+      banner: {
+        type: 'string',
+      }
+    }
+  },
   account: {
     accountLinking: {
       enabled: true, 
       trustedProviders: ['anilist'],
       allowDifferentEmails: true,
       allowUnlinkingAll: true,
-    }
+    },
   },
   plugins: [
     organization(),

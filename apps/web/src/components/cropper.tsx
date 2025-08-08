@@ -15,7 +15,8 @@ import {
 import { useCallback, useRef } from "react";
 import { 
   Cropper as ReactCropper, 
-  CircleStencil, 
+  CircleStencil,
+  RectangleStencil,
   CropperRef, 
   ImageRestriction 
 } from 'react-advanced-cropper';
@@ -28,6 +29,7 @@ type CropperProps = {
   className?: string;
   quality?: number;
   outputFormat?: 'image/jpeg' | 'image/png' | 'image/webp';
+  cropType?: 'profile' | 'banner';
 }
 
 const MOVEMENT_STEP = 50;
@@ -37,13 +39,17 @@ const ROTATION_ANGLE = 90;
 const DEFAULT_QUALITY = 0.8;
 const OUTPUT_FILENAME = 'cropped-image';
 
+// Banner aspect ratio (e.g., 16:9 or 3:1 for wide banners)
+const BANNER_ASPECT_RATIO = 16 / 5;
+
 export default function Cropper({ 
   image,
   onCrop,
   onCancel,
   className = "",
   quality = DEFAULT_QUALITY,
-  outputFormat = 'image/jpeg'
+  outputFormat = 'image/jpeg',
+  cropType = 'profile'
 }: CropperProps) {
   const cropperRef = useRef<CropperRef>(null);
   
@@ -128,6 +134,27 @@ export default function Cropper({
       label: "Move down"
     }
   ];
+
+  const getStencilProps = () => {
+    if (cropType === 'banner') {
+      return {
+        aspectRatio: {
+          minimum: BANNER_ASPECT_RATIO,
+          maximum: BANNER_ASPECT_RATIO
+        }
+      };
+    } else {
+      // circular
+      return {
+        aspectRatio: {
+          minimum: 1,
+          maximum: 1
+        }
+      };
+    }
+  };
+
+  const StencilComponent = cropType === 'banner' ? RectangleStencil : CircleStencil;
   
   return (
     <div className={cn(
@@ -149,18 +176,16 @@ export default function Cropper({
         ))}
       </div>
       
-      <div className="w-full h-[300px] sm:h-[350px] max-w-full overflow-hidden rounded-lg border">
-        <ReactCropper            
+      <div className={cn(
+        "w-full max-w-full overflow-hidden rounded-lg border",
+        cropType === 'banner' ? "h-[250px] sm:h-[300px]" : "h-[300px] sm:h-[350px]"
+      )}>
+        <ReactCropper
           src={image}
           ref={cropperRef}            
           className="cropper w-full h-full max-w-full"
-          stencilComponent={CircleStencil}
-          stencilProps={{        
-            aspectRatio: {
-              minimum: 1,
-              maximum: 1
-            },
-          }}
+          stencilComponent={StencilComponent}
+          stencilProps={getStencilProps()}
           imageRestriction={ImageRestriction.stencil}
         />
       </div>

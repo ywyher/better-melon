@@ -9,7 +9,6 @@ interface UploadResult {
   url: string | null;
 }
 
-// Predefined file type options
 export const FILE_TYPES = {
   IMAGES: ['image/'],
   VIDEOS: ['video/'],
@@ -24,7 +23,6 @@ interface UploadOptions {
   maxRetries?: number;
 }
 
-// Helper function to validate image integrity
 const validateImageFile = (file: File): Promise<boolean> => {
   return new Promise((resolve) => {
     if (!file.type.startsWith('image/')) {
