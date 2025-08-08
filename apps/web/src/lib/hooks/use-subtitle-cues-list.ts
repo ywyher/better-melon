@@ -148,7 +148,7 @@ export function useSubtitleCuesList({ cues, selectedTranscription }: UseSubtitle
     }, 100);
     
     return () => clearTimeout(timeoutId);
-  }, [selectedTranscription, findActiveCue, rowVirtualizer]);
+  }, [selectedTranscription, findActiveCue, rowVirtualizer, player]);
 
   // Force remeasure when cues change (content might have changed)
   useEffect(() => {

@@ -9,7 +9,7 @@ export const user = pgTable("user", {
   name: text('name').notNull().unique(),
   email: text('email').notNull().unique(),
   emailVerified: boolean('email_verified').notNull(),
-  image: text('image').default("pfp.png"),
+  image: text('image').default("pfp.png").notNull(),
   isAnonymous: boolean('isAnonymous').default(false),
   createdAt: timestamp('created_at').notNull(),
   updatedAt: timestamp('updated_at').notNull()

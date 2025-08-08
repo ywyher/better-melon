@@ -26,6 +26,12 @@ const nextConfig: NextConfig = {
         port: "",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "files.catbox.moe",
+        port: "",
+        pathname: "/**",
+      },
     ],
   },
 };

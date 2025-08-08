@@ -4,17 +4,22 @@ import { cn } from "@/lib/utils/utils";
 export default function Pfp({
   image = "/images/pfp.png",
   className,
+  onClick
 }: {
   image?: string;
   className?: string;
+  onClick?: () => void
 }) {
   return (
-    <Avatar className={cn(
-      "cursor-pointer border",
-      "w-12 h-12",
-      "object",
-      className,
-    )}>
+    <Avatar 
+      className={cn(
+        "cursor-pointer border-none",
+        "w-12 h-12",
+        "object",
+        className,
+      )}
+      onClick={onClick}
+    >
       <AvatarImage className="object-cover" src={image} alt="Profile picture" />
       <AvatarFallback>AS</AvatarFallback>
     </Avatar>

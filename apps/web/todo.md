@@ -1,6 +1,6 @@
-use-save-progress causes lag, disable rn
+when navigating between eps the subs in transcriptoin-item component doenst chagne ??
 
-filter ja-en files
+use-save-progress causes lag, disable rn
 
 check out memory mapping instead of json for parsing files idk how it works yet but it seems promising (prob not hehe)
 

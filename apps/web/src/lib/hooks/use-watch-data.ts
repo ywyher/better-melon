@@ -299,13 +299,6 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
     pitchAccentError
   ]);
 
-  useEffect(() =>{ 
-    console.log(`test streamingStore`, streamingStore )
-    console.log(`test settingsStore`, settingsStore )
-    console.log(`test transcriptionStore`, transcriptionStore )
-    console.log(`test learningStore`, learningStore )
-  }, [streamingStore, settingsStore, transcriptionStore, learningStore])
-
   return {
     streaming: {
       data: streamingData,

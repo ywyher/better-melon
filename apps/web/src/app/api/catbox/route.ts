@@ -1,12 +1,17 @@
-import { env } from '@/lib/env/server';
 import ky from 'ky';
+import { env } from '@/lib/env/server';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
-    const file = formData.get('file') as File;
-    
+    const rawFile = formData.get('file') as File;
+
+    const file = new File([rawFile], encodeURIComponent(rawFile.name), {
+      type: rawFile.type,
+      lastModified: rawFile.lastModified
+    });
+
     if (!file) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 });
     }

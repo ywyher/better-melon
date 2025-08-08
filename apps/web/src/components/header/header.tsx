@@ -8,12 +8,11 @@ import { Menu } from '@/components/header/menu';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { Avatar } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
 import { useIsSmall } from '@/lib/hooks/use-media-query';
 import { useSession } from '@/lib/queries/user';
 import { useAuthStore } from '@/lib/stores/auth-store';
 import { cn } from '@/lib/utils/utils';
-import React, { useState, useEffect, HTMLAttributes } from 'react';
+import React, { useState, useEffect } from 'react';
 
 export default function Header() {
   const isAuthDialogOpen = useAuthStore((state) => state.isAuthDialogOpen)
@@ -65,7 +64,7 @@ export default function Header() {
       <div className="flex flex-row gap-2 items-center justify-end">
         <ThemeToggle className="w-10 h-10 rounded-sm" />
         {isAuthenticated ? (
-          <Menu isSmall={isSmall} />
+          <Menu user={user} isSmall={isSmall} />
         ) : (
           <>
             {isLoading ? (

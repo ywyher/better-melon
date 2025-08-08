@@ -13,7 +13,9 @@
     "apps/*",
     "packages/*"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "react-advanced-cropper": "^0.20.1"
+  },
   "devDependencies": {
     "turbo": "^2.5.5"
   }

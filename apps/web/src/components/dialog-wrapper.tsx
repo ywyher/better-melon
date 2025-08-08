@@ -31,6 +31,7 @@ type DialogWrapperProps = {
   trigger?: React.ReactNode;
   defaultOpen?: boolean;
   breakpoint?: 'small' | 'medium' | 'large' | 'xLarge'
+  handleOnly?: boolean;
 }
 
 export default function DialogWrapper({ 
@@ -43,7 +44,8 @@ export default function DialogWrapper({
   setOpen,
   trigger,
   defaultOpen = false,
-  breakpoint = 'small'
+  breakpoint = 'small',
+  handleOnly = false
 }: DialogWrapperProps) {
   const isBreakpoint = useMediaQuery(breakpoints[breakpoint]);
   
@@ -59,13 +61,13 @@ export default function DialogWrapper({
 
   if (isBreakpoint) {
     return (
-      <Drawer open={isOpen} onOpenChange={onOpenChange}>
+      <Drawer open={isOpen} onOpenChange={onOpenChange} handleOnly={handleOnly}>
         {trigger && <DrawerTrigger asChild>{trigger}</DrawerTrigger>}
-        <DrawerContent className="min-h-[85vh] max-h-[85vh]">
+        <DrawerContent className="w-full min-h-[85vh] max-h-[85vh]">
           <div className={cn("pb-3 px-3", className)}>
             <DrawerHeader className={cn(
               (title || description) 
-              ? "px-6 py-4 border-b bg-background/95 backdrop-blur h-fit"
+              ? "border-b bg-background/95 backdrop-blur h-fit"
               : "p-0"
             )}>
               <DrawerTitle className="text-xl font-semibold">{title}</DrawerTitle>
@@ -83,14 +85,18 @@ export default function DialogWrapper({
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
-      <DialogContent className={cn(
-        className,
-        'min-w-fit'
-      )}>
-        <DialogHeader className={cn(
-          (title || description) && "px-4 py-4 border-b bg-background/95 backdrop-blur h-fit",
-          headerClassName
-        )}>
+      <DialogContent 
+        className={cn(
+          "w-full",
+          className
+        )}
+      >
+        <DialogHeader 
+          className={cn(
+            (title || description) && "pb-4 border-b bg-background/95 backdrop-blur h-fit",
+            headerClassName
+          )}
+        >
           <DialogTitle className="text-xl font-semibold">{title}</DialogTitle>
           <DialogDescription className="text-sm text-muted-foreground mt-1">
             {description}

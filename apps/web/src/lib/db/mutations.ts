@@ -48,7 +48,7 @@ export async function ensureAuthenticated() {
     }
 }
 
-export async function updateUser({ data, userId }: { data: User, userId: User['id'] }) { 
+export async function updateUser({ data, userId }: { data: Partial<User>, userId: User['id'] }) { 
     const [updatedUser] = await db.update(user).set({
         ...data,
         updatedAt: new Date()

@@ -30,8 +30,9 @@ import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { User } from "@/lib/db/schema";
 
-export function Menu({ isSmall }: { isSmall: boolean }) {
+export function Menu({ user,isSmall }: { user: User; isSmall: boolean }) {
   const [open, setOpen] = useState<boolean>(false)
   const router = useRouter();
   const queryClient = useQueryClient()
@@ -85,7 +86,10 @@ export function Menu({ isSmall }: { isSmall: boolean }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="cursor-pointer">
-        <Pfp className="min-w-10 max-w-10 min-h-10 max-h-10 rounded-sm" />
+        <Pfp 
+          className="min-w-10 max-w-10 min-h-10 max-h-10 rounded-sm"
+          image={user.image}
+        />
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-44">
         <DropdownMenuLabel className="capitalize">

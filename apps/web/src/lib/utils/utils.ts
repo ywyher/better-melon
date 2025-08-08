@@ -5,8 +5,6 @@ import { Anime } from "@/types/anime";
 import { MediaPlayerInstance } from "@vidstack/react";
 import { defaultGeneralSettings } from "@/lib/constants/settings";
 import _ from 'lodash';
-import { EpisodeMetadata } from "@/types/episode";
-import { StreamingData } from "@better-melon/shared/types";
 
 export const s3 = new S3Client({
   region: "auto",
