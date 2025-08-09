@@ -6,7 +6,7 @@ import SelectListProvider from "@/components/add-to-list/select-list-provider";
 import DialogWrapper from "@/components/dialog-wrapper";
 import { Button } from "@/components/ui/button";
 import { animeListProviders } from "@/lib/constants/anime-list";
-import { userQueries, useSession } from "@/lib/queries/user";
+import { userQueries } from "@/lib/queries/user";
 import { useAuthStore } from "@/lib/stores/auth-store";
 import { cn } from "@/lib/utils/utils";
 import { Anime } from "@/types/anime";

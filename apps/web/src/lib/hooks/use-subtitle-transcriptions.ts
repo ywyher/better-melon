@@ -21,7 +21,7 @@ export const useSubtitleTranscriptions = ({
 }: UseSubtitleTranscriptionsProps) => {
   const englishSubtitleUrl = useSubtitleStore((state) => state.englishSubtitleUrl) || "";
   const activeSubtitleFile = useSubtitleStore((state) => state.activeSubtitleFile);
-  const storeActiveTranscriptions = useTranscriptionStore((state) => state.activeTranscriptions) || [];
+  const storeActiveTranscriptions = useTranscriptionStore((state) => state.activeTranscriptions);
 
   // Ensure 'japanese', 'english', and 'hiragana' are always included in the active transcriptions
   const activeTranscriptions: SubtitleTranscription[] = useMemo(() => {
@@ -60,7 +60,7 @@ export const useSubtitleTranscriptions = ({
         refetchOnWindowFocus: false,
       };
     })
-  }), [englishSubtitleUrl, activeSubtitleFile, activeTranscriptions, shouldFetch]);
+  }), [englishSubtitleUrl, activeSubtitleFile, activeTranscriptions, shouldFetch, animeId, episodeNumber]);
 
   const queries = useQueries({ ...queryConfig });
 
@@ -78,19 +78,24 @@ export const useSubtitleTranscriptions = ({
     }
   }, [queries, loadingDuration]);
   
+  const queriesData = useMemo(() => 
+    queries.map(q => q.data), 
+    [queries]
+  );
+
   const transcriptions = useMemo(() => {
-    const result = queries.map((q) => {
-      if(!q.data) return;
+    const result = queriesData.map((data) => {
+      if(!data) return;
       return {
-        transcription: q.data.transcription,
-        format: q.data.format,
-        cues: q.data.cues,
+        transcription: data.transcription,
+        format: data.format,
+        cues: data.cues,
       }
     }).filter(q => q != undefined) as TranscriptionQuery[]
     
     return result;
-  }, [queries.map(q => q.data).join(',')]); // More stable dependency
-
+  }, [queriesData]);
+  
   const transcriptionsLookup = useMemo(() => {
     const lookup = new Map<SubtitleTranscription, Map<string, SubtitleCue>>();
 

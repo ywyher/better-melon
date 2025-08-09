@@ -1,7 +1,5 @@
 import AnimeHistoryCardContent from "@/components/anime/card/history/content";
-import { Card } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
-import { cn } from "@/lib/utils/utils";
 import { AnilistCoverImage, AnilistTitle } from "@better-melon/shared/types";
 import { Anime } from "@/types/anime";
 import AnimeCardWrapper from "@/components/anime/card/wrappers/card";

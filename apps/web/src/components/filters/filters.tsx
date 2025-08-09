@@ -9,9 +9,10 @@ import {
 } from "@/components/ui/accordion"
 import { useIsLarge } from "@/lib/hooks/use-media-query";
 import { cn } from "@/lib/utils/utils";
+import { SearchFilters } from "@/types/search";
 
 interface AnimeFiltersProps {
-    onApply: (variables?: any) => void;
+    onApply: (variables?: Partial<SearchFilters>) => void;
     className?: string;
 }
 

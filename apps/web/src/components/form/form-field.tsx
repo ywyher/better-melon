@@ -91,17 +91,20 @@ export function FormField<
                     disabled,
                     ...field,
                     // Handle both form onChange and custom onValueChange
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     onChange: (value: any) => {
                       // Always update the form
                       field.onChange(value);
                       
                       // Call custom onValueChange if it exists
+                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
                       const childElement = children as React.ReactElement<{ onChange?: (value: any) => void }>;
                       const originalOnChange = childElement.props.onChange;
                       if (originalOnChange) {
                         originalOnChange(value);
                       }
                     },
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   } as any)
                 : children}
             </FormControl>

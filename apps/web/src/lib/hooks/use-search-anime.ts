@@ -50,7 +50,7 @@ export function useSearchAnime() {
 
         const variables = queryVariables.list.search(filters);
         executeQuery({ variables });
-    }, [query, page, sorts, genres, tags, status, year, format, season, isAdult, source, country, averageScore]);
+    }, [query, page, sorts, genres, tags, status, year, format, season, isAdult, source, country, averageScore, executeQuery]);
 
     const handlePageChange = useCallback((newPage: number) => {
         setPage(newPage);

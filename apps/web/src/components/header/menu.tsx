@@ -30,12 +30,15 @@ import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { User } from "@/lib/db/schema";
+import { useIsSmall } from "@/lib/hooks/use-media-query";
+import { useSession } from "@/lib/queries/user";
 
-export function Menu({ user, isSmall }: { user: User; isSmall: boolean }) {
+export function Menu() {
   const [open, setOpen] = useState<boolean>(false)
+  const isSmall = useIsSmall();
   const router = useRouter();
   const queryClient = useQueryClient()
+  const { data: user } = useSession()
 
   const handleLogout = async () => {
     const { error } = await authClient.signOut()
@@ -49,6 +52,8 @@ export function Menu({ user, isSmall }: { user: User; isSmall: boolean }) {
     router.refresh()
     setOpen(false)
   }
+
+  if(!user) return;
 
   if (isSmall)
     return (

@@ -106,3 +106,5 @@ export const CueToken = React.memo<SubtitleCueTokenProps>(({
     prevProps.token.surface_form === nextProps.token.surface_form
   );
 });
+
+CueToken.displayName = "CueToken";

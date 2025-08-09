@@ -69,11 +69,12 @@ export const useSetSubtitles = ({
         setSubtitlesError(new SubtitlesNotAvailableError(episodeNumber));
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     streamingData, 
     preferredFormat, 
-    episodeNumber, 
-    englishSubtitleUrl
+    episodeNumber,
+    englishSubtitleUrl,
   ]);
 
   return {

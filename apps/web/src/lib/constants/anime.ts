@@ -106,12 +106,16 @@ export const queryVariables = {
     }),
     quickSearch: ({ query, page = 1, perPage = 10 }: { query: string, page?: number, perPage?: number }): AnimeListQueryVariables => ({ 
       query,
+      page,
+      perPage,
       withTitle: true,
       withCoverImage: true,
       withStatus: true,
     }),
     topTrending: ({ page = 1, perPage = 10 }: { page?: number, perPage?: number }): AnimeListQueryVariables => ({ 
       sorts: ['TRENDING_DESC'],
+      page,
+      perPage,
       withTitle: true,
       withStatus: true,
       withCoverImage: true,
@@ -123,6 +127,8 @@ export const queryVariables = {
     }),
     trending: ({ page = 1, perPage = 10 }: { page?: number, perPage?: number }): AnimeListQueryVariables => ({ 
       sorts: ['TRENDING_DESC'],
+      page,
+      perPage,
       withTitle: true,
       withFormat: true,
       withStatus: true,
@@ -132,6 +138,8 @@ export const queryVariables = {
     }),
     popular: ({ page = 1, perPage = 10 }: { page?: number, perPage?: number }): AnimeListQueryVariables => ({ 
       sorts: ['POPULARITY_DESC'],
+      page,
+      perPage,
       withTitle: true,
       withFormat: true,
       withStatus: true,
@@ -141,6 +149,8 @@ export const queryVariables = {
     }),
     favourite: ({ page = 1, perPage = 10 }: { page?: number, perPage?: number }): AnimeListQueryVariables => ({ 
       sorts: ['FAVOURITES_DESC'],
+      page,
+      perPage,
       withTitle: true,
       withFormat: true,
       withStatus: true,
@@ -151,6 +161,8 @@ export const queryVariables = {
     topAiring: ({ page = 1, perPage = 10 }: { page?: number, perPage?: number }): AnimeListQueryVariables => ({ 
       sorts: ['TRENDING_DESC'],
       status: 'RELEASING',
+      page,
+      perPage,
       withFormat: true,
       withTitle: true,
       withStatus: true,
@@ -161,6 +173,8 @@ export const queryVariables = {
     topUpcoming: ({ page = 1, perPage = 10 }: { page?: number, perPage?: number }): AnimeListQueryVariables => ({ 
       sorts: ['POPULARITY_DESC'],
       status: 'NOT_YET_RELEASED',
+      page,
+      perPage,
       withFormat: true,
       withTitle: true,
       withStatus: true,

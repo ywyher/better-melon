@@ -5,7 +5,6 @@ import { usePitchAccent } from "@/lib/hooks/use-pitch-accent";
 import { generatePitchAccentHTML } from "@/lib/utils/pitch";
 import { JMdictKana, JMdictKanji } from "@/types/jmdict";
 import { PitchAccents } from "@/types/pitch";
-import { useEffect } from "react";
 
 type JMdictPitchAccentProps = {
   kanji: JMdictKanji[]

@@ -34,7 +34,7 @@ export function usePitchAccent(query: string) {
       position: pitch[0].pitches[0].position,
       reading: query
     }) 
-  }, [pitch])
+  }, [pitch, query])
 
   return {
     pitch,

@@ -14,9 +14,9 @@ export default function StylesPlayground() {
     if(hasChanged(activeTranscriptions, store.activeTranscriptions)) {
       setActiveTranscriptions(['japanese', 'hiragana']);
     }
-  }, [activeTranscriptions]);
+  }, [activeTranscriptions, setActiveTranscriptions, store]);
 
-  const { rawStyles, computedStyles, isLoading, refetch } = useSubtitleStyles()
+  const { rawStyles, computedStyles, refetch } = useSubtitleStyles()
 
   useEffect(() => {
     console.log(`styles`, {

@@ -5,7 +5,8 @@ export default function EpisodesListPlayground() {
     <EpisodesList
       nextAiringEpisode={{
         episode: 4,
-        timeUntilAiring: 372341
+        timeUntilAiring: 372341,
+        airingAt: 1238123821372183
       }}
       animeTitle={{
         english: "DAN DA DAN Season 2"

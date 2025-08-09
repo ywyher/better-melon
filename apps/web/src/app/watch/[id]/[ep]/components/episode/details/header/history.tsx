@@ -70,7 +70,7 @@ export default function EpisodeDetailsHistory() {
 
   const isLoading = useMemo(() => {
     return isHistoryLoading || isMediaHistoryLoading || isLocalLoading
-  }, [isHistoryLoading, isMediaHistoryLoading])
+  }, [isHistoryLoading, isMediaHistoryLoading, isLocalLoading])
 
   return (
     <LoadingButton

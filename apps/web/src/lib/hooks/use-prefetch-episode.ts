@@ -26,7 +26,7 @@ export function usePrefetchEpisode({
   const isVideoReady = usePlayerStore((state) => state.isVideoReady);
   const isLastEpisode = (streamingData?.anime.episodes || 0) > 0 && episodeNumber >= (streamingData?.anime.episodes || 0);
   const player = usePlayerStore((state) => state.player)
-  const isPaused = useMediaState('paused')
+  const isPaused = useMediaState('paused', player)
   const [passedHalfDuration, setPassedHalfDuration] = useState<boolean>(false)
   const lastUpdateTimeRef = useRef<number>(0);
   
@@ -43,7 +43,7 @@ export function usePrefetchEpisode({
           }
         }
     });
-  }, [player])
+  }, [player, passedHalfDuration])
 
   const isReady = useMemo(() => {
     if(!streamingData || !preferredFormat || !passedHalfDuration || isPaused) return false;
@@ -58,13 +58,12 @@ export function usePrefetchEpisode({
       return shared &&
         streamingData.anime.episodes != episodeNumber
     };
-  }, [isVideoReady, streamingData, preferredFormat, passedHalfDuration])
+  }, [isVideoReady, streamingData, preferredFormat, passedHalfDuration, episodeNumber, isPaused])
 
   const networkCondition = useNetworkCondition();
   
   const { 
     streamingData: prefetchedStreamingData, 
-    streamingDataPrefetched 
   } = usePrefetchStreamingData({
     animeId, 
     episodeNumber, 
@@ -91,7 +90,6 @@ export function usePrefetchEpisode({
     stylesPrefetched, 
   } = usePrefetchSubtitleStyles({
     activeTranscriptions,
-    episodeNumber,
     isLastEpisode,
     isReady,
     networkCondition

@@ -21,19 +21,13 @@ export default function DefinitionCardContent({
   dictionary,
   isLoading = false
 }: DefinitionCardContentProps) {
-  if (isLoading) {
-    return <DefinitionCardContentSkeleton isExpanded={isExpanded} />
-  }
   
-  if (!dictionary?.length) {
-    return null
-  }
-
+  // Ensure hooks are always called
   const dictionarySections = useMemo(() => {
+    if (!dictionary) return { jmdict: undefined, jmnedict: undefined, kanjidic2: undefined }
     const jmdict = dictionary.find((d) => d.index === 'jmdict')
     const jmnedict = dictionary.find((d) => d.index === 'jmnedict')
     const kanjidic2 = dictionary.find((d) => d.index === 'kanjidic2')
-    
     return { jmdict, jmnedict, kanjidic2 }
   }, [dictionary])
 
@@ -43,13 +37,21 @@ export default function DefinitionCardContent({
     if (!jmdict?.entries?.[0]?.sense?.[0]?.examples?.[0]?.sentences) {
       return { kanji: "", english: "" }
     }
-    
     const sentences = jmdict.entries[0].sense[0].examples[0].sentences
     return {
       kanji: sentences.find(s => s.land === 'jpn')?.text || "",
       english: sentences.find(s => s.land === 'eng')?.text || "",
     }
   }, [jmdict])
+
+  // Now handle early return logic AFTER hooks
+  if (isLoading) {
+    return <DefinitionCardContentSkeleton isExpanded={isExpanded} />
+  }
+
+  if (!dictionary?.length) {
+    return null
+  }
 
   if (!isExpanded) {
     return (
@@ -81,18 +83,13 @@ export default function DefinitionCardContent({
           "sm:border-t-2 sm:pt-5 lg:pt-0 lg:border-none"
         )}>
           <div className="flex flex-col gap-4">
-            {/* Kanji section */}
             {jmdict && kanjidic2 && (
               <Kanjidic2Section
                 entries={kanjidic2.entries}
                 sentences={sentenceData}
               />
             )}
-
-            {/* Separator between sections */}
             {kanjidic2 && jmnedict && <Separator />}
-
-            {/* Names section */}
             {jmnedict && (
               <JMnedictSection
                 entries={jmnedict.entries as JMnedictWord[]}

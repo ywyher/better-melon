@@ -1,11 +1,12 @@
 "use client"
 
 import { AccordionTrigger } from "@/components/ui/accordion";
+import { SearchFilters } from "@/types/search";
 import { Filter, X, ListFilterPlus } from "lucide-react";
 import { parseAsArrayOf, parseAsInteger, parseAsString, useQueryState } from "nuqs";
 
 interface FiltersHeaderProps {
-  onApply: (variables?: any) => void;
+  onApply: (variables?: Partial<SearchFilters>) => void;
 }
 
 export default function FiltersHeader({ onApply }: FiltersHeaderProps) {
@@ -58,13 +59,13 @@ export default function FiltersHeader({ onApply }: FiltersHeaderProps) {
       tags: undefined,
       sorts: undefined,
       status: undefined,
-      year: undefined,
+      seasonYear: undefined,
       format: undefined,
       season: undefined,
       isAdult: undefined,
       source: undefined,
-      country: undefined,
-      score: undefined,
+      countryOfOrigin: undefined,
+      averageScore: undefined,
       query: undefined,
       page: 1
     })

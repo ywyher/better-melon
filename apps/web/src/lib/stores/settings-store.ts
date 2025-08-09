@@ -28,7 +28,7 @@ export type SettingsStore = {
 }
 
 export const useSettingsStore = create<SettingsStore>()(
-  (set, get) => ({
+  (set) => ({
     general: defaultGeneralSettings,
     setGeneral: (general) => set({ general }),
     updateGeneral: (updates) => set((state) => ({ 

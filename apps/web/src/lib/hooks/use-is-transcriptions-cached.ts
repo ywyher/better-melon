@@ -22,7 +22,7 @@ export default function useIsTranscriptionsCached({ animeId, episodeNumber }: Us
       const pathname = urlObj.pathname
       const filename = pathname.split('/').pop() || ''
       return decodeURIComponent(filename)
-    } catch (error) {
+    } catch {
       // If URL parsing fails, try to extract from the end of the string
       const parts = url.split('/')
       return decodeURIComponent(parts[parts.length - 1] || '')

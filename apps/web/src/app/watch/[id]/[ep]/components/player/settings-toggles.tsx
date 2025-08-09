@@ -5,7 +5,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { settingsQueries } from "@/lib/queries/settings";
 import { handlePlayerSettings } from "@/app/settings/player/actions";
-import { useSettingsStore } from "@/lib/stores/settings-store";
+import { SettingsStore, useSettingsStore } from "@/lib/stores/settings-store";
 import { useSyncSettings } from "@/lib/hooks/use-sync-settings";
 import { handleSubtitleSettings } from "@/app/settings/subtitle/_subtitle-settings/actions";
 import { handleWordSettings } from "@/app/settings/word/_settings/actions";
@@ -14,9 +14,9 @@ interface ToggleConfig {
   key: string;
   name: string;
   tooltip: string | React.ReactNode;
-  getValue: (store: any) => boolean;
-  updateLocal: (store: any, value: boolean) => void;
-  updateServer: (value: boolean) => Promise<any>;
+  getValue: (store: SettingsStore) => boolean;
+  updateLocal: (store: SettingsStore, value: boolean) => void;
+  updateServer: (value: boolean) => Promise<{ message: string | null; error: string | null }>;
 }
 
 export default function SettingsToggles() {

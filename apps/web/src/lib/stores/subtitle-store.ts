@@ -1,4 +1,4 @@
-import { SubtitleTranscription, SubtitleCue, ActiveSubtitleFile, SubtitleFile } from "@/types/subtitle";
+import { SubtitleCue, ActiveSubtitleFile } from "@/types/subtitle";
 import { create } from "zustand";
 
 export type SubtitleStore = {

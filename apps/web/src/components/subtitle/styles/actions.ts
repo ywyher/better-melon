@@ -41,7 +41,7 @@ export async function getMultipleTranscriptionsStyles(transcriptions: StyleTrans
     acc[style.transcription][style.state] = style;
     
     return acc;
-  }, {} as Record<SubtitleStyles['transcription'], Record<string, any>>);
+  }, {} as Record<SubtitleStyles['transcription'], Record<string, unknown>>);
 
   // Ensure 'all' transcription has both default and active states
   if (stylesMap['all']) {

@@ -5,7 +5,6 @@ import AnkiSkeleton from '@/app/settings/anki/_components/anki-skeleton'
 import AnkiError from '@/app/settings/anki/_components/anki-error'
 import AnkiPreset from '@/app/settings/anki/_components/anki-preset'
 import { ankiQueries } from '@/lib/queries/anki'
-import { useEffect } from 'react'
 
 export default function AnkiSettingsPage() {
   const { data, error, isLoading } = useQuery({

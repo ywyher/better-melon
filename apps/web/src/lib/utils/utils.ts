@@ -19,7 +19,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export const hasChanged = (a: any, b: any) => !_.isEqual(a, b);
+export const hasChanged = (a: unknown, b: unknown) => !_.isEqual(a, b);
 
 // ONLY ON CLIENT SIDE
 export async function readFileContent(file: File): Promise<string> {
@@ -81,7 +81,7 @@ export function camelCaseToTitleCase(camelCase: string): string {
   return titleCase;
 }
 
-export function arraysAreEqual(arr1: any[], arr2: any[]): boolean {
+export function arraysAreEqual(arr1: unknown[], arr2: unknown[]): boolean {
   if (arr1.length !== arr2.length) return false;
   return arr1.every((val, index) => val === arr2[index]);
 }
@@ -209,7 +209,7 @@ export function sortObject({
   object,
   output = 'object'
 }:{ 
-  object: Record<string, any> | undefined
+  object: Record<string, unknown> | undefined
   output?: 'array' | 'object' | 'string'
 }) {
   if (!object) return {};

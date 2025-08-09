@@ -55,13 +55,17 @@ export function SliderInput({
         max={max}
         step={step}
         onBlur={() => {
-          onBlur && onBlur(internalValue);
+          if (onBlur) {
+            onBlur(internalValue);
+          }
         }}
         value={[internalValue]}
         onValueChange={(values) => {
           const newValue = values[0];
           setInternalValue(newValue);
-          onChange && onChange(newValue);
+          if (onChange) {
+            onChange(newValue);
+          }
         }}
         className={`w-full ${className}`}
         disabled={disabled}

@@ -1,9 +1,7 @@
 import AddToAnki from "@/components/add-to-anki"
 import { Badge } from "@/components/ui/badge"
-import useAddToAnki from "@/lib/hooks/use-add-to-anki"
 import { subtitleQueries } from "@/lib/queries/subtitle"
 import { useQuery } from "@tanstack/react-query"
-import { toast } from "sonner"
 
 type Kanjidic2LiteralProps = {
   literal: string
@@ -34,7 +32,7 @@ export default function Kanjidic2Literal({ literal, definition, sentences }: Kan
         sentenceKanji={sentences.kanji}
         sentenceEnglish={sentences.english}
         sentenceKana={kanaSentence ?? ''}
-        disabled={isLoading}
+        isLoading={isLoading}
       >
         <Badge className="cursor-pointer">
           Add to anki

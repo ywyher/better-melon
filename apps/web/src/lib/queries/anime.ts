@@ -4,7 +4,7 @@ import { getCache } from "@/lib/db/queries";
 import { env } from "@/lib/env/client";
 import { GET_ANIME, GET_ANIME_LIST } from "@/lib/graphql/queries";
 import { sortObject } from "@/lib/utils/utils";
-import { Anime, AnimeListQueryVariableKeys, AnimeQueryVariableKeys, AnimeQueryVariables, AnimeListQueryVariables, AnimeInHistory } from "@/types/anime";
+import { Anime, AnimeListQueryVariableKeys, AnimeQueryVariableKeys, AnimeQueryVariables, AnimeListQueryVariables } from "@/types/anime";
 import { createQueryKeys } from "@lukemorales/query-key-factory";
 import { AnilistResponse, KitsuEpisodesReponse } from "@better-melon/shared/types";
 import { ApiResponse } from "@/types/api";
@@ -13,7 +13,7 @@ import { getHistory, getHistoryByMedia } from "@/lib/actions/history";
 export const animeQueries = createQueryKeys('anime', {
   data: ({ animeId, name, variables }: { animeId: Anime['id'], name: AnimeQueryVariableKeys, variables: AnimeQueryVariables }) => ({
       queryKey: ['data', animeId, sortObject({ object: variables, output: 'string' })],
-      queryFn: async <T>() => {
+      queryFn: async () => {
         try {
           const cached = await getCache(`${cacheKeys.anime.data({ animeId, name, variables })}`);
           if (cached) {
@@ -98,8 +98,8 @@ export const animeQueries = createQueryKeys('anime', {
           if(error) throw new Error(error)
 
           return history;
-        } catch (error) {
-          const msg = error instanceof Error ? error.message : "Failed to fetch anime data"
+        } catch {
+          // const msg = error inpstanceof Error ? error.message : "Failed to fetch anime data"
           return []
         }
       },
@@ -112,8 +112,8 @@ export const animeQueries = createQueryKeys('anime', {
         if(error) throw new Error(error)
 
         return history ?? null;
-      } catch (error) {
-        const msg = error instanceof Error ? error.message : "Failed to fetch history data"
+      } catch {
+        // const msg = error instanceof Error ? error.message : "Failed to fetch history data"
         return null;
       }
     },

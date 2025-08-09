@@ -43,3 +43,5 @@ export const RegularToken = memo<RegularTokenProps>(({
     </div>
   );
 });
+
+RegularToken.displayName = "RegularToken";

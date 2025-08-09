@@ -65,5 +65,5 @@ export function useSaveProgress({
         unsubscribeRef.current();
       }
     };
-  }, [animeId, episodeNumber, animeTitle, animeCoverImage, player]);
+  }, [animeId, episodeNumber, animeTitle, animeCoverImage, player, handleSave]);
 }

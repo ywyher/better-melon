@@ -1,6 +1,6 @@
 "use client"
 
-import React, { Fragment, useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { SubtitleToken, SubtitleTranscription } from '@/types/subtitle';

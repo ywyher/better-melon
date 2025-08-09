@@ -1,4 +1,4 @@
-import { DictionaryMetadata, Language2Letter, Language3Letter, Tag, Xref } from "@/types/dictionary";
+import { Language3Letter, Tag, Xref } from "@/types/dictionary";
 import { JMdictDictionaryMetadata } from "@/types/jmdict";
 
 /**

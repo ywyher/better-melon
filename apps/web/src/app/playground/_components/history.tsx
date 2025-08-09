@@ -5,17 +5,19 @@ import { DefaultAudioLayout, defaultLayoutIcons, DefaultVideoLayout } from '@vid
 import '@vidstack/react/player/styles/default/theme.css';
 import '@vidstack/react/player/styles/default/layouts/video.css';
 
-import { handleHistory } from '@/lib/actions/history';
 import { toast } from 'sonner';
 import { useEffect, useRef, useState } from 'react';
 import LoadingButton from '@/components/loading-button';
 import { useSaveProgress } from '@/lib/hooks/use-save-progress';
 import { usePlayerStore } from '@/lib/stores/player-store';
+import useHistory from '@/lib/hooks/use-history';
 
 export default function HistoryPlayground() {
   const player = useRef<MediaPlayerInstance>(null);
   const setPlayer = usePlayerStore((state) => state.setPlayer);
   const [isLoading, setIsLoading] = useState<boolean>(false)
+
+  const { handleSave } = useHistory()
 
   useEffect(() => {
     setPlayer(player)
@@ -37,19 +39,17 @@ export default function HistoryPlayground() {
   const duration = 1380;
   const videoSrc = "http://localhost:8080/proxy?url=https://cdn.dotstream.buzz/anime/bca82e41ee7b0833588399b1fcd177c7/06131c7fd7dda0c6681d6c55752143af/master.m3u8"
 
-  const handleSave = async () => {
+  const handleSubmit = async () => {
     setIsLoading(true)
 
     try {
-      const { error, message } = await handleHistory({ 
-        data: {
-          mediaCoverImage: animeCoverImage,
-          mediaId: String(animeId),
-          mediaTitle: animeTitle,
-          mediaEpisode: episodeNumber,
-          duration,
-          progress
-        }
+      const { error, message } = await handleSave({ 
+        mediaCoverImage: animeCoverImage,
+        mediaId: String(animeId),
+        mediaTitle: animeTitle,
+        mediaEpisode: episodeNumber,
+        duration,
+        progress
       })
 
       if(error) throw new Error(error)
@@ -72,7 +72,7 @@ export default function HistoryPlayground() {
   return (
     <div className='flex flex-col gap-3'>
       <LoadingButton
-        onClick={async () => handleSave()}
+        onClick={async () => handleSubmit()}
         isLoading={isLoading}
       >
         Save {animeTitle.english} in history

@@ -3,7 +3,7 @@ import { Word } from "@/lib/db/schema";
 import { wordQueries } from "@/lib/queries/word";
 import { useLearningStore } from "@/lib/stores/learning-store";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 type WordStatusProps = {
@@ -49,10 +49,6 @@ export function useWordStatus({
       setIsActionLoading(false)
     }
   }
-
-  useEffect(() => {
-    console.log(`wordsLookup`,wordsLookup)
-  }, [wordsLookup])
 
   return {
     status: wordData?.word?.status,

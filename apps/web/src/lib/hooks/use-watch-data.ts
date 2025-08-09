@@ -19,6 +19,7 @@ import { useMediaHistory } from "@/lib/hooks/use-media-history";
 import { useStreamingStore } from "@/lib/stores/streaming-store";
 import { useStreamingData } from "@/lib/hooks/use-streaming-data";
 import { StreamingData } from "@better-melon/shared/types";
+import { PitchLookup, TranscriptionQuery, TranscriptionsLookup, TranscriptionStyles, WordsLookup } from "@/app/watch/[id]/[ep]/types";
 
 export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
   const loadStartTimeRef = useRef<number>(performance.now());
@@ -155,7 +156,14 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
       console.log('Batch updating episode store with:', Object.keys(updates));
       streamingStore.batchUpdate(updates);
     }
-  }, [animeId, episodeNumber, streamingData]);
+  }, [
+    animeId,
+    episodeNumber,
+    streamingData,
+    currentStreamingState,
+    setDelay,
+    streamingStore
+  ]);
 
   // Update settings store
   useEffect(() => {
@@ -170,14 +178,14 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
         settingsStore.batchUpdate(settings);
       }
     }
-  }, [settings]);
+  }, [settings, currentSettingsState, settingsStore]);
 
   // Update transcription store
   useEffect(() => {
     const updates: Partial<{
-      transcriptions: any;
-      transcriptionsLookup: any;
-      transcriptionsStyles: any;
+      transcriptions: TranscriptionQuery[];
+      transcriptionsLookup: TranscriptionsLookup;
+      transcriptionsStyles: TranscriptionStyles[];
     }> = {};
     
     if (hasChanged(transcriptions, currentTranscriptionState.transcriptions)) {
@@ -193,13 +201,18 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
       console.log('Batch updating transcription store with:', Object.keys(updates));
       transcriptionStore.batchUpdate(updates);
     }
-  }, [transcriptions, transcriptionsLookup]);
+  }, [
+    transcriptions,
+    transcriptionsLookup,
+    currentTranscriptionState,
+    transcriptionStore
+  ]);
 
   // Update learning store
   useEffect(() => {
     const updates: Partial<{
-      pitchLookup: any;
-      wordsLookup: any;
+      pitchLookup: PitchLookup;
+      wordsLookup: WordsLookup;
     }> = {};
     
     if (hasChanged(pitchLookup, currentLearningState.pitchLookup)) {
@@ -215,7 +228,7 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
       console.log('Batch updating learning store with:', Object.keys(updates));
       learningStore.batchUpdate(updates);
     }
-  }, [pitchLookup, wordsLookup]);
+  }, [pitchLookup, wordsLookup, currentLearningState, learningStore]);
 
   const isLoading = useMemo(() => {
     return (
@@ -230,11 +243,10 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
     isStreamingDataLoading,
     isSettingsLoading,
     isWordsLoading,
-    isPitchAccentLoading,
     isMediaHistoryLoading,
     isTranscriptionsLoading,
     isStylesLoading,
-    hasInitialized
+    hasInitialized,
   ]);
 
   // Update watch store
@@ -246,7 +258,12 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
     if (!isLoading && !hasInitialized) {
       setHasInitialized(true);
     }
-  }, [isLoading, hasInitialized]);
+  }, [
+    isLoading,
+    hasInitialized,
+    currentStreamingState.isLoading,
+    streamingStore
+  ]);
 
   useEffect(() => {
     if (!isLoading &&
@@ -266,6 +283,7 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
         streamingStore.setLoadingDuration(elapsed);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     isLoading,
     streamingDataLoadingDuration,
@@ -275,6 +293,8 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
     mediaHistoryLoadingDuration,
     wordsLoadingDuration,
     pitchAccentLoadingDuration,
+    // currentStreamingState.loadingDuration,
+    // streamingStore
   ]);
 
   const errors = useMemo(() => {

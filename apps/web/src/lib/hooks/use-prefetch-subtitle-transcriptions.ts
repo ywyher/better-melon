@@ -28,7 +28,7 @@ export function usePrefetchSubtitleTranscriptions({
   animeId,
   episodeNumber
 }: PrefetchSubtitleTranscriptionsProps) {
-  const storeActiveTranscriptions = useTranscriptionStore((state) => state.activeTranscriptions) || [];
+  const storeActiveTranscriptions = useTranscriptionStore((state) => state.activeTranscriptions);
 
   const activeTranscriptions: SubtitleTranscription[] = useMemo(() => {
     if (!storeActiveTranscriptions.includes('japanese')) {
@@ -57,7 +57,7 @@ export function usePrefetchSubtitleTranscriptions({
             preferredFormat,
           }) : 
           undefined;
-      } catch (error) {
+      } catch {
         activeSubtitleFile = undefined;
       }
       
@@ -67,7 +67,7 @@ export function usePrefetchSubtitleTranscriptions({
             files: streamingData.episode.sources?.tracks ?? [],
           }) : 
           '';
-      } catch (error) {
+      } catch {
         englishSubtitleUrl = '';
       }
       

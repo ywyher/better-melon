@@ -3,12 +3,13 @@ import { generateWebVTTFromSkipTimes } from '@/lib/utils/subtitle';
 import { AnimeSkipTime } from '@/types/anime';
 import { useStreamingStore } from '@/lib/stores/streaming-store';
 import { usePlayerStore } from '@/lib/stores/player-store';
-import { useSettingsStore } from '@/lib/stores/settings-store';
+import { useMediaState } from '@vidstack/react';
 
 export default function useSkipTimes() {
   const player = usePlayerStore((state) => state.player)
   const streamingData = useStreamingStore((state) => state.streamingData)
   const episodeNumber = useStreamingStore((state) => state.episodeNumber)
+  const duration = useMediaState('duration', player)
   const [skipTimes, setSkipTimes] = useState<AnimeSkipTime[]>([]);
   const [vttUrl, setVttUrl] = useState<string>('');
   const [canSkip, setCanSkip] = useState(false);
@@ -43,7 +44,7 @@ export default function useSkipTimes() {
     
     const vttContent = generateWebVTTFromSkipTimes({
       skipTimes: skipTimesData,
-      totalDuration: player.current?.duration || 0,
+      totalDuration: duration || 0,
       episode: {
         title: streamingData.anime?.title.english,
         number: episodeNumber
@@ -58,7 +59,7 @@ export default function useSkipTimes() {
     return () => {
       if (blobUrl) URL.revokeObjectURL(blobUrl);
     };
-  }, [streamingData, player.current?.duration, episodeNumber, skipTimesData]);
+  }, [streamingData, duration, episodeNumber, skipTimesData, player]);
 
   // Clean up VTT URL on unmount
   useEffect(() => {

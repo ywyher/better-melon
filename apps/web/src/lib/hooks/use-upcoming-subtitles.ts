@@ -77,7 +77,7 @@ export function useUpcomingSubtitles(transcriptions: TranscriptionQuery[], activ
     const isNearEnd = currentSubtitleStart >= (lastUpcomingSubtitlesubtitleStart - bufferSubtitles * 3);
     
     return isNearEnd;
-  }, [currentTime, transcriptions, activeSubtitles.japanese, delay.japanese]);
+  }, [currentTime, transcriptions, activeSubtitles.japanese, delay.japanese, upcomingSubtitles]);
 
   useEffect(() => {
     if (shouldFetchUpcomingUpcomingSubtitles()) {

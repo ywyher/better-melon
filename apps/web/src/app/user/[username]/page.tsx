@@ -1,7 +1,7 @@
 "use client"
 
 import UserCard from "@/app/user/[username]/components/card";
-import { userQueries, useSession } from "@/lib/queries/user";
+import { userQueries } from "@/lib/queries/user";
 import { User as TUser } from "@/lib/db/schema";
 import { useParams } from "next/navigation";
 import { useMemo } from "react";

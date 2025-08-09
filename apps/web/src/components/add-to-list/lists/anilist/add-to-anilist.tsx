@@ -10,7 +10,6 @@ import { useIsSmall } from "@/lib/hooks/use-media-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { NumberInput } from "@/components/form/number-input";
 import { SelectInput } from "@/components/form/select-input";
-import { userQueries } from "@/lib/queries/user";
 import { CalendarInput } from "@/components/form/calendar-input";
 import { TextareaInput } from "@/components/form/textarea-input";
 import { AnimeListProivder } from "@/types/anime-list";

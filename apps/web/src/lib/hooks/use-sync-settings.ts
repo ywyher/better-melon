@@ -39,13 +39,21 @@ export function useSyncSettings({
     if (resolvedStrategy === 'ask') {
       const result = await showSyncSettingsToast();
       if (result.error) {
-        onError?.(result.error) || toast.error(result.error);
+        if (onError) {
+          onError(result.error);
+        } else {
+          toast.error(result.error);
+        }
         return { success: false, error: result.error };
       }
       
       if (!result.strategy) {
         const message = successMessage || "Updated successfully in store";
-        onSuccess?.() || toast.success(message);
+        if (onSuccess) {
+          onSuccess();
+        } else {
+          toast.success(message);
+        }
         return { success: true, strategy: null };
       }
       
@@ -68,18 +76,30 @@ export function useSyncSettings({
         });
         
         const successMsg = message || successMessage || "Updated successfully";
-        onSuccess?.(successMsg) || toast.success(successMsg);
+        if (onSuccess) {
+          onSuccess(successMsg);
+        } else {
+          toast.success(successMsg);
+        }
         return { success: true, strategy: resolvedStrategy };
       } catch (err) {
         const errorMsg = err instanceof Error ? err.message : "Failed to update";
-        onError?.(errorMsg) || toast.error(errorMsg);
+        if (onError) {
+          onError(errorMsg);
+        } else {
+          toast.error(errorMsg);
+        }
         return { success: false, error: errorMsg };
       }
     }
     
     // Handle 'never' strategy
     const message = successMessage || "Updated successfully in store";
-    onSuccess?.(message) || toast.success(message);
+    if (onSuccess) {
+      onSuccess(message);
+    } else {
+      toast.success(message);
+    }
     return { success: true, strategy: 'never' };
   };
 

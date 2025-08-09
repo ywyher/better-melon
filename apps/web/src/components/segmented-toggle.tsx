@@ -1,3 +1,5 @@
+import { cn } from "@/lib/utils/utils";
+
 function ToggleItem({ 
   option, 
   onSelect, 
@@ -39,10 +41,11 @@ export default function SegmentedToggle<T extends string>({
   className?: string
 }) {
   return (
-    <div className={`
-      flex flex-row border border-secondary rounded-md overflow-hidden shadow-sm w-full
-      ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
-    `}>
+    <div className={cn(
+      "flex flex-row border border-secondary rounded-md overflow-hidden shadow-sm w-full",
+      disabled && "opacity-50 cursor-not-allowed",
+      className
+    )}>
       {options.map((option) => (
         <ToggleItem
           key={option}

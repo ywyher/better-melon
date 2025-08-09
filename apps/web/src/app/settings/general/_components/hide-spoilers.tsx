@@ -15,7 +15,7 @@ export default function HideSpoilers({ value }: { value: GeneralSettings['hideSp
             <div className="col-span-1 space-y-1">
                 <h3 className="font-medium">Hide spoilers</h3>
                 <p className="text-sm text-muted-foreground">
-                    Don't show episdodes image nor title
+                    Don&apos;t show episdodes image nor title
                 </p>
             </div>
             <div className="col-span-1 flex justify-end">

@@ -1,10 +1,9 @@
-import React, { memo, useCallback, useEffect, useMemo } from 'react';
+import React, { memo, useCallback, useMemo } from 'react';
 import { SubtitleToken, SubtitleCue, SubtitleTranscription } from '@/types/subtitle';
 import { JapaneseToken } from '@/components/token/japanese-token';
 import { RegularToken } from '@/components/token/regular-token';
 import { PitchAccents } from '@/types/pitch';
 import { useTokenStyles } from '@/lib/hooks/use-token-styles';
-import { useSettingsStore } from '@/lib/stores/settings-store';
 
 interface TokenRendererProps {
   cue: SubtitleCue;
@@ -71,4 +70,6 @@ const TokenRenderer = memo<TokenRendererProps>(({
   );
 });
 
+
+TokenRenderer.displayName = "TokenRenderer";
 export default TokenRenderer;

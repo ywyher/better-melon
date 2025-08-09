@@ -13,7 +13,7 @@ export default function BackgroundColorController({
 }: SubtitleStylesControllerProps) {
   const { isLoading, displayValue, onSubmit } = useStyleFieldController({
     transcription,
-    initialValue: value,
+    initialValue: String(value),
     source,
     syncSettings,
     state,

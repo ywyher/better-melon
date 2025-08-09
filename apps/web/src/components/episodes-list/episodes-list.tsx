@@ -71,7 +71,7 @@ export default function EpisodesList({
     overscan: 10,
     measureElement: useCallback((element: Element) => {
       return element.getBoundingClientRect().height || 60;
-    }, [episodes])
+    }, [])
   });
 
   if(

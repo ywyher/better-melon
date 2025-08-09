@@ -71,3 +71,5 @@ export const JapaneseToken = memo<JapaneseTokenProps>(({
     </div>
   );
 });
+
+JapaneseToken.displayName = "JapaneseToken";

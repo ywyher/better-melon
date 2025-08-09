@@ -1,11 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { SearchFilters } from "@/types/search";
 import { Search } from "lucide-react";
 import { parseAsInteger, useQueryState } from "nuqs";
 import { useState } from "react";
 
 type SearchBarProps = {
-  onApply: (variables?: any) => void
+  onApply: (variables?: Partial<SearchFilters>) => void
 }
 
 export default function SearchBar({

@@ -138,7 +138,7 @@ export default function useAnimeInAnilist({
     animeInList?.MediaList,
     handleSuccess,
     handleError,
-    getAnimeInList
+    refetch
   ]);
 
   const deleteAnimeFromList = useCallback(async () => {
@@ -179,7 +179,7 @@ export default function useAnimeInAnilist({
     deleteAnimeFromListMutation,
     handleSuccess,
     handleError,
-    getAnimeInList
+    refetch
   ]);
 
   return {

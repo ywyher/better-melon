@@ -34,7 +34,7 @@ export function useSubtitleCuesList({ cues, selectedTranscription }: UseSubtitle
       const contentLength = content.length;
       
       // Base height for padding, margins, etc.
-      let baseHeight = 45;
+      const baseHeight = 45;
       
       // Estimate based on character count and line breaks
       const estimatedLines = Math.max(1, Math.ceil(contentLength / 50)); // ~50 chars per line
@@ -148,7 +148,7 @@ export function useSubtitleCuesList({ cues, selectedTranscription }: UseSubtitle
     }, 100);
     
     return () => clearTimeout(timeoutId);
-  }, [selectedTranscription, findActiveCue, rowVirtualizer, player]);
+  }, [selectedTranscription, findActiveCue, rowVirtualizer, player, cues]);
 
   // Force remeasure when cues change (content might have changed)
   useEffect(() => {

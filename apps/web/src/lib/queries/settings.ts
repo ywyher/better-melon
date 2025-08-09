@@ -4,7 +4,7 @@ import { getSubtitleSettings } from "@/app/settings/subtitle/_subtitle-settings/
 import { getWords } from "@/app/settings/word/_known-words/actions";
 import { getWordSettings } from "@/app/settings/word/_settings/actions";
 import { getSubtitleStyles } from "@/components/subtitle/styles/actions";
-import { getPitchAccent, getSettingsForEpisode } from "@/lib/db/queries";
+import { getSettingsForEpisode } from "@/lib/db/queries";
 import { SubtitleStyles, Word } from "@/lib/db/schema";
 import { createQueryKeys } from "@lukemorales/query-key-factory";
 

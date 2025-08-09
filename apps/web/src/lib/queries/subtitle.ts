@@ -133,7 +133,7 @@ export const subtitleQueries = createQueryKeys('subtitle', {
       const end = performance.now();
       const duration = end - start;
       if(setLoadingDuration) setLoadingDuration(duration);
-      (`~Subtitle styles fetched and stored in ${duration.toFixed(2)}ms for ${transcriptionsToFetch.length} transcriptions`);
+      console.log(`~Subtitle styles fetched and stored in ${duration.toFixed(2)}ms for ${transcriptionsToFetch.length} transcriptions`);
       
       return stylesMap as Record<StyleTranscription, {
         active: SubtitleStyles;

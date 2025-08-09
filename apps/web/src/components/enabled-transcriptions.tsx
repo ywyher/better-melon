@@ -67,7 +67,7 @@ export default function EnabledTranscriptions({
     if (arraysEqual(debouncedTranscriptions, playerSettings.enabledTranscriptions)) return;
     
     mutate(debouncedTranscriptions);
-  }, [debouncedTranscriptions, mutate]);
+  }, [debouncedTranscriptions, mutate, playerSettings.enabledTranscriptions]);
 
   return (
     <TooltipWrapper

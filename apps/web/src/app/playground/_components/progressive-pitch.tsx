@@ -7,11 +7,12 @@ import transcriptions from "./transcriptions.json";
 import { TranscriptionQuery } from "@/app/watch/[id]/[ep]/types";
 import { useSubtitleStore } from "@/lib/stores/subtitle-store";
 import { useEffect } from "react";
+import { useTranscriptionStore } from "@/lib/stores/transcription-store";
 
 
 export default function ProgressivePitchPlayground() {
   const setActiveSubtitleFile = useSubtitleStore((state) => state.setActiveSubtitleFile);
-  const setActiveTranscriptions = useSubtitleStore((state) => state.setActiveTranscriptions);
+  const setActiveTranscriptions = useTranscriptionStore((state) => state.setActiveTranscriptions);
 
   useEffect(() => {
     setActiveTranscriptions(['japanese']);

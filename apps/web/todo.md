@@ -1,3 +1,6 @@
+const storeActiveTranscriptions = useTranscriptionStore((state) => state.activeTranscriptions) || [];
+// eslint-disable-next-line react-hooks/exhaustive-deps
+
 episode list weird styling when only one episode
 
 when navigating between eps the subs in transcriptoin-item component doenst chagne ??

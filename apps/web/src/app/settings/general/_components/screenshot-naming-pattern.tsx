@@ -1,6 +1,5 @@
 "use client"
 
-import TooltipWrapper from "@/components/tooltip-wrapper";
 import { Input } from "@/components/ui/input";
 import { GeneralSettings } from "@/lib/db/schema";
 import ScreenshotNamingPatternInstructions from "@/app/settings/general/_components/screenshot-naming-pattern-instructions";

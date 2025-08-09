@@ -55,7 +55,17 @@ export default function WatchPage() {
       kana: null,
       english: null,
     })
-  }, [animeId, episodeNumber, setIsVideoReady]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    animeId,
+    episodeNumber,
+    loadStartTimeRef,
+    setIsVideoReady,
+    setActiveSubtitleFile,
+    setEnglishSubtitleUrl,
+    setToken,
+    setSentences,
+  ]);
 
   usePrefetchEpisode({
     animeId,

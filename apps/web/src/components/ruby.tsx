@@ -1,8 +1,6 @@
 import { defaultSubtitleStyles } from '@/components/subtitle/styles/constants';
-import { usePlayerStore } from '@/lib/stores/player-store';
 import { cn } from '@/lib/utils/utils';
-import { useMediaState } from '@vidstack/react';
-import React, { memo, useEffect, useMemo } from 'react';
+import React, { memo, useMemo } from 'react';
 
 interface RubyProps {
   kanji: string;
@@ -68,9 +66,6 @@ const Ruby = memo<RubyProps>(({
   className,
   styles,
 }) => {
-  const player = usePlayerStore((state) => state.player);
-  const isFullScreen = useMediaState('fullscreen', player)
-
   const computedStyles = useMemo(() => {
     const hasKanjiStyles = Object.entries(kanjiStyles).length > 0;
     const hasFuriganaStyles = Object.entries(furiganaStyles).length > 0;
@@ -122,7 +117,7 @@ const Ruby = memo<RubyProps>(({
       wrapper: computedWrapperStyles,
       isMinimal: false
     };
-  }, [kanjiStyles, furiganaStyles, wrapperStyles, styles, isFullScreen]);
+  }, [kanjiStyles, furiganaStyles, wrapperStyles, styles]);
 
   if (!kanji) return null;
 

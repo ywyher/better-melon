@@ -4,7 +4,7 @@ import { SubtitleSettings } from "@/lib/db/schema";
 import { FileSelectionError } from "@/lib/errors/player";
 import { DelayStore } from "@/lib/stores/delay-store";
 import { getExtension } from "@/lib/utils/utils";
-import { ActiveSubtitleFile, Ruby, SubtitleFormat, SubtitleToken } from "@/types/subtitle";
+import { ActiveSubtitleFile, Ruby, SubtitleCue, SubtitleFormat, SubtitleToken } from "@/types/subtitle";
 import Kuroshiro from "@sglkc/kuroshiro";
 import CustomKuromojiAnalyzer from "@/lib/subtitle/custom-kuromoji-analyzer";
 import { getTokenizer } from "kuromojin";
@@ -229,8 +229,6 @@ export const selectSubtitleFile = ({ files, preferredFormat, matchPattern }: {
     return supportedFile;
   }
   
-  const unwantedWords = ['ja-en'];
-
   // Last resort: Return first file (regardless of extension), preferring non-ja-en
   const cleanFiles = files.filter(file => excludeWordsInFileName.some(word => file.name.toLowerCase().includes(word.toLocaleLowerCase())));
   
@@ -385,7 +383,8 @@ export const getTranscriptionsLookupKey = (from: number, to: number, delay: numb
   return `${Math.floor(from - delay)}-${Math.floor(to - delay)}`
 }
 
-const findBestMatchingCue = (transcriptionMap: Map<string, any>, targetKey: string, tolerance: number = 3) => {
+
+const findBestMatchingCue = (transcriptionMap: Map<string, SubtitleCue>, targetKey: string, tolerance: number = 3) => {
   // First try exact match
   const exactMatch = transcriptionMap.get(targetKey);
   if (exactMatch) return exactMatch;

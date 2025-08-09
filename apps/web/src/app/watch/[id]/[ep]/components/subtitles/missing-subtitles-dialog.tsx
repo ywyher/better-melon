@@ -36,7 +36,7 @@ export default function MissingSubtitlesDialog({
    <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Subtitles doesn't exist yet for {animeTitle.english} episode {episodeNumber}</DialogTitle>
+          <DialogTitle>Subtitles doesn&apos;t exist yet for {animeTitle.english} episode {episodeNumber}</DialogTitle>
           <DialogDescription>{errorMessage}</DialogDescription>
         </DialogHeader>
           <div className="flex flex-col gap-5">

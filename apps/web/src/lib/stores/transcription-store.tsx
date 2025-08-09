@@ -1,6 +1,4 @@
-import { TranscriptionQuery, TranscriptionsLookup, TranscriptionStyles } from "@/app/watch/[id]/[ep]/types";
-import { defaultSubtitleStyles } from "@/components/subtitle/styles/constants";
-import { getContainerStyles, getTokenStyles } from "@/lib/utils/styles";
+import { TranscriptionQuery, TranscriptionsLookup } from "@/app/watch/[id]/[ep]/types";
 import { SubtitleTranscription } from "@/types/subtitle";
 import { create } from "zustand";
 

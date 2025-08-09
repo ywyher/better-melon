@@ -136,7 +136,7 @@ export default function StreamingDetailsPlayground() {
         ]
       }
     })
-  }, [])
+  }, [setEpisodeNumber, setStreamingData])
   
   return (
     <StreamingDetails />

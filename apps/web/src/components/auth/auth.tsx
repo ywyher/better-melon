@@ -16,11 +16,10 @@ export type AuthIdentifier = "email" | "username"
 
 type AuthProps = {
     user?: User
-    open: boolean,
-    setOpen: (isAuthDialogOpen: boolean) => void
 }
 
-export default function Auth({ user, open, setOpen }: AuthProps) {
+export default function Auth({ user }: AuthProps) {
+    const [open, setOpen] = useState(false)
     const [port, setPort] = useState<AuthPort>("check")
     const [identifier, setIdentifier] = useState<AuthIdentifier | null>(null)
     const [identifierValue, setIdentifierValue] = useState<string>("")
@@ -31,7 +30,18 @@ export default function Auth({ user, open, setOpen }: AuthProps) {
     };
 
     return (
-        <DialogWrapper title="Authentication" open={open} setOpen={setOpen}>
+        <DialogWrapper 
+            title="Authentication" 
+            open={open} 
+            setOpen={setOpen}
+            trigger={
+                <Button
+                    variant='outline'
+                >
+                    Auth
+                </Button>
+            }
+        >
             {(port === "register" || port === "login") && (
                 <Button
                     variant="link"

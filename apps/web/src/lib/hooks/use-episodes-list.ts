@@ -18,7 +18,7 @@ export default function useEpisodesList({ animeId }: UseEpisodesListProps) {
   const episodesListSpoilerMode = useUIStateStore((state) => state.episodesListSpoilerMode);
   const setEpisodesListSpoilerMode = useUIStateStore((state) => state.setEpisodesListSpoilerMode);
 
-  const [start, end] = useMemo(() => {
+  const [start,] = useMemo(() => {
     return selectedChunk.split("-").map(Number)
   }, [selectedChunk]);
   
@@ -53,7 +53,7 @@ export default function useEpisodesList({ animeId }: UseEpisodesListProps) {
         label: `${start}-${end}`
       };
     });
-  }, [rawEpisodes]);
+  }, [count]);
 
   const cycleViewMode = useCallback(() => {
     if (episodesListViewMode === "grid") {
@@ -63,7 +63,7 @@ export default function useEpisodesList({ animeId }: UseEpisodesListProps) {
     } else {
       setEpisodesListViewMode("grid");
     }
-  }, [episodesListViewMode]);
+  }, [episodesListViewMode, setEpisodesListViewMode]);
 
   return {
     episodes,

@@ -1,7 +1,5 @@
-import AnimeCard from "@/components/anime/card/default/card";
 import MoreCard from "@/components/more-card";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { AnimeInListHome } from "@/types/anime";
 import { ReactNode } from "react";
 
 export default function ListScrollAreaWrapper({ 

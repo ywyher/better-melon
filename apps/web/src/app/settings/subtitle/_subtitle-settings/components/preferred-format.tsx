@@ -2,13 +2,6 @@
 
 import { SelectInput } from "@/components/form/select-input"
 import LoadingButton from "@/components/loading-button"
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
 import { subtitleFormats } from "@/lib/constants/subtitle"
 import { SubtitleSettings } from "@/lib/db/schema"
 import { useSubtitleSettings } from "@/lib/hooks/use-subtitle-settings"

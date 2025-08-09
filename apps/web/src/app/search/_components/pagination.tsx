@@ -72,9 +72,9 @@ export default function SearchPagination({
     }
   };
   
-  const handlePageClick = (page: number) => {
-    onPageChange(page);
-  };
+  // const handlePageClick = (page: number) => {
+  //   onPageChange(page);
+  // };
   
   return (
     <Pagination className="justify-end">

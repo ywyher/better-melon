@@ -54,7 +54,7 @@ export function useActiveSubtitles(transcriptions: TranscriptionQuery[]) {
     return result;
   }, [transcriptions, currentTime, delay]);
 
-  const activeSubtitles = useMemo(() => getActiveSubtitleSets(), [getActiveSubtitleSets, transcriptions, currentTime]);
+  const activeSubtitles = useMemo(() => getActiveSubtitleSets(), [getActiveSubtitleSets]);
 
   return {
     activeSubtitles,

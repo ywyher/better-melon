@@ -3,7 +3,7 @@
 import AutoNext from "@/app/settings/player/_components/auto-next"
 import AutoPlay from "@/app/settings/player/_components/auto-play"
 import AutoScrollToCue from "@/app/settings/player/_components/auto-scroll-to-cue"
-import AutoScrollToCueDuration from "@/app/settings/player/_components/auto-scroll-to-cue-duration"
+import AutoScrollResumeDelay from "@/app/settings/player/_components/auto-scroll-to-cue-duration"
 import AutoSkip from "@/app/settings/player/_components/auto-skip"
 import CuePauseDuration from "@/app/settings/player/_components/cue-pause-duration"
 import EnabledTranscriptionsSettings from "@/app/settings/player/_components/enabled-transcriptions-settings"
@@ -32,7 +32,7 @@ export default function PlayerSettingsPage() {
       <EnabledTranscriptionsSettings playerSettings={playerSettings} />
       <Separator />
       <AutoScrollToCue value={playerSettings.autoScrollToCue} />
-      <AutoScrollToCueDuration value={playerSettings.autoScrollResumeDelay} />
+      <AutoScrollResumeDelay value={playerSettings.autoScrollResumeDelay} />
     </div>
   )
 }

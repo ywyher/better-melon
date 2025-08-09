@@ -31,7 +31,7 @@ export default function KnownWords() {
           <CardContent className="pt-0">
             <div className="space-y-4">
               <div className="text-sm text-muted-foreground space-y-1">
-                <p>• Paste text and we'll extract Japanese words</p>
+                <p>• Paste text and we&apos;ll extract Japanese words</p>
                 <p>• Words are automatically validated</p>
                 <p>• Duplicates are safely handled</p>
               </div>

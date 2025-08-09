@@ -1,6 +1,5 @@
 'use client'
 import { usePathname } from 'next/navigation'
-import { useEffect } from 'react'
 
 function getSettingsTitle(pathname: string): string {
   const segment = pathname.split('/').pop()

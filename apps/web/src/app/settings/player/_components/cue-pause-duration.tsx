@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { PlayerSettings } from "@/lib/db/schema"
 import { usePlayerSettings } from "@/lib/hooks/use-player-settings"
 import { X } from "lucide-react"
-import { useEffect, useState } from "react"
+import { useState } from "react"
   
 export default function CuePauseDuration({ value }: { 
     value: PlayerSettings['cuePauseDuration']
@@ -33,7 +33,7 @@ export default function CuePauseDuration({ value }: {
                 <div className="flex flex-row gap-2 items-center">
                     <h3 className="font-medium">Cue pause duration <i className="text-gray-400">(in seconds)</i></h3>
                     <TooltipWrapper>
-                        No value {"->"} it won't unpause it self
+                        No value {"->"} it won&apos;t unpause it self
                     </TooltipWrapper>
                 </div>
                 <p className="text-sm text-muted-foreground">

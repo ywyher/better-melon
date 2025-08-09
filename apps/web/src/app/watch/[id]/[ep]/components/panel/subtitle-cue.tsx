@@ -94,4 +94,6 @@ const SubtitleCue = React.memo(({
   );
 });
 
+SubtitleCue.displayName = "SubtitleCue";
+
 export default SubtitleCue;

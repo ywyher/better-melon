@@ -14,7 +14,7 @@ export default function DetailsRelations({ anime }: DetailsRelationsProps) {
       <Alert variant="destructive" className="bg-secondary">
         <AlertCircle />
         <AlertDescription className="font-bold">
-          This page exclude relations that aren't animes like mangas, novels and so on
+          This page exclude relations that aren&apos;t animes like mangas, novels and so on
         </AlertDescription>
       </Alert>
       <div className="

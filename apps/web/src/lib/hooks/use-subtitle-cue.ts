@@ -2,7 +2,6 @@ import { useCallback } from "react";
 import { usePlayerStore } from "@/lib/stores/player-store";
 import { useDefinitionStore } from "@/lib/stores/definition-store";
 import { useDelayStore } from "@/lib/stores/delay-store";
-import { useSubtitleStore } from "@/lib/stores/subtitle-store";
 import { SubtitleToken, SubtitleCue as TSubtitleCue } from "@/types/subtitle";
 import { getSentencesForCue, isTokenExcluded, removeHtmlTags } from "@/lib/utils/subtitle";
 import { toast } from "sonner";
@@ -16,8 +15,6 @@ export const useSubtitleCue = () => {
   const player = usePlayerStore((state) => state.player);
   
   const delay = useDelayStore((state) => state.delay);
-
-  const activeSubtitleFile = useSubtitleStore((state) => state.activeSubtitleFile);
 
   const transcriptionsLookup = useTranscriptionStore((state) => state.transcriptionsLookup);
 
@@ -33,7 +30,7 @@ export const useSubtitleCue = () => {
   const handleSeek = useCallback((from: TSubtitleCue['from']) => {
     // 0.1 to avoid seeking to the previous cue
     player.current?.remoteControl.seek(from + delay.japanese + 0.1);
-  }, [player, activeSubtitleFile, delay.japanese]);
+  }, [player, delay.japanese]);
 
   const handleTokenClick = useCallback((token: SubtitleToken, from: number, to: number) => {
     if (!token || !transcriptionsLookup || isTokenExcluded(token)) return;

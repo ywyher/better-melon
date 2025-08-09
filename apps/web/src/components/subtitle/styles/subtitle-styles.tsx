@@ -65,7 +65,7 @@ export default function SubtitleStyles({ syncSettings: propSyncStrategy, source 
     const defaultStyles = selectedState === 'active' ? defaultSubtitleStyles[selectedTranscription].active : defaultSubtitleStyles[selectedTranscription].default;
     
     return currentStyles && JSON.stringify(currentStyles) !== JSON.stringify(defaultStyles);
-  }, [source, remoteStyles, storeStyles, selectedState]);
+  }, [source, remoteStyles, storeStyles, selectedState, selectedTranscription]);
 
   if (!styles || isLoading) return <SubtitleStylesSkeleton />;
   

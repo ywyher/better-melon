@@ -20,7 +20,7 @@ export default function DefinitionTrigger({ value }: {
                 <div className="flex flex-row gap-2 items-center">
                     <h3 className="font-medium">Definition Trigger</h3>
                     <TooltipWrapper>
-                        Doesn't apply to the subtitles at the panel (should it ?)
+                        Doesn&apos;t apply to the subtitles at the panel (should it ?)
                     </TooltipWrapper>
                 </div>
                 <p className="text-sm text-muted-foreground">

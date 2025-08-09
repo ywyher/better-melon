@@ -29,7 +29,7 @@ export function useMediaHistory({ mediaId, mediaEpisode }: UseHistoryMediaProps)
     if(isVideoReady && mediaHistory && player.current) {
       player.current.remoteControl.seek(mediaHistory.progress);
     }
-  }, [isVideoReady, mediaHistory, player.current]);
+  }, [isVideoReady, mediaHistory, player]);
 
   useEffect(() => {
     if (isLoading) {

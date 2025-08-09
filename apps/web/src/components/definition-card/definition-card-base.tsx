@@ -26,7 +26,7 @@ export default function DefinitionCardBase() {
     transform: `translate3d(${position.x}px, ${position.y}px, 0)`,
   };
 
-  const { dictionary, isLoading, error } = useDictionary({ query: token?.original_form })
+  const { dictionary, isLoading } = useDictionary({ query: token?.original_form })
 
   if (!token) return;
 

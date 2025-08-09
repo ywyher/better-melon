@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export default function HeaderLinks() {
     return (
-        <div className="flex flex-row gap-2">
+        <div className="hidden md:flex flex-row gap-2">
             <QuickSearch />
             <Link href={'/search'}>
                 <Button

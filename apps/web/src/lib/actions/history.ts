@@ -169,7 +169,7 @@ export async function getHistory({ limit }: { limit?: number }) {
             history: [],
         }
 
-        let list = await db
+        const list = await db
             .select()
             .from(history)
             .where(eq(history.userId, userId))

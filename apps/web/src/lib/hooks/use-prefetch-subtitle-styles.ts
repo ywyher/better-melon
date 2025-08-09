@@ -3,10 +3,9 @@ import { useSubtitleStylesStore } from "@/lib/stores/subtitle-styles-store";
 import { NetworkCondition } from "@/types";
 import { SubtitleTranscription } from "@/types/subtitle";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useMemo, useRef } from "react";
+import { useMemo, useRef } from "react";
 
 type PrefetchSubtitleStylesProps = {
-  episodeNumber: number,
   activeTranscriptions: SubtitleTranscription[],
   isReady: boolean,
   isLastEpisode: boolean,
@@ -14,7 +13,6 @@ type PrefetchSubtitleStylesProps = {
 }
 
 export function usePrefetchSubtitleStyles({
-  episodeNumber,
   activeTranscriptions,
   isReady,
   isLastEpisode,

@@ -1,5 +1,4 @@
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import AnimeCardFooter from "@/components/anime/card/default/footer";
 import AnimeCardContent from "@/components/anime/card/default/content";
 import { AnilistCoverImage, AnilistFormat, AnilistStatus, AnilistTitle } from "@better-melon/shared/types";
@@ -30,8 +29,6 @@ export default function AnimeCard({
   relationType,
   className
 }: AnimeCardProps) {
-  const [imageLoading, setImageLoading] = useState<boolean>(true);
-
   const router = useRouter();
 
   const handleClick = () => {

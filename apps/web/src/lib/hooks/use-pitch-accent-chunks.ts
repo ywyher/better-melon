@@ -55,7 +55,7 @@ export function usePitchAccentChunks({
         refetchOnWindowFocus: false
       }
     })
-  }), [chunks, activeSubtitleFile, animeId]);
+  }), [chunks, activeSubtitleFile, animeId, shouldFetch]);
 
   const queries = useQueries(queryConfig);
 
@@ -75,14 +75,17 @@ export function usePitchAccentChunks({
     };
   }, [queries]);
 
+  const queriesData = useMemo(() => 
+    queries.map(q => q.data), 
+    [queries]
+  );
+
   const pitchLookup = useMemo(() => {
-    if(queries.some(q => q.isLoading)) return new Map()
-    console.log(`queries`, queries)
     const newLookup = new Map<string, NHKEntry>();
     
-    queries.forEach(query => {
-      if (query.data) {
-        query.data.forEach(entry => {
+    queriesData.forEach(data => {
+      if (data) {
+        data.forEach(entry => {
           if (entry.word) {
             newLookup.set(entry.word, entry);
           }
@@ -91,7 +94,7 @@ export function usePitchAccentChunks({
     });
 
     return newLookup;
-  }, [queries.map(q => q.data).join(',')]); // Stable dependency
+  }, [queriesData]);
 
   useEffect(() => {
     if (loadingState.isComplete && !loadingDuration && queries.length > 0) {

@@ -49,7 +49,6 @@ export const useSubtitleStyles = () => {
   }, [shouldScaleFontDown, updateScaling]);
   
   const {
-    data,
     isLoading,
     error,
     refetch

@@ -22,7 +22,7 @@ export default function AddKnownWords() {
 
     try {
       await initalize()
-      let validWords: string[] = [];
+      const validWords: string[] = [];
       const tokens = await tokenizeText(words);
       tokens?.map((t) => {
         if(isJapanese(t.surface_form)) {

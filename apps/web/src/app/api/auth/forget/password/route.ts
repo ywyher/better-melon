@@ -3,8 +3,6 @@ import { env } from "@/lib/env/server";
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 
-const resend = new Resend(env.RESEND_API_KEY);
-
 export async function POST(req: NextRequest) {
   try {
     const { email, url, name } = await req.json();
@@ -15,6 +13,18 @@ export async function POST(req: NextRequest) {
         { status: 400 },
       );
     }
+
+    // Check if API key is available
+    if (!env.RESEND_API_KEY) {
+      console.warn("RESEND_API_KEY not provided - email sending disabled");
+      return NextResponse.json(
+        { error: "Email service not configured" }, 
+        { status: 503 }
+      );
+    }
+
+    // Initialize Resend only when needed
+    const resend = new Resend(env.RESEND_API_KEY);
 
     // Use query parameters for your logic
     const { data, error } = await resend.emails.send({

@@ -9,7 +9,7 @@ import { useSyncSettings } from "@/lib/hooks/use-sync-settings";
 
 interface UseStyleSubtitleStylesControllerProps {
   transcription: SubtitleStyles['transcription'];
-  initialValue: any;
+  initialValue: string | number;
   source: 'database' | 'local' | string;
   field: keyof Omit<SubtitleStyles, 'id' | 'userId' | 'createdAt' | 'updatedAt'>
   syncSettings: GeneralSettings['syncSettings']
@@ -29,7 +29,7 @@ export function useStyleFieldController({
   errorMessage
 }: UseStyleSubtitleStylesControllerProps) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [localValue, setLocalValue] = useState<any>(null);
+  const [localValue, setLocalValue] = useState<string | null>(null);
   const [displayValue, setDisplayValue] = useState<string>('')
   const queryClient = useQueryClient();
   const handleStyles = useSubtitleStylesStore((state) => state.handleStyles);
@@ -48,11 +48,11 @@ export function useStyleFieldController({
   }, [localValue])
 
   useEffect(() => {
-    setDisplayValue(initialValue)
+    setDisplayValue(String(initialValue))
   }, [initialValue])
 
-  const onSubmit = async (value: any) => {
-    setLocalValue(value);
+  const onSubmit = async (value: string | number) => {
+    setLocalValue(String(value));
     setIsLoading(true);
 
     try {

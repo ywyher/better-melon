@@ -22,7 +22,7 @@ export default function DefinitionCardHeader({ token, entries }: DefinitionCardH
   const { getTokenAccent } = useTranscriptionItem('japanese')
 
   const pairs = parseRuby(token.surface_form, true)
-  const accent = useMemo(() => getTokenAccent(token), [token]);
+  const accent = useMemo(() => getTokenAccent(token), [token, getTokenAccent]);
 
   return (
     <CardHeader className="flex flex-row justify-between items-center p-0">

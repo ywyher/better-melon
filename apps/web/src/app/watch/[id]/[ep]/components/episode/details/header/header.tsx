@@ -28,6 +28,7 @@ export default function EpisodeDetailsHeader() {
         <EpisodeDetailsHistory />
         <AddToList
           animeId={animeId}
+          variant="outline"
         />
       </div>
     </CardHeader>

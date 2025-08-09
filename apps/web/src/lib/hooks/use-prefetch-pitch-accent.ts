@@ -62,7 +62,7 @@ export function usePrefetchPitchAccent({
              streamingData != null &&
              japaneseCues?.length &&
              subtitleFileName != null;
-    }, [isReady, isLastEpisode, networkCondition, chunks.length]);
+    }, [isReady, isLastEpisode, networkCondition, chunks.length, japaneseCues?.length, streamingData, subtitleFileName]);
   
   const queries = useQueries({
     queries: chunks.map((chunk, index) => {

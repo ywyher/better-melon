@@ -333,7 +333,7 @@ async function tokenizeAndConvertSubtitles({
     };
   }
 
-  let tokenizationInProgress = tokenizerStats.tokenizationInProgress
+  const tokenizationInProgress = tokenizerStats.tokenizationInProgress
   // Check if this resource is already being tokenized by another call
   if (tokenizationInProgress.has(cacheKey)) {
     console.info(`[Tokenizing(${transcription})] Waiting for in-progress tokenization of ${transcription} for ${cacheKey}`);
@@ -386,7 +386,7 @@ async function getParsingData({
 }: {
   source: string | File,
 }) {
-  let body: ParseSubtitleBody = {
+  const body: ParseSubtitleBody = {
     source: typeof source === 'string' ? source : source.name,
     isFile: typeof source !== 'string' ? true : false
   };

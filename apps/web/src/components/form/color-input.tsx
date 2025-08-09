@@ -24,7 +24,7 @@ export const ColorInput = ({ value = "#FFFFFF", onChange, className, ...props }:
       setLocalValue(value);
       fromUserInteraction.current = false;
     }
-  }, [value]);
+  }, [value, localValue]);
 
   useEffect(() => {
     if (

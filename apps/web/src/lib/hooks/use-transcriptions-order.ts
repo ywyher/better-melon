@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useDebounce } from "@/components/multiple-selector";
 import { handleTranscriptionOrder } from "@/app/settings/subtitle/_transcription-order/actions";
 import { useMutation } from "@tanstack/react-query";
@@ -6,9 +6,9 @@ import { useSyncSettings } from "@/lib/hooks/use-sync-settings";
 import { settingsQueries } from "@/lib/queries/settings";
 import { toast } from "sonner";
 import { arrayMove } from "@dnd-kit/sortable";
+import { GeneralSettings, SubtitleSettings } from "@/lib/db/schema";
 import type { DragEndEvent } from "@dnd-kit/core";
 import type { SubtitleTranscription } from "@/types/subtitle";
-import { GeneralSettings, SubtitleSettings } from "@/lib/db/schema";
 
 type UseTranscriptionOrderProps = {
   subtitleSettings: SubtitleSettings,

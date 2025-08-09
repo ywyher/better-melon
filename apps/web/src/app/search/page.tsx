@@ -1,5 +1,6 @@
 "use client"
 
+import { Suspense } from "react";
 import AnimeFilters from "@/components/filters/filters";
 import { Indicator } from "@/components/indicator";
 import SearchHeader from "@/app/search/_components/header";
@@ -8,7 +9,7 @@ import SearchBar from "@/app/search/_components/search-bar";
 import SearchPagination from "@/app/search/_components/pagination";
 import { useSearchAnime } from "@/lib/hooks/use-search-anime";
 
-export default function Search() {
+function SearchPage() {
     const {
         animes,
         pageInfo,
@@ -55,5 +56,13 @@ export default function Search() {
                 />
             </div>
         </div>
+    );
+}
+
+export default function Search() {
+    return (
+        <Suspense fallback={<></>}>
+            <SearchPage />
+        </Suspense>
     );
 }

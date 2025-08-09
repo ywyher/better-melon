@@ -40,7 +40,6 @@ export function useWords({
   const wordsLookup = useMemo(() => {
     if (!words) return new Map() as WordsLookup;
     const lookup = new Map() as WordsLookup;
-    console.log(`words`, words)
     words.forEach((wordsData) => lookup.set(wordsData.word, {
       word: wordsData.word,
       status: wordsData.status

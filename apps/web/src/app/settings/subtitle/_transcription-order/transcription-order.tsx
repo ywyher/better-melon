@@ -60,7 +60,7 @@ const defaultItems: TranscriptionItems = {
 export default function TranscriptionOrder() {
   const { data: subtitleSettings, isLoading: isSubtitleSettingsLoading } = useQuery({ ...settingsQueries.subtitle() })
   const [items, setItems] = useState<TranscriptionItems>(defaultItems);
-  const [transcriptionOrder, setTranscriptionOrder] = useState<string[]>([]);
+  const [transcriptionOrder, setTranscriptionOrder] = useState<SubtitleTranscription[]>([]);
   const [debouncedOrder] = useDebounce(transcriptionOrder, 1500);
   
   useEffect(() => {
@@ -121,8 +121,8 @@ export default function TranscriptionOrder() {
       const newIndex = itemIds.indexOf(String(over.id));
       if (oldIndex == -1 && newIndex == -1) return;
 
-      const oldOrder = items;
-      const newOrder = arrayMove(itemIds, oldIndex, newIndex);
+    //   const oldOrder = items;
+      const newOrder = arrayMove(itemIds, oldIndex, newIndex) as SubtitleTranscription[];
       
       const newItems: TranscriptionItems = {};
       newOrder.forEach(id => {

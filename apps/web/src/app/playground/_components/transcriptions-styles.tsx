@@ -1,7 +1,6 @@
 'use client'
 
 import SubtitleTranscriptions from "@/app/watch/[id]/[ep]/components/transcriptions/transcriptions";
-import DefinitionCard from "@/components/definition-card/definition-card";
 import { useEffect } from "react";
 import { useSubtitleStore } from "@/lib/stores/subtitle-store";
 import { useSubtitleTranscriptions } from "@/lib/hooks/use-subtitle-transcriptions";
@@ -37,7 +36,7 @@ export default function TranscriptionsStylesPlayground() {
     animeId: 9253,
     episodeNumber: 2
   })
-  const { rawStyles, computedStyles, refetch: refetchStyles } = useSubtitleStyles() 
+  const { refetch: refetchStyles } = useSubtitleStyles() 
 
   const setTranscriptions = useTranscriptionStore((state) => state.setTranscriptions)
   const store = useTranscriptionStore.getState(); // use this to read current store values (won't trigger re-renders)
@@ -46,7 +45,7 @@ export default function TranscriptionsStylesPlayground() {
     if (transcriptions && hasChanged(transcriptions, store.transcriptions)) {
       setTranscriptions(transcriptions);
     }
-  }, [transcriptions]);
+  }, [transcriptions, setTranscriptions, store.transcriptions]);
 
   return (
     <div className="flex flex-row gap-10">

@@ -11,4 +11,4 @@ const db = drizzle(env.DATABASE_URL!, {
 });
 
 export default db;
-export type DBInstance = PgTransaction<NodePgQueryResultHKT, Record<string, never>, ExtractTablesWithRelations<Record<string, never>>>
+export type DBInstance = PgTransaction<NodePgQueryResultHKT, typeof schema, ExtractTablesWithRelations<typeof schema>>

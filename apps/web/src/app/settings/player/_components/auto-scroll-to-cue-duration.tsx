@@ -6,9 +6,9 @@ import { Button } from "@/components/ui/button"
 import { PlayerSettings } from "@/lib/db/schema"
 import { usePlayerSettings } from "@/lib/hooks/use-player-settings"
 import { X } from "lucide-react"
-import { useEffect, useState } from "react"
+import { useState } from "react"
   
-export default function autoScrollResumeDelay({ value }: { 
+export default function AutoScrollResumeDelay({ value }: { 
     value: PlayerSettings['autoScrollResumeDelay']
 }) {
     const { isLoading, onSubmit } = usePlayerSettings({

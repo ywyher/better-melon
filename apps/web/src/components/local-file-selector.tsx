@@ -59,7 +59,8 @@ export default function LocalFileSelector({ onSelect }: LocalFileSelectorProps) 
         toast.warning("Subtitles must be in Japanese");
       }
     } catch (error) {
-      setFileState({ loading: false, fileName: null, error: "Failed to process file" });
+      const msg = error instanceof Error ? error.message : "Failed to process file"
+      setFileState({ loading: false, fileName: null, error: msg });
       toast.error("Failed to process file");
     }
     
@@ -67,7 +68,7 @@ export default function LocalFileSelector({ onSelect }: LocalFileSelectorProps) 
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
-  }, [setActiveSubtitleFile]);
+  }, [setActiveSubtitleFile, onSelect]);
 
   const clearFile = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
@@ -85,7 +86,7 @@ export default function LocalFileSelector({ onSelect }: LocalFileSelectorProps) 
   const { loading, fileName, error } = fileState;
 
   return (
-    <div className="w-full w-full">
+    <div className="w-full">
       {/* Hidden file input */}
       <input
         ref={fileInputRef}

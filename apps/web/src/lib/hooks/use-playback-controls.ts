@@ -43,7 +43,7 @@ export default function usePlaybackControls({
       console.error('Error moving to the next episode:', error);
       isTransitioning.current = false;
     }
-  }, [autoNext, episodeNumber, streamingData?.anime?.episodes, animeId, router]);
+  }, [autoNext, episodeNumber, streamingData?.anime, animeId, router, player]);
 
   const onTimeUpdate = useThrottledCallback(() => {
     if (!player.current) return;
