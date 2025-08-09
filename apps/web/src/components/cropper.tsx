@@ -42,13 +42,15 @@ const OUTPUT_FILENAME = 'cropped-image';
 // Banner aspect ratio (e.g., 16:9 or 3:1 for wide banners)
 const BANNER_ASPECT_RATIO = 48 / 9;
 
+const PFP_ASPECT_RATIO = 1 / 1;
+
 export default function Cropper({ 
   image,
   onCrop,
   onCancel,
   className = "",
   quality = DEFAULT_QUALITY,
-  outputFormat = 'image/jpeg',
+  outputFormat = 'image/png',
   cropType = 'profile'
 }: CropperProps) {
   const cropperRef = useRef<CropperRef>(null);
@@ -148,8 +150,8 @@ export default function Cropper({
       // circular
       return {
         aspectRatio: {
-          minimum: 1,
-          maximum: 1
+          minimum: PFP_ASPECT_RATIO,
+          maximum: PFP_ASPECT_RATIO
         }
       };
     }
