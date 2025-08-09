@@ -1,16 +1,17 @@
 import Pfp from "@/components/pfp";
 import Cropper from "@/components/cropper";
+import useUserFiles from "@/lib/hooks/use-user-files";
+import UploadLoader from "@/app/user/[username]/components/upload-loader";
 import DialogWrapper from "@/components/dialog-wrapper";
 import { User } from "@/lib/db/schema";
-import { Camera } from "lucide-react";
 import { cn, getFileUrl } from "@/lib/utils/utils";
-import useUserFiles from "@/lib/hooks/use-user-files";
 
-type ProfilePfpProps = {
-  user: User;
-};
+type UserPfpProps = {
+  userId: User['id']
+  image: User['image']
+}
 
-export function UserPfp({ user }: ProfilePfpProps) {
+export function UserPfp({ userId, image }: UserPfpProps) {
   const {
     fileInputRef,
     previewUrl,
@@ -21,7 +22,7 @@ export function UserPfp({ user }: ProfilePfpProps) {
     handleDialogClose,
     triggerFileInput
   } = useUserFiles({ 
-    user, 
+    userId,
     field: 'image',
     successMessage: 'Lookin good :)'
   });
@@ -31,7 +32,7 @@ export function UserPfp({ user }: ProfilePfpProps) {
       <div 
         className={cn(
           "relative w-full h-full group cursor-pointer",
-          "w-50 h-50",
+          "w-50 h-50 z-20",
           isUploading && "cursor-wait"
         )}
         onClick={triggerFileInput}
@@ -46,29 +47,15 @@ export function UserPfp({ user }: ProfilePfpProps) {
         />
         
         <Pfp 
-          image={getFileUrl(user.image)}
+          image={getFileUrl(image)}
           className={cn(
-            "object-cover rounded-lg border-2 border-primary/20",
+            "object-cover rounded-sm border-2 border-primary/20",
             "w-full h-full transition-opacity duration-200",
             isUploading && "opacity-75"
           )}
         />
         
-        {isUploading && (
-          <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px] rounded-lg flex items-center justify-center">
-            <div className="bg-background/90 rounded-full p-3 shadow-lg">
-              <div className="animate-spin rounded-full h-6 w-6 border-2 border-primary border-t-transparent" />
-            </div>
-          </div>
-        )}
-        
-        {!isUploading && (
-          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-colors duration-200 rounded-lg flex items-center justify-center">
-            <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-background/90 rounded-full p-2 shadow-lg">
-              <Camera size={18} />
-            </div>
-          </div>
-        )}
+        <UploadLoader isUploading={isUploading} />
       </div>
 
       <DialogWrapper

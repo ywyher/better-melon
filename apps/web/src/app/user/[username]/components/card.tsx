@@ -1,0 +1,31 @@
+import { UserBanner } from "@/app/user/[username]/components/banner";
+import { UserPfp } from "@/app/user/[username]/components/pfp";
+import { User } from "@/lib/db/schema";
+
+type ProfileCardProps = { user: User }
+
+export default function UserCard({ user }: ProfileCardProps) {
+  return (
+    <div className="
+      absolute inset-0 top-0 left-1/2 transform -translate-x-1/2
+      w-full h-[330px] md:h-[430px]
+    ">
+      <UserBanner userId={user.id} banner={user.banner} />
+      <div className="
+        h-full container mx-auto
+        pb-10 z-20
+        flex items-end gap-10
+      ">
+        <UserPfp userId={user.id} image={user.image} />
+        <div 
+          className="
+            z-20
+            text-2xl font-bold text-white
+          "
+        >
+          {user.name}
+        </div>
+      </div>
+    </div>
+  );
+}

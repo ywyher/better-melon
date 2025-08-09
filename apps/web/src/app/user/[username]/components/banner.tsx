@@ -1,12 +1,16 @@
 import Cropper from "@/components/cropper";
-import DialogWrapper from "@/components/dialog-wrapper";
-import { User } from "@/lib/db/schema";
 import useUserFiles from "@/lib/hooks/use-user-files";
-import { cn, getFileUrl } from "@/lib/utils/utils";
-import { Camera } from "lucide-react";
-import Image from "next/image";
+import DialogWrapper from "@/components/dialog-wrapper";
+import { cn } from "@/lib/utils/utils";
+import { User } from "@/lib/db/schema";
+import UploadLoader from "@/app/user/[username]/components/upload-loader";
 
-export function UserBanner({ user }: { user: User }) {
+type UserBannerProps = {
+  userId: User['id']
+  banner: User['banner']
+}
+
+export function UserBanner({ userId, banner }: UserBannerProps) {
   const {
     fileInputRef,
     previewUrl,
@@ -17,7 +21,7 @@ export function UserBanner({ user }: { user: User }) {
     handleDialogClose,
     triggerFileInput
   } = useUserFiles({ 
-    user, 
+    userId, 
     field: 'banner',
     successMessage: 'Banner updated successfully!'
   });
@@ -26,8 +30,9 @@ export function UserBanner({ user }: { user: User }) {
     <>
       <div
         className={cn(
-          "relative group cursor-pointer",
-          "absolute inset-0 top-0 left-1/2 transform -translate-x-1/2 w-screen h-80",
+          "group cursor-pointer z-10",
+          "absolute inset-0 top-0 left-1/2 transform -translate-x-1/2",
+          "w-screen h-[330px] md:h-[430px]",
           isUploading && "cursor-wait"
         )}
         onClick={triggerFileInput}
@@ -41,33 +46,29 @@ export function UserBanner({ user }: { user: User }) {
           disabled={isUploading}
         />
         
-        <Image
-          src={previewUrl || getFileUrl(user.banner)}
-          alt="Profile banner"
-          fill
-          className={cn(
-            "object-cover transition-opacity duration-200",
-            isUploading && "opacity-75"
-          )}
+        <div
+          style={{
+            backgroundImage: `url("${banner}")`,
+            backgroundPosition: "50% 35%",
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: 'cover',
+            position: 'relative',
+            width: '100%',
+            height: '100%',
+            backgroundColor: '#242538'
+          }}
         />
-        
-        {isUploading && (
-          <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px] flex items-center justify-center z-10">
-            <div className="bg-background/90 rounded-full p-3 shadow-lg">
-              <div className="animate-spin rounded-full h-6 w-6 border-2 border-primary border-t-transparent" />
-            </div>
-          </div>
-        )}
-        
-        {!isUploading && (
-          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-200 flex items-center justify-center z-10">
-            <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-background/90 rounded-full p-3 shadow-lg">
-              <Camera size={20} />
-            </div>
-          </div>
-        )}
 
-        <div className="absolute inset-0 bg-gradient-to-b from-background/20 via-background/60 to-background"></div>
+        <UploadLoader isUploading={isUploading} />
+        <div
+          className="
+            absolute inset-0 
+            bg-gradient-to-b 
+            from-background/20 
+            via-background/40 
+            to-background
+          "
+        />
       </div>
 
       <DialogWrapper

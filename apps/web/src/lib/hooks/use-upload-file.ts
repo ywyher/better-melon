@@ -1,7 +1,7 @@
-import { useState, useCallback } from 'react';
-import { toast } from 'sonner';
-import { CatboxUploadResponse } from '@/types/catbox'
 import ky from 'ky';
+import { toast } from 'sonner';
+import { useState, useCallback } from 'react';
+import { CatboxUploadResponse } from '@/types/catbox'
 
 interface UploadResult {
   message: string | null;

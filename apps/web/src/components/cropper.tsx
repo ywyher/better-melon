@@ -40,7 +40,7 @@ const DEFAULT_QUALITY = 0.8;
 const OUTPUT_FILENAME = 'cropped-image';
 
 // Banner aspect ratio (e.g., 16:9 or 3:1 for wide banners)
-const BANNER_ASPECT_RATIO = 16 / 5;
+const BANNER_ASPECT_RATIO = 48 / 9;
 
 export default function Cropper({ 
   image,
@@ -141,7 +141,8 @@ export default function Cropper({
         aspectRatio: {
           minimum: BANNER_ASPECT_RATIO,
           maximum: BANNER_ASPECT_RATIO
-        }
+        },
+        resizable: false
       };
     } else {
       // circular

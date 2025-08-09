@@ -1,12 +1,8 @@
 "use client"
 
-import EditProfile from "@/app/user/[username]/components/edit-profile";
-import ProfileCard from "@/app/user/[username]/components/profile-card";
-import { User as TUser } from "@/lib/db/schema";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { UpdatePassword } from "@/components/update-password";
+import UserCard from "@/app/user/[username]/components/card";
 import { useSession } from "@/lib/queries/user";
-import { UserIcon, KeyIcon } from "lucide-react";
+import { User as TUser } from "@/lib/db/schema";
 
 export default function User() {
     const { data, isLoading } = useSession()
@@ -15,8 +11,8 @@ export default function User() {
 
     return (
       <div>
-        <ProfileCard user={data as TUser} />
-        <Tabs defaultValue="account" className="w-full">
+        <UserCard user={data as TUser} />
+        {/* <Tabs defaultValue="account" className="w-full">
             <TabsList className="w-full mb-6">
                 <TabsTrigger value="account" className="cursor-pointer flex-1">
                     <UserIcon className="h-4 w-4 mr-2" />
@@ -33,7 +29,7 @@ export default function User() {
             <TabsContent value="password">
                 <UpdatePassword />
             </TabsContent>
-        </Tabs>
+        </Tabs> */}
       </div>
     )
 }

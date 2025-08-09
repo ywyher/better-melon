@@ -54,7 +54,10 @@ export function Menu({ user,isSmall }: { user: User; isSmall: boolean }) {
     return (
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger>
-          <Pfp className="min-w-10 max-w-10 min-h-10 max-h-10 rounded-sm" />
+          <Pfp
+            className="min-w-10 max-w-10 min-h-10 max-h-10 rounded-sm"
+            image={user.image}
+          />
         </SheetTrigger>
         <SheetContent className="flex flex-col gap-5 px-4 pb-4 w-[80%]">
           <SheetHeader className="h-1">
@@ -86,7 +89,7 @@ export function Menu({ user,isSmall }: { user: User; isSmall: boolean }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="cursor-pointer">
-        <Pfp 
+        <Pfp
           className="min-w-10 max-w-10 min-h-10 max-h-10 rounded-sm"
           image={user.image}
         />

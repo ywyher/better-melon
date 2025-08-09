@@ -22,7 +22,6 @@ export default function Navigations({ children }: { children: React.ReactNode })
             ): (
                 <div className="flex flex-col">
                     <Header />
-                    <Separator className="z-40" />
                     <div className="mt-5">
                         {children}
                     </div>

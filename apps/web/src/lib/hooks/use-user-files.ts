@@ -7,12 +7,12 @@ import { userQueries } from "@/lib/queries/user";
 import { User } from "@/lib/db/schema";
 
 interface UseImageUploadProps {
-  user: User;
+  userId: User['id'];
   field: 'image' | 'banner';
   successMessage?: string;
 }
 
-export default function useUserFiles({ user, field, successMessage }: UseImageUploadProps) {
+export default function useUserFiles({ userId, field, successMessage }: UseImageUploadProps) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -54,7 +54,7 @@ export default function useUserFiles({ user, field, successMessage }: UseImageUp
       const updateData = field === 'banner' ? { banner: url } : { image: url };
       const { error: userError } = await updateUser({ 
         data: updateData,
-        userId: user.id
+        userId
       });
       
       if (userError) {
