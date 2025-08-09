@@ -51,7 +51,12 @@ export const auth = betterAuth({
     additionalFields: {
       banner: {
         type: 'string',
-      }
+        required: false,
+      },
+      isAnonymous: {
+        type: 'boolean',
+        required: false
+      },
     }
   },
   account: {

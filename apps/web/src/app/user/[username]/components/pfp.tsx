@@ -1,17 +1,18 @@
 import Pfp from "@/components/pfp";
 import Cropper from "@/components/cropper";
 import useUserFiles from "@/lib/hooks/use-user-files";
-import UploadLoader from "@/app/user/[username]/components/upload-loader";
 import DialogWrapper from "@/components/dialog-wrapper";
 import { User } from "@/lib/db/schema";
 import { cn, getFileUrl } from "@/lib/utils/utils";
+import UploadOverlay from "@/app/user/[username]/components/upload-overlay";
 
 type UserPfpProps = {
   userId: User['id']
   image: User['image']
+  editable?: boolean
 }
 
-export function UserPfp({ userId, image }: UserPfpProps) {
+export function UserPfp({ userId, image, editable = false }: UserPfpProps) {
   const {
     fileInputRef,
     previewUrl,
@@ -31,11 +32,12 @@ export function UserPfp({ userId, image }: UserPfpProps) {
     <>
       <div 
         className={cn(
-          "relative w-full h-full group cursor-pointer",
+          "relative w-full h-full group",
           "w-50 h-50 z-20",
+          editable && "cursor-pointer",
           isUploading && "cursor-wait"
         )}
-        onClick={triggerFileInput}
+        onClick={editable ? triggerFileInput : undefined}
       >
         <input 
           type="file" 
@@ -55,7 +57,7 @@ export function UserPfp({ userId, image }: UserPfpProps) {
           )}
         />
         
-        <UploadLoader isUploading={isUploading} />
+        <UploadOverlay isUploading={isUploading} editable={editable} />
       </div>
 
       <DialogWrapper

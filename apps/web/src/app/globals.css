@@ -82,6 +82,9 @@
 
   --header-height: 4rem;
   --bottombar-height: 68px;
+
+  --banner-height: 430px;
+  --banner-height-small: 330px;
 }
 
 .dark {

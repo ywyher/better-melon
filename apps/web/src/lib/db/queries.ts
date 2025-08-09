@@ -5,7 +5,7 @@ import { defaultSubtitleSettings } from "@/app/settings/subtitle/_subtitle-setti
 import { defaultWordSettings } from "@/app/settings/word/constants"
 import { auth } from "@/lib/auth"
 import { defaultGeneralSettings } from "@/lib/constants/settings"
-import { account, generalSettings, playerSettings, subtitleSettings, User, wordSettings } from "@/lib/db/schema"
+import { account, generalSettings, playerSettings, subtitleSettings, user, User, wordSettings } from "@/lib/db/schema"
 import { env } from "@/lib/env/client"
 import { redis } from "@/lib/redis"
 import { NHKEntry } from "@/types/nhk"
@@ -15,6 +15,12 @@ import db from "@/lib/db"
 import { AuthProvider } from "@/types"
 import { ensureAuthenticated } from "@/lib/db/mutations"
 
+export async function getUserByUsername({ username }: { username: User['name'] }) {
+  const [data] = await db.select().from(user)
+    .where(eq(user.name, username))
+
+  return data
+}
 
 export async function getAccountInfo({ provider }: { provider: AuthProvider }) {
   const { userId, isAnon, error } = await ensureAuthenticated()

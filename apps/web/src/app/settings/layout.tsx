@@ -15,7 +15,7 @@ export default function RootLayout({
   return (
     <>
         <div className="
-            absolute left-0 right-0 top-36
+          absolute left-0 right-0 top-40
         ">
             <div className="
                 flex flex-col justify-end gap-5

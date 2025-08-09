@@ -1,6 +1,11 @@
 import { Camera } from "lucide-react";
 
-export default function UploadLoader({ isUploading }: { isUploading: boolean }) {
+type UploadOverlayProps = {
+  isUploading: boolean
+  editable: boolean
+}
+
+export default function UploadOverlay({ isUploading, editable }: UploadOverlayProps) {
   return (
     <>
       {isUploading && (
@@ -11,7 +16,7 @@ export default function UploadLoader({ isUploading }: { isUploading: boolean }) 
         </div>
       )}
       
-      {!isUploading && (
+      {!isUploading && editable && (
         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-200 flex items-center justify-center z-10">
           <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-background/90 rounded-full p-3 shadow-lg">
             <Camera size={20} />

@@ -3,14 +3,15 @@ import useUserFiles from "@/lib/hooks/use-user-files";
 import DialogWrapper from "@/components/dialog-wrapper";
 import { cn } from "@/lib/utils/utils";
 import { User } from "@/lib/db/schema";
-import UploadLoader from "@/app/user/[username]/components/upload-loader";
+import UploadOverlay from "@/app/user/[username]/components/upload-overlay";
 
 type UserBannerProps = {
   userId: User['id']
   banner: User['banner']
+  editable?: boolean
 }
 
-export function UserBanner({ userId, banner }: UserBannerProps) {
+export function UserBanner({ userId, banner, editable = false }: UserBannerProps) {
   const {
     fileInputRef,
     previewUrl,
@@ -21,7 +22,7 @@ export function UserBanner({ userId, banner }: UserBannerProps) {
     handleDialogClose,
     triggerFileInput
   } = useUserFiles({ 
-    userId, 
+    userId,
     field: 'banner',
     successMessage: 'Banner updated successfully!'
   });
@@ -30,12 +31,12 @@ export function UserBanner({ userId, banner }: UserBannerProps) {
     <>
       <div
         className={cn(
-          "group cursor-pointer z-10",
-          "absolute inset-0 top-0 left-1/2 transform -translate-x-1/2",
-          "w-screen h-[330px] md:h-[430px]",
+          "group z-10 absolute top-0 left-0",
+          "w-screen h-[var(--banner-height-small)] md:h-[var(--banner-height)]",
+          editable && "cursor-pointer",
           isUploading && "cursor-wait"
         )}
-        onClick={triggerFileInput}
+        onClick={editable ? triggerFileInput : undefined}
       >
         <input 
           type="file" 
@@ -59,7 +60,7 @@ export function UserBanner({ userId, banner }: UserBannerProps) {
           }}
         />
 
-        <UploadLoader isUploading={isUploading} />
+        <UploadOverlay isUploading={isUploading} editable={editable} />
         <div
           className="
             absolute inset-0 

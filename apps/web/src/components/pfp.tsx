@@ -13,7 +13,7 @@ export default function Pfp({
   return (
     <Avatar 
       className={cn(
-        "cursor-pointer border-none",
+        "border-none",
         "w-12 h-12",
         "object-cover",
         className,

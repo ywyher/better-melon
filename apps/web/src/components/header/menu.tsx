@@ -32,7 +32,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { User } from "@/lib/db/schema";
 
-export function Menu({ user,isSmall }: { user: User; isSmall: boolean }) {
+export function Menu({ user, isSmall }: { user: User; isSmall: boolean }) {
   const [open, setOpen] = useState<boolean>(false)
   const router = useRouter();
   const queryClient = useQueryClient()
@@ -67,7 +67,7 @@ export function Menu({ user,isSmall }: { user: User; isSmall: boolean }) {
           </SheetHeader>
           <Separator />
           <div className="flex flex-col gap-4">
-            <Link href="/profile" className="flex flex-row gap-2">
+            <Link href={`/user/${user.name}`} className="flex flex-row gap-2">
                 <UserIcon size={20} />
                 <span>Profile</span>
             </Link>
@@ -102,7 +102,7 @@ export function Menu({ user,isSmall }: { user: User; isSmall: boolean }) {
         <DropdownMenuGroup>
           <DropdownMenuItem
             className="cursor-pointer"
-            onClick={() => router.push("/profile")}
+            onClick={() => router.push(`/user/${user.name}`)}
           >
             <UserIcon />
             <span>Profile</span>

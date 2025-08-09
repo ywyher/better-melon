@@ -1,35 +1,40 @@
 "use client"
 
 import UserCard from "@/app/user/[username]/components/card";
-import { useSession } from "@/lib/queries/user";
+import { userQueries, useSession } from "@/lib/queries/user";
 import { User as TUser } from "@/lib/db/schema";
+import { useParams } from "next/navigation";
+import { useMemo } from "react";
+import AnonAlert from "@/app/user/[username]/components/anon-alert";
+import { useQuery } from "@tanstack/react-query";
 
 export default function User() {
-    const { data, isLoading } = useSession()
+    const params = useParams();
+    const profileUsername = String(params.username)
 
-    if(isLoading) return <>Loading...</>
+    const { data, isLoading } = useQuery({
+      ...userQueries.profile({ profileUsername }),
+      enabled: !!profileUsername
+    })
+
+    const isOwner = useMemo(() => {
+      if(!data?.currentUser || !profileUsername) return false;
+      return (data.currentUser?.name == profileUsername)
+        && (data.currentUser?.id == data.profileUser?.id)
+    }, [profileUsername, data])
+
+    if(isLoading || !data?.profileUser) return <>Loading...</>
 
     return (
       <div>
-        <UserCard user={data as TUser} />
-        {/* <Tabs defaultValue="account" className="w-full">
-            <TabsList className="w-full mb-6">
-                <TabsTrigger value="account" className="cursor-pointer flex-1">
-                    <UserIcon className="h-4 w-4 mr-2" />
-                    Account
-                </TabsTrigger>
-                <TabsTrigger value="password" className="cursor-pointer flex-1">
-                    <KeyIcon className="h-4 w-4 mr-2" />
-                    Password
-                </TabsTrigger>
-            </TabsList>
-            <TabsContent value="account">
-                <EditProfile user={data as User} />
-            </TabsContent>
-            <TabsContent value="password">
-                <UpdatePassword />
-            </TabsContent>
-        </Tabs> */}
+        <UserCard user={data.profileUser as TUser} editable={isOwner} />
+        
+        <div className="
+          mt-[calc(var(--banner-height-small)-5rem)]
+          md:mt-[calc(var(--banner-height)-5rem)]
+        ">
+          {data?.currentUser?.isAnonymous && isOwner && <AnonAlert />}
+        </div>
       </div>
     )
 }

@@ -62,7 +62,7 @@ export default function useUserFiles({ userId, field, successMessage }: UseImage
       }
       
       toast.success(successMessage || `${field} updated successfully!`);
-      queryClient.invalidateQueries({ queryKey: userQueries.session._def });
+      queryClient.invalidateQueries({ queryKey: userQueries.profile._def });
       
       cleanup();
     } catch (err) {

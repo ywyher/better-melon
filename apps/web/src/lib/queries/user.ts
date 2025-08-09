@@ -1,5 +1,5 @@
 import { authClient, getSession } from "@/lib/auth-client";
-import { getAccountInfo } from "@/lib/db/queries";
+import { getAccountInfo, getUserByUsername } from "@/lib/db/queries";
 import { User } from "@/lib/db/schema";
 import { AuthProvider } from "@/types";
 import { createQueryKeys } from "@lukemorales/query-key-factory";
@@ -11,6 +11,20 @@ export const userQueries = createQueryKeys('user', {
       queryFn: async () => {
         const data = await getSession()
         return data.data?.user as User || null
+      }
+    }),
+    profile: ({ profileUsername }: { profileUsername: User['name'] }) => ({
+      queryKey: ['profile', profileUsername],
+      queryFn: async () => {
+        const [{ data }, profileUser] = await Promise.all([
+          getSession(),
+          getUserByUsername({ username: profileUsername })
+        ])
+
+        return {
+          currentUser: data?.user as User,
+          profileUser
+        }
       }
     }),
     listAccounts: () => ({

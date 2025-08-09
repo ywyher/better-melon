@@ -31,7 +31,6 @@ export default function Header() {
         border-b-1
       "
     >
-      {/* Full-width background with blur effect */}
       <div 
         className={cn(
           "absolute inset-0 transition-all duration-300 ease-in-out",
@@ -39,7 +38,6 @@ export default function Header() {
         )}
       />
       
-      {/* Content container */}
       <div
         className={cn(
           "relative h-16 max-h-16 container mx-auto",
@@ -54,30 +52,7 @@ export default function Header() {
         </div>
         <div className="flex flex-row gap-2 items-center justify-end">
           <ThemeToggle className="w-10 h-10 rounded-sm" />
-          {isAuthenticated ? (
-            <Menu user={user} isSmall={isSmall} />
-          ) : (
-            <>
-              {isLoading ? (
-                <div className="flex items-center gap-4">
-                  <Avatar className={'bg-foreground rounded-sm animate-pulse'} />
-                </div>
-              ): (
-                <DialogWrapper
-                  open={isAuthDialogOpen}
-                  setOpen={setIsAuthDialogOpen}
-                  title="Authenticate"
-                  trigger={<Button variant="outline" className="rounded-sm">Auth</Button>}
-                >
-                  <Auth
-                    user={user || undefined}
-                    open={isAuthDialogOpen}
-                    setOpen={setIsAuthDialogOpen}
-                  />
-                </DialogWrapper>
-              )}
-            </>
-          )}
+          {user && <Menu user={user} isSmall={isSmall} />}
         </div>
       </div>
     </header>
