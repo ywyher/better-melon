@@ -6,15 +6,30 @@ export const kitsuEpisodeThumbnail = t.Object({
 })
 
 export const kitsuEpisodeAttributes = t.Object({
-  synopsis: t.Optional(t.String()),
-  description: t.Optional(t.String()),
+  synopsis: t.Optional(t.Union([
+    t.String(),
+    t.Null()
+  ])),
+  description: t.Optional(t.Union([
+    t.String(),
+    t.Null()
+  ])),
   titles: t.Partial(kitsuTitles),
   canonicalTitle: t.Optional(t.String()),
-  seasonNumber: t.Optional(t.Number()),
+  seasonNumber: t.Optional(t.Union([
+    t.Number(),
+    t.Null()
+  ])),
   number: t.Number(),
   relativeNumber: t.Optional(t.Union([t.Number(), t.Null()])),
-  airdate: t.Optional(t.String()),
-  length: t.Number(), // duration
+  airdate: t.Optional(t.Union([
+    t.String(),
+    t.Null()
+  ])),
+  length: t.Union([
+    t.Number(),
+    t.Null()
+  ]), // duration
   thumbnail: t.Optional(kitsuEpisodeThumbnail),
   createdAt: t.String(),
   updatedAt: t.String(),

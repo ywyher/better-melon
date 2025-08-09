@@ -58,6 +58,10 @@ export default function EpisodesList({
     episodesListViewMode,
   } = useEpisodesList({ animeId })
 
+  useEffect(() => {
+    console.log(`episodes`, episodes)
+  }, [episodes])
+
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
   const rowVirtualizer = useVirtualizer({
@@ -145,12 +149,12 @@ export default function EpisodesList({
       </CardHeader>
       <CardContent
         ref={scrollAreaRef}
-        className="relative h-fit min-h-[50vh] w-full overflow-y-auto"
+        className="relative h-full min-h-[50vh] w-full overflow-y-auto"
       >
         <div
           style={{
-              height: `${rowVirtualizer.getTotalSize()}px`,
-              position: 'relative',
+            height: `${rowVirtualizer.getTotalSize()}px`,
+            position: 'relative',
           }}
         >
           {episodesListViewMode === "grid" && (

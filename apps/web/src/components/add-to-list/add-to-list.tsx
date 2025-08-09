@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { animeListProviders } from "@/lib/constants/anime-list";
 import { userQueries, useSession } from "@/lib/queries/user";
 import { useAuthStore } from "@/lib/stores/auth-store";
+import { cn } from "@/lib/utils/utils";
 import { Anime } from "@/types/anime";
 import { AnimeListProivder } from "@/types/anime-list";
 import { useQuery } from "@tanstack/react-query";
@@ -17,11 +18,15 @@ import { useState } from "react";
 type AddToListProps = { 
   animeId: Anime['id']
   isAddToList?: boolean
+  variant?: 'default' | 'outline' | 'secondary'
+  className?: string
 }
 
 export default function AddToList({ 
   animeId,
-  isAddToList = false
+  isAddToList = false,
+  variant,
+  className = ""
 }: AddToListProps ) {
   const [open, setOpen] = useState<boolean>(isAddToList || false)
   const [selectedProvider, setSelectedProvider] = useState<AnimeListProivder>(animeListProviders[0])
@@ -38,7 +43,14 @@ export default function AddToList({
     <DialogWrapper
       open={open}
       setOpen={setOpen}
-      trigger={<Button variant='outline' className="w-fit"><FilePenLine /> Add to list</Button>}
+      trigger={
+        <Button 
+          variant={variant} 
+          className={cn('w-fit', className)}
+        >
+          <FilePenLine /> Add to list
+        </Button>
+      }
       title={<SelectListProvider selectedProvider={selectedProvider} setSelectedProvider={setSelectedProvider} />}
       className="min-w-[50%]"
       breakpoint="medium"

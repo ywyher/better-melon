@@ -23,7 +23,7 @@ export default function UserCard({ user, editable }: ProfileCardProps) {
         <div 
           className="
             z-20
-            text-2xl font-bold text-white
+            text-2xl font-bold text-foreground
           "
         >
           {user.name}

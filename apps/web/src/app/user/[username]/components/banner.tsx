@@ -25,7 +25,7 @@ export function UserBanner({ userId, banner, editable = false }: UserBannerProps
     userId,
     field: 'banner',
     successMessage: 'Banner updated successfully!'
-  });
+  })
 
   return (
     <>

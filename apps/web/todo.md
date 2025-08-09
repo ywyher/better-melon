@@ -1,3 +1,5 @@
+episode list weird styling when only one episode
+
 when navigating between eps the subs in transcriptoin-item component doenst chagne ??
 
 use-save-progress causes lag, disable rn

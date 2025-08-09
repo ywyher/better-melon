@@ -1,14 +1,14 @@
 'use client'
 
-import { useEffect } from "react";
-import { useSubtitleStore } from "@/lib/stores/subtitle-store";
-import { useSubtitleTranscriptions } from "@/lib/hooks/use-subtitle-transcriptions";
-import { useInitializeTokenizer } from "@/lib/hooks/use-initialize-tokenizer";
 import SubtitleTranscriptions from "@/app/watch/[id]/[ep]/components/transcriptions/transcriptions";
-import { useWatchDataStore } from "@/lib/stores/watch-store";
+import { useEffect } from "react";
 import { hasChanged } from "@/lib/utils/utils";
+import { useSubtitleStore } from "@/lib/stores/subtitle-store";
+import { useWatchDataStore } from "@/lib/stores/watch-store";
 import { useSubtitleStyles } from "@/lib/hooks/use-subtitle-styles";
 import { usePitchAccentChunks } from "@/lib/hooks/use-pitch-accent-chunks";
+import { useInitializeTokenizer } from "@/lib/hooks/use-initialize-tokenizer";
+import { useSubtitleTranscriptions } from "@/lib/hooks/use-subtitle-transcriptions";
 
 import DefinitionCard from "@/components/definition-card/definition-card";
 

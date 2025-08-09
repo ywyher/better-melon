@@ -142,6 +142,7 @@ export const queryVariables = {
     favourite: ({ page = 1, perPage = 10 }: { page?: number, perPage?: number }): AnimeListQueryVariables => ({ 
       sorts: ['FAVOURITES_DESC'],
       withTitle: true,
+      withFormat: true,
       withStatus: true,
       withCoverImage: true,
       withSeasonYear: true,
