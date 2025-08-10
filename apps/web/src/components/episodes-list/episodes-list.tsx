@@ -74,6 +74,23 @@ export default function EpisodesList({
     }, [])
   });
 
+
+  useEffect(() => {
+    console.log(`test`, {
+      isLoading,
+      isEpisodesLoading,
+      episodes,
+      animeTitle,
+      animeBanner,
+    })
+  }, [
+    isLoading,
+    isEpisodesLoading,
+    episodes,
+    animeTitle,
+    animeBanner,
+  ])
+
   if(
     isLoading 
     || isEpisodesLoading 

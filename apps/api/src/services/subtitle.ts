@@ -4,7 +4,7 @@ import { makeRequest, setCache } from "../utils/utils";
 import { cacheKeys } from "../lib/constants/cache";
 import { AnilistAnime, SubtitleEntry, SubtitleFile } from "@better-melon/shared/types";
 
-export async function getSubtitleEntries({ anilistId, shouldCache = true }: { anilistId: AnilistAnime['id'], shouldCache: boolean }): Promise<SubtitleEntry[]> {
+export async function getSubtitleEntries({ anilistId, shouldCache = true }: { anilistId: AnilistAnime['id'], shouldCache?: boolean }): Promise<SubtitleEntry[]> {
   try {
     const cacheKey = `${cacheKeys.subtitle.entries(anilistId)}`;
     if (shouldCache) {

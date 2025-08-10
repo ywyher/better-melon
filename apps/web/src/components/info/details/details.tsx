@@ -25,7 +25,7 @@ export default function Details({ anime, isLoading }: DetailsProps) {
           {anime.status != 'NOT_YET_RELEASED' && (
             <EpisodesList
               nextAiringEpisode={anime.nextAiringEpisode}
-              animeBanner={anime.bannerImage}
+              animeBanner={anime.bannerImage || anime.coverImage.extraLarge}
               animeTitle={anime.title}
               className="h-full"
             />

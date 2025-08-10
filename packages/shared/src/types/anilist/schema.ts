@@ -1,5 +1,15 @@
-import { Type as t } from "@sinclair/typebox";
+import { Type as t, type TObject } from "@sinclair/typebox";
 import { animeDate } from "../anime/schema";
+
+export const NullableFields = <T extends TObject<any>>(obj: T) =>
+  t.Object(
+    Object.fromEntries(
+      Object.entries(obj.properties).map(([key, schema]) => [
+        key,
+        t.Union([schema as any, t.Null()])
+      ])
+    )
+  )
 
 export const anilistGenre = t.Union([
   t.Literal("Action"),
@@ -483,11 +493,14 @@ export const anilistAnime = t.Object({
     t.Null()
   ]),
   coverImage: anilistCoverImage,
-  episodes: t.Number(),
+  episodes: t.Union([
+    t.Number(),
+    t.Null()
+  ]),
   nextAiringEpisode: t.Union([
     anilistNextAiringEpisode,
     t.Null()
   ]),
   startDate: animeDate,
-  endDate: animeDate,
+  endDate: NullableFields(animeDate),
 })
