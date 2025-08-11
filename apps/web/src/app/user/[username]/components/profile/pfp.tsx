@@ -4,7 +4,7 @@ import useUserFiles from "@/lib/hooks/use-user-files";
 import DialogWrapper from "@/components/dialog-wrapper";
 import { User } from "@/lib/db/schema";
 import { cn, getFileUrl } from "@/lib/utils/utils";
-import UploadOverlay from "@/app/user/[username]/components/upload-overlay";
+import UploadOverlay from "@/app/user/[username]/components/profile/upload-overlay";
 
 type UserPfpProps = {
   userId: User['id']
@@ -12,7 +12,7 @@ type UserPfpProps = {
   editable?: boolean
 }
 
-export function UserPfp({ userId, image, editable = false }: UserPfpProps) {
+export default function ProfilePfp({ userId, image, editable = false }: UserPfpProps) {
   const {
     fileInputRef,
     previewUrl,

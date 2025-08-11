@@ -5,6 +5,7 @@ import { Anime } from "@/types/anime";
 import { MediaPlayerInstance } from "@vidstack/react";
 import { defaultGeneralSettings } from "@/lib/constants/settings";
 import _ from 'lodash';
+import { format } from "date-fns";
 
 export const s3 = new S3Client({
   region: "auto",
@@ -224,4 +225,24 @@ export function sortObject({
 
 export function getPercentage({ duration, progress }:{ progress: number; duration: number }) {
   return Number(((progress / duration) * 100).toFixed(1))
+}
+
+export const groupByDate = <T>(
+  {
+    array,
+    dateExtractor
+  }: {  
+    array: T[], 
+    dateExtractor: (item: T) => Date,
+  }) => {
+  return array.reduce((acc, entry) => {
+    const dateKey = format(dateExtractor(entry), 'yyyy-MM-dd');
+    
+    if (!acc[dateKey]) {
+      acc[dateKey] = [];
+    }
+    acc[dateKey].push(entry);
+    
+    return acc;
+  }, {} as Record<string, T[]>);
 }

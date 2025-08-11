@@ -62,7 +62,7 @@ export default function DialogWrapper({
   if (isBreakpoint) {
     return (
       <Drawer open={isOpen} onOpenChange={onOpenChange} handleOnly={handleOnly}>
-        {trigger && <DrawerTrigger asChild>{trigger}</DrawerTrigger>}
+        {trigger && <DrawerTrigger className="cursor-pointer" asChild>{trigger}</DrawerTrigger>}
         <DrawerContent className="w-full min-h-[85vh] max-h-[85vh]">
           <div className={cn("pb-3 px-3", className)}>
             <DrawerHeader className={cn(
@@ -84,7 +84,7 @@ export default function DialogWrapper({
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
+      {trigger && <DialogTrigger className="cursor-pointer" asChild>{trigger}</DialogTrigger>}
       <DialogContent 
         className={cn(
           "w-full",

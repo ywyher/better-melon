@@ -7,7 +7,7 @@ export default function ListScrollAreaWrapper({
   showMore = true,
   children
 }: {
-  onMoreClick: () => void;
+  onMoreClick?: () => void;
   showMore?: boolean;
   children: ReactNode;
 }) {
@@ -20,7 +20,9 @@ export default function ListScrollAreaWrapper({
     >
       <div className="flex flex-row gap-8 w-max py-2">
         {children}
-        {showMore && <MoreCard onClick={onMoreClick} />}
+        {showMore && <MoreCard onClick={() => {
+          if(onMoreClick) onMoreClick()
+        }} />}
       </div>
       <ScrollBar orientation="horizontal" />
     </ScrollArea>

@@ -3,7 +3,7 @@ import useUserFiles from "@/lib/hooks/use-user-files";
 import DialogWrapper from "@/components/dialog-wrapper";
 import { cn } from "@/lib/utils/utils";
 import { User } from "@/lib/db/schema";
-import UploadOverlay from "@/app/user/[username]/components/upload-overlay";
+import UploadOverlay from "@/app/user/[username]/components/profile/upload-overlay";
 
 type UserBannerProps = {
   userId: User['id']
@@ -11,7 +11,7 @@ type UserBannerProps = {
   editable?: boolean
 }
 
-export function UserBanner({ userId, banner, editable = false }: UserBannerProps) {
+export default function ProfileBanner({ userId, banner, editable = false }: UserBannerProps) {
   const {
     fileInputRef,
     previewUrl,

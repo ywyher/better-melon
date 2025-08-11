@@ -1,8 +1,8 @@
 'use client'
 
+import { Switch } from "@/components/ui/switch"
 import { SubtitleSettings } from "@/lib/db/schema"
 import { useSubtitleSettings } from "@/lib/hooks/use-subtitle-settings"
-import { Switch } from "@radix-ui/react-switch"
   
 export default function ShowFurigana({ value }: { 
     value: SubtitleSettings['showFurigana']

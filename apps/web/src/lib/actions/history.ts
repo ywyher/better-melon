@@ -164,17 +164,17 @@ export async function getHistory({ limit }: { limit?: number }) {
         const { userId, error } = await ensureAuthenticated()
     
         if(!userId || error) return {
-            message: null,
-            error: error,
-            history: [],
+          message: null,
+          error: error,
+          history: [],
         }
 
         const list = await db
-            .select()
-            .from(history)
-            .where(eq(history.userId, userId))
-            .orderBy(desc(history.updatedAt))
-            .limit(limit ?? Number.MAX_SAFE_INTEGER);
+          .select()
+          .from(history)
+          .where(eq(history.userId, userId))
+          .orderBy(desc(history.updatedAt))
+          .limit(limit ?? Number.MAX_SAFE_INTEGER);
 
 
         return {
