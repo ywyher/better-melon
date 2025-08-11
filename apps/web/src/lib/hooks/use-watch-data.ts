@@ -299,11 +299,11 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
 
   const errors = useMemo(() => {
     return [
+      subtitlesError,
       streamingDataError,
       transcriptionsError,
       settingsError,
       stylesError,
-      subtitlesError,
       isMediaHistoryError,
       wordsError,
       pitchAccentError

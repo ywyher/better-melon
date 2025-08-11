@@ -34,8 +34,8 @@ export async function getSubtitleEntries({ anilistId, shouldCache = true }: { an
     }
 
     return entries;
-  } catch (error) {
-    throw new Error(`${error instanceof Error ? error.message : 'Failed to fetch subtitle entries: Unknown error'}`)
+  } catch {
+    return []
   }
 }
 
@@ -78,6 +78,6 @@ export async function getSubtitleFiles({ anilistData, episodeNumber }: { anilist
 
     return files;
   } catch (error) {
-    throw new Error(`${error instanceof Error ? error.message : 'Failed to fetch subtitle files: Unknown error'}`)
+    return []
   }
 }

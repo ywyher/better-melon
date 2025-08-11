@@ -153,9 +153,24 @@ export async function getKitsuAnime({
     });
     console.log('Successfully fetched episode data');
 
+    console.log({
+      info: info.attributes,
+      episode
+    })
+
     return {
       anime: info,
-      episode
+      episode: {
+        ...episode,
+        attributes: {
+          ...episode.attributes,
+          titles: info.attributes.titles,
+          canonicalTitle: info.attributes.canonicalTitle || anilistData.title.english,
+          thumbnail: {
+            original: episode.attributes.thumbnail?.original || anilistData.bannerImage || anilistData.coverImage.extraLarge
+          }
+        }
+      }
     };
   } catch (error) {
     console.error('Error in getKitsu:', error);

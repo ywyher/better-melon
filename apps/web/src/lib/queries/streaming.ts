@@ -19,7 +19,7 @@ export const streamingQueries = createQueryKeys('streaming', {
             const dataRaw = await fetch(
               `${env.NEXT_PUBLIC_API_URL}/anime/${animeId}/${episodeNumber}/${provider}`
             );
-            
+
             if (!dataRaw.ok) {
               throw new Error(`API responded with status: ${dataRaw.status}`);
             }
@@ -28,7 +28,7 @@ export const streamingQueries = createQueryKeys('streaming', {
               data: StreamingData,
               message: string,
             };
-
+            
             if (!success) {
               throw new Error(message || 'API returned failure');
             }
@@ -36,10 +36,15 @@ export const streamingQueries = createQueryKeys('streaming', {
             if (!data) {
               throw new Error('Invalid data structure returned from API');
             }
-
+            
+            
             return data;
           } catch (error) {
-            throw new Error(`Failed to fetch initial anime data: ${error instanceof Error ? error.message : 'Unknown error'}`);
+            throw new Error('Invalid data structure returned from API');
+            // return {
+            //   success: false,
+            //   message
+            // }
           }
         }
     }),

@@ -1,23 +1,23 @@
 'use client';
 
-import PlayerSection from '@/app/watch/[id]/[ep]/components/sections/player-section';
-import MissingSubtitlesDialog from '@/app/watch/[id]/[ep]/components/subtitles/missing-subtitles-dialog';
-import ControlsSection from '@/app/watch/[id]/[ep]/components/sections/controls-section';
-import EpisodeDetails from '@/app/watch/[id]/[ep]/components/episode/details/details';
 import Panel from '@/app/watch/[id]/[ep]/components/panel/panel';
+import PlayerSection from '@/app/watch/[id]/[ep]/components/sections/player-section';
+import EpisodeDetails from '@/app/watch/[id]/[ep]/components/episode/details/details';
+import ControlsSection from '@/app/watch/[id]/[ep]/components/sections/controls-section';
+import MissingSubtitlesDialog from '@/app/watch/[id]/[ep]/components/subtitles/missing-subtitles-dialog';
 import { cn } from '@/lib/utils/utils';
 import { useParams } from 'next/navigation';
 import { Indicator } from '@/components/indicator';
-import { usePlayerStore } from '@/lib/stores/player-store';
 import { useIsXLarge } from '@/lib/hooks/use-media-query';
-import { usePrefetchEpisode } from '@/lib/hooks/use-prefetch-episode';
-import { useLayoutEffect, useMemo } from 'react';
-import { useDefinitionStore } from '@/lib/stores/definition-store';
-import { SubtitlesNotAvailableError } from '@/lib/errors/player';
-import { useSubtitleStore } from '@/lib/stores/subtitle-store';
-import { useUIStateStore } from '@/lib/stores/ui-state-store';
-import { defaultSubtitleSettings } from '@/app/settings/subtitle/_subtitle-settings/constants';
 import { useWatchData } from '@/lib/hooks/use-watch-data';
+import { usePlayerStore } from '@/lib/stores/player-store';
+import { useUIStateStore } from '@/lib/stores/ui-state-store';
+import { useSubtitleStore } from '@/lib/stores/subtitle-store';
+import { usePrefetchEpisode } from '@/lib/hooks/use-prefetch-episode';
+import { useDefinitionStore } from '@/lib/stores/definition-store';
+import { defaultSubtitleSettings } from '@/app/settings/subtitle/_subtitle-settings/constants';
+import { useLayoutEffect, useMemo } from 'react';
+import { SubtitlesNotAvailableError } from '@/lib/errors/player';
 
 export default function WatchPage() {
   const params = useParams();

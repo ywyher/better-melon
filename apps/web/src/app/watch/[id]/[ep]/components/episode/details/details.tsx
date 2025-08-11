@@ -13,11 +13,13 @@ export default function EpisodeDetails() {
     <Card className="flex flex-col gap-3 bg-secondary py-4">
       <EpisodeDetailsHeader />
       <CardContent>
-        <CardDescription
-          className="bg-accent p-2 rounded-sm border-primary/20 border-1 w-fit"
-        >
-          {episode.details.attributes.description}
-        </CardDescription>
+        {episode.details.attributes.description && (
+          <CardDescription
+            className="bg-accent p-2 rounded-sm border-primary/20 border-1 w-fit"
+          >
+            {episode.details.attributes.description}
+          </CardDescription>
+        )}
       </CardContent>
     </Card>
   )

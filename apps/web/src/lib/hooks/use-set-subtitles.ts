@@ -56,6 +56,7 @@ export const useSetSubtitles = ({
         // name
         matchPattern: cachedFiles.japanese
       });
+
       if (file && file !== activeSubtitleFile) { // Only update if different
         setActiveSubtitleFile(file);
         setSubtitlesError(null);
@@ -75,6 +76,7 @@ export const useSetSubtitles = ({
     preferredFormat, 
     episodeNumber,
     englishSubtitleUrl,
+    activeSubtitleFile
   ]);
 
   return {
