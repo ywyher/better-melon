@@ -25,36 +25,36 @@ export default function ProfileCard({ username }: { username: string }) {
   if(isLoading || !profileUser) return <>Loading...</>
   
   return (
-    <div
-      className="
-        mb-[calc(var(--banner-height-small)-5rem)]
-        md:mb-[calc(var(--banner-height)-5rem)]
-      "
-    >
-      <div className="
-        absolute inset-0 top-0 left-1/2 transform -translate-x-1/2
-        w-full h-[var(--banner-height-small)] md:h-[var(--banner-height)]
-        mb-[calc(var(--banner-height-small)-5rem)]
-        md:mb-[calc(var(--banner-height)-5rem)]
-      ">
-        <ProfileBanner userId={profileUser.id} banner={profileUser.banner} editable={isOwner} />
+    <>
+      <div
+        className="
+          mb-[calc(var(--banner-height-small)-5rem)]
+          md:mb-[calc(var(--banner-height)-5rem)]
+        "
+      >
         <div className="
-          h-full container mx-auto
-          pb-10 z-20
-          flex items-end gap-10
+          absolute inset-0 top-0 left-1/2 transform -translate-x-1/2
+          w-full h-[var(--banner-height-small)] md:h-[var(--banner-height)]
         ">
-          <ProfilePfp userId={profileUser.id} image={profileUser.image} editable={isOwner} />
-          <div 
-            className="
-              z-20
-              text-2xl font-bold text-foreground
-            "
-          >
-            {profileUser.name}
+          <ProfileBanner userId={profileUser.id} banner={profileUser.banner} editable={isOwner} />
+          <div className="
+            h-full container mx-auto
+            pb-10 z-20
+            flex items-end gap-10
+          ">
+            <ProfilePfp userId={profileUser.id} image={profileUser.image} editable={isOwner} />
+            <div 
+              className="
+                z-20
+                text-2xl font-bold text-foreground
+              "
+            >
+              {profileUser.name}
+            </div>
           </div>
         </div>
       </div>
       {data?.currentUser?.isAnonymous && isOwner && <AnonAlert />}
-    </div>
+    </>
   );
 }

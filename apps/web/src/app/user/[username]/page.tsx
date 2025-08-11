@@ -9,7 +9,7 @@ export default function User() {
     const username = String(params.username)
 
     return (
-      <div>
+      <div className="flex flex-col gap-5">
         <UserCard username={username} />
         <ActivityHistory username={username} />
       </div>
