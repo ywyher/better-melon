@@ -1,5 +1,7 @@
+import StatsCard from '@/components/stats-card'
 import { Separator } from '@/components/ui/separator'
 import { ActivityHistoryEntry } from '@/types/history'
+import { Hash, Hourglass, TvMinimalPlay } from 'lucide-react'
 import { useMemo } from 'react'
 
 type ActivityHistoryStatsProps = {
@@ -27,22 +29,57 @@ export default function ActivityHistoryStats({ entries }: ActivityHistoryStatsPr
     return Math.round((totalSeconds / 3600) * 10) / 10
   }, [entries])
 
+  const totalEpisodes = useMemo(() => {
+    return entries.reduce((sum, entry) => {
+      // Handle case where medias might be undefined
+      if (!entry.medias || !Array.isArray(entry.medias)) {
+        return sum
+      }
+      
+      // Add the number of media objects (episodes) in this entry
+      return sum + entry.medias.length
+    }, 0)
+  }, [entries])
+
+  const totalAnimes = useMemo(() => {
+    const uniqueAnimeIds = new Set<string>()
+    
+    entries.forEach(entry => {
+      // Handle case where medias might be undefined
+      if (!entry.medias || !Array.isArray(entry.medias)) {
+        return
+      }
+      
+      // Add all animeIds to the Set (automatically handles uniqueness)
+      entry.medias.forEach(media => {
+        if (media.mediaId) {
+          uniqueAnimeIds.add(media.mediaId)
+        }
+      })
+    })
+    
+    return uniqueAnimeIds.size
+  }, [entries])
+
   return (
     <>
       <Separator className='border-1' />
-      <div className='flex flex-row gap-5 justify-center'>
-        <div className='px-6 w-fit'>
-          <div className='flex flex-col justify-center items-center gap-0'>
-            <div className="text-xl font-bold">{entries.length}</div>
-            <div className="text-muted-foreground text-md">Total watched</div>
-          </div>
-        </div>
-        <div className='px-6 w-fit'>
-          <div className='flex flex-col justify-center items-center gap-0'>
-            <div className="text-xl font-bold">{totalHours}h</div>
-            <div className="text-muted-foreground text-md">Total hours watched</div>
-          </div>
-        </div>
+      <div className='flex flex-row justify-center items-center gap-10'>
+        <StatsCard 
+          value={totalAnimes}
+          icon={Hash}
+          label='Total animes'
+        />
+        <StatsCard 
+          value={totalEpisodes}
+          icon={TvMinimalPlay}
+          label='Total episodes'
+        />
+        <StatsCard 
+          value={`${totalHours}h`}
+          icon={Hourglass}
+          label='Total hours wasted'
+        />
       </div>
       <Separator />
     </>

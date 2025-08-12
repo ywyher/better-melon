@@ -40,8 +40,8 @@ export default function ProfleHistory() {
 
   return (
     <Card className="bg-secondary">
-      <CardHeader className="flex flex-col gap-3">
-        <CardTitle className="text-2xl">History</CardTitle>
+      <CardHeader className="flex flex-row justify-between gap-3">
+        <CardTitle className="text-2xl flex-1">History</CardTitle>
         <ProfileHistorySearchBar />
       </CardHeader>
       <Separator />

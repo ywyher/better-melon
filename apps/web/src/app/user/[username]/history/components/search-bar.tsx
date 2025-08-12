@@ -19,7 +19,7 @@ export default function ProfileHistorySearchBar() {
   }
   
   return (
-    <div className="flex flex-row gap-2 items-center">
+    <div className="flex flex-row gap-2 flex-2 items-center">
       <Input
         value={value}
         onChange={(e) => setValue(e.target.value)}
