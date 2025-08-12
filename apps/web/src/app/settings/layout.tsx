@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description: "User settings page",
 };
 
-export default function RootLayout({
+export default function SettingsLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;

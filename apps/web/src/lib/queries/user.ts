@@ -1,5 +1,5 @@
 import { authClient, getSession } from "@/lib/auth-client";
-import { getAccountInfo, getHistoryByUsername, getUserByUsername } from "@/lib/db/queries";
+import { getAccountInfo } from "@/lib/db/queries";
 import { User } from "@/lib/db/schema";
 import { AuthProvider } from "@/types";
 import { createQueryKeys } from "@lukemorales/query-key-factory";

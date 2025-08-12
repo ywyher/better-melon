@@ -2,7 +2,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { cn } from "@/lib/utils/utils"
 import { TriangleAlert } from "lucide-react"
 
-export default function AnonAlert({ className }: { className: string }) {
+export default function AnonAlert({ className = "" }: { className?: string }) {
   return (
     <Alert variant="destructive" className={cn(
       'w-fit',

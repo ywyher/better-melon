@@ -3,8 +3,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { updateUser } from "@/lib/db/mutations";
 import useUploadFile from "@/lib/hooks/use-upload-file";
-import { userQueries } from "@/lib/queries/user";
 import { User } from "@/lib/db/schema";
+import { profileQueries } from "@/lib/queries/profile";
 
 interface UseImageUploadProps {
   userId: User['id'];
@@ -62,7 +62,7 @@ export default function useUserFiles({ userId, field, successMessage }: UseImage
       }
       
       toast.success(successMessage || `${field} updated successfully!`);
-      queryClient.invalidateQueries({ queryKey: userQueries.profile._def });
+      queryClient.invalidateQueries({ queryKey: profileQueries.profile._def });
       
       cleanup();
     } catch (err) {

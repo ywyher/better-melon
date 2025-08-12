@@ -1,4 +1,4 @@
-import Hianime from '@repo/scraper';
+import Hianime from '@better-melon/scraper';
 import { redis } from "bun";
 import { AnilistToHiAnime, HianimeResponse } from "../types/hianime";
 import { cacheKeys } from "../lib/constants/cache";
@@ -52,7 +52,11 @@ async function mapAnilistToHianime({ anilistData }: { anilistData: AnilistAnime 
       format: mappedFormat,
       status: mappedStatus,
       startDate,
-      endDate: status == 'FINISHED' ? endDate : null
+      endDate: status == 'FINISHED' ? endDate : {
+        day: null,
+        year: null,
+        month: null
+      }
     }
 
     const endTime = performance.now();

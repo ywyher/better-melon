@@ -5,9 +5,9 @@ export default function AnimeCardSkeleton() {
   return (
     <Card
       className="
-        relative w-50 h-70 p-0
+        relative w-50 h-90 p-0
         border-0 outline-0 shadow-none
-        flex flex-col gap-2
+        flex flex-col gap-2 bg-transparent
       "
     >
       <CardContent className="p-0 flex flex-col gap-3">

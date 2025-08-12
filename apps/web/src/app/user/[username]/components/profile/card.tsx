@@ -1,11 +1,17 @@
+'use client'
+
 import AnonAlert from "@/app/user/[username]/components/profile/anon-alert";
 import ProfilePfp from "@/app/user/[username]/components/profile/pfp";
 import ProfileBanner from "@/app/user/[username]/components/profile/banner";
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { profileQueries } from "@/lib/queries/profile";
+import { useParams } from "next/navigation";
 
-export default function ProfileCard({ username }: { username: string }) {
+export default function ProfileCard() {
+  const params = useParams()
+  const username = String(params.username)
+
   const { data, isLoading } = useQuery({
     ...profileQueries.profile({ username }),
     enabled: !!username
@@ -28,8 +34,8 @@ export default function ProfileCard({ username }: { username: string }) {
     <>
       <div
         className="
-          mb-[calc(var(--banner-height-small)-5rem)]
-          md:mb-[calc(var(--banner-height)-5rem)]
+          mb-[calc(var(--banner-height-small)-5.5rem)]
+          md:mb-[calc(var(--banner-height)-5.5rem)]
         "
       >
         <div className="

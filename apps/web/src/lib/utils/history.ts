@@ -1,6 +1,6 @@
 import { Activity } from "react-activity-calendar";
 
-export const calculateActivityHistoryLevel = (count: number, maxLevel?: number): number => {
+export const calculateActivityHistoryLevel = (count: number): number => {
   if (count === 0) return 0;
   if (count <= 2) return 1;
   if (count <= 5) return 2;

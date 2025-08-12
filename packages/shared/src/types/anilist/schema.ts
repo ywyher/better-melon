@@ -502,5 +502,12 @@ export const anilistAnime = t.Object({
     t.Null()
   ]),
   startDate: animeDate,
-  endDate: NullableFields(animeDate),
+  endDate: t.Union([
+    animeDate,
+    t.Object({
+      day: t.Null(),
+      year: t.Null(),
+      month: t.Null()
+    })
+  ]),
 })

@@ -6,7 +6,7 @@ import { groupByDate } from "@/lib/utils/utils";
 import { ActivityHistoryEntry } from "@/types/history";
 import { createQueryKeys } from "@lukemorales/query-key-factory";
 
-export const profileQueries = createQueryKeys('anki', {
+export const profileQueries = createQueryKeys('profile', {
   profile: ({ username }: { username: User['name'] }) => ({
     queryKey: ['profile', username],
     queryFn: async () => {
@@ -21,8 +21,34 @@ export const profileQueries = createQueryKeys('anki', {
       }
     }
   }),
+  history: ({ 
+    username,
+    search,
+    page,
+    limit
+  }: { 
+    username: User['name'];
+    search?: string;
+    page?: number;
+    limit?: number
+  }) => ({
+    queryKey: ['history', username, search, page],
+    queryFn: async () => {
+      const { history, pagination } = await getProfileHistory({ 
+        username,
+        search,
+        page,
+        limit
+      })
+
+      return {
+        history,
+        pagination
+      }
+    }
+  }),
   activiyHistory: ({ username }: { username: User['name'] }) => ({
-    queryKey: ['profile', username],
+    queryKey: ['activity-history', username],
     queryFn: async () => {
       const { history } = await getProfileHistory({ username })
 
