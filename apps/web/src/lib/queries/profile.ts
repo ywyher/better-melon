@@ -3,6 +3,7 @@ import { getSession } from "@/lib/auth-client";
 import { History, User } from "@/lib/db/schema";
 import { calculateActivityHistoryLevel, padActivityHistory } from "@/lib/utils/history";
 import { groupByDate } from "@/lib/utils/utils";
+import { ActivityHistoryEntry } from "@/types/history";
 import { createQueryKeys } from "@lukemorales/query-key-factory";
 
 export const profileQueries = createQueryKeys('anki', {
@@ -27,14 +28,14 @@ export const profileQueries = createQueryKeys('anki', {
 
       const grouped = groupByDate<History>({ array: history, dateExtractor: (history) => history.createdAt })
 
-      const entries = Object.entries(grouped).map(([date, entries]) => ({
+      const entries: ActivityHistoryEntry[] = Object.entries(grouped).map(([date, entries]) => ({
         date,
         count: entries.length,
         level: calculateActivityHistoryLevel(entries.length),
-        data: entries
+        medias: entries
       }));
 
-      const paddedEntries = padActivityHistory(entries)
+      const paddedEntries: ActivityHistoryEntry[] = padActivityHistory(entries)
 
       return {
         grouped,
