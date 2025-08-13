@@ -13,6 +13,7 @@ export default function ProfileTabsLinks() {
 
   const links = [
     { label: "Overview", href: `/user/${username}` },
+    { label: "Mined words", href: `/user/${username}/words` },
     { label: "History", href: `/user/${username}/history` },
   ]
 

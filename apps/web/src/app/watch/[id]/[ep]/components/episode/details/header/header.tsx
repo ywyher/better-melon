@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { CardHeader, CardTitle } from "@/components/ui/card";
 import { useStreamingStore } from "@/lib/stores/streaming-store";
 import { format } from "date-fns";
+import { useEffect } from "react";
 
 export default function EpisodeDetailsHeader() {
   const animeId = useStreamingStore((state) => state.animeId) || 20661

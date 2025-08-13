@@ -146,9 +146,11 @@ export default function QuickSearch({ className = "" }: { className?: string }) 
                   </div>
                 ))}
               </div>
-              <DrawerFooter>
-                <ViewAll navigateToSearch={navigateToSearch} query={debouncedValue} />
-              </DrawerFooter>
+              {debouncedValue && (
+                <DrawerFooter>
+                  <ViewAll navigateToSearch={navigateToSearch} query={debouncedValue} />
+                </DrawerFooter>
+              )}
             </DrawerContent>
           </Drawer>
         </>
@@ -218,7 +220,9 @@ export default function QuickSearch({ className = "" }: { className?: string }) 
                   )}
                 </CommandList>
               </div>
-              <ViewAll navigateToSearch={navigateToSearch} query={debouncedValue} />
+              {debouncedValue && (
+                <ViewAll navigateToSearch={navigateToSearch} query={debouncedValue} />
+              )}
             </div>
           </CommandDialog>
         </>

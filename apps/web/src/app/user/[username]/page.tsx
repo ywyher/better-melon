@@ -1,5 +1,3 @@
-"use client"
-
 import ProfileOverview from "@/app/user/[username]/overview/page";
 
 export default function User() {

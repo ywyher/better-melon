@@ -1,4 +1,4 @@
-import { getProfileHistory, getProfileUser } from "@/app/user/[username]/actions";
+import { getProfileHistory, getProfileUser, getProfileWords } from "@/app/user/[username]/actions";
 import { getSession } from "@/lib/auth-client";
 import { History, User } from "@/lib/db/schema";
 import { calculateActivityHistoryLevel, padActivityHistory } from "@/lib/utils/history";
@@ -43,6 +43,32 @@ export const profileQueries = createQueryKeys('profile', {
 
       return {
         history,
+        pagination
+      }
+    }
+  }),
+  words: ({ 
+    username,
+    search,
+    page,
+    limit
+  }: { 
+    username: User['name'];
+    search?: string;
+    page?: number;
+    limit?: number
+  }) => ({
+    queryKey: ['words', username, search, page],
+    queryFn: async () => {
+      const { words, pagination } = await getProfileWords({ 
+        username,
+        search,
+        page,
+        limit
+      })
+
+      return {
+        words,
         pagination
       }
     }

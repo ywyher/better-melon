@@ -14,3 +14,12 @@ export type CacheKey = string;
 export type Nullable<T> = {
   [K in keyof T]: T[K] | null;
 };
+
+export type Pagination = {
+  currentPage: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+  itemsPerPage?: number;
+  totalPages?: number;
+  totalItems?: number;
+}

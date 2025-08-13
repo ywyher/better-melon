@@ -34,7 +34,7 @@ async function mapAnilistToKitsu({ anilistData }: { anilistData: AnilistAnime })
       success: true,
       status: mappedStatus,
       startDate: `${startDate.year}-${pad(startDate.month)}-${pad(startDate.day)}`,
-      endDate: mappedStatus == 'finished' ? `${endDate.year}-${pad(endDate.month)}-${pad(endDate.day)}` : null
+      endDate: mappedStatus == 'finished' ? `${endDate.year}-${pad(endDate.month || 0)}-${pad(endDate.day || 0)}` : null
     }
 
     const endTime = performance.now();
@@ -153,19 +153,14 @@ export async function getKitsuAnime({
     });
     console.log('Successfully fetched episode data');
 
-    console.log({
-      info: info.attributes,
-      episode
-    })
-
     return {
       anime: info,
       episode: {
         ...episode,
         attributes: {
           ...episode.attributes,
-          titles: info.attributes.titles,
-          canonicalTitle: info.attributes.canonicalTitle || anilistData.title.english,
+          titles: episode.attributes.titles,
+          canonicalTitle: episode.attributes.canonicalTitle || anilistData.title.english,
           thumbnail: {
             original: episode.attributes.thumbnail?.original || anilistData.bannerImage || anilistData.coverImage.extraLarge
           }

@@ -1,21 +1,21 @@
 "use client"
 
-import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
-import { FieldErrors, useForm } from "react-hook-form";
-import { zodResolver } from '@hookform/resolvers/zod';
+import LoadingButton from "@/components/loading-button";
 import { z } from "zod";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { useIsSmall } from "@/lib/hooks/use-media-query";
-import { PasswordInput } from "@/components/form/password-input";
-import { authClient } from "@/lib/auth-client";
-import { Dispatch, SetStateAction, useState } from "react";
 import { AuthPort } from "@/components/auth/auth";
-import LoadingButton from "@/components/loading-button";
-import { emailSchema, passwordSchema, usernameSchema } from "@/types/auth";
+import { useRouter } from "next/navigation";
+import { useIsSmall } from "@/lib/hooks/use-media-query";
+import { authClient } from "@/lib/auth-client";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { PasswordInput } from "@/components/form/password-input";
 import { useQueryClient } from "@tanstack/react-query";
 import { getShouldVerifyEmail } from "@/components/auth/actions";
-import { useRouter } from "next/navigation";
+import { FieldErrors, useForm } from "react-hook-form";
+import { Dispatch, SetStateAction, useState } from "react";
+import { emailSchema, passwordSchema, usernameSchema } from "@/types/auth";
+import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
 
 export const registerSchema = z.object({
     username: usernameSchema,
