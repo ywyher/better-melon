@@ -31,7 +31,7 @@ export default function TopTrending() {
       className="relative"
     >
       <CarouselContent>
-        {data?.Page.media
+        {data && data.Page.media
           .filter((anime) => anime.bannerImage)
           .map((anime) => (
             <TopTrendingSlide

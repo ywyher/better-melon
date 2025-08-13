@@ -1,4 +1,4 @@
-import { ChangeEmailTemplate } from "@/components/templates/email/change-email";
+import { ChangeEmailTemplate } from "@/components/templates/change-email";
 import { env } from "@/lib/env/server";
 import { NextResponse } from "next/server";
 import { Resend } from "resend";

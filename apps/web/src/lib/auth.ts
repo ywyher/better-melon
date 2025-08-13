@@ -1,14 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import db, { DBInstance } from "@/lib/db";
-import { betterAuth } from "better-auth";
-import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { anonymous, emailOTP, genericOAuth, organization } from "better-auth/plugins"
 import * as schema from '@/lib/db/schema/index'
-import { nextCookies } from "better-auth/next-js";
 import { eq } from "drizzle-orm";
 import { env } from "@/lib/env/server";
+import { APIError } from 'better-auth/api'
 import { generateId } from "better-auth"
+import { betterAuth } from "better-auth";
+import { nextCookies } from "better-auth/next-js";
+import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import db, { DBInstance } from "@/lib/db";
+import { anonymous, emailOTP, genericOAuth } from "better-auth/plugins"
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -23,8 +24,8 @@ export const auth = betterAuth({
     minPasswordLength: 8,
     sendResetPassword: async ({ url, user }) => {
       try {
-        const response = await fetch(
-          `${env.APP_URL}/api/auth/forget/password`,
+        const res = await fetch(
+          `${env.APP_URL}/api/auth/forget-password`,
           {
             method: "POST",
             headers: {
@@ -36,16 +37,16 @@ export const auth = betterAuth({
               url: url,
             }),
           },
-        );
+        )
 
-        if (!response.ok) {
-          throw new Error(`Error: ${response.statusText}`);
-        }
+        if(!res.ok) throw new Error(res.statusText)
 
+        return
         return;
       } catch (error) {
-        console.error("Failed to send reset password url:", error);
-        throw error;
+        throw new APIError("BAD_GATEWAY", {
+          message: "Failed to send reset password email"
+        });
       }
     },
   },
@@ -70,7 +71,6 @@ export const auth = betterAuth({
     },
   },
   plugins: [
-    organization(),
     anonymous({
       generateName: () => {
         const randomSuffix = Math.random().toString(36).substring(2, 8); // generates random alphanumeric string
@@ -165,7 +165,7 @@ export const auth = betterAuth({
       async sendVerificationOTP({ email, otp, type }) { 
         if (type === "email-verification") {
           try {
-            const response = await fetch(
+            const res = await fetch(
               `${env.APP_URL}/api/auth/otp`,
               {  
                 method: "POST",
@@ -174,18 +174,15 @@ export const auth = betterAuth({
                 },
                 body: JSON.stringify({ email, otp }),
               },
-            );
+            )
+            
+            if(!res.ok) throw new Error(res.statusText)
 
-            if (!response.ok) {
-              throw new Error(`Error: ${response.statusText}`);
-            }
-
-            const data = await response.json();
-
-            return data;
+            return
           } catch (error) {
-            console.error("Failed to send OTP:", error);
-            throw error;
+            throw new APIError('BAD_GATEWAY', {
+              message: "Failed to send OTP:", error
+            });
           }
         }
       }, 

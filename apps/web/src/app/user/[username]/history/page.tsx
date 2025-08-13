@@ -1,17 +1,18 @@
 'use client'
 
-import ProfileHistorySearchBar from "@/app/user/[username]/history/components/search-bar";
-import AnimeCardSkeleton from "@/components/anime/card/default/skeleton";
+import HistoryStats from "@/app/user/[username]/history/components/stats";
 import AnimeHistoryCard from "@/components/anime/card/history/card";
+import AnimeCardSkeleton from "@/components/anime/card/default/skeleton";
+import ProfileHistorySearchBar from "@/app/user/[username]/history/components/search-bar";
+import ProfileHistoryPagination from "@/app/user/[username]/history/components/pagination";
+import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
-import { parseAsInteger, useQueryState } from "nuqs";
+import { Separator } from "@/components/ui/separator";
 import { getPercentage } from "@/lib/utils/utils";
 import { profileQueries } from "@/lib/queries/profile";
+import { parseAsInteger, useQueryState } from "nuqs";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { useMemo } from "react";
-import ProfileHistoryPagination from "@/app/user/[username]/history/components/pagination";
-import { Separator } from "@/components/ui/separator";
 
 export default function ProfleHistory() {
   const params = useParams()
@@ -44,6 +45,7 @@ export default function ProfleHistory() {
         <CardTitle className="text-2xl flex-1">History</CardTitle>
         <ProfileHistorySearchBar />
       </CardHeader>
+      <HistoryStats medias={history} />
       <Separator />
       <CardContent className="flex flex-row flex-wrap gap-5">
         {isLoading && Array.from({ length: 10 }).map((_,idx) => <AnimeCardSkeleton key={idx} />)}

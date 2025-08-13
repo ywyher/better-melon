@@ -10,7 +10,8 @@
     "start": "node dist/index.js",
     "lint": "eslint . --ext .ts",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "update": "bun update"
   },
   "dependencies": {
     "@types/spdy": "^3.4.9",

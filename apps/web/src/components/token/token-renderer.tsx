@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useMemo } from 'react';
+import React, { memo, useCallback, useEffect, useMemo } from 'react';
 import { SubtitleToken, SubtitleCue, SubtitleTranscription } from '@/types/subtitle';
 import { JapaneseToken } from '@/components/token/japanese-token';
 import { RegularToken } from '@/components/token/regular-token';
@@ -37,6 +37,10 @@ const TokenRenderer = memo<TokenRendererProps>(({
     getStyles({ token, isActive, accent, transcription }), 
     [getStyles, token, isActive, accent, transcription]
   );
+
+  useEffect(() => {
+    console.log(`styles`, styles)
+  }, [styles])
 
   const handleClick = useCallback(() => {
     onTokenClick(cue.id, japaneseToken || token)

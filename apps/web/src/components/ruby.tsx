@@ -1,6 +1,6 @@
 import { defaultSubtitleStyles } from '@/components/subtitle/styles/constants';
 import { cn } from '@/lib/utils/utils';
-import React, { memo, useMemo } from 'react';
+import React, { memo, useEffect, useMemo } from 'react';
 
 interface RubyProps {
   kanji: string;

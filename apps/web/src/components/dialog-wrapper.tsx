@@ -55,7 +55,7 @@ export default function DialogWrapper({
   // Determine if component is in controlled or uncontrolled mode
   const isControlled = open !== undefined && setOpen !== undefined;
   const isOpen = isControlled ? open : internalOpen;
-  const onOpenChange = isControlled 
+  const onOpenChange = isControlled
     ? setOpen 
     : setInternalOpen;
 
@@ -93,7 +93,7 @@ export default function DialogWrapper({
       >
         <DialogHeader 
           className={cn(
-            (title || description) && "pb-4 border-b bg-background/95 backdrop-blur h-fit",
+            (title || description) && "border-b bg-background/95 backdrop-blur h-fit",
             headerClassName
           )}
         >

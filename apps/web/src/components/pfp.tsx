@@ -21,7 +21,7 @@ export default function Pfp({
       onClick={onClick}
     >
       <AvatarImage className="object-cover" src={image} alt="Profile picture" />
-      <AvatarFallback>AS</AvatarFallback>
+      <AvatarFallback>pff</AvatarFallback>
     </Avatar>
   );
 }

@@ -43,7 +43,7 @@ export default function Register({ setPort, email, setPassword, setOpen }: Regis
         defaultValues: {
             email: email || "",
             password: "",
-            username: "",
+            username: '',
         }
     })
 
@@ -53,7 +53,7 @@ export default function Register({ setPort, email, setPassword, setOpen }: Regis
         const result = await authClient.signUp.email({
             email: email || formData.email,
             password: formData.password,
-            name: "",
+            name: formData.username
         });
 
         if(result.error) {

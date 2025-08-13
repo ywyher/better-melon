@@ -49,7 +49,7 @@ export default function ActivityHistory({ username }: ActivityHistoryProps) {
       <ActivityHistoryHeader />
       
       
-      <ActivityHistoryStats entries={entries} />
+      <ActivityHistoryStats medias={entries.flatMap(entry => entry.medias || [])} />
       
       <CardContent>
         <ActivityCalendarWrapper

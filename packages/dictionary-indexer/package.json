@@ -6,7 +6,8 @@
   "private": true,
   "scripts": {
     "dev": "echo 'No dev script for scraper package'",
-    "build": "bun ./src/index.ts"
+    "build": "bun ./src/index.ts",
+    "update": "bun update"
   },
   "devDependencies": {
     "@types/bun": "latest"

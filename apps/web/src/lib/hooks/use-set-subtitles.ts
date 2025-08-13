@@ -76,7 +76,7 @@ export const useSetSubtitles = ({
     preferredFormat, 
     episodeNumber,
     englishSubtitleUrl,
-    activeSubtitleFile
+    // activeSubtitleFile // this bitch causes maximum depth
   ]);
 
   return {

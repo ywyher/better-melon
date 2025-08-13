@@ -1,4 +1,4 @@
-import { ForgetPassowrdEmailTemplate } from "@/components/templates/email/forget-password";
+import { ForgetPassowrdEmailTemplate } from "@/components/templates/forget-password";
 import { env } from "@/lib/env/server";
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";

@@ -7,6 +7,7 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "start": "turbo run start",
+    "update": "turbo run update",
     "lint": "turbo run lint",
     "check-types": "tsc --noEmit"
   },
@@ -15,6 +16,7 @@
     "packages/*"
   ],
   "dependencies": {
+    "@react-email/render": "^1.2.0",
     "react-advanced-cropper": "^0.20.1"
   },
   "devDependencies": {

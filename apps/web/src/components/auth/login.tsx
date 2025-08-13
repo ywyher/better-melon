@@ -13,7 +13,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { AuthIdentifier, AuthPort } from "@/components/auth/auth";
 import LoadingButton from "@/components/loading-button";
 import { Button } from "@/components/ui/button";
-import { identifierSchema } from "@/types/auth";
+import { identifierSchema, passwordSchema } from "@/types/auth";
 import { getEmailByUsername, getIsAccountVerified, getShouldVerifyEmail } from "@/components/auth/actions";
 import { useQueryClient } from "@tanstack/react-query";
 import { FormField } from "@/components/form/form-field";
@@ -21,9 +21,7 @@ import { useRouter } from "next/navigation";
 
 export const loginSchema = z.object({
     identifier: identifierSchema,
-    password: z.string().min(1, {
-        message: "Password is required.",
-    }),
+    password: passwordSchema
 });
 
 type FormValues = z.infer<typeof loginSchema>;
@@ -59,44 +57,51 @@ export default function Login({ setPort, identifier, identifierValue, setOpen, s
         }
         if(!email) {
             toast.error("Failed to get email")
+            setIsLoading(false)
             return
         }
 
         const isAccountVerified = await getIsAccountVerified(email)
         const shouldVerifyEmail = await getShouldVerifyEmail()
 
-        if(isAccountVerified || !shouldVerifyEmail) {
-            const result = await authClient.signIn.email({
-                email: email,
-                password: formData.password,
-            });
-    
-            if(result.error) {
-                toast.error(result.error.message);
-                setIsLoading(false);
-                return;
-            }
-            
-            queryClient.clear()
-            router.refresh()
-            toast.success("Logged in successfully")
-            setIsLoading(false)
-            setOpen(false)
-            setPort('check')
-        }else {
-            const { error } = await authClient.emailOtp.sendVerificationOtp({
-                email: email,
-                type: "email-verification"
-            })
-            
-            if(error) {
-                toast.error(error.message)
+        try {
+            if(isAccountVerified || !shouldVerifyEmail) {
+                const result = await authClient.signIn.email({
+                    email: email,
+                    password: formData.password,
+                });
+        
+                if(result.error) {
+                    toast.error(result.error.message);
+                    setIsLoading(false);
+                    return;
+                }
+                
+                queryClient.clear()
+                router.refresh()
+                toast.success("Logged in successfully")
                 setIsLoading(false)
-                return;
+                setOpen(false)
+                setPort('check')
+            }else {
+                const { error } = await authClient.emailOtp.sendVerificationOtp({
+                    email: email,
+                    type: "email-verification"
+                })
+                
+                if(error) {
+                    toast.error(error.message)
+                    setIsLoading(false)
+                    return;
+                }
+        
+                setPassword(formData.password)
+                setPort('verify')
             }
-    
-            setPassword(formData.password)
-            setPort('verify')
+        } catch (error) {
+            const msg = error instanceof Error ? error.message : "Failed"
+            setIsLoading(false)
+            toast.error(msg)
         }
     }
 
@@ -119,6 +124,7 @@ export default function Login({ setPort, identifier, identifierValue, setOpen, s
 
         if(!email) {
             toast.error("Failed to get email")
+            setIsLoading(false)
             return
         }
 

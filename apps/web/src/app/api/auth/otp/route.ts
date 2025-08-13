@@ -1,4 +1,4 @@
-import { OTPTemplate } from "@/components/templates/email/otp";
+import { OTPTemplate } from "@/components/templates/otp";
 import { env } from "@/lib/env/server";
 import { NextResponse } from "next/server";
 import { Resend } from "resend";

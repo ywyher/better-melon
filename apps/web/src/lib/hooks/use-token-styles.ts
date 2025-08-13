@@ -1,4 +1,3 @@
-// useTokenStyles.ts - Individual functions + combined function
 import { CSSProperties, useCallback } from 'react';
 import { excludedPos, learningStatusesStyles } from '@/lib/constants/subtitle';
 import { SubtitleToken } from '@/types/subtitle';
@@ -30,6 +29,7 @@ export interface TokenStyles {
 export const useTokenStyles = () => {
   const wordSettings = useSettingsStore((settings) => settings.word);
   const wordsLookup = useLearningStore((state) => state.wordsLookup);
+  const rawStyles = useSubtitleStylesStore((state) => state.rawStyles);
   const computedStyles = useSubtitleStylesStore((state) => state.computedStyles);
 
   const getTokenStyles = useCallback((
@@ -59,6 +59,13 @@ export const useTokenStyles = () => {
       }
 
     if (!styles?.token) return {};
+
+    if(transcription == 'japanese') {
+      console.log(`styles`, {
+        rawStyles,
+        computedStyles
+      })
+    }
       
     const baseStyle = isActive 
       ? styles.token.active 
@@ -87,6 +94,10 @@ export const useTokenStyles = () => {
       ? styles.container.active 
       : styles.container.default;
     
+    if(isActive) {
+      console.log(`containerStyle`, containerStyle)
+    }
+
     return isActive ? containerStyle : { display: '' };
   }, [computedStyles]);
 

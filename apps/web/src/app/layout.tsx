@@ -32,14 +32,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-        {env.ENV === 'DEVELOPMENT' && (
-          <head>
-            <Script
-              crossOrigin="anonymous"
-              src="//unpkg.com/react-scan/dist/auto.global.js"
-            />
-          </head>
-        )}
+      {env.ENV === 'DEVELOPMENT' && (
+        <head>
+          <Script
+            crossOrigin="anonymous"
+            src="//unpkg.com/react-scan/dist/auto.global.js"
+          />
+        </head>
+      )}
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ApolloProvider>
           <ReactQueryProvider>

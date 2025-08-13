@@ -1,4 +1,4 @@
-import React, { memo, useMemo } from 'react';
+import React, { memo, useEffect, useMemo } from 'react';
 import { Ruby as TRuby, SubtitleToken } from '@/types/subtitle';
 import Ruby from '@/components/ruby';
 import { parseRuby } from '@/lib/utils/subtitle';
@@ -34,7 +34,9 @@ export const JapaneseToken = memo<JapaneseTokenProps>(({
 
   return (
     <div
-      className='flex flex-row gap-0 items-end cursor-pointer'
+      className='
+        flex flex-row gap-0 items-end cursor-pointer
+      '
       onClick={onTokenClick}
       onMouseEnter={onTokenMouseEnter}
       onMouseLeave={onTokenMouseLeave}

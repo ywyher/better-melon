@@ -1,4 +1,4 @@
-178433 episode list not showing and subtitles not made
+issues with the styles
 
 const storeActiveTranscriptions = useTranscriptionStore((state) => state.activeTranscriptions) || [];
 // eslint-disable-next-line react-hooks/exhaustive-deps
