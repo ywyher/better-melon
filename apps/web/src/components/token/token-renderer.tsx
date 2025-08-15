@@ -38,9 +38,9 @@ const TokenRenderer = memo<TokenRendererProps>(({
     [getStyles, token, isActive, accent, transcription]
   );
 
-  useEffect(() => {
-    console.log(`styles`, styles)
-  }, [styles])
+  // useEffect(() => {
+  //   console.log(`styles`, styles)
+  // }, [styles])
 
   const handleClick = useCallback(() => {
     onTokenClick(cue.id, japaneseToken || token)

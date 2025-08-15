@@ -1,30 +1,43 @@
 import { handleWord } from "@/app/settings/word/_known-words/actions";
+import { getPitchAccent } from "@/lib/db/queries";
 import { Word } from "@/lib/db/schema";
 import { wordQueries } from "@/lib/queries/word";
 import { useLearningStore } from "@/lib/stores/learning-store";
+import { NHKPitch } from "@/types/nhk";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
 
-type WordStatusProps = {
+type WordProps = {
   word: string
 }
 
-export function useWordStatus({
+export function useWord({
   word
-}: WordStatusProps) {
+}: WordProps) {
   const [isActionLoading, setIsActionLoading] = useState<boolean>(false);
   const [newStatus, setNewStatus] = useState<Word['status'] | undefined>(undefined)
   const wordsLookup = useLearningStore((state) => state.wordsLookup)
   const setWordsLookup = useLearningStore((state) => state.setWordsLookup)
+  const pitchLookup = useLearningStore((state) => state.pitchLookup)
 
   const { data: wordData, isLoading: isWordDataLoading } = useQuery(wordQueries.word(word, newStatus))
 
-  const handler = async (word: string, status: Word['status']) => {
+  const saveWord = async (word: string, status: Word['status']) => {
     try {
       setIsActionLoading(true)
 
-      const { error, message } = await handleWord({ word, status })
+      let pitches: NHKPitch[];
+
+      if (pitchLookup.size > 0) {
+        const entry = pitchLookup.get(word);
+        pitches = entry?.pitches ?? [];
+      } else {
+        const data = await getPitchAccent(word);
+        pitches = data[0]?.pitches ?? [];
+      }
+      
+      const { error, message } = await handleWord({ word, status, pitches: pitches ? pitches : null })
       if(error) throw new Error(error);
 
       if(wordsLookup) {
@@ -53,6 +66,6 @@ export function useWordStatus({
   return {
     status: wordData?.word?.status,
     isLoading: isActionLoading || isWordDataLoading,
-    handler,
+    saveWord,
   }
 }

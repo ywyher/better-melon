@@ -1,4 +1,5 @@
 import { AnkiFieldKey } from "@/types/anki";
+import { NHKPitch } from "@/types/nhk";
 import { SubtitleTranscription } from "@/types/subtitle";
 import { AnilistCoverImage, AnilistTitle } from "@better-melon/shared/types";
 import { InferSelectModel, relations } from "drizzle-orm";
@@ -81,8 +82,8 @@ export const generalSettings = pgTable("general_settings", {
   
 
   userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }).unique(),
-  createdAt: timestamp("created_at").notNull(),
-  updatedAt: timestamp("updated_at").notNull()
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull()
 });
 
 export const generalSettingsRelations = relations(generalSettings, ({ one }) => ({
@@ -114,8 +115,8 @@ export const subtitleSettings = pgTable("subtitle_settings", {
   showFurigana: boolean('furigana').default(true).notNull(),
 
   userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }).unique(),
-  createdAt: timestamp("created_at").notNull(),
-  updatedAt: timestamp("updated_at").notNull()
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull()
 });
 
 export const subtitleSettingsRelations = relations(subtitleSettings, ({ one }) => ({
@@ -173,8 +174,8 @@ export const subtitleStyles = pgTable("subtitle_styles", {
   state: subtitleStateEnum('state').notNull().default('default'),
   userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }),
   transcription: stlyeTranscriptionEnum("transcription").notNull().default('all'),
-  createdAt: timestamp("created_at").default(new Date()),
-  updatedAt: timestamp("updated_at").default(new Date())
+  createdAt: timestamp("created_at").defaultNow().default(new Date()),
+  updatedAt: timestamp("updated_at").defaultNow().default(new Date())
 });
 
 export const subtitleStylesRelations = relations(subtitleStyles, ({ one }) => ({
@@ -209,8 +210,8 @@ export const playerSettings = pgTable("player_settings", {
   enabledTranscriptions: transcriptionEnum('enabled_transcriptions').array().notNull().default(["japanese", "english"]),
 
   userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }).unique(),
-  createdAt: timestamp("created_at").notNull(),
-  updatedAt: timestamp("updated_at").notNull()
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull()
 });
 
 export const playerSettingsRelations = relations(playerSettings, ({ one }) => ({
@@ -234,8 +235,8 @@ export const wordSettings = pgTable("word_settings", {
   pitchColoring: boolean("pitch_coloring").default(true).notNull(),
 
   userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }),
-  createdAt: timestamp("created_at").notNull(),
-  updatedAt: timestamp("updated_at").notNull()
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull()
 });
 
 export const wordSettingsRelations = relations(wordSettings, ({ one }) => ({
@@ -248,10 +249,11 @@ export const wordSettingsRelations = relations(wordSettings, ({ one }) => ({
 export const word = pgTable("word", {
   id: text("id").primaryKey(),
   word: text("word").notNull(),
-  status: wordStatusEnum('word_status').default('unknown').notNull(),
+  status: wordStatusEnum('status').default('unknown').notNull(),
+  pitches: jsonb("pitches").$type<NHKPitch[]>(),
   userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }),
-  createdAt: timestamp("created_at").notNull(),
-  updatedAt: timestamp("updated_at").notNull()
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull()
 });
 
 export const wordRelations = relations(word, ({ one }) => ({
@@ -274,8 +276,8 @@ export const history = pgTable("history", {
   mediaEpisode: real("media_episode").notNull().default(1),
   
   userId: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
-  createdAt: timestamp("created_at").notNull(),
-  updatedAt: timestamp("updated_at").notNull()
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull()
 });
 
 export const historyRelations = relations(history, ({ one }) => ({

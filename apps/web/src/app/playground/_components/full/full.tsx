@@ -3,6 +3,7 @@ import EpisodeDetails from "@/app/watch/[id]/[ep]/components/episode/details/det
 import Panel from "@/app/watch/[id]/[ep]/components/panel/panel";
 import ControlsSection from "@/app/watch/[id]/[ep]/components/sections/controls-section";
 import PlayerSection from "@/app/watch/[id]/[ep]/components/sections/player-section";
+import { useUIStateStore } from "@/lib/stores/ui-state-store";
 import { cn } from "@/lib/utils/utils";
 
 export default function FullPlayground() {

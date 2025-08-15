@@ -96,6 +96,7 @@ export function usePitchAccentChunks({
     return newLookup;
   }, [queriesData]);
 
+
   useEffect(() => {
     if (loadingState.isComplete && !loadingDuration && queries.length > 0) {
       const endTime = performance.now();

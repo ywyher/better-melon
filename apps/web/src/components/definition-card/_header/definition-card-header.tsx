@@ -1,17 +1,17 @@
 'use client'
 
+import Ruby from "@/components/ruby";
 import DefinitionCardHeaderAnki from "@/components/definition-card/_header/components/anki";
 import DefinitionCardHeaderClose from "@/components/definition-card/_header/components/close";
 import DefinitionCardHeaderExpand from "@/components/definition-card/_header/components/expand";
 import DefinitionCardHeaderWordStatus from "@/components/definition-card/_header/components/word-status";
-import Ruby from "@/components/ruby";
-import { CardHeader, CardTitle } from "@/components/ui/card";
-import { pitchAccentsStyles } from "@/lib/constants/pitch";
-import { useTranscriptionItem } from "@/lib/hooks/use-transcription-item";
+import { useMemo } from "react";
 import { parseRuby } from "@/lib/utils/subtitle";
 import { JMdictWord } from "@/types/jmdict";
 import { SubtitleToken } from "@/types/subtitle";
-import { useMemo } from "react";
+import { pitchAccentsStyles } from "@/lib/constants/pitch";
+import { useTranscriptionItem } from "@/lib/hooks/use-transcription-item";
+import { CardHeader, CardTitle } from "@/components/ui/card";
 
 type DefinitionCardHeaderProps = {
   token: SubtitleToken

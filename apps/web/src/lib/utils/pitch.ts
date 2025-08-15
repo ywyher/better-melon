@@ -1,66 +1,64 @@
-// Function to count mora in a Japanese reading
 export function countMora(reading: string) {
-    // Remove common punctuation and normalize
-    const normalized = reading.replace(/[・]/g, '');
-    
+    const normalized = reading
+        .normalize("NFC") // Unicode normalization
+        .replace(/[・、。！？　]/g, ''); // remove punctuation + fullwidth space
+
     let moraCount = 0;
     let i = 0;
-    
+
     while (i < normalized.length) {
         const char = normalized[i];
-        
-        // Check for small tsu (っ/ッ)
+
+        // Sokuon (small tsu)
         if (char === 'っ' || char === 'ッ') {
             moraCount++;
             i++;
             continue;
         }
-        
-        // Check for long vowel marks (ー)
+
+        // Long vowel mark
         if (char === 'ー') {
             moraCount++;
             i++;
             continue;
         }
-        
-        // Check for 'n' sound (ん/ン)
+
+        // Moraic nasal
         if (char === 'ん' || char === 'ン') {
             moraCount++;
             i++;
             continue;
         }
-        
-        // Check for combination characters (きゃ, しゅ, etc.)
+
+        // Yōon (small ya/yu/yo)
         if (i + 1 < normalized.length) {
             const nextChar = normalized[i + 1];
-            // Check if next character is small ya, yu, yo
             if (['ゃ', 'ゅ', 'ょ', 'ャ', 'ュ', 'ョ'].includes(nextChar)) {
-                moraCount++; // Counts as one mora
+                moraCount++;
                 i += 2;
                 continue;
             }
         }
-        
-        // Regular character
+
+        // Regular kana (includes standalone small vowels)
         moraCount++;
         i++;
     }
-    
+
     return moraCount;
 }
 
-// Function to determine pitch accent type
 export function getPitchAccent({ position, reading }: { reading: string, position: number }) {
     const moraCount = countMora(reading);
-    
+
     if (position === 0) {
-        return 'heiban'; // 平板 - no pitch drop
+        return 'heiban';
     } else if (position === 1) {
-        return 'atamadaka'; // 頭高 - drops after first mora
+        return 'atamadaka';
     } else if (position === moraCount) {
-        return 'odaka'; // 尾高 - drops after final mora
+        return 'odaka';
     } else {
-        return 'nakadaka'; // 中高 - drops somewhere in the middle
+        return 'nakadaka';
     }
 }
 

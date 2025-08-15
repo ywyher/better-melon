@@ -1,19 +1,19 @@
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
 import { wordStatuses } from "@/lib/constants/word";
 import { Word } from "@/lib/db/schema";
-import { useWordStatus } from "@/lib/hooks/use-word-status";
+import { useWord } from "@/lib/hooks/use-word";
 import { BookType } from "lucide-react";
 
 export default function DefinitionCardHeaderWordStatus({ word }: { word: string }) {
   const { 
-    handler,
+    saveWord,
     isLoading,
     status
-  } = useWordStatus({ word })
+  } = useWord({ word })
   
   return (
     <Select
-      onValueChange={async (v: Word['status']) => await handler(word, v)}
+      onValueChange={async (v: Word['status']) => await saveWord(word, v)}
       disabled={isLoading}
       value={status}
     >

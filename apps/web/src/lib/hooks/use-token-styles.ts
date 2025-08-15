@@ -1,4 +1,4 @@
-import { CSSProperties, useCallback } from 'react';
+import { CSSProperties, useCallback, useEffect } from 'react';
 import { excludedPos, learningStatusesStyles } from '@/lib/constants/subtitle';
 import { SubtitleToken } from '@/types/subtitle';
 import { StyleTranscription } from '@/app/watch/[id]/[ep]/types';
@@ -60,12 +60,12 @@ export const useTokenStyles = () => {
 
     if (!styles?.token) return {};
 
-    if(transcription == 'japanese') {
-      console.log(`styles`, {
-        rawStyles,
-        computedStyles
-      })
-    }
+    // if(transcription == 'japanese') {
+    //   console.log(`styles`, {
+    //     rawStyles,
+    //     computedStyles
+    //   })
+    // }
       
     const baseStyle = isActive 
       ? styles.token.active 
@@ -94,9 +94,9 @@ export const useTokenStyles = () => {
       ? styles.container.active 
       : styles.container.default;
     
-    if(isActive) {
-      console.log(`containerStyle`, containerStyle)
-    }
+    // if(isActive) {
+    //   console.log(`containerStyle`, containerStyle)
+    // }
 
     return isActive ? containerStyle : { display: '' };
   }, [computedStyles]);
@@ -150,7 +150,7 @@ export const useTokenStyles = () => {
       learningStatus: learningStatusStyle,
       furigana: furiganaStyle,
     };
-  }, [getTokenStyles, getContainerStyles, getLearningStatusStyles, wordSettings]);
+  }, [getTokenStyles, getContainerStyles, getLearningStatusStyles, wordSettings, wordsLookup]);
 
   return {
     getTokenStyles,

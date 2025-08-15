@@ -3,6 +3,7 @@
 import db from "@/lib/db"
 import { ensureAuthenticated } from "@/lib/db/mutations"
 import { Word, word as wordTable } from "@/lib/db/schema"
+import { NHKPitch } from "@/types/nhk"
 import { generateId } from "better-auth"
 import { and, eq, inArray } from "drizzle-orm"
 
@@ -105,7 +106,7 @@ export async function addWordsBulk({ words, status }: { words: string[], status:
   }
 }
 
-export async function handleWord({ word, status }: { word: Word['word'], status: Word['status'] }) {
+export async function handleWord({ word, status, pitches }: { word: Word['word'], status: Word['status'], pitches: NHKPitch[] | null }) {
   try {
     const { userId, error } = await ensureAuthenticated()
     if(error || !userId) throw new Error(error || "Must be authenticated")
@@ -130,6 +131,7 @@ export async function handleWord({ word, status }: { word: Word['word'], status:
       id,
       word,
       status,
+      pitches,
       userId,
       createdAt: new Date(),
       updatedAt: new Date()

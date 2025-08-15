@@ -171,7 +171,7 @@ export default function useFullPlayground() {
     currentSettingsState.player,
     currentSettingsState.subtitle,
     currentSettingsState.word,
-    settingsStore
+    // settingsStore
   ]);
 
   // Update transcription store
@@ -228,12 +228,12 @@ export default function useFullPlayground() {
     }, 1000);
   }, [streamingStore])
 
-  useEffect(() =>{ 
-    console.log(`test streamingStore`, streamingStore )
-    console.log(`test settingsStore`, settingsStore )
-    console.log(`test transcriptionStore`, transcriptionStore )
-    console.log(`test learningStore`, learningStore )
-  }, [streamingStore, settingsStore, transcriptionStore, learningStore])
+  // useEffect(() =>{ 
+  //   console.log(`test streamingStore`, streamingStore )
+  //   console.log(`test settingsStore`, settingsStore )
+  //   console.log(`test transcriptionStore`, transcriptionStore )
+  //   console.log(`test learningStore`, learningStore )
+  // }, [streamingStore, settingsStore, transcriptionStore, learningStore])
 
   return {
     wordsLookup,

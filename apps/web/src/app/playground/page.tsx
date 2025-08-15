@@ -9,7 +9,7 @@
 // import ProgressivePitchPlayground from "@/app/playground/_components/progressive-pitch";
 // import ProxyPlayground from "@/app/playground/_components/proxy";
 // import RubyPlayground from "@/app/playground/_components/ruby";
-import StylesPlayground from "@/app/playground/_components/styles";
+// import StylesPlayground from "@/app/playground/_components/styles";
 // import SubtitleFileSelectorPlayground from "@/app/playground/_components/subtitle-file-selector";
 // import TranscriptionsStylesPlayground from "@/app/playground/_components/transcriptions-styles";
 // import TranscriptionsHookPlayground from "@/app/playground/_components/transcriptions-hook";
@@ -19,13 +19,15 @@ import StylesPlayground from "@/app/playground/_components/styles";
 // import HistoryPlayground from "@/app/playground/_components/history";
 // import AddToListPlayground from "@/app/playground/_components/add-to-list";
 // import StreamingDetailsPlayground from "@/app/playground/_components/streaming-details";
+// import TranscriptionsStaticPlayground from "@/app/playground/_components/transcriptions-static";
 import FullPlayground from "@/app/playground/_components/full/full";
 
 export default function Playground() {
   return (
     <>
-      <StylesPlayground />
-      {/* <FullPlayground /> */}
+      <FullPlayground />
+      {/* <TranscriptionsStaticPlayground /> */}
+      {/* <StylesPlayground /> */}
       {/* <AddToListPlayground /> */}
       {/* <StreamingDetailsPlayground /> */}
       {/* <HistoryPlayground /> */}

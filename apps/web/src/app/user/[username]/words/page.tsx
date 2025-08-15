@@ -1,10 +1,12 @@
-import { Separator } from "@/components/ui/separator";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+'use client'
+
+import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { Separator } from "@/components/ui/separator";
+import { useParams } from "next/navigation";
 import { profileQueries } from "@/lib/queries/profile";
 import { parseAsInteger, useQueryState } from "nuqs";
-import { useParams } from "next/navigation";
-import { useMemo } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function ProfileWords() {
   const params = useParams()
@@ -40,8 +42,12 @@ export default function ProfileWords() {
       </CardHeader>
       <Separator />
       <CardContent>
-        {words && words.map(w => (
-          <>{w.word}</>
+        {words && words.map((w, idx) => (
+          <div
+            key={idx}
+          >
+            {w.word}
+          </div>
         ))}
       </CardContent>
     </Card>
