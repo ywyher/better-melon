@@ -26,6 +26,7 @@ export const useSubtitleCue = () => {
   const setSentences = useDefinitionStore((state) => state.setSentences);
   const setToken = useDefinitionStore((state) => state.setToken);
   const setIsAddToAnki = useDefinitionStore((state) => state.setIsAddToAnki);
+  const setTimeRange = useDefinitionStore((state) => state.setTimeRange);
   
   const handleSeek = useCallback((from: TSubtitleCue['from']) => {
     // 0.1 to avoid seeking to the previous cue
@@ -50,6 +51,10 @@ export const useSubtitleCue = () => {
       setSentences(sentences);
     }
     
+    setTimeRange({
+      start: from,
+      end: to
+    })
     setIsAddToAnki(false);
   }, [activeToken, setToken, setSentences, setIsAddToAnki, transcriptionsLookup, delay]);
 

@@ -16,6 +16,7 @@ export const useTranscriptionItem = (transcription: SubtitleTranscription) => {
   const activeToken = useDefinitionStore((state) => state.token);
   const setSentences = useDefinitionStore((state) => state.setSentences);
   const setToken = useDefinitionStore((state) => state.setToken);
+  const setTimeRange = useDefinitionStore((state) => state.setTimeRange);
   const storeToken = useDefinitionStore((state) => state.token);
 
   const pitchLookup = useLearningStore((state) => state.pitchLookup);
@@ -67,6 +68,10 @@ export const useTranscriptionItem = (transcription: SubtitleTranscription) => {
       const sentences = getSentencesForCue(transcriptionsLookup, from, to, delay);
       setSentences(sentences);
     }
+    setTimeRange({
+      start: from,
+      end: to
+    })
   }, [storeToken, setToken, setSentences, transcription, definitionTrigger, transcriptionsLookup, delay]);
 
   const getTokenAccent = useCallback((token: SubtitleToken): PitchAccents | null => {

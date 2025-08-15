@@ -2,7 +2,9 @@ import { handleWord } from "@/app/settings/word/_known-words/actions";
 import { getPitchAccent } from "@/lib/db/queries";
 import { Word } from "@/lib/db/schema";
 import { wordQueries } from "@/lib/queries/word";
+import { useDefinitionStore } from "@/lib/stores/definition-store";
 import { useLearningStore } from "@/lib/stores/learning-store";
+import { useStreamingStore } from "@/lib/stores/streaming-store";
 import { NHKPitch } from "@/types/nhk";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
@@ -17,13 +19,24 @@ export function useWord({
 }: WordProps) {
   const [isActionLoading, setIsActionLoading] = useState<boolean>(false);
   const [newStatus, setNewStatus] = useState<Word['status'] | undefined>(undefined)
+
   const wordsLookup = useLearningStore((state) => state.wordsLookup)
   const setWordsLookup = useLearningStore((state) => state.setWordsLookup)
+
   const pitchLookup = useLearningStore((state) => state.pitchLookup)
+
+  const animeId = useStreamingStore((state) => state.animeId)
+  const animeEpisode = useStreamingStore((state) => state.episodeNumber)
+  const animeTitle = useStreamingStore((state) => state.streamingData?.anime.title)
+  const animeBanner = useStreamingStore((state) => state.streamingData?.anime.bannerImage)
+  const timeRange = useDefinitionStore((state) => state.timeRange)
 
   const { data: wordData, isLoading: isWordDataLoading } = useQuery(wordQueries.word(word, newStatus))
 
   const saveWord = async (word: string, status: Word['status']) => {
+    if(!animeId || !animeEpisode || !animeTitle || !animeBanner || !timeRange) {
+      throw new Error("One of these is missing: animeId, animeEpisode, animeTitle, animeBanner, timeRange")
+    }
     try {
       setIsActionLoading(true)
 
@@ -37,7 +50,16 @@ export function useWord({
         pitches = data[0]?.pitches ?? [];
       }
       
-      const { error, message } = await handleWord({ word, status, pitches: pitches ? pitches : null })
+      const { error, message } = await handleWord({ 
+        word, 
+        status, 
+        pitches: pitches ? pitches : null,
+        animeEpisode,
+        animeId,
+        animeTitle,
+        animeBanner,
+        timeRange
+      });
       if(error) throw new Error(error);
 
       if(wordsLookup) {

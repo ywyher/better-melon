@@ -3,7 +3,9 @@
 import db from "@/lib/db"
 import { ensureAuthenticated } from "@/lib/db/mutations"
 import { Word, word as wordTable } from "@/lib/db/schema"
+import { Anime } from "@/types/anime"
 import { NHKPitch } from "@/types/nhk"
+import { AnilistTitle } from "@better-melon/shared/types"
 import { generateId } from "better-auth"
 import { and, eq, inArray } from "drizzle-orm"
 
@@ -106,7 +108,16 @@ export async function addWordsBulk({ words, status }: { words: string[], status:
   }
 }
 
-export async function handleWord({ word, status, pitches }: { word: Word['word'], status: Word['status'], pitches: NHKPitch[] | null }) {
+export async function handleWord({ word, status, pitches, animeId, animeTitle, timeRange, animeEpisode, animeBanner }: { 
+  word: Word['word'];
+  status: Word['status'];
+  pitches: NHKPitch[] | null;
+  timeRange: Word['timeRange'];
+  animeTitle: AnilistTitle;
+  animeId: Anime['id'];
+  animeEpisode: number;
+  animeBanner: string
+}) {
   try {
     const { userId, error } = await ensureAuthenticated()
     if(error || !userId) throw new Error(error || "Must be authenticated")
@@ -132,6 +143,11 @@ export async function handleWord({ word, status, pitches }: { word: Word['word']
       word,
       status,
       pitches,
+      timeRange,
+      animeId: String(animeId),
+      animeEpisode: Number(animeEpisode),
+      animeTitle,
+      animeBanner,
       userId,
       createdAt: new Date(),
       updatedAt: new Date()

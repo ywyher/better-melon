@@ -4,7 +4,7 @@ import Ruby from "@/components/ruby";
 import DefinitionCardHeaderAnki from "@/components/definition-card/_header/components/anki";
 import DefinitionCardHeaderClose from "@/components/definition-card/_header/components/close";
 import DefinitionCardHeaderExpand from "@/components/definition-card/_header/components/expand";
-import DefinitionCardHeaderWordStatus from "@/components/definition-card/_header/components/word-status";
+import DefinitionCardHeaderWord from "@/components/definition-card/_header/components/word-status";
 import { useMemo } from "react";
 import { parseRuby } from "@/lib/utils/subtitle";
 import { JMdictWord } from "@/types/jmdict";
@@ -56,7 +56,7 @@ export default function DefinitionCardHeader({ token, entries }: DefinitionCardH
         })}
       </CardTitle>
       <div className='flex flex-row gap-2 items-center'>
-        <DefinitionCardHeaderWordStatus word={token?.original_form || ""} />
+        <DefinitionCardHeaderWord word={token?.original_form || ""} />
         <DefinitionCardHeaderAnki entries={entries} />
         <DefinitionCardHeaderExpand />
         <DefinitionCardHeaderClose />

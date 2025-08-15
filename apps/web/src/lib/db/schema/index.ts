@@ -49,7 +49,7 @@ export const ankiPreset = pgTable('anki_preset', {
   fields: jsonb(),
   isDefault: boolean('is_default').default(false),
   isGui: boolean('is_gui').default(false),
-  userId: text("userId").references(() => user.id, { onDelete: "cascade" }),
+  userId: text("user_id").references(() => user.id, { onDelete: "cascade" }),
   createdAt: timestamp('created_at').notNull(),
   updatedAt: timestamp('updated_at').notNull()
 })
@@ -81,7 +81,7 @@ export const generalSettings = pgTable("general_settings", {
 
   
 
-  userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }).unique(),
+  userId: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }).unique(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull()
 });
@@ -109,12 +109,12 @@ export const subtitleSettings = pgTable("subtitle_settings", {
   
   preferredFormat: subtitleFormatEnum('preferred_format'),
   matchPattern: text("match_pattern"), // fileNameMatchPattern
-  transcriptionOrder: text('transcription_order').array().default(["hiragana","katakana","romaji","japanese","english"]),
+  transcriptionOrder: text('transcription_order').array().$type<SubtitleTranscription[]>().default(["hiragana","katakana","romaji","japanese","english"]),
 
   definitionTrigger: definitionTriggerEnum('definition_trigger').notNull().default('click'),
   showFurigana: boolean('furigana').default(true).notNull(),
 
-  userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }).unique(),
+  userId: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }).unique(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull()
 });
@@ -172,7 +172,7 @@ export const subtitleStyles = pgTable("subtitle_styles", {
   gap: real('gap').notNull().default(10),
   
   state: subtitleStateEnum('state').notNull().default('default'),
-  userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }),
+  userId: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
   transcription: stlyeTranscriptionEnum("transcription").notNull().default('all'),
   createdAt: timestamp("created_at").defaultNow().default(new Date()),
   updatedAt: timestamp("updated_at").defaultNow().default(new Date())
@@ -209,7 +209,7 @@ export const playerSettings = pgTable("player_settings", {
 
   enabledTranscriptions: transcriptionEnum('enabled_transcriptions').array().notNull().default(["japanese", "english"]),
 
-  userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }).unique(),
+  userId: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }).unique(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull()
 });
@@ -234,7 +234,7 @@ export const wordSettings = pgTable("word_settings", {
   learningStatus: boolean("learning_status").default(true).notNull(),
   pitchColoring: boolean("pitch_coloring").default(true).notNull(),
 
-  userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }),
+  userId: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull()
 });
@@ -251,7 +251,12 @@ export const word = pgTable("word", {
   word: text("word").notNull(),
   status: wordStatusEnum('status').default('unknown').notNull(),
   pitches: jsonb("pitches").$type<NHKPitch[]>(),
-  userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }),
+  timeRange: jsonb("time_range").$type<{ start: number; end: number; }>().notNull(),
+  animeTitle: jsonb("anime_title").$type<AnilistTitle>().notNull(),
+  animeBanner: jsonb("anime_banner").notNull(),
+  animeId: text("anime_id").notNull(),
+  animeEpisode: real("anime_episode").notNull().default(1),
+  userId: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull()
 });
@@ -330,9 +335,7 @@ export type AnkiPreset = Omit<InferSelectModel<typeof ankiPreset>, 'fields'> & {
 export type Word = InferSelectModel<typeof word>
 export type WordSettings = InferSelectModel<typeof wordSettings>
 export type SubtitleStyles = InferSelectModel<typeof subtitleStyles>
-export type SubtitleSettings = InferSelectModel<typeof subtitleSettings> & {
-  transcriptionOrder: SubtitleTranscription[]
-}
+export type SubtitleSettings = InferSelectModel<typeof subtitleSettings>
 export type PlayerSettings = InferSelectModel<typeof playerSettings>
 export type GeneralSettings = InferSelectModel<typeof generalSettings>
 export type History = InferSelectModel<typeof history>

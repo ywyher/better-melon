@@ -11,6 +11,12 @@ type DefinitionStore = {
     isExpanded: boolean;
     setIsExpanded: (isExpanded: DefinitionStore['isExpanded']) => void;
 
+    timeRange: {
+        start: number;
+        end: number;
+    } | null;
+    setTimeRange: (timeRange: DefinitionStore['timeRange']) => void;
+
     sentences: {
         kanji: string | null;
         kana: string | null;
@@ -32,6 +38,9 @@ export const useDefinitionStore = create<DefinitionStore>()(
 
         isExpanded: false,
         setIsExpanded: (isExpanded: DefinitionStore['isExpanded']) => set({ isExpanded }),
+
+        timeRange: null,
+        setTimeRange: (timeRange: DefinitionStore['timeRange']) => set({ timeRange }),
 
         sentences: {
             kanji: null,
