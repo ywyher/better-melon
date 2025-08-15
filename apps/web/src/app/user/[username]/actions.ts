@@ -2,6 +2,7 @@
 
 import db from "@/lib/db"
 import { history, User, user, word } from "@/lib/db/schema"
+import { WordFilters } from "@/types/word"
 import { and, desc, eq, ilike, or, sql } from "drizzle-orm"
 
 export async function getProfileUser({ username }: { username: User['name'] }) {
@@ -93,31 +94,37 @@ export async function getProfileHistory({
 }
 
 export async function getProfileWords({ 
-  username, 
-  search, 
-  page = 1, 
-  limit = Number.MAX_SAFE_INTEGER
+  username,
+  filters
 }: {
   username: User['name'];
-  search?: string;
-  page?: number;
-  limit?: number;
+  filters: WordFilters
 }) {
+  const { animeTitle, episodeNumber, limit, page, status, word: query } = filters;
   try {
     const [userData] = await db.select().from(user).where(eq(user.name, username))
 
     const whereConditions = [eq(word.userId, userData.id)]
     
-    if (search) {
+    if (query) {
+      whereConditions.push(ilike(word.word, query));
+    }
+    if(animeTitle) {
       const searchCondition = or(
-        // ilike(sql`${word.mediaTitle}->>'english'`, `%${search}%`),
-        // ilike(sql`${word.mediaTitle}->>'romaji'`, `%${search}%`),
-        // ilike(sql`${word.mediaTitle}->>'native'`, `%${search}%`)
+        ilike(sql`${word.animeTitle}->>'english'`, `%${animeTitle}%`),
+        ilike(sql`${word.animeTitle}->>'romaji'`, `%${animeTitle}%`),
+        ilike(sql`${word.animeTitle}->>'native'`, `%${animeTitle}%`)
       );
 
-      if (searchCondition) {
-        whereConditions.push(searchCondition);
+      if(searchCondition) {
+        whereConditions.push(searchCondition)
       }
+    }
+    if(episodeNumber) {
+      whereConditions.push(eq(word.animeEpisode, episodeNumber))
+    }
+    if(status) {
+      whereConditions.push(eq(word.status, status))
     }
 
     // Calculate offset for pagination
@@ -130,7 +137,7 @@ export async function getProfileWords({
       .where(and(...whereConditions));
 
     // Get paginated results
-    const list = await db
+    const words = await db
         .select()
         .from(word)
         .where(and(...whereConditions))
@@ -144,7 +151,7 @@ export async function getProfileWords({
     const hasPreviousPage = page > 1;
     
     return {
-      words: list,
+      words: words,
       pagination: {
         currentPage: page,
         totalPages,

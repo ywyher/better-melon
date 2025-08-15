@@ -18,7 +18,7 @@ export default function ProfileLayout({
         <ProfileCard />
         <ProfileTabs />
       </div>
-      <div>
+      <div className="pb-10">
         {children}
       </div>
     </div>

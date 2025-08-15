@@ -16,6 +16,7 @@ interface SelectInputProps {
   onChange?: (value: string) => void;
   name?: string;
   disabled?: boolean;
+  defaultValue?: string;
 }
 
 export function SelectInput({
@@ -25,6 +26,7 @@ export function SelectInput({
   value,
   onChange,
   disabled = false,
+  defaultValue,
   ...props
 }: SelectInputProps) {
   return (
@@ -32,6 +34,7 @@ export function SelectInput({
       onValueChange={onChange} 
       value={value}
       disabled={disabled}
+      defaultValue={defaultValue}
       {...props}
     >
       <SelectTrigger className={`w-full cursor-pointer ${className}`}>

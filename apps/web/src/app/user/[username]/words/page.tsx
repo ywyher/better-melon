@@ -1,26 +1,28 @@
 'use client'
 
-import { useMemo } from "react";
+import WordCard from "@/app/user/[username]/words/components/word-card";
+import ProfileWordsFilters from "@/app/user/[username]/words/components/filters/filters";
 import { useQuery } from "@tanstack/react-query";
 import { Separator } from "@/components/ui/separator";
 import { useParams } from "next/navigation";
+import { WordFilters } from "@/types/word";
 import { profileQueries } from "@/lib/queries/profile";
-import { parseAsInteger, useQueryState } from "nuqs";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import WordCard from "@/app/user/[username]/words/components/word-card";
+import { useMemo, useState } from "react";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import ProfileWordsPagination from "@/app/user/[username]/words/components/pagination";
 
 export default function ProfileWords() {
   const params = useParams()
   const username = String(params.username)
-  const [query] = useQueryState('query')
-  const [page] = useQueryState('page', parseAsInteger.withDefault(1))
-
+  const [filters, setFilters] = useState<WordFilters>({
+    page: 1,
+    limit: 2,
+  })
+  
   const { data, isLoading } = useQuery({
     ...profileQueries.words({
-      username, 
-      search: query ?? undefined,
-      page,
-      limit: 20
+      username,
+      filters
     })
   })
 
@@ -34,19 +36,33 @@ export default function ProfileWords() {
     return data.pagination
   }, [data])
 
-  if(isLoading) return <>Loading...</>
-
   return (
     <Card className="w-full bg-secondary">
-      <CardHeader>
+      <CardHeader className="flex flex-col gap-3 lg:gap-0 lg:flex-row justify-between">
         <CardTitle className="text-2xl flex-1">Words</CardTitle>
+        <ProfileWordsFilters setFilters={setFilters} />
       </CardHeader>
       <Separator />
-      <CardContent>
-        {words && words.map((w, idx) => (
-          <WordCard word={w} />
-        ))}
+      <CardContent className="p-6">
+        {isLoading && <>Loading</>}
+        <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
+          {words && words.map((w, idx) => (
+            <WordCard 
+              key={idx}
+              word={w}
+            />
+          ))}
+        </div>
       </CardContent>
+      {pagination && (
+        <CardFooter>
+          <ProfileWordsPagination 
+            pagination={pagination}
+            filters={filters}
+            setFilters={setFilters}
+          />
+        </CardFooter>
+      )}
     </Card>
   )
 }

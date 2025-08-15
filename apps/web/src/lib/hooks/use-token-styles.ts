@@ -1,5 +1,5 @@
 import { CSSProperties, useCallback, useEffect } from 'react';
-import { excludedPos, learningStatusesStyles } from '@/lib/constants/subtitle';
+import { excludedPos } from '@/lib/constants/subtitle';
 import { SubtitleToken } from '@/types/subtitle';
 import { StyleTranscription } from '@/app/watch/[id]/[ep]/types';
 import { pitchAccentsStyles } from '@/lib/constants/pitch';
@@ -8,6 +8,7 @@ import { useSettingsStore } from '@/lib/stores/settings-store';
 import { useLearningStore } from '@/lib/stores/learning-store';
 import { useSubtitleStylesStore } from '@/lib/stores/subtitle-styles-store';
 import { defaultSubtitleStyles } from '@/components/subtitle/styles/constants';
+import { learningStatusesStyles } from '@/lib/constants/word';
 
 interface TokenStylesParams {
   token: SubtitleToken;
@@ -29,7 +30,6 @@ export interface TokenStyles {
 export const useTokenStyles = () => {
   const wordSettings = useSettingsStore((settings) => settings.word);
   const wordsLookup = useLearningStore((state) => state.wordsLookup);
-  const rawStyles = useSubtitleStylesStore((state) => state.rawStyles);
   const computedStyles = useSubtitleStylesStore((state) => state.computedStyles);
 
   const getTokenStyles = useCallback((

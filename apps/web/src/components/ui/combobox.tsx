@@ -28,6 +28,7 @@ type ComboboxProps = {
   contentWidth?: string;
   onChange?: (value: string) => void;
   defaultValue?: string;
+  className?: string
 };
 
 export function Combobox({
@@ -38,7 +39,8 @@ export function Combobox({
   buttonWidth = "w-full",
   contentWidth = "w-full", 
   onChange,
-  defaultValue = ""
+  defaultValue = "",
+  className
 }: ComboboxProps) {
   const [open, setOpen] = React.useState(false)
   const [value, setValue] = React.useState(defaultValue)
@@ -97,7 +99,10 @@ export function Combobox({
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            className="w-full justify-between text-muted-foreground pr-16"
+            className={cn(
+              "w-full justify-between text-muted-foreground pr-16",
+              className
+            )}
             onClick={handleButtonClick}
           >
             {getSelectedLabel()}

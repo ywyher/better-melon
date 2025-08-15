@@ -2,14 +2,16 @@ import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { useQueryState } from "nuqs";
+import { parseAsInteger, useQueryState } from "nuqs";
 
 export default function ProfileHistorySearchBar() {
   const [query, setQuery] = useQueryState('query')
+  const [, setPage] = useQueryState("page", parseAsInteger.withDefault(1))
   const [value, setValue] = useState(query || "")
   
   const handleSubmit = () => {
     setQuery(value ? value : null)
+    setPage(1)
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {

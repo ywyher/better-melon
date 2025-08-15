@@ -221,13 +221,6 @@ export const playerSettingsRelations = relations(playerSettings, ({ one }) => ({
   })
 }))
 
-export const wordStatusEnum = pgEnum('word_enum', [
-  'known',
-  'learning',
-  'unknown',
-  'ignore'
-])
-
 export const wordSettings = pgTable("word_settings", {
   id: text("id").primaryKey(),
   
@@ -246,6 +239,13 @@ export const wordSettingsRelations = relations(wordSettings, ({ one }) => ({
   })
 }))
 
+export const wordStatusEnum = pgEnum('word_enum', [
+  'known',
+  'learning',
+  'unknown',
+  'ignore'
+])
+
 export const word = pgTable("word", {
   id: text("id").primaryKey(),
   word: text("word").notNull(),
@@ -253,7 +253,7 @@ export const word = pgTable("word", {
   pitches: jsonb("pitches").$type<NHKPitch[]>(),
   timeRange: jsonb("time_range").$type<{ start: number; end: number; }>().notNull(),
   animeTitle: jsonb("anime_title").$type<AnilistTitle>().notNull(),
-  animeBanner: jsonb("anime_banner").notNull(),
+  animeBanner: text("anime_banner").notNull(),
   animeId: text("anime_id").notNull(),
   animeEpisode: real("anime_episode").notNull().default(1),
   userId: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),

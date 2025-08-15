@@ -6,27 +6,38 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination"
 import { Pagination as TPagination } from "@/types";
+import { WordFilters } from "@/types/word";
 import { useQueryState } from "nuqs";
 import { parseAsInteger } from 'nuqs'
-import { useCallback } from "react";
+import { Dispatch, SetStateAction, useCallback } from "react";
 
 type ProfileHistoryPaginationProps = {
   pagination: TPagination
+  filters: WordFilters;
+  setFilters: Dispatch<SetStateAction<WordFilters>>;
 }
 
-export default function ProfileHistoryPagination({ pagination }: ProfileHistoryPaginationProps) {
+export default function ProfileWordsPagination({ pagination, filters, setFilters }: ProfileHistoryPaginationProps) {
   const { hasNextPage, hasPreviousPage } = pagination
   const [page, setPage] = useQueryState('page', parseAsInteger.withDefault(1))
   
   const handlePrevious = useCallback(() => {
     if (hasPreviousPage) {
       setPage(page - 1);
+      setFilters({
+        ...filters,
+        page: page - 1
+      })
     }
   }, [hasPreviousPage, page]);
   
   const handleNext = useCallback(() => {
     if (hasNextPage) {
       setPage(page + 1);
+      setFilters({
+        ...filters,
+        page: page + 1
+      })
     }
   }, [hasNextPage, page]);
   

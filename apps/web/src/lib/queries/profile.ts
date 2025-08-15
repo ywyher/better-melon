@@ -2,8 +2,9 @@ import { getProfileHistory, getProfileUser, getProfileWords } from "@/app/user/[
 import { getSession } from "@/lib/auth-client";
 import { History, User } from "@/lib/db/schema";
 import { calculateActivityHistoryLevel, padActivityHistory } from "@/lib/utils/history";
-import { groupByDate } from "@/lib/utils/utils";
+import { groupByDate, sortObject } from "@/lib/utils/utils";
 import { ActivityHistoryEntry } from "@/types/history";
+import { WordFilters } from "@/types/word";
 import { createQueryKeys } from "@lukemorales/query-key-factory";
 
 export const profileQueries = createQueryKeys('profile', {
@@ -49,22 +50,16 @@ export const profileQueries = createQueryKeys('profile', {
   }),
   words: ({ 
     username,
-    search,
-    page,
-    limit
+    filters,
   }: { 
     username: User['name'];
-    search?: string;
-    page?: number;
-    limit?: number
+    filters: WordFilters
   }) => ({
-    queryKey: ['words', username, search, page],
+    queryKey: ['words', sortObject({ object: filters, output: 'string' })],
     queryFn: async () => {
       const { words, pagination } = await getProfileWords({ 
         username,
-        search,
-        page,
-        limit
+        filters
       })
 
       return {
