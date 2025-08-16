@@ -87,7 +87,7 @@ export default function ProfleHistory() {
       </CardContent>
       <Separator />
       <ActivityCalendarWrapper
-        className="flex justify-center items-center"
+        className="flex justify-center items-center px-5"
         entries={activity}
         isLoading={isLoading}
         hideColorLegend={true}

@@ -1,4 +1,4 @@
-import StatsCard from '@/components/stats-card'
+import StatsCard, { StatsCardSkeleton } from '@/components/stats-card'
 import { History } from '@/lib/db/schema'
 import { useMemo } from 'react'
 import { Separator } from '@/components/ui/separator'
@@ -7,9 +7,10 @@ import { calculateTotalAnimes, calculateTotalEpisodes, calculateTotalHours } fro
 
 type ActivityHistoryStatsProps = {
   animes: History[]
+  isLoading: boolean
 }
 
-export default function ActivityHistoryStats({ animes }: ActivityHistoryStatsProps) {
+export default function HistoryActivityStats({ animes, isLoading }: ActivityHistoryStatsProps) {
   const { totalHours, totalAnimes, totalEpisodes } = useMemo(() => {
     if(!animes) return {
       totalHours: 0,
@@ -27,21 +28,31 @@ export default function ActivityHistoryStats({ animes }: ActivityHistoryStatsPro
     <>
       <Separator className='border-1' />
       <div className='flex flex-row justify-center items-center gap-10'>
-        <StatsCard
-          value={totalAnimes}
-          icon={Hash}
-          label='Total animes'
-        />
-        <StatsCard
-          value={totalEpisodes}
-          icon={TvMinimalPlay}
-          label='Total episodes'
-        />
-        <StatsCard
-          value={`${totalHours}h`}
-          icon={Hourglass}
-          label='Total hours wasted'
-        />
+        {isLoading ? (
+          <>
+            <StatsCardSkeleton />
+            <StatsCardSkeleton />
+            <StatsCardSkeleton />
+          </>
+        ): (
+          <>
+            <StatsCard
+              value={totalAnimes}
+              icon={Hash}
+              label='Total animes'
+            />
+            <StatsCard
+              value={totalEpisodes}
+              icon={TvMinimalPlay}
+              label='Total episodes'
+            />
+            <StatsCard
+              value={`${totalHours}h`}
+              icon={Hourglass}
+              label='Total hours wasted'
+            />
+          </>
+        )}
       </div>
       <Separator />
     </>

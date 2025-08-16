@@ -2,8 +2,8 @@ import { getProfileHistory, getProfileUser, getProfileWords } from "@/app/user/[
 import { getSession } from "@/lib/auth-client";
 import { History, User, Word } from "@/lib/db/schema";
 import { calculateActivityCalendarLevel, groupByDate, padActivityCalendar, sortObject } from "@/lib/utils/utils";
-import { ActivityHistoryEntry, HistoryFilters } from "@/types/history";
-import { WordFilters } from "@/types/word";
+import { HistoryActivityEntry, HistoryFilters } from "@/types/history";
+import { WordFilters, WordsActivityEntry } from "@/types/word";
 import { createQueryKeys } from "@lukemorales/query-key-factory";
 import { Activity } from "react-activity-calendar";
 
@@ -84,8 +84,8 @@ export const profileQueries = createQueryKeys('profile', {
       }
     }
   }),
-  activiyHistory: ({ username }: { username: User['name'] }) => ({
-    queryKey: ['activity-history', username],
+  historyActivity: ({ username }: { username: User['name'] }) => ({
+    queryKey: ['history-history', username],
     queryFn: async () => {
       const { history } = await getProfileHistory({
         username,
@@ -95,9 +95,9 @@ export const profileQueries = createQueryKeys('profile', {
         }
       })
 
-      const grouped = groupByDate<History>({ array: history, dateExtractor: (history) => history.createdAt })
+      const grouped = groupByDate<History>({ array: history, dateExtractor: (history) => history.updatedAt })
 
-      const entries: ActivityHistoryEntry[] = Object.entries(grouped).map(([date, entries]) => ({
+      const entries: HistoryActivityEntry[] = Object.entries(grouped).map(([date, entries]) => ({
         date,
         count: entries.length,
         level: calculateActivityCalendarLevel(entries.length),
@@ -108,7 +108,35 @@ export const profileQueries = createQueryKeys('profile', {
 
       return {
         grouped,
-        entries: paddedEntries as ActivityHistoryEntry[]
+        entries: paddedEntries as HistoryActivityEntry[]
+      }
+    }
+  }),
+  wordsActivity: ({ username }: { username: User['name'] }) => ({
+    queryKey: ['words-activity', username],
+    queryFn: async () => {
+      const { words } = await getProfileWords({
+        username,
+        filters: {
+          page: 1,
+          limit: Number.MAX_SAFE_INTEGER
+        }
+      })
+
+      const grouped = groupByDate<Word>({ array: words, dateExtractor: (word) => word.updatedAt })
+
+      const entries: WordsActivityEntry[] = Object.entries(grouped).map(([date, entries]) => ({
+        date,
+        count: entries.length,
+        level: calculateActivityCalendarLevel(entries.length),
+        words: entries
+      }));
+
+      const paddedEntries: Activity[] = padActivityCalendar(entries)
+
+      return {
+        grouped,
+        entries: paddedEntries as WordsActivityEntry[]
       }
     }
   }),

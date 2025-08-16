@@ -1,22 +1,21 @@
-import ActivityHistoryStats from '@/app/user/[username]/overview/components/activity-history/stats'
-import ActivityHistoryHeader from '@/app/user/[username]/overview/components/activity-history/header'
-import ActivityDetailsDialog from '@/app/user/[username]/overview/components/activity-history/details-dialog'
-import ActivityHistorySkeleton from '@/app/user/[username]/overview/components/activity-history/skeleton'
+import HistoryActivityStats from '@/app/user/[username]/overview/components/history-activity/stats'
+import HistoryActivityHeader from '@/app/user/[username]/overview/components/history-activity/header'
 import ActivityCalendarWrapper from '@/components/activity-calendar-wrapper'
 import { useQuery } from '@tanstack/react-query'
 import { profileQueries } from '@/lib/queries/profile'
 import { Card, CardContent } from '@/components/ui/card'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
+import HistoryActivityDetailsDialog from '@/app/user/[username]/overview/components/history-activity/details-dialog'
 
-type ActivityHistoryProps = {
+type HistoryActivityProps = {
   username: string
 }
 
-export default function ActivityHistory({ username }: ActivityHistoryProps) {
+export default function HistoryActivity({ username }: HistoryActivityProps) {
   const [dateKey, setDateKey] = useState<string>('')
   
   const { data, isLoading } = useQuery({
-    ...profileQueries.activiyHistory({ username })
+    ...profileQueries.historyActivity({ username })
   })
 
   const entries = useMemo(() => {
@@ -42,24 +41,26 @@ export default function ActivityHistory({ username }: ActivityHistoryProps) {
     setDateKey('')
   }, [])
 
-  if(isLoading) return <ActivityHistorySkeleton />  
-
   return (
-    <Card className='w-fit bg-secondary'>
-      <ActivityHistoryHeader />
+    <Card className='w-full bg-secondary'>
+      <HistoryActivityHeader />
       
-      
-      <ActivityHistoryStats animes={entries.flatMap(entry => entry.animes || [])} />
+      <HistoryActivityStats 
+        animes={entries.flatMap(entry => entry.animes || [])} 
+        isLoading={isLoading}
+      />
       
       <CardContent>
         <ActivityCalendarWrapper
           entries={entries}
           isLoading={isLoading}
           onDateClick={handleDateClick}
+          className="flex justify-center items-center"
         />
         
-        <ActivityDetailsDialog
+        <HistoryActivityDetailsDialog
           dateKey={dateKey}
+          username={username}
           animes={animes}
           onClose={handleDialogClose}
         />

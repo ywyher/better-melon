@@ -4,15 +4,19 @@ import ListScrollAreaWrapper from '@/components/home/wrappers/scroll-area'
 import { format } from 'date-fns'
 import { History } from '@/lib/db/schema'
 import { getPercentage } from '@/lib/utils/utils'
+import { Button } from '@/components/ui/button'
+import Link from 'next/link'
 
 type ActivityDetailsDialogProps = {
   dateKey: string
+  username: string
   animes: History[] | undefined
   onClose: () => void
 }
 
-export default function ActivityDetailsDialog({ 
-  dateKey, 
+export default function HistoryActivityDetailsDialog({ 
+  dateKey,
+  username,
   animes, 
   onClose 
 }: ActivityDetailsDialogProps) {
@@ -24,7 +28,19 @@ export default function ActivityDetailsDialog({
       setOpen={onClose}
       title={<>Activity Details - {dateKey && format(new Date(dateKey), "MMM dd, yyyy")}</>}
       description={<>{animes?.length || 0} animes watched in this day</>}
-      className="min-w-xl"
+      footer={
+        <Button
+          asChild
+          variant="outline"
+          className='w-full'
+        >
+          <Link href={`/user/${username}/history?date={"from":"${dateKey}","to":"${dateKey}"}`}>
+            Details
+          </Link>
+        </Button>
+      }
+      className="min-w-xl bg-secondary"
+      headerClassName='bg-secondary'
     >
       <ListScrollAreaWrapper showMore={false}>
         {animes && animes.map((anime) => (

@@ -1,4 +1,9 @@
 import { Word } from "@/lib/db/schema";
+import { Activity } from "react-activity-calendar";
+
+export type WordsActivityEntry = Activity & {
+  words: Word[]
+}
 
 export type WordFilters = {
   page: number

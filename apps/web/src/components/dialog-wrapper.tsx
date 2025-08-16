@@ -5,6 +5,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger
@@ -13,19 +14,23 @@ import {
   Drawer,
   DrawerContent,
   DrawerDescription,
+  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger
 } from "@/components/ui/drawer";
 import useMediaQuery, { breakpoints } from "@/lib/hooks/use-media-query";
 import { cn } from "@/lib/utils/utils";
+import { Separator } from "@/components/ui/separator";
 
 type DialogWrapperProps = {
   title?: React.ReactNode;
   description?: React.ReactNode
   children: React.ReactNode;
+  footer?: React.ReactNode;
   className?: string;
   headerClassName?: string;
+  footerClassName?: string;
   open?: boolean;
   setOpen?: Dispatch<SetStateAction<boolean>>;
   trigger?: React.ReactNode;
@@ -38,8 +43,10 @@ export default function DialogWrapper({
   title,
   description,
   children, 
+  footer,
   className = "", 
   headerClassName,
+  footerClassName,
   open,
   setOpen,
   trigger,
@@ -76,6 +83,16 @@ export default function DialogWrapper({
               </DrawerDescription>
             </DrawerHeader>
             {children}
+            {footer && (
+              <>
+                <Separator />
+                <DrawerFooter className={cn(
+                  footerClassName
+                )}>
+                  {footer}
+                </DrawerFooter>
+              </>
+            )}
           </div>
         </DrawerContent>
       </Drawer>
@@ -103,6 +120,16 @@ export default function DialogWrapper({
           </DialogDescription>
         </DialogHeader>
         {children}
+        {footer && (
+          <>
+            <Separator />
+            <DialogFooter className={cn(
+              footerClassName
+            )}>
+              {footer}
+            </DialogFooter>
+          </>
+        )}
       </DialogContent>
     </Dialog>
   );

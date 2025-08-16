@@ -1,7 +1,6 @@
 'use client'
 
-import WordCard from "@/app/user/[username]/words/components/word-card";
-import WordCardSkeleton from "@/app/user/[username]/words/components/word-card-skeleton";
+import WordCard, { WordCardSkeleton } from "@/components/word-card";
 import ProfileWordsFilters from "@/app/user/[username]/words/components/filters/filters";
 import { useQuery } from "@tanstack/react-query";
 import { Separator } from "@/components/ui/separator";
@@ -86,7 +85,7 @@ export default function ProfileWords() {
       </CardContent>
       <Separator />
       <ActivityCalendarWrapper
-        className="flex justify-center items-center"
+        className="flex justify-center items-center px-5"
         entries={activity}
         isLoading={isLoading}
         hideColorLegend={true}

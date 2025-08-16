@@ -14,7 +14,7 @@ export default function ListScrollAreaWrapper({
   return (
     <ScrollArea
       className="
-        h-[380px] w-full
+        h-fit w-full
         overflow-x-scroll whitespace-nowrap
       "
     >

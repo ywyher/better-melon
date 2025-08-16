@@ -1,9 +1,7 @@
 import { History } from "@/lib/db/schema";
+import { Activity } from "react-activity-calendar";
 
-export type ActivityHistoryEntry = {
-  date: string;
-  count: number;
-  level: number;
+export type HistoryActivityEntry = Activity & {
   animes: History[]
 }
 
