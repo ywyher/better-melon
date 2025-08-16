@@ -1,23 +1,30 @@
 'use client'
 
 import WordCard from "@/app/user/[username]/words/components/word-card";
+import WordCardSkeleton from "@/app/user/[username]/words/components/word-card-skeleton";
 import ProfileWordsFilters from "@/app/user/[username]/words/components/filters/filters";
 import { useQuery } from "@tanstack/react-query";
 import { Separator } from "@/components/ui/separator";
 import { useParams } from "next/navigation";
 import { WordFilters } from "@/types/word";
 import { profileQueries } from "@/lib/queries/profile";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import ProfileWordsPagination from "@/app/user/[username]/words/components/pagination";
+import ActivityCalendarWrapper from "@/components/activity-calendar-wrapper";
+import { parseAsJson, useQueryState } from "nuqs";
+import { dateRangeSchema } from "@/types";
+import ProfileWordsStats from "@/app/user/[username]/words/components/stats";
+import { StatsCardSkeleton } from "@/components/stats-card";
 
 export default function ProfileWords() {
   const params = useParams()
   const username = String(params.username)
   const [filters, setFilters] = useState<WordFilters>({
     page: 1,
-    limit: 2,
+    limit: 20,
   })
+  const [, setDate] = useQueryState('date', parseAsJson(dateRangeSchema.parse))
   
   const { data, isLoading } = useQuery({
     ...profileQueries.words({
@@ -36,24 +43,58 @@ export default function ProfileWords() {
     return data.pagination
   }, [data])
 
+  const activity = useMemo(() => {
+    if(!data) return []
+    return data.activity
+  }, [data])
+
+  const handleDateClick = useCallback((d: string) => {
+    setDate({
+      from: d,
+      to: d
+    })
+    setFilters({
+      ...filters,
+      date: {
+        from: d,
+        to: d
+      }
+    })
+  }, [filters])
+
   return (
     <Card className="w-full bg-secondary">
-      <CardHeader className="flex flex-col gap-3 lg:gap-0 lg:flex-row justify-between">
-        <CardTitle className="text-2xl flex-1">Words</CardTitle>
+      <CardHeader className="flex flex-col gap-3 justify-between">
+        <CardTitle className="text-2xl flex-1">Mined Words</CardTitle>
         <ProfileWordsFilters setFilters={setFilters} />
       </CardHeader>
-      <Separator />
-      <CardContent className="p-6">
-        {isLoading && <>Loading</>}
+      <ProfileWordsStats words={words} isLoading={isLoading} />
+      <CardContent>
         <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
-          {words && words.map((w, idx) => (
-            <WordCard 
-              key={idx}
-              word={w}
-            />
-          ))}
+          {isLoading ? (
+            <>{Array.from({ length: filters.limit }, (_, idx) => <WordCardSkeleton key={`skeleton-${idx}`} />)}</>
+          ) : (
+            words && words.map((w, idx) => (
+              <WordCard 
+                key={idx}
+                word={w}
+              />
+            ))
+          )}
         </div>
       </CardContent>
+      <Separator />
+      <ActivityCalendarWrapper
+        className="flex justify-center items-center"
+        entries={activity}
+        isLoading={isLoading}
+        hideColorLegend={true}
+        hideTotalCount={true}
+        hideMonthLabels={true}
+        showWeekdayLabels={false}
+        onDateClick={(d) => handleDateClick(d)}
+      />
+      <Separator />
       {pagination && (
         <CardFooter>
           <ProfileWordsPagination 

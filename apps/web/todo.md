@@ -1,3 +1,9 @@
+in the profile page the word card should have a button when you click it takes you to the anime with the timestamps of the word
+
+using save in history in episode details results in player seeking to the end of the video -> related to the useMediaHistory hook in the use-watch-data hook
+
+maybe in the profile words page add to anki so we need to save setnence in table now too lol
+
 issues with the styles
 
 const storeActiveTranscriptions = useTranscriptionStore((state) => state.activeTranscriptions) || [];

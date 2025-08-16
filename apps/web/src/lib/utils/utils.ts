@@ -6,6 +6,7 @@ import { MediaPlayerInstance } from "@vidstack/react";
 import { defaultGeneralSettings } from "@/lib/constants/settings";
 import _ from 'lodash';
 import { format } from "date-fns";
+import { Activity } from "react-activity-calendar";
 
 export const s3 = new S3Client({
   region: "auto",
@@ -236,7 +237,7 @@ export const groupByDate = <T>(
     dateExtractor: (item: T) => Date,
   }) => {
   return array.reduce((acc, entry) => {
-    const dateKey = format(dateExtractor(entry), 'yyyy-MM-dd');
+    const dateKey = format(normalizeDateToUTC(dateExtractor(entry)), 'yyyy-MM-dd');
     
     if (!acc[dateKey]) {
       acc[dateKey] = [];
@@ -245,4 +246,69 @@ export const groupByDate = <T>(
     
     return acc;
   }, {} as Record<string, T[]>);
+}
+
+export const calculateActivityCalendarLevel = (count: number): number => {
+  if (count === 0) return 0;
+  if (count <= 2) return 1;
+  if (count <= 5) return 2;
+  if (count <= 10) return 3;
+  return 4;
+};
+
+export const normalizeDateToUTC = (date: Date, output: 'string' | 'date' = 'date') => {
+  const normalized =  new Date(Date.UTC(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate()
+  ));
+
+  if(output == 'string') {
+    return normalized.toISOString().split("T")[0]
+  }else {
+    return normalized as Date
+  }
+};
+
+export function padActivityCalendar(
+  entries: Activity[]
+): Activity[] {
+  const today = new Date();
+  
+  // Just use today directly
+  const endDate = today;
+  
+  // Set start date to 364 days before today (365 days total including today)
+  const startDate = new Date(today);
+  startDate.setDate(startDate.getDate() - 363);
+  
+  // Create a map of existing entries for quick lookup
+  const entryMap = new Map<string, Activity>();
+  entries.forEach(entry => {
+    entryMap.set(entry.date, entry);
+  });
+  
+  const paddedEntries: Activity[] = [];
+  const currentDate = new Date(startDate);
+  
+  while (currentDate <= endDate) {
+    const dateString = normalizeDateToUTC(currentDate, 'string') as string;
+    
+    if (entryMap.has(dateString)) {
+      // Use existing entry
+      paddedEntries.push(entryMap.get(dateString)!);
+    } else {
+      // Create empty entry for missing date
+      paddedEntries.push({
+        date: dateString,
+        count: 0,
+        level: 0,
+      });
+    }
+    
+    // Move to next day
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+  
+  return paddedEntries;
 }

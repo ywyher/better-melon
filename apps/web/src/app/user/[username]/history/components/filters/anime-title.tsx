@@ -3,7 +3,7 @@ import { useQueryState } from "nuqs";
 import { useEffect, useState, useRef } from "react";
 import { useDebounce } from "use-debounce";
 
-export default function ProfileWordsAnimeTitleFilter() {
+export default function ProfileHistoryAnimeTitleFilter() {
   const [animeTitle, setAnimeTitle] = useQueryState('animeTitle')
   const [value, setValue] = useState<string | null>(animeTitle)
   const [debouncedValue] = useDebounce(value, 500)

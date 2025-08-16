@@ -7,13 +7,17 @@ import { Word } from "@/lib/db/schema"
 import { WordFilters } from "@/types/word"
 import { wordStatuses } from "@/lib/constants/word"
 import { Dispatch, SetStateAction, useCallback, useEffect } from "react"
-import { parseAsInteger, parseAsStringEnum, useQueryState } from "nuqs"
+import { parseAsInteger, parseAsJson, parseAsStringEnum, useQueryState } from "nuqs"
+import { dateRangeSchema } from "@/types"
+import ProfileWordsDateFilter from "@/app/user/[username]/words/components/filters/date"
+import { Delete, Save } from "lucide-react"
 
 export default function ProfileWordsFilters({ setFilters }: { setFilters:  Dispatch<SetStateAction<WordFilters>> }) { 
   const [page, setPage] = useQueryState('page', parseAsInteger.withDefault(1))
   const [status, setStatus] = useQueryState('status',
     parseAsStringEnum<Word['status']>(wordStatuses)
   )
+  const [date, setDate] = useQueryState('date', parseAsJson(dateRangeSchema.parse))
   const [word, setWord] = useQueryState('word')
   const [episodeNumber, setEpisodeNumber] = useQueryState('episodeNumber', parseAsInteger)
   const [animeTitle, setAnimeTitle] = useQueryState('animeTitle')
@@ -23,6 +27,7 @@ export default function ProfileWordsFilters({ setFilters }: { setFilters:  Dispa
     setStatus(status)
     setWord(word)
     setEpisodeNumber(episodeNumber)
+    setDate(date)
     setAnimeTitle(animeTitle)
     setFilters({
       page: page ?? 1,
@@ -30,9 +35,10 @@ export default function ProfileWordsFilters({ setFilters }: { setFilters:  Dispa
       word: word ?? undefined,
       episodeNumber: episodeNumber ?? undefined,
       animeTitle: animeTitle ?? undefined,
+      date: date ?? undefined,
       limit: 20
     })
-  }, [page, status, word, episodeNumber, animeTitle])
+  }, [page, status, word, episodeNumber, animeTitle, date])
   
   const resetFilters = useCallback(() => {
     setPage(1)
@@ -40,6 +46,7 @@ export default function ProfileWordsFilters({ setFilters }: { setFilters:  Dispa
     setWord(null)
     setEpisodeNumber(null)
     setAnimeTitle(null)
+    setDate(null)
     setFilters({
       page: page ?? 1,
       limit: 20
@@ -52,27 +59,28 @@ export default function ProfileWordsFilters({ setFilters }: { setFilters:  Dispa
 
   return (
     <div className="
-      flex flex-col gap-3 lg:flex-row flex-3
+      flex flex-col lg:flex-row gap-3 flex-3
     ">
-      <div className="flex flex-row gap-2 flex-1">
+      <div className="flex flex-col lg:flex-row gap-2 flex-1">
         <ProfileWordsWordFilter />
         <ProfileWordsAnimeTitleFilter />
         <ProfileWordsEpisodeNumberFilter />
         <ProfileWordsStatusFilter />
+        <ProfileWordsDateFilter />
       </div>
       <div className="flex flex-row gap-3">
         <Button
           className="flex-1"
           onClick={applyFilters}
         >
-          Apply
+          <Save />
         </Button>
         <Button
           variant="destructive"
           className="flex-1"
           onClick={resetFilters}
         >
-          Reset
+          <Delete />
         </Button>
       </div>
     </div>

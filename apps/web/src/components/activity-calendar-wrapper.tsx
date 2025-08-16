@@ -1,38 +1,55 @@
-import { ActivityCalendar } from 'react-activity-calendar'
-import { Tooltip as ReactTooltip } from 'react-tooltip'
-import { cloneElement } from 'react'
 import { format } from 'date-fns'
+import { cloneElement } from 'react'
+import { Tooltip as ReactTooltip } from 'react-tooltip'
+import { Activity, ActivityCalendar } from 'react-activity-calendar'
 import 'react-tooltip/dist/react-tooltip.css'
-import { ActivityHistoryEntry } from '@/types/history'
 
 type ActivityCalendarWrapperProps = {
-  entries: ActivityHistoryEntry[]
+  entries: Activity[]
   isLoading: boolean
-  onDateClick: (dateKey: string) => void
+  className?: string;
+  hideColorLegend?: boolean;
+  hideTotalCount?: boolean;
+  hideMonthLabels?: boolean;
+  showWeekdayLabels?: boolean;
+  onDateClick?: (dateKey: string) => void
 }
 
 export default function ActivityCalendarWrapper({ 
-  entries, 
-  isLoading, 
-  onDateClick 
+  entries,
+  isLoading,
+  className = "",
+  hideColorLegend = false,
+  hideTotalCount = false,
+  hideMonthLabels = false,
+  showWeekdayLabels = true,
+  onDateClick
 }: ActivityCalendarWrapperProps) {
+
   return (
-    <>
+    <div
+      className={className}
+    >
       <ActivityCalendar 
         data={entries || []}
         loading={isLoading}
-        hideColorLegend={false}
-        hideTotalCount={false}
-        showWeekdayLabels={true}
+        hideColorLegend={hideColorLegend}
+        hideTotalCount={hideTotalCount}
+        hideMonthLabels={hideMonthLabels}
+        showWeekdayLabels={showWeekdayLabels}
         renderBlock={(block, { count, date }) =>
           cloneElement(block, {
             'data-tooltip-id': 'react-tooltip',
             'data-tooltip-html': `${count} activities on ${date}`,
-            onClick: () => onDateClick(format(new Date(date), 'yyyy-MM-dd'))
+            onClick: () => {
+              if(onDateClick) {
+                onDateClick(format(new Date(date), 'yyyy-MM-dd'))
+              }
+            }
           })
         }
       />
       <ReactTooltip id="react-tooltip" />
-    </>
+    </div>
   )
 }

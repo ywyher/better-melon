@@ -6,7 +6,7 @@ import ActivityCalendarWrapper from '@/components/activity-calendar-wrapper'
 import { useQuery } from '@tanstack/react-query'
 import { profileQueries } from '@/lib/queries/profile'
 import { Card, CardContent } from '@/components/ui/card'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 type ActivityHistoryProps = {
   username: string

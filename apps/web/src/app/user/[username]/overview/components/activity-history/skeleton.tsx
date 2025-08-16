@@ -21,7 +21,15 @@ export default function ActivityHistorySkeleton() {
       <Separator className='border-1' />
       
       {/* Stats Skeleton */}
-      <div className='px-6 w-fit'>
+      <div className='flex flex-row gap-5 justify-center items-center w-full'>
+        <div className='flex flex-col justify-center items-center gap-0 py-4'>
+          <Skeleton className="h-7 w-12 mb-1" />
+          <Skeleton className="h-5 w-24" />
+        </div>
+        <div className='flex flex-col justify-center items-center gap-0 py-4'>
+          <Skeleton className="h-7 w-12 mb-1" />
+          <Skeleton className="h-5 w-24" />
+        </div>
         <div className='flex flex-col justify-center items-center gap-0 py-4'>
           <Skeleton className="h-7 w-12 mb-1" />
           <Skeleton className="h-5 w-24" />

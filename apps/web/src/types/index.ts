@@ -1,3 +1,6 @@
+import { History } from "@/lib/db/schema";
+import z from "zod";
+
 export type Option = {
     value: string;
     label: string;
@@ -23,3 +26,8 @@ export type Pagination = {
   totalPages?: number;
   totalItems?: number;
 }
+
+export const dateRangeSchema = z.object({
+  from: z.string(),
+  to: z.string(),
+})

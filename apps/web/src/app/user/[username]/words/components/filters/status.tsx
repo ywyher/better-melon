@@ -31,7 +31,7 @@ export default function ProfileWordsStatusFilter() {
           setStatus((v ? v : null) as Word['status'])
         }
       }}
-      placeholder="Search a status"
+      placeholder="Pick a status"
       defaultValue={status || ""}
       className="bg-secondary"
     />

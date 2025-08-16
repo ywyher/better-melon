@@ -2,8 +2,9 @@
 
 import db from "@/lib/db"
 import { history, User, user, word } from "@/lib/db/schema"
+import { HistoryFilters } from "@/types/history"
 import { WordFilters } from "@/types/word"
-import { and, desc, eq, ilike, or, sql } from "drizzle-orm"
+import { and, desc, eq, gte, ilike, lte, or, sql } from "drizzle-orm"
 
 export async function getProfileUser({ username }: { username: User['name'] }) {
   const [data] = await db.select().from(user)
@@ -14,30 +15,37 @@ export async function getProfileUser({ username }: { username: User['name'] }) {
 
 export async function getProfileHistory({ 
   username, 
-  search, 
-  page = 1, 
-  limit = Number.MAX_SAFE_INTEGER
+  filters
 }: {
   username: User['name'];
-  search?: string;
-  page?: number;
-  limit?: number;
+  filters: HistoryFilters
 }) {
+  const { limit, page, animeTitle, date } = filters
   try {
     const [userData] = await db.select().from(user).where(eq(user.name, username))
 
     const whereConditions = [eq(history.userId, userData.id)]
     
-    if (search) {
+    if (animeTitle) {
       const searchCondition = or(
-        ilike(sql`${history.mediaTitle}->>'english'`, `%${search}%`),
-        ilike(sql`${history.mediaTitle}->>'romaji'`, `%${search}%`),
-        ilike(sql`${history.mediaTitle}->>'native'`, `%${search}%`)
+        ilike(sql`${history.mediaTitle}->>'english'`, `%${animeTitle}%`),
+        ilike(sql`${history.mediaTitle}->>'romaji'`, `%${animeTitle}%`),
+        ilike(sql`${history.mediaTitle}->>'native'`, `%${animeTitle}%`)
       );
 
       if (searchCondition) {
         whereConditions.push(searchCondition);
       }
+    }
+
+    // Add date range filtering
+    if (date?.from && date?.to) {
+      // Convert string dates to Date objects for comparison
+      const fromDate = new Date(date.from + 'T00:00:00.000Z');
+      const toDate = new Date(date.to + 'T23:59:59.999Z'); // End of day
+      
+      whereConditions.push(gte(history.updatedAt, fromDate));
+      whereConditions.push(lte(history.updatedAt, toDate));
     }
 
     // Calculate offset for pagination
@@ -92,7 +100,6 @@ export async function getProfileHistory({
     }
   }
 }
-
 export async function getProfileWords({ 
   username,
   filters
@@ -100,7 +107,7 @@ export async function getProfileWords({
   username: User['name'];
   filters: WordFilters
 }) {
-  const { animeTitle, episodeNumber, limit, page, status, word: query } = filters;
+  const { date, animeTitle, episodeNumber, limit, page, status, word: query } = filters;
   try {
     const [userData] = await db.select().from(user).where(eq(user.name, username))
 
@@ -125,6 +132,15 @@ export async function getProfileWords({
     }
     if(status) {
       whereConditions.push(eq(word.status, status))
+    }
+    // Add date range filtering
+    if (date?.from && date?.to) {
+      // Convert string dates to Date objects for comparison
+      const fromDate = new Date(date.from + 'T00:00:00.000Z');
+      const toDate = new Date(date.to + 'T23:59:59.999Z'); // End of day
+      
+      whereConditions.push(gte(word.updatedAt, fromDate));
+      whereConditions.push(lte(word.updatedAt, toDate));
     }
 
     // Calculate offset for pagination
@@ -166,8 +182,8 @@ export async function getProfileWords({
   } catch(error) {
     return {
       message: null,
-      error: error instanceof Error ? error.message : "Failed to get history.",
-      history: [],
+      error: error instanceof Error ? error.message : "Failed to get words.",
+      words: [],
       pagination: {
         currentPage: 1,
         totalPages: 0,

@@ -7,5 +7,9 @@ export type WordFilters = {
   word: string;
   animeTitle: string;
   episodeNumber: number;
+  date: {
+    from: string;
+    to: string;
+  }
   status: Word['status']
 }>
