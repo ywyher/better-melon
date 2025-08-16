@@ -15,7 +15,7 @@ import { useDelayStore } from "@/lib/stores/delay-store";
 import { useSettingsStore } from "@/lib/stores/settings-store";
 import { useTranscriptionStore } from "@/lib/stores/transcription-store";
 import { useLearningStore } from "@/lib/stores/learning-store";
-import { useMediaHistory } from "@/lib/hooks/use-media-history";
+import { useAnimeHistory } from "@/lib/hooks/use-anime-history";
 import { useStreamingStore } from "@/lib/stores/streaming-store";
 import { useStreamingData } from "@/lib/hooks/use-streaming-data";
 import { StreamingData } from "@better-melon/shared/types";
@@ -106,12 +106,12 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
   });
 
   const { 
-    isLoading: isMediaHistoryLoading,
-    error: isMediaHistoryError,
-    loadingDuration: mediaHistoryLoadingDuration
-  } = useMediaHistory({
-    mediaEpisode: episodeNumber,
-    mediaId: animeId
+    isLoading: isAnimeHistoryLoading,
+    error: isAnimeHistoryError,
+    loadingDuration: animeHistoryLoadingDuration
+  } = useAnimeHistory({
+    animeEpisode: episodeNumber,
+    animeId: animeId
   });
 
   const {
@@ -235,7 +235,7 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
       isStreamingDataLoading ||
       isSettingsLoading ||
       isWordsLoading ||
-      isMediaHistoryLoading ||
+      isAnimeHistoryLoading ||
       (isTranscriptionsLoading && !hasInitialized) ||
       (isStylesLoading && !hasInitialized)
     );
@@ -243,7 +243,7 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
     isStreamingDataLoading,
     isSettingsLoading,
     isWordsLoading,
-    isMediaHistoryLoading,
+    isAnimeHistoryLoading,
     isTranscriptionsLoading,
     isStylesLoading,
     hasInitialized,
@@ -271,7 +271,7 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
         transcriptionsLoadingDuration >= 0 &&
         settingsLoadingDuration >= 0 &&
         stylesLoadingDuration >= 0 && 
-        mediaHistoryLoadingDuration >= 0 && 
+        animeHistoryLoadingDuration >= 0 && 
         wordsLoadingDuration >= 0 &&
         pitchAccentLoadingDuration >= 0 
     ) {
@@ -290,7 +290,7 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
     transcriptionsLoadingDuration,
     settingsLoadingDuration,
     stylesLoadingDuration,
-    mediaHistoryLoadingDuration,
+    animeHistoryLoadingDuration,
     wordsLoadingDuration,
     pitchAccentLoadingDuration,
     // currentStreamingState.loadingDuration,
@@ -304,7 +304,7 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
       transcriptionsError,
       settingsError,
       stylesError,
-      isMediaHistoryError,
+      isAnimeHistoryError,
       wordsError,
       pitchAccentError
     ].filter(Boolean);
@@ -314,7 +314,7 @@ export const useWatchData = (animeId: Anime['id'], episodeNumber: number) => {
     settingsError,
     stylesError,
     subtitlesError,
-    isMediaHistoryError,
+    isAnimeHistoryError,
     wordsError,
     pitchAccentError
   ]);

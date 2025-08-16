@@ -101,7 +101,7 @@ export const profileQueries = createQueryKeys('profile', {
         date,
         count: entries.length,
         level: calculateActivityCalendarLevel(entries.length),
-        medias: entries
+        animes: entries
       }));
 
       const paddedEntries: Activity[] = padActivityCalendar(entries)

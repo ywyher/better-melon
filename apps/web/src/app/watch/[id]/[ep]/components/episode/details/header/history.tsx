@@ -2,7 +2,7 @@
 
 import LoadingButton from "@/components/loading-button"
 import useHistory from "@/lib/hooks/use-history"
-import { useMediaHistory } from "@/lib/hooks/use-media-history"
+import { useAnimeHistory } from "@/lib/hooks/use-anime-history"
 import { usePlayerStore } from "@/lib/stores/player-store"
 import { useStreamingStore } from "@/lib/stores/streaming-store"
 import { useMediaState } from "@vidstack/react"
@@ -20,9 +20,9 @@ export default function EpisodeDetailsHistory() {
 
   const { handleSave, handleDelete, isLoading: isHistoryLoading } = useHistory()
 
-  const { mediaHistory, isLoading: isMediaHistoryLoading, refetch } = useMediaHistory({
-    mediaId: animeId,
-    mediaEpisode: episodeNumber
+  const { animeHistory, isLoading: isAnimeHistoryLoading, refetch } = useAnimeHistory({
+    animeId: animeId,
+    animeEpisode: episodeNumber
   })
 
   const handleSaveInHistory = async () => {
@@ -32,10 +32,10 @@ export default function EpisodeDetailsHistory() {
   
     try {
       const { error, message } = await handleSave({
-        mediaId: String(animeId),
-        mediaEpisode: episodeNumber,
-        mediaCoverImage: streamingData?.anime.coverImage,
-        mediaTitle: streamingData?.anime.title,
+        animeId: String(animeId),
+        animeEpisode: episodeNumber,
+        animeCoverImage: streamingData?.anime.coverImage,
+        animeTitle: streamingData?.anime.title,
         duration,
         progress: duration,
       })
@@ -54,8 +54,8 @@ export default function EpisodeDetailsHistory() {
     setIsLocalLoading(true)
     try {
       const { error, message } = await handleDelete({
-        mediaId: String(animeId),
-        mediaEpisode: episodeNumber,
+        animeId: String(animeId),
+        animeEpisode: episodeNumber,
       })
       if(error) throw new Error(error)
       toast.success(message)
@@ -69,18 +69,18 @@ export default function EpisodeDetailsHistory() {
   }
 
   const isLoading = useMemo(() => {
-    return isHistoryLoading || isMediaHistoryLoading || isLocalLoading
-  }, [isHistoryLoading, isMediaHistoryLoading, isLocalLoading])
+    return isHistoryLoading || isAnimeHistoryLoading || isLocalLoading
+  }, [isHistoryLoading, isAnimeHistoryLoading, isLocalLoading])
 
   return (
     <LoadingButton
-      onClick={mediaHistory ? handleDeleteFromHistory : handleSaveInHistory}
+      onClick={animeHistory ? handleDeleteFromHistory : handleSaveInHistory}
       isLoading={isLoading}
       className="py-0"
       variant="outline"
     >
       <Bookmark />
-      {mediaHistory ? <>Remove from history</> : <>Mard as watched</>}
+      {animeHistory ? <>Remove from history</> : <>Mard as watched</>}
     </LoadingButton>
   )
 }

@@ -49,10 +49,10 @@ export function useSaveProgress({
       lastSaveTimeRef.current = now;
       
       handleSave({
-        mediaId: String(animeId),
-        mediaEpisode: episodeNumber,
-        mediaTitle: animeTitle,
-        mediaCoverImage: animeCoverImage,
+        animeId: String(animeId),
+        animeEpisode: episodeNumber,
+        animeTitle: animeTitle,
+        animeCoverImage: animeCoverImage,
         duration,
         progress: currentTime
       });

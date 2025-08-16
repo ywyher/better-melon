@@ -28,9 +28,9 @@ export async function getProfileHistory({
     
     if (animeTitle) {
       const searchCondition = or(
-        ilike(sql`${history.mediaTitle}->>'english'`, `%${animeTitle}%`),
-        ilike(sql`${history.mediaTitle}->>'romaji'`, `%${animeTitle}%`),
-        ilike(sql`${history.mediaTitle}->>'native'`, `%${animeTitle}%`)
+        ilike(sql`${history.animeTitle}->>'english'`, `%${animeTitle}%`),
+        ilike(sql`${history.animeTitle}->>'romaji'`, `%${animeTitle}%`),
+        ilike(sql`${history.animeTitle}->>'native'`, `%${animeTitle}%`)
       );
 
       if (searchCondition) {

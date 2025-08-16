@@ -69,17 +69,17 @@ export default function ProfleHistory() {
         <CardTitle className="text-2xl flex-1">History</CardTitle>
         <ProfileHistoryFilters setFilters={setFilters} />        
       </CardHeader>
-      <HistoryStats medias={history} isLoading={isLoading} />
+      <HistoryStats animes={history} isLoading={isLoading} />
       <Separator />
       <CardContent className="flex flex-row flex-wrap gap-5">
         {isLoading && Array.from({ length: filters.limit }).map((_,idx) => <AnimeCardSkeleton key={idx} />)}
         {history && history.map((h, idx) => (
           <AnimeHistoryCard 
             key={idx}
-            id={Number(h.mediaId)}
-            coverImage={h.mediaCoverImage}
-            title={h.mediaTitle}
-            episodeNumber={h.mediaEpisode}
+            id={Number(h.animeId)}
+            coverImage={h.animeCoverImage}
+            title={h.animeTitle}
+            episodeNumber={h.animeEpisode}
             percentage={getPercentage({ duration: h.duration, progress: h.progress })}
           />
         ))}

@@ -31,9 +31,9 @@ export default function ActivityDetailsDialog({
           <AnimeHistoryCard
             key={anime.id}
             id={Number(anime.id)}
-            coverImage={anime.mediaCoverImage}
-            title={anime.mediaTitle}
-            episodeNumber={Number(anime.mediaEpisode)}
+            coverImage={anime.animeCoverImage}
+            title={anime.animeTitle}
+            episodeNumber={Number(anime.animeEpisode)}
             percentage={getPercentage({ 
               progress: anime.progress, 
               duration: anime.duration 

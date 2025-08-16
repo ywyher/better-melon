@@ -8,7 +8,7 @@ import { Anime, AnimeListQueryVariableKeys, AnimeQueryVariableKeys, AnimeQueryVa
 import { createQueryKeys } from "@lukemorales/query-key-factory";
 import { AnilistResponse, KitsuEpisodesReponse } from "@better-melon/shared/types";
 import { ApiResponse } from "@/types/api";
-import { getHistory, getHistoryByMedia } from "@/lib/actions/history";
+import { getHistory, getHistoryByAnime } from "@/lib/actions/history";
 
 export const animeQueries = createQueryKeys('anime', {
   data: ({ animeId, name, variables }: { animeId: Anime['id'], name: AnimeQueryVariableKeys, variables: AnimeQueryVariables }) => ({
@@ -104,11 +104,11 @@ export const animeQueries = createQueryKeys('anime', {
         }
       },
   }),
-  historyByMedia: ({ mediaId, mediaEpisode }: { mediaId: string; mediaEpisode: number }) => ({
-    queryKey: ['history', 'media', mediaId, mediaEpisode],
+  historyByAnime: ({ animeId, animeEpisode }: { animeId: string; animeEpisode: number }) => ({
+    queryKey: ['history', 'anime', animeId, animeEpisode],
     queryFn: async () => {
       try {
-        const { error, history } = await getHistoryByMedia({ mediaId, mediaEpisode })
+        const { error, history } = await getHistoryByAnime({ animeId, animeEpisode })
         if(error) throw new Error(error)
 
         return history ?? null;

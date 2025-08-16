@@ -3,17 +3,17 @@ import { History } from "@/lib/db/schema"
 import { useState } from "react"
 
 type HandleSaveProps = {
-  mediaCoverImage: History['mediaCoverImage']
-  mediaId: History['mediaId']
-  mediaTitle: History['mediaTitle']
-  mediaEpisode: History['mediaEpisode']
+  animeCoverImage: History['animeCoverImage']
+  animeId: History['animeId']
+  animeTitle: History['animeTitle']
+  animeEpisode: History['animeEpisode']
   duration: History['duration']
   progress: History['progress']
 }
 
 type HandleDeleteProps = {
-  mediaId: History['mediaId']
-  mediaEpisode: History['mediaEpisode']
+  animeId: History['animeId']
+  animeEpisode: History['animeEpisode']
 }
 
 export default function useHistory() {
@@ -21,10 +21,10 @@ export default function useHistory() {
 
   const handleSave = async ({
     duration,
-    mediaCoverImage,
-    mediaEpisode,
-    mediaId,
-    mediaTitle,
+    animeCoverImage,
+    animeEpisode,
+    animeId,
+    animeTitle,
     progress,
   }: HandleSaveProps) => {
     setIsLoading(true)
@@ -32,10 +32,10 @@ export default function useHistory() {
     try {
       const { error, message } = await saveInHistory({ 
         data: {
-          mediaCoverImage,
-          mediaId: String(mediaId),
-          mediaTitle,
-          mediaEpisode,
+          animeCoverImage,
+          animeId: String(animeId),
+          animeTitle,
+          animeEpisode,
           duration,
           progress
         }
@@ -59,15 +59,15 @@ export default function useHistory() {
   }
 
   const handleDelete = async ({
-    mediaEpisode,
-    mediaId,
+    animeEpisode,
+    animeId,
   }: HandleDeleteProps) => {
     setIsLoading(true)
 
     try {
       const { error, message } = await deleteFromHistory({ 
-        mediaId: String(mediaId),
-        mediaEpisode,
+        animeId: String(animeId),
+        animeEpisode,
       })
 
       if(error) throw new Error(error)

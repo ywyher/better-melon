@@ -1,15 +1,10 @@
 in the profile page the word card should have a button when you click it takes you to the anime with the timestamps of the word
 
-using save in history in episode details results in player seeking to the end of the video -> related to the useMediaHistory hook in the use-watch-data hook
+using save in history in episode details results in player seeking to the end of the video -> related to the useAnimeHistory hook in the use-watch-data hook
 
 maybe in the profile words page add to anki so we need to save setnence in table now too lol
 
 issues with the styles
-
-const storeActiveTranscriptions = useTranscriptionStore((state) => state.activeTranscriptions) || [];
-// eslint-disable-next-line react-hooks/exhaustive-deps
-
-episode list weird styling when only one episode
 
 when navigating between eps the subs in transcriptoin-item component doenst chagne ??
 
@@ -27,15 +22,9 @@ maybe change the player loading strategy to idle
 
 header search component uses a custom query, change it to the global one
 
-GET_ANIME query is kinda a mess rn
-
 on resizing the it shows the loading state for some reason prob cuz isVideoReady which result in the player returning back to 0:00 fix this shit
 
 transcriptinos selector doesn't seeem to work lol most likely cuz we have english japanese hiragana to always be there, but they should be visable of they are removed dumbass me
-
-check your words list button ?
-
-for the words part we are creating an entry for each word i think that is a bit expensive be try one entry with one field having all the word if that is better
 
 the home page should be introduction to the site and add an option to redirect to the animes page right away in the settings
 

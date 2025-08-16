@@ -36,10 +36,10 @@ export default function ContinueWatching() {
           {history.map((anime) => (
             <AnimeHistoryCard
               key={anime.id}
-              id={Number(anime.mediaId)}
-              title={anime.mediaTitle}
-              coverImage={anime.mediaCoverImage}
-              episodeNumber={anime.mediaEpisode}
+              id={Number(anime.animeId)}
+              title={anime.animeTitle}
+              coverImage={anime.animeCoverImage}
+              episodeNumber={anime.animeEpisode}
               percentage={getPercentage({ progress: anime.progress, duration: anime.duration })}
             />
           ))}

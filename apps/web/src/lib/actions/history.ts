@@ -8,17 +8,17 @@ import { generateId } from "better-auth"
 import { and, desc, eq } from "drizzle-orm"
 
 type EnsureHistoryExistsProps = {
-  mediaId: string | number;
-  mediaTitle: AnilistTitle;
-  mediaCoverImage: AnilistCoverImage;
-  mediaEpisode: number
+  animeId: string | number;
+  animeTitle: AnilistTitle;
+  animeCoverImage: AnilistCoverImage;
+  animeEpisode: number
 }
 
 export async function ensureHistoryExists({
-  mediaId,
-  mediaTitle,
-  mediaCoverImage,
-  mediaEpisode
+  animeId,
+  animeTitle,
+  animeCoverImage,
+  animeEpisode
 }: EnsureHistoryExistsProps) {
     const { userId, error } = await ensureAuthenticated()
 
@@ -33,8 +33,8 @@ export async function ensureHistoryExists({
         const [exists] = await db.select().from(history)
           .where(and(
             eq(history.userId, userId),
-            eq(history.mediaId, String(mediaId)),
-            eq(history.mediaEpisode, mediaEpisode),
+            eq(history.animeId, String(animeId)),
+            eq(history.animeEpisode, animeEpisode),
           ))
 
         if(exists?.id) return {
@@ -49,17 +49,17 @@ export async function ensureHistoryExists({
             id,
             duration: 0,
             progress: 0,
-            mediaId: String(mediaId),
-            mediaTitle,
-            mediaCoverImage,
-            mediaEpisode,
+            animeId: String(animeId),
+            animeTitle,
+            animeCoverImage,
+            animeEpisode,
             userId: userId,
             createdAt: new Date(),
             updatedAt: new Date(),
         });
 
         return {
-            message: "Media saved in history successfully",
+            message: "Anime saved in history successfully",
             error: null,
             historyId: id,
             userId
@@ -67,7 +67,7 @@ export async function ensureHistoryExists({
     } catch (error: unknown) {
         return {
             message: null,
-            error: error instanceof Error ? error.message : "Failed to save media in history",
+            error: error instanceof Error ? error.message : "Failed to save anime in history",
             historyId: null,
             userId: null
         }
@@ -75,23 +75,23 @@ export async function ensureHistoryExists({
 }
 
 type SaveInHistoryProps = {
-  data: Pick<History, 'mediaCoverImage' | 'mediaId' | 'mediaTitle' | 'mediaEpisode'> & Partial<Omit<History, 'id' | 'userId' | 'createdAt' | 'updatedAt'>>
+  data: Pick<History, 'animeCoverImage' | 'animeId' | 'animeTitle' | 'animeEpisode'> & Partial<Omit<History, 'id' | 'userId' | 'createdAt' | 'updatedAt'>>
 }
 
 type DeleteFromHistoryProps = {
-  mediaId: History['mediaId']
-  mediaEpisode: History['mediaEpisode']
+  animeId: History['animeId']
+  animeEpisode: History['animeEpisode']
 }
 
 export async function saveInHistory({ data }: SaveInHistoryProps) {
-  const { mediaCoverImage, mediaId, mediaTitle, mediaEpisode } = data
+  const { animeCoverImage, animeId, animeTitle, animeEpisode } = data
 
   try {
       const {error, historyId, userId } = await ensureHistoryExists({ 
-          mediaCoverImage,
-          mediaId,
-          mediaTitle,
-          mediaEpisode
+          animeCoverImage,
+          animeId,
+          animeTitle,
+          animeEpisode
       })
   
       if(!historyId || error || !userId) return {
@@ -111,22 +111,22 @@ export async function saveInHistory({ data }: SaveInHistoryProps) {
   
       if(!result) return {
         message: null,
-        error: 'Failed to save media in history, try again later...',
+        error: 'Failed to save anime in history, try again later...',
       }
   
       return {
-        message: "Media saved in history..",
+        message: "Anime saved in history..",
         error: null
       }
   } catch (error: unknown) {
       return {
         message: null,
-        error: error instanceof Error ? error.message : "Failed to save media in history",
+        error: error instanceof Error ? error.message : "Failed to save anime in history",
       }
   }
 }
 
-export async function deleteFromHistory({ mediaId, mediaEpisode }: DeleteFromHistoryProps) {
+export async function deleteFromHistory({ animeId, animeEpisode }: DeleteFromHistoryProps) {
   try {
     const { userId, error } = await ensureAuthenticated()
 
@@ -137,24 +137,24 @@ export async function deleteFromHistory({ mediaId, mediaEpisode }: DeleteFromHis
 
     const result = await db.delete(history)
       .where(and(
-        eq(history.mediaId, mediaId),
-        eq(history.mediaEpisode, mediaEpisode),
+        eq(history.animeId, animeId),
+        eq(history.animeEpisode, animeEpisode),
         eq(history.userId, userId)
       )) 
 
     if(!result) return {
       message: null,
-      error: 'Failed to save media in history, try again later...',
+      error: 'Failed to save anime in history, try again later...',
     }
 
     return {
-      message: "Media saved in history..",
+      message: "Anime saved in history..",
       error: null
     }
   } catch (error: unknown) {
     return {
       message: null,
-      error: error instanceof Error ? error.message : "Failed to save media in history",
+      error: error instanceof Error ? error.message : "Failed to save anime in history",
     }
   }
 }
@@ -191,12 +191,12 @@ export async function getHistory({ limit }: { limit?: number }) {
     }
 }
 
-export async function getHistoryByMedia({ 
-  mediaId, 
-  mediaEpisode 
+export async function getHistoryByAnime({ 
+  animeId, 
+  animeEpisode 
 }: { 
-  mediaId: string; 
-  mediaEpisode: number 
+  animeId: string; 
+  animeEpisode: number 
 }) {
   try {
     const { userId, error } = await ensureAuthenticated()
@@ -206,24 +206,24 @@ export async function getHistoryByMedia({
       history: null,
     }
     
-    const [mediaHistory] = await db
+    const [animeHistory] = await db
       .select()
       .from(history)
         .where(and(
             eq(history.userId, userId),
-            eq(history.mediaId, mediaId),
-            eq(history.mediaEpisode, mediaEpisode)
+            eq(history.animeId, animeId),
+            eq(history.animeEpisode, animeEpisode)
         ));
     
     return {
-      history: mediaHistory,
-      message: "history by media",
+      history: animeHistory,
+      message: "history by anime",
       error: null
     };
   } catch(error) {
     return {
       message: null,
-      error: error instanceof Error ? error.message : "Failed to get history by media.",
+      error: error instanceof Error ? error.message : "Failed to get history by anime.",
       history: null
     }
   }

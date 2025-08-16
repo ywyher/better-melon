@@ -275,10 +275,10 @@ export const history = pgTable("history", {
   progress: real("progress").notNull().default(0),
 
   // Store these as JSON
-  mediaTitle: jsonb("media_title").$type<AnilistTitle>().notNull(),
-  mediaCoverImage: jsonb("media_cover_image").$type<AnilistCoverImage>().notNull(),
-  mediaId: text("media_id").notNull(),
-  mediaEpisode: real("media_episode").notNull().default(1),
+  animeTitle: jsonb("anime_title").$type<AnilistTitle>().notNull(),
+  animeCoverImage: jsonb("anime_cover_image").$type<AnilistCoverImage>().notNull(),
+  animeId: text("anime_id").notNull(),
+  animeEpisode: real("anime_episode").notNull().default(1),
   
   userId: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
   createdAt: timestamp("created_at").defaultNow().notNull(),

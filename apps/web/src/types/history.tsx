@@ -4,7 +4,7 @@ export type ActivityHistoryEntry = {
   date: string;
   count: number;
   level: number;
-  medias: History[]
+  animes: History[]
 }
 
 export type HistoryFilters = {
