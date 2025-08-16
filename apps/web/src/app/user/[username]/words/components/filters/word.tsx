@@ -6,7 +6,7 @@ import { useDebounce } from "use-debounce";
 export default function ProfileWordsWordFilter() {
   const [word, setWord] = useQueryState('word')
   const [value, setValue] = useState<string | null>(word)
-  const [debouncedValue] = useDebounce(value, 500)
+  const [debouncedValue] = useDebounce(value, 300)
   const isInitialized = useRef(false)
 
   // Initialize value from word on mount

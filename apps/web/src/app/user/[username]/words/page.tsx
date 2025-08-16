@@ -82,6 +82,7 @@ export default function ProfileWords() {
             ))
           )}
         </div>
+        {(!isLoading && !words?.length) && <>No entries found.</>}
       </CardContent>
       <Separator />
       <ActivityCalendarWrapper
@@ -96,7 +97,10 @@ export default function ProfileWords() {
       />
       <Separator />
       {pagination && (
-        <CardFooter>
+        <CardFooter className="flex flex-row justify-between">
+          <div className="flex flex-row w-full gap-2 text-muted-foreground">
+            {words.length} entry found in page {pagination.currentPage}
+          </div>
           <ProfileWordsPagination 
             pagination={pagination}
             filters={filters}

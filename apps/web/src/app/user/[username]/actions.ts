@@ -100,6 +100,7 @@ export async function getProfileHistory({
     }
   }
 }
+
 export async function getProfileWords({ 
   username,
   filters
@@ -114,7 +115,7 @@ export async function getProfileWords({
     const whereConditions = [eq(word.userId, userData.id)]
     
     if (query) {
-      whereConditions.push(ilike(word.word, query));
+      whereConditions.push(sql`${word.word} ~* ${query}`);
     }
     if(animeTitle) {
       const searchCondition = or(

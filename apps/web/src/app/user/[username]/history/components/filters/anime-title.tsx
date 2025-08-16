@@ -6,7 +6,7 @@ import { useDebounce } from "use-debounce";
 export default function ProfileHistoryAnimeTitleFilter() {
   const [animeTitle, setAnimeTitle] = useQueryState('animeTitle')
   const [value, setValue] = useState<string | null>(animeTitle)
-  const [debouncedValue] = useDebounce(value, 500)
+  const [debouncedValue] = useDebounce(value, 300)
   const isInitialized = useRef(false)
 
   // Initialize value from animeTitle on mount
